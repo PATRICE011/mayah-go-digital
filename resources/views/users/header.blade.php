@@ -41,7 +41,11 @@
                
                 <!-- User actions -->
                 <p class="nav__user-name">Welcome, {{ Auth::user()->name }}</p>
+<<<<<<< HEAD
                 <form method="POST" action="{{ route('users.logout') }}" class="nav__logout-form">
+=======
+                <form method="POST" action="{{ route('makelogout') }}" class="nav__logout-form">
+>>>>>>> 62832ae6414a4b7178aacad887db61a0648dbded
                     @csrf
                     <button type="submit" class="button-1 button__ghost">Logout</button>
                 </form>

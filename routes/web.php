@@ -29,7 +29,11 @@ Route::middleware(['guest'])->group(function () {
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
+<<<<<<< HEAD
     Route::post('/user/logout', [UserController::class, 'logout'])->name('users.logout');
+=======
+    Route::post('users/logout', [UserController::class, 'logout'])->name('makelogout');
+>>>>>>> 62832ae6414a4b7178aacad887db61a0648dbded
     
     // // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
