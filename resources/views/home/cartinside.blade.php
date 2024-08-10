@@ -8,7 +8,7 @@
             @foreach ($cartItems as $item)
                 <article class="cart__card">
                     <div class="cart__box">
-                        <img src="{{ asset($item->product->product_image) }}" alt="" class="cart__img">
+                        <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="" class="cart__img">
                     </div>
 
                     <div class="cart__details">
