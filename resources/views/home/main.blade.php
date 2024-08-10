@@ -125,36 +125,6 @@
                         </div>
                     </article>
 
-                    <article class="products__card coffee">
-                        <div class="products__shape">
-                            <img src="assets/img/DRINKS-2.png" alt="" class="products__img">
-                        </div>
-
-                        <div class="products__data">
-                            <h2 class="products__price">5 Pesos</h2>
-                            <h3 class="products__name">C2 - Yellow</h3>
-
-                            <button class="button products__button">
-                                <i class='bx bx-shopping-bag'></i>
-                            </button>
-                        </div>
-                    </article>
-
-                    <article class="products__card coffee">
-                        <div class="products__shape">
-                            <img src="assets/img/DRINKS-3.png" alt="" class="products__img">
-                        </div>
-
-                        <div class="products__data">
-                            <h2 class="products__price">5 Pesos</h2>
-                            <h3 class="products__name">C2 - Red</h3>
-
-                            <button class="button products__button">
-                                <i class='bx bx-shopping-bag'></i>
-                            </button>
-                        </div>
-                    </article>
-
                     <!-- SCHOOL -->
                     <article class="products__card cake">
                         <div class="products__shape">
@@ -164,21 +134,6 @@
                         <div class="products__data">
                             <h2 class="products__price">5 Pesos</h2>
                             <h3 class="products__name">Eraser</h3>
-
-                            <button class="button products__button">
-                                <i class='bx bx-shopping-bag'></i>
-                            </button>
-                        </div>
-                    </article>
-
-                    <article class="products__card cake">
-                        <div class="products__shape">
-                            <img src="assets/img/SCHOOL-SUPPLIES-2.png" alt="" class="products__img">
-                        </div>
-
-                        <div class="products__data">
-                            <h2 class="products__price">5 Pesos</h2>
-                            <h3 class="products__name">Pencils</h3>
 
                             <button class="button products__button">
                                 <i class='bx bx-shopping-bag'></i>
