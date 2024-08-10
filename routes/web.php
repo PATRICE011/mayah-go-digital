@@ -1,5 +1,3 @@
-<!-- THIS IS A COMMENT -->
-
 <?php
 
 use App\Http\Controllers\AdminController;
@@ -9,7 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
-
+// THIS IS A COMMENT
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
