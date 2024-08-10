@@ -1,3 +1,5 @@
+<!-- THIS IS A COMMENT -->
+
 <?php
 
 use App\Http\Controllers\AdminController;

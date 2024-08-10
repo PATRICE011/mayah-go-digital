@@ -1,3 +1,5 @@
+<!-- THIS IS A COMMENT -->
+
 <header class="header" id="header">
          <nav class="nav container">
             <a href="index.php" class="nav__logo">
@@ -42,7 +44,6 @@
                 <!-- User actions -->
                 <p class="nav__user-name">Welcome, {{ Auth::user()->name }}</p>
                 <form method="POST" action="{{ route('users.logout') }}" class="nav__logout-form">
-                <form method="POST" action="{{ route('makelogout') }}" class="nav__logout-form">
                     @csrf
                     <button type="submit" class="button-1 button__ghost">Logout</button>
                 </form>
