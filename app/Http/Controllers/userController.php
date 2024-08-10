@@ -17,7 +17,7 @@ class UserController extends Controller
 {
     public function viewDashboard(){
         $products = Product::all();
-        $cart = Cart::where('user_id', auth()->id())->first();
+        $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
         
 
@@ -29,7 +29,7 @@ class UserController extends Controller
     public function getRegister()
     {
         $products = Product::all();
-        $cart = Cart::where('user_id', auth()->id())->first();
+        $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
         return view('users.register',[
             'products' => $products,
@@ -40,7 +40,7 @@ class UserController extends Controller
     public function getLogin()
     {
         $products = Product::all();
-        $cart = Cart::where('user_id', auth()->id())->first();
+        $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
         return view('users.login',[
             'products' => $products,
