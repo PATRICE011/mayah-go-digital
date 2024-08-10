@@ -90,7 +90,7 @@
                      @foreach ( $products as $product )
                         <article class="products__card delicacies">
                             <div class="products__shape">
-                            <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="" class="products__img">
+                            <img src="{{ asset($product->product_image) }}" alt="" class="products__img">
 
                             </div>
 
