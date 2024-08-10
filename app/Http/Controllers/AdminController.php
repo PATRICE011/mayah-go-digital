@@ -21,7 +21,7 @@ class AdminController extends Controller
     // edit invenotry page
     public function edit($id){
         $product = Product::findOrFail($id);
-        return view('admins.inventory.edit', compact('product'));
+        return view('admins.editv', compact('product'));
     }
 
     // log out
