@@ -31,7 +31,10 @@
                         <td>{{$product->product_price}}</td>
                         <td>{{$product->product_stocks}}</td>
                         <td>
-                            <a href="{{ route('admins.editv', $product->id) }}" class="btn clr-color2">Edit</a>
+                            <!-- <a href="{{ route('admins.editv', $product->id) }}" class="btn clr-color2">Edit</a> -->
+                            <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#donationModal-1">
+                                Edit
+                            </button>
                         </td>
                         <td>
                         <form action="{{ route('admins.inventory.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
@@ -50,7 +53,7 @@
             </button>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal for Add Products -->
         <div class="modal fade" id="donationModal" tabindex="-1" role="dialog" aria-labelledby="donationModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -81,6 +84,47 @@
                                 <input type="file" class="form-control-file" id="date" name="product_image">
                             </div>
                             <button type="submit" class="btn clr-color1">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Edit Products -->
+        <div class="modal fade" id="donationModal-1" tabindex="-1" role="dialog" aria-labelledby="donationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="donationModalLabel">Edit Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('admins.inventory.update', $product->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="form-group">
+                                <label for="product_name">Product Name</label>
+                                <input type="text" class="form-control" id="contributorName" name="product_name" value="{{ $product->product_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product_pricet">Price</label>
+                                <input type="text" class="form-control" id="amount" name="product_price" value="{{ $product->product_price }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="product_stocks">Stocks</label>
+                                <input type="number" class="form-control" id="date" name="product_stocks" value="{{ $product->product_stocks }}" required>
+                            </div>
+			
+                            <div class="form-group">
+                                <label for="product_image">Product Image</label>
+                                <input type="file" class="form-control-file" id="product_image" name="product_image">
+                                @if($product->product_image)
+                                    <img src="{{ asset($product->product_image) }}" alt="Product Image" width="100">
+                                @endif
+                            </div>
+                            <button type="submit" class="btn clr-color1">Update</button>
                         </form>
                     </div>
                 </div>
