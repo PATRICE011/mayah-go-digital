@@ -52,5 +52,5 @@ Route::middleware('auth:admin')->group(function () {
 
     // Route to handle delete request
     Route::delete('/admin/inventory/{id}', [ProductController::class, 'destroy'])->name('admins.inventory.destroy');
-
+    
 });
