@@ -1,5 +1,3 @@
-<!-- THIS IS A COMMENT -->
-
 <header class="header" id="header">
          <nav class="nav container">
             <a href="index.php" class="nav__logo">

@@ -84,6 +84,8 @@ class UserController extends Controller
         ]);
     }
 
+
+
     public function postRegister(Request $request)
 {
     $validator = Validator::make($request->all(), [
