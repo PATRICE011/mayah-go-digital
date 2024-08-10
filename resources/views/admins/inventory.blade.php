@@ -25,7 +25,7 @@
                     @foreach ($products as $product)
                     <tr>
                         <td></td>
-                        <td><img src="{{asset($product->product_image)}}" alt="Product Image" width="50"></td>
+                        <td><img src="{{ asset($product->product_image) }}" alt="Product Image" width="50"></td>
                         <!-- <td>Category Name</td> -->
                         <td>{{$product->product_name}}</td>
                         <td>{{$product->product_price}}</td>
@@ -119,12 +119,9 @@
 			
                             <div class="form-group">
                                 <label for="product_image">Product Image</label>
-                                <input type="file" class="form-control-file" id="product_image" name="product_image">
-                                @if($product->product_image)
-                                    <img src="{{ asset($product->product_image) }}" alt="Product Image" width="100">
-                                @endif
+                                <input type="file" class="form-control-file" id="date" name="product_image">
                             </div>
-                            <button type="submit" class="btn clr-color1">Update</button>
+                            <button type="submit" class="btn clr-color1">Add</button>
                         </form>
                     </div>
                 </div>
