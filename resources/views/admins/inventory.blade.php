@@ -125,7 +125,7 @@
                                     <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="Product Image" width="100">
                                 @endif
                             </div>
-                            <button type="submit" class="btn clr-color1">Update</button>
+                            <button type="submit" class="btn clr-color1">Add</button>
                         </form>
                         @endforeach
                        
