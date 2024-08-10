@@ -62,7 +62,7 @@
                         <i class='bx bx-cog' ></i>
                         <span class="nav__name">Settings</span>
                     </a>
-                    <form action="{{ route('logout') }}" method="POST">
+                    <form action="{{ route('admins.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="nav__link">
                         <i class='bx bxs-log-out'></i>

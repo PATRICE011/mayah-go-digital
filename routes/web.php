@@ -29,7 +29,7 @@ Route::middleware(['guest'])->group(function () {
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
-    Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+    Route::post('/user/logout', [UserController::class, 'logout'])->name('users.logout');
     
     // // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
 // Admin Routes
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admins.index');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
     Route::get('admin/dashboard', [AdminController::class, 'showDashboard'])->name('admins.dashboard');
     Route::get('/inventory', [AdminController::class, 'showInventory'])->name('admins.inventory');
     Route::post('/inventory', [ProductController::class, 'getProduct'])->name('admins.insertProduct');

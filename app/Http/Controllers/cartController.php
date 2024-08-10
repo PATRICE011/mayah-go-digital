@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Auth;
 class cartController extends Controller
 {
     public function addtocart(Request $request)
@@ -19,7 +19,7 @@ class cartController extends Controller
             return redirect()->back()->with('error', 'Product not found');
         }
     
-        $user = auth()->user();
+        $user = Auth::user();
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
     
         $cartItem = CartItem::where('cart_id', $cart->id)
@@ -44,7 +44,7 @@ class cartController extends Controller
 
     public function showCart()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $cart = Cart::where('user_id', $user->id)->first();
     
         if ($cart) {
@@ -55,6 +55,4 @@ class cartController extends Controller
     
         return view('home.cartinside', ['cartItems' => $cartItems]);
     }
-
-
 }
