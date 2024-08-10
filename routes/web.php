@@ -50,7 +50,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/inventory', [ProductController::class, 'getProduct'])->name('admins.insertProduct');
     
     // Route to display edit form
-    Route::get('/admin/inventory/{id}/edit', [AdminController::class, 'edit'])->name('admins.editv');
+    // Route::get('/admin/inventory/{id}/edit', [AdminController::class, 'edit'])->name('admins.editv');
 
     // Route to handle update request
     Route::put('/admin/inventory/{id}', [ProductController::class, 'update'])->name('admins.inventory.update');
