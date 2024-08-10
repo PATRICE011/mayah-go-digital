@@ -1,9 +1,11 @@
-@extends('admins.layout')
 
+@extends('admins.layout')
 @section('content')
+          
 <div class="main-wrapper">
     <main class="container section">
-        <h1>Edit Product</h1>
+  
+    <h1>Edit Product</h1>
         <form action="{{ route('admins.inventory.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -30,4 +32,5 @@
         </form>
     </main>
 </div>
+
 @endsection
