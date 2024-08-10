@@ -8,8 +8,8 @@ class AdminController extends Controller
 {
     //
     public function index(){
-        
-        return view("admins.index");
+        $products = Product::all();
+        return view("admins.index",['products' =>$products]);
     }
     public function showInventory(){
         $products = Product::all();

@@ -25,13 +25,13 @@
                     @foreach ($products as $product)
                     <tr>
                         <td></td>
-                        <td><img src="{{asset($product->product_image)}}" alt="Product Image" width="50"></td>
+                        <td><img src="{{ asset('assets/img/' . $product->product_image) }}" alt="Product Image" width="50"></td>
                         <!-- <td>Category Name</td> -->
                         <td>{{$product->product_name}}</td>
                         <td>{{$product->product_price}}</td>
                         <td>{{$product->product_stocks}}</td>
                         <td>
-                            <!-- <a href="{{ route('admins.editv', $product->id) }}" class="btn clr-color2">Edit</a> -->
+                           
                             <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#donationModal-1">
                                 Edit
                             </button>
@@ -101,6 +101,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        @foreach ($products as $product )
                         <form action="{{route('admins.inventory.update', $product->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -121,11 +122,13 @@
                                 <label for="product_image">Product Image</label>
                                 <input type="file" class="form-control-file" id="product_image" name="product_image">
                                 @if($product->product_image)
-                                    <img src="{{ asset($product->product_image) }}" alt="Product Image" width="100">
+                                    <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="Product Image" width="100">
                                 @endif
                             </div>
                             <button type="submit" class="btn clr-color1">Update</button>
                         </form>
+                        @endforeach
+                       
                     </div>
                 </div>
             </div>
