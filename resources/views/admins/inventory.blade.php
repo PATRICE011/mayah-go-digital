@@ -31,7 +31,7 @@
                         <td>{{$product->product_price}}</td>
                         <td>{{$product->product_stocks}}</td>
                         <td>
-                            <a href="{{ route('admins.inventory.edit', $product->id) }}" class="btn clr-color2">Edit</a>
+                            <a href="{{ route('admins.editv', $product->id) }}" class="btn clr-color2">Edit</a>
                         </td>
                         <td>
                         <form action="{{ route('admins.inventory.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
