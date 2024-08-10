@@ -15,23 +15,24 @@ use App\Models\Cart;
 
 class UserController extends Controller
 {
-    public function viewDashboard(){
+    public function viewDashboard()
+    {
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
         
-
         return view('users.usersdashboard', [
             'products' => $products,
-            'cartItems' => $cartItems // Pass the cart items to the view
+            'cartItems' => $cartItems
         ]);
     }
+
     public function getRegister()
     {
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
-        return view('users.register',[
+        return view('users.register', [
             'products' => $products,
             'cartItems' => $cartItems
         ]);
@@ -42,7 +43,7 @@ class UserController extends Controller
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
-        return view('users.login',[
+        return view('users.login', [
             'products' => $products,
             'cartItems' => $cartItems
         ]);

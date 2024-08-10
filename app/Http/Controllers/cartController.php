@@ -55,6 +55,4 @@ class cartController extends Controller
     
         return view('home.cartinside', ['cartItems' => $cartItems]);
     }
-
-
 }

@@ -7,7 +7,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
-
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -29,7 +34,7 @@ Route::middleware(['guest'])->group(function () {
 // Authenticated User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
-    Route::post('users/logout', [UserController::class, 'logout'])->name('makelogout');
+    Route::post('/user/logout', [UserController::class, 'logout'])->name('users.logout');
     
     // // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
