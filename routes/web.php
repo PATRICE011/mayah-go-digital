@@ -8,6 +8,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 // THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
+// THIS IS A COMMENT
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
