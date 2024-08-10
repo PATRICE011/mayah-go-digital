@@ -38,7 +38,9 @@ class productController extends Controller
         
         // ayusin 
         if ($request->hasFile('product_image')) {
-            $imagePath = $request->file('product_image')->store('products', 'public');
+            $imageName = time().'.'.$request->product_image->extension();
+            $request->product_image->move(public_path('img'), $imageName);
+            $imagePath = 'img/' . $imageName;
             $product->product_image = $imagePath;
         }
 
