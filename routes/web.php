@@ -6,6 +6,7 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 // THIS IS A COMMENT
 // THIS IS A COMMENT
@@ -45,17 +46,19 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admins.index');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
+
+    // dashboard
     Route::get('admin/dashboard', [AdminController::class, 'showDashboard'])->name('admins.dashboard');
+    
+    // inventory
     Route::get('/inventory', [AdminController::class, 'showInventory'])->name('admins.inventory');
     Route::post('/inventory', [ProductController::class, 'getProduct'])->name('admins.insertProduct');
-    
-    // Route to display edit form
-    // Route::get('/admin/inventory/{id}/edit', [AdminController::class, 'edit'])->name('admins.editv');
-
-    // Route to handle update request
     Route::put('/admin/inventory/{id}', [ProductController::class, 'update'])->name('admins.inventory.update');
-
-    // Route to handle delete request
     Route::delete('/admin/inventory/{id}', [ProductController::class, 'destroy'])->name('admins.inventory.destroy');
     
+    // categories
+    Route::get('/categories', [AdminController::class, 'showCategories'])->name('admins.category');
+    Route::post('/categories', [categoryController::class, 'getCategory'])->name('admins.insertCategory');
+    Route::put('/admin/categories/{id}', [categoryController::class, 'update'])->name('admins.category.update');
+    Route::delete('/admin/categories/{id}', [categoryController::class, 'destroy'])->name('admins.category.destroy');
 });

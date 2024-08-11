@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
@@ -22,6 +23,14 @@ class AdminController extends Controller
     public function edit($id){
         $product = Product::findOrFail($id);
         return view('admins.editv', compact('product'));
+    }
+
+    // 
+    public function showCategories(){
+
+        // fetch category
+        $categories = Category::all();
+        return view ('admins.category', compact('categories'));
     }
 
     // log out

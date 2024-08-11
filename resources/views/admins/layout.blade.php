@@ -52,9 +52,14 @@
                     <span class="nav__name">Messages</span>
                 </a>
 
+                <a href="{{ route('admins.category') }}" class="nav__link">
+                <i class='bx bx-purchase-tag-alt' ></i>
+                    <span class="nav__name">Manage Category</span>
+                </a>
+
                 <a href="{{ route('admins.inventory') }}" class="nav__link">
                     <i class='bx bx-box'></i>
-                    <span class="nav__name">Inventory</span>
+                    <span class="nav__name">Manage Inventory</span>
                 </a>
 
                 <a href="#" class="nav__link">
@@ -65,7 +70,7 @@
                 <form action="{{ route('admins.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="nav__link">
-                        <i class='bx bxs-log-out'></i>
+                        <i class='bx bx-log-out-circle' ></i>
                         <span class="nav__name">Logout</span>
                     </button>
                 </form>

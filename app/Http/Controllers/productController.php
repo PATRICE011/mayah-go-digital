@@ -64,4 +64,6 @@ class productController extends Controller
         $product->delete();
         return redirect()->route('admins.inventory')->with('success', 'Product deleted successfully.');
     }
+
+   
 }
