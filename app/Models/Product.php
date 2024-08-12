@@ -16,12 +16,16 @@ class Product extends Model
         'product_image',
         'product_price',
         'product_stocks',
-        // 'category_name'
+        'category_id'
         
     ];
     public function cartItems()
     {
         return $this->hasMany(CartItem::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
 }

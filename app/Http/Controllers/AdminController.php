@@ -12,10 +12,17 @@ class AdminController extends Controller
         $products = Product::all();
         return view("admins.index",['products' =>$products]);
     }
-    public function showInventory(){
-        $products = Product::all();
-        return view("admins.inventory",['products' =>$products]);
+    public function showInventory()
+    {
+        $products = Product::with('category')->get();
+        $categories = Category::all(); // Fetch all categories
+        return view('admins.inventory', 
+        [
+        'products' => $products, 
+        'categories' => $categories
+        ]);
     }
+    
     public function showDashboard(){
         return view("admins.dashboard");
     }

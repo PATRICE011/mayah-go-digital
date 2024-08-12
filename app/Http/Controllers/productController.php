@@ -16,6 +16,7 @@ class productController extends Controller
             'product_price' => 'required|numeric',
             'product_stocks' => 'required|numeric',
             'product_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required'
         ]);
 
         // Handle the uploaded image

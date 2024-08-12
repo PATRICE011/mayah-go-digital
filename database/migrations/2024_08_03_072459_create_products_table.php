@@ -12,15 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Auto-incrementing primary key
             $table->string('product_name');
-            $table->string('product_image',300);
+            $table->string('product_image', 300);
             $table->integer('product_price');
             $table->integer('product_stocks')->default(0)->nullable();
-            // $table->string('category_name');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Foreign key to categories
             $table->timestamps();
-
+        
+           
         });
+        
+        
     }
 
     /**

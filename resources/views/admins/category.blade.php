@@ -18,9 +18,11 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Initialize a counter variable -->
+                    @php $counter = 1; @endphp
                     @foreach ($categories as $category)
                     <tr>
-                        <td></td>
+                        <td>{{ $counter++ }}</td>
                         <td>{{ $category->category_name }}</td>
                         <td>
                             <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editCategoryModal-{{ $category->id }}">
