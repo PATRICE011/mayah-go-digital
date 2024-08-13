@@ -17,6 +17,7 @@
                         <th>Delete</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <!-- Initialize a counter variable -->
                     @php $counter = 1; @endphp
@@ -56,6 +57,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+
                     <div class="modal-body">
                         <form action="{{ route('admins.insertCategory') }}" method="post">
                             @csrf
@@ -63,7 +65,10 @@
                                 <label for="category_name">Category Name</label>
                                 <input type="text" class="form-control" id="category_name" name="category_name" placeholder="e.g., Biscuits" required>
                             </div>
-                            <button type="submit" class="btn clr-color1">Add</button>
+
+                            <button type="submit" class="btn clr-color1">
+                                Add
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -81,6 +86,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+
                     <div class="modal-body">
                         <form action="{{ route('admins.category.update', $category->id) }}" method="post">
                             @csrf
@@ -89,7 +95,10 @@
                                 <label for="category_name">Category Name</label>
                                 <input type="text" class="form-control" id="category_name" name="category_name" value="{{ $category->category_name }}" required>
                             </div>
-                            <button type="submit" class="btn clr-color1">Update</button>
+
+                            <button type="submit" class="btn clr-color1">
+                                Update
+                            </button>
                         </form>
                     </div>
                 </div>

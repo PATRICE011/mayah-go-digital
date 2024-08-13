@@ -33,7 +33,7 @@ class categoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $category->delete();
-        return redirect()->route('admins.inventory')->with('success', 'Product deleted successfully.');
+        return redirect()->route('admins.category')->with('success', 'Product deleted successfully.');
     }
 
 }

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Admin;
 use App\Models\Cart;
+use App\Models\Category;
 
 class UserController extends Controller
 {
@@ -19,11 +20,19 @@ class UserController extends Controller
     {
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
+        $categories = Category::withCount('products')->get();
         $cartItems = $cart ? $cart->items : collect();
         
+        $categories->prepend((object) [
+            'slug' => 'all',
+            'category_name' => 'Show All',
+            'products_count' => $products->count()
+        ]);
+
         return view('users.usersdashboard', [
             'products' => $products,
-            'cartItems' => $cartItems
+            'cartItems' => $cartItems,
+            'categories' =>  $categories
         ]);
     }
 
@@ -32,9 +41,18 @@ class UserController extends Controller
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
+        $categories = Category::withCount('products')->get();
+
+        $categories->prepend((object) [
+            'slug' => 'all',
+            'category_name' => 'Show All',
+            'products_count' => $products->count()
+        ]);
+
         return view('users.register', [
             'products' => $products,
-            'cartItems' => $cartItems
+            'cartItems' => $cartItems,
+            'categories' =>  $categories
         ]);
     }
 
@@ -43,9 +61,18 @@ class UserController extends Controller
         $products = Product::all();
         $cart = Cart::where('user_id', Auth::id())->first();
         $cartItems = $cart ? $cart->items : collect();
+        $categories = Category::withCount('products')->get();
+
+        $categories->prepend((object) [
+            'slug' => 'all',
+            'category_name' => 'Show All',
+            'products_count' => $products->count()
+        ]);
+        
         return view('users.login', [
             'products' => $products,
-            'cartItems' => $cartItems
+            'cartItems' => $cartItems,
+            'categories' =>  $categories
         ]);
     }
 

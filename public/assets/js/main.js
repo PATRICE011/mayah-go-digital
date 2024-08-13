@@ -33,6 +33,38 @@ if(cartClose){
         cart.classList.remove('show-cart')
     })
 }
+/*=============== MIXITUP FILTER PRODUCTS ===============*/
+
+document.addEventListener('DOMContentLoaded', function() {
+   // Initialize MixItUp
+   let mixerProducts = mixitup('.products__content', {
+       selectors: {
+           target: '.products__card'
+       },
+       animation: {
+           duration: 300
+       }
+   });
+
+   // Get filter links
+   const linkProducts = document.querySelectorAll('.products__item');
+
+   // Function to set active class and apply filter
+   function activeProducts() {
+       linkProducts.forEach(l => l.classList.remove('active-product'));
+       this.classList.add('active-product');
+
+       // Apply filter
+       const filter = this.getAttribute('data-filter');
+       // Check if filter is 'all' and apply an empty filter to show all products
+       mixerProducts.filter(filter === '.all' ? '' : filter);
+   }
+
+   // Add event listeners to filter links
+   linkProducts.forEach(l => l.addEventListener('click', activeProducts));
+});
+
+
 /*=============== SEARCH ===============*/
 const search = document.getElementById('search'),
       searchBtn = document.getElementById('search-btn'),
@@ -67,30 +99,6 @@ function navigateToPage() {
    window.location.href = "register.html";
 }
 
-
-
-/*=============== MIXITUP FILTER PRODUCTS ===============*/
-let mixerProducts = mixitup('.products__content', {
-   selectors: {
-       target: '.products__card'
-   },
-   animation: {
-       duration: 300
-   }
-});
-
-/* Default filter products */ 
-mixerProducts.filter('.delicacies')
-
-/* Link active products */ 
-const linkProducts = document.querySelectorAll('.products__item')
-
-function activeProducts(){
-   linkProducts.forEach(l=> l.classList.remove('active-product'))
-   this.classList.add('active-product')
-}
-
-linkProducts.forEach(l=> l.addEventListener('click', activeProducts))
 
 /*=============== SHOW SCROLL UP ===============*/ 
 const scrollUp = () =>{

@@ -9,17 +9,18 @@ class AdminController extends Controller
 {
     //
     public function index(){
-        $products = Product::all();
+        $products = Product::with('category')->paginate(5);
         return view("admins.index",['products' =>$products]);
     }
     public function showInventory()
     {
-        $products = Product::with('category')->get();
         $categories = Category::all(); // Fetch all categories
-        return view('admins.inventory', 
-        [
-        'products' => $products, 
-        'categories' => $categories
+    // Fetch products with pagination (5 products per page)
+        $products = Product::with('category')->paginate(5);
+
+        return view('admins.inventory', [
+            'products' => $products,
+            'categories' => $categories
         ]);
     }
     
