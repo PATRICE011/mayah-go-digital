@@ -5,8 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
 // Guest Routes
@@ -20,9 +20,9 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register', [UserController::class, 'postRegister'])->name('users.makereg');
     
     // OTP routes
-    // Route::get('/otp', [OtpController::class, 'showOtp'])->name('users.otp');
-    // Route::post('/otp', [OtpController::class, 'verifyOtp'])->name('users.verifyOtp');
-    // Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('users.resendOtp');
+    Route::get('/otp', [OtpController::class, 'showOtp'])->name('users.otp');
+    Route::post('/otp', [OtpController::class, 'verifyOtp'])->name('users.verifyOtp');
+    Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('users.resendOtp');
     
     
 });

@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\otpController;
+use App\Http\Controllers\OtpController;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Category;
 
-class UserController extends Controller
+class userController extends Controller
 {
     public function viewDashboard()
     {
@@ -124,12 +124,12 @@ class UserController extends Controller
             'unique:users_area',
             function ($attribute, $value, $fail) {
                 // Check if the mobile number exists in the admins table
-                if (\App\Models\Admin::where('mobile', $value)->exists()) {
+                if (Admin::where('mobile', $value)->exists()) {
                     $fail('The mobile number is already associated with an admin account.');
                 }
             },
         ],
-        // 'address' => 'required|string|max:500',
+        
         'password' => 'required|string|min:8|confirmed',
     ]);
 
@@ -138,7 +138,7 @@ class UserController extends Controller
     }
 
     // Generate OTP code
-    // $otp = rand(100000, 999999);
+    $otp = rand(100000, 999999);
 
     // Create the user
     $user = User::create([
@@ -146,15 +146,15 @@ class UserController extends Controller
         'mobile' => $request->mobile,
         'address' => $request->address,
         'password' => Hash::make($request->password),
-        // 'otp' => $otp,
+        'otp' => $otp,
         'is_admin' => $request->is_admin ?? 0,
     ]);
 
     // Send OTP via Semaphore
-    // $otpController = new otpController();
-    // $otpController->sendOtp($user->mobile, $otp);
+    $otpController = new OtpController();
+    $otpController->sendOtp($user->mobile, $otp);
 
-    return redirect()->route('users.login');
+    return redirect()->route('users.otp');
 }
 
     public function logout(Request $request)

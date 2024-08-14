@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
 class cartController extends Controller
 {
+    //
     public function addtocart(Request $request)
     {
         $productId = $request->input('id');

@@ -3,7 +3,7 @@
 @section('content')
     @include('home.header')
     @include('home.search')
-    @include('home.cart')
+    @include('home.cartinside')
 
     <div class="login show-login" id="login">
         <form action="{{ route('users.verifyOtp') }}" method="POST" class="login__form">
