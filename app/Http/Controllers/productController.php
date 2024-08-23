@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Cart;
 class productController extends Controller
 {
     
@@ -65,6 +68,38 @@ class productController extends Controller
         $product->delete();
         return redirect()->route('admins.inventory')->with('success', 'Product deleted successfully.');
     }
+
+    // search product
+    public function search(Request $request)
+    {
+        $query = Product::query();
+    
+        if ($request->has('search')) {
+            $keyword = e($request->input('search'));
+            $firstLetter = substr($keyword, 0, 1);  // Get the first letter of the keyword
+            $query->where('product_name', 'LIKE', "$firstLetter%");
+        }
+    
+        $products = $query->with('category')->get();
+        $categories = Category::withCount('products')->get();
+    
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::id())->first();
+            $cartItems = $cart ? $cart->items : collect();
+        } else {
+            $cartItems = collect();
+        }
+    
+        $error = $products->isEmpty() ? 'No products found for "' . $request->input('search') . '"' : null;
+    
+        return view('home.index', compact(
+            'products', 
+            'categories',
+            'cartItems',
+            'error'
+        ));
+    }
+    
 
    
 }

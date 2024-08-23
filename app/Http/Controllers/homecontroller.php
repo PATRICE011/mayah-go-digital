@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class homecontroller extends Controller
+class Homecontroller extends Controller
 {
     public function index(){
         $products = Product::all();

@@ -9,9 +9,16 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
+
+
+// public routes
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+// search
+Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
+
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    
     
     Route::get('/register', [UserController::class, 'getRegister'])->name('users.register');
     Route::get('/login', [UserController::class, 'getLogin'])->name('users.login');
@@ -24,7 +31,6 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/otp', [OtpController::class, 'verifyOtp'])->name('users.verifyOtp');
     Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('users.resendOtp');
     
-    
 });
 
 // Authenticated User Routes
@@ -35,6 +41,8 @@ Route::middleware(['auth'])->group(function () {
     // // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
     Route::post('/cart/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
+
+    
 });
 
 // Admin Routes

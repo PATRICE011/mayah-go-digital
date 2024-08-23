@@ -1,3 +1,5 @@
+
+
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById('nav-menu'),
       navToggle = document.getElementById('nav-toggle'),
@@ -80,6 +82,7 @@ searchClose.addEventListener('click', () =>{
    search.classList.remove('show-search')
 })
 
+
 /*=============== LOGIN ===============*/
 const login = document.getElementById('login'),
       loginBtn = document.getElementById('login-btn'),
@@ -149,4 +152,19 @@ sr.reveal('.about__data', {delay: 800})
 sr.reveal('.about__img', {delay: 1200})
 
 sr.reveal('.products', {delay: 800})
+
+// search product 
+window.addEventListener('load', function() {
+   setTimeout(function() {
+       var element = document.getElementById('products');
+       if (element) {
+           console.log("Element found:", element);
+           element.scrollIntoView({ behavior: 'smooth' });
+       } else {
+           console.log("Element not found for ID: products");
+       }
+   }, 100);
+});
+
+
 

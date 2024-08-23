@@ -76,7 +76,10 @@
             </ul>
 
             <!-- products -->
-            <div class="products__content grid">
+            <div class="products__content grid" id="prodSearch">
+                @if ($products->isEmpty())
+                    <p>No products found for "{{ request('search') }}"</p>
+                @else
                 @foreach ($products as $product)
                     <article class="products__card {{ $product->category->slug }} all">
                         <div class="products__shape">
@@ -93,10 +96,12 @@
                                     <i class='bx bx-shopping-bag'></i>
                                 </button>
                             </form>
-                        </div>
-                    </article>
+                            </div>
+                        </article>
                 @endforeach
+                @endif
             </div>
+
         </div>
     </section>
 </main>

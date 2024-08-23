@@ -1172,3 +1172,8 @@ img {
   font-size: 12px;
   font-weight: bold;
 }
+/* search */
+.search__error {
+  color: red;
+  margin-top: 10px;
+}
