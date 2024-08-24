@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
-
+// public routes
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+// search
+Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
@@ -42,8 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
 
     Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
-    // search
-    Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
+    
 });
 
 // Admin Routes

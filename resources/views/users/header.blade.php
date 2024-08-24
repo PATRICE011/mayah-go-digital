@@ -38,13 +38,10 @@
                 <div class="nav_shop" id="cart-shop">
                     <i class="ri-shopping-cart-2-line nav__shop"></i>
                 </div>
-               
-                <!-- User actions -->
-                <p class="nav__user-name">Welcome, {{ Auth::user()->name }}</p>
-                <form method="POST" action="{{ route('users.logout') }}" class="nav__logout-form">
-                    @csrf
-                    <button type="submit" class="button-1 button__ghost">Logout</button>
-                </form>
+
+                <div class="nav_shop" id="cart-shop">
+                    <i class="ri-user-line nav__login" id="login-btn"></i>
+                </div>
                
                <!-- Toggle button -->
                <div class="nav__toggle" id="nav-toggle">
