@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// public routes
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
 // search
 Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
-    
+    // public routes
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
     
     Route::get('/register', [UserController::class, 'getRegister'])->name('users.register');
     Route::get('/login', [UserController::class, 'getLogin'])->name('users.login');
