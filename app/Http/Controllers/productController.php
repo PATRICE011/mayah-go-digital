@@ -73,25 +73,25 @@ class productController extends Controller
     public function search(Request $request)
     {
         $query = Product::query();
-    
-        if ($request->has('search')) {
+        
+        if ($request->has('search') && !empty($request->input('search'))) {
             $keyword = e($request->input('search'));
             $firstLetter = substr($keyword, 0, 1);  // Get the first letter of the keyword
             $query->where('product_name', 'LIKE', "$firstLetter%");
         }
-    
+        
         $products = $query->with('category')->get();
         $categories = Category::withCount('products')->get();
-    
+        
         if (Auth::check()) {
             $cart = Cart::where('user_id', Auth::id())->first();
             $cartItems = $cart ? $cart->items : collect();
         } else {
             $cartItems = collect();
         }
-    
+        
         $error = $products->isEmpty() ? 'No products found for "' . $request->input('search') . '"' : null;
-    
+        
         return view('home.index', compact(
             'products', 
             'categories',
@@ -99,6 +99,7 @@ class productController extends Controller
             'error'
         ));
     }
+    
     
 
    

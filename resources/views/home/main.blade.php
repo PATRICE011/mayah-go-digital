@@ -76,7 +76,7 @@
             </ul>
 
             <!-- products -->
-            <div class="products__content grid" id="prodSearch">
+            <div class="products__content grid" >
                 @if ($products->isEmpty())
                     <p>No products found for "{{ request('search') }}"</p>
                 @else
@@ -101,7 +101,7 @@
                 @endforeach
                 @endif
             </div>
-
+            
         </div>
     </section>
 </main>
