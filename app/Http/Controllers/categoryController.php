@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-class categoryController extends Controller
+class CategoryController extends Controller
 {
     //
     public function getCategory(Request $request)
