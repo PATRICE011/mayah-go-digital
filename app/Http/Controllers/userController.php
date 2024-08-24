@@ -14,7 +14,7 @@ use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Category;
 
-class userController extends Controller
+class UserController extends Controller
 {
     public function viewDashboard()
     {

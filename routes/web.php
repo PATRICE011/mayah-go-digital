@@ -18,7 +18,8 @@ Route::get('/products', [ProductController::class, 'search'])->name('searchProdu
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
-    
+    // public routes
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
     
     Route::get('/register', [UserController::class, 'getRegister'])->name('users.register');
     Route::get('/login', [UserController::class, 'getLogin'])->name('users.login');
