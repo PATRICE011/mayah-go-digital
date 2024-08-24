@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-class OtpController extends Controller
+class otpController extends Controller
 {
     //
     public function showOtp(){

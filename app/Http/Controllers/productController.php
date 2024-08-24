@@ -82,6 +82,8 @@ class productController extends Controller
     
         $products = $query->with('category')->get();
         $categories = Category::withCount('products')->get();
+        // $categories = Category::where('name', '!=', 'Show All')->get();
+
     
         if (Auth::check()) {
             $cart = Cart::where('user_id', Auth::id())->first();
@@ -99,7 +101,5 @@ class productController extends Controller
             'error'
         ));
     }
-    
 
-   
 }

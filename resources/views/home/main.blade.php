@@ -67,6 +67,12 @@
 
             <!-- categories -->
             <ul class="products__filters">
+                <!-- Manually add 'Show All' button here -->
+                <!-- <li class="products__item products__line" data-filter="all">
+                    <h3 class="products__title">Show All</h3>
+                </li> -->
+
+                <!-- Loop through categories -->
                 @foreach ($categories as $category)
                     <li class="products__item products__line" data-filter=".{{ $category->slug }}.all">
                         <h3 class="products__title">{{ $category->category_name }}</h3>
@@ -74,6 +80,8 @@
                     </li>
                 @endforeach
             </ul>
+
+
 
             <!-- products -->
             <div class="products__content grid" id="prodSearch">

@@ -675,10 +675,6 @@ img {
 }
 
 /*=============== PRODUCTS ===============*/
-<<<<<<< HEAD
-=======
-
->>>>>>> e6029c2b730e1ecd81ba48f7ded8faf8e4731e65
 .products__filters{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -703,10 +699,6 @@ img {
 }
 
 .products__item{
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
   cursor: pointer;
 }
 
