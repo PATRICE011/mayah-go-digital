@@ -58,4 +58,14 @@ class cartController extends Controller
     
         return view('home.cartinside', ['cartItems' => $cartItems]);
     }
+
+    public function checkout()
+    {
+        // Logic for handling the checkout process
+        // For example, you might want to redirect to a payment page, or process the cart contents
+        
+        // Example logic (you will need to adjust based on your application needs)
+        // This could be redirecting to a checkout view or handling payment processing
+        return view('home.checkout'); // Assuming you have a 'checkout.blade.php' in your views folder
+    }
 }

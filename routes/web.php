@@ -35,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
     // // Cart routes
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
     Route::post('/cart/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
+
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
 });
 
 // Admin Routes

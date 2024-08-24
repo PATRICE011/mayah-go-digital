@@ -254,6 +254,9 @@ img {
   right: -100%;
   padding: 3.5rem 2rem;
   transition: .4s;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .cart__title-center {
@@ -272,8 +275,29 @@ img {
 }
 
 .cart__container {
-  display: grid;
-  row-gap: 1.5rem;
+  /* display: grid;
+  row-gap: 1.5rem; */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.cart__checkout-button {
+  margin-top: auto; /* Pushes the button to the bottom */
+  margin-bottom: 20px; /* Adds spacing at the bottom */
+  width: 100%; /* Make the button full-width if desired */
+  padding: 1rem; /* Adjust padding for button size */
+  background-color: var(--first-color); /* Button background color */
+  color: #fff; /* Button text color */
+  text-align: center; /* Center the text inside the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.cart__checkout-button a{
+  color: white;
 }
 
 .cart__card {
