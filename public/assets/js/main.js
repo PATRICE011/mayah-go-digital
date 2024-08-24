@@ -19,7 +19,7 @@ const cart = document.getElementById('cart'),
       cartShop = document.getElementById('cart-shop'),
       cartClose = document.getElementById('cart-close')
 
-/*===== CART SHOW =====*/
+/*=============== CART SHOW ===============*/
 /* Validate if constant exists */
 if(cartShop){
     cartShop.addEventListener('click', () =>{
@@ -28,7 +28,7 @@ if(cartShop){
     })
 }
 
-/*===== CART HIDDEN =====*/
+/*=============== CART HIDDEN ===============*/
 /* Validate if constant exists */
 if(cartClose){
     cartClose.addEventListener('click', () =>{

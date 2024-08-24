@@ -9,6 +9,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
+
+
 // public routes
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // search
@@ -40,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'showCart'])->name('home.cartinside');
     Route::post('/cart/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
 
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
     
 });
 

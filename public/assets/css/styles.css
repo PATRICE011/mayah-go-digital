@@ -675,9 +675,6 @@ img {
 }
 
 /*=============== PRODUCTS ===============*/
-.products__container{
-  /* padding: 4rem 0 2.5rem; */
-}
 .products__filters{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
