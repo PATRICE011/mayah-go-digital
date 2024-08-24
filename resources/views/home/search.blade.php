@@ -6,7 +6,5 @@
     </form>
     
     <i class="ri-close-line search__close" id="search-close"></i>
-    <!-- @if (isset($error))
-        <p class="search__error">{{ $error }}</p>
-    @endif -->
+   
 </div>

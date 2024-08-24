@@ -59,49 +59,80 @@
     </section>
 
     <!--==================== PRODUCTS ====================-->
-    <section class="products section" id="products">
-        <div class="products__container container">
-            <h2 class="home__title section__title">
-                Choose our delicious and best products
-            </h2>
+    
+<section class="products section" id="products">
+    <div class="products__container container">
+        <h2 class="home__title section__title">
+            Choose our delicious and best products
+        </h2>
 
-            <!-- categories -->
-            <ul class="products__filters">
-                @foreach ($categories as $category)
-                    <li class="products__item products__line" data-filter=".{{ $category->slug }}.all">
-                        <h3 class="products__title">{{ $category->category_name }}</h3>
-                        <span class="products__stock">{{ $category->products_count }} Products</span>
-                    </li>
-                @endforeach
-            </ul>
-
-            <!-- products -->
-            <div class="products__content grid" >
-                @if ($products->isEmpty())
-                    <p>No products found for "{{ request('search') }}"</p>
-                @else
-                @foreach ($products as $product)
-                    <article class="products__card {{ $product->category->slug }} all">
-                        <div class="products__shape">
-                            <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="" class="products__img">
-                        </div>
-                        <div class="products__data">
-                            <h2 class="products__price">{{ $product->product_price }} Pesos</h2>
-                            <h3 class="products__name">{{ $product->product_name }}</h3>
-                            <!-- Add product to cart button -->
-                            <form action="{{ route('home.inserttocart') }}" method="POST" class="add-to-cart-form">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $product->id }}">
-                                <button type="submit" class="button products__button">
-                                    <i class='bx bx-shopping-bag'></i>
-                                </button>
-                            </form>
-                            </div>
-                        </article>
-                @endforeach
-                @endif
-            </div>
-            
+        <!-- products -->
+        
+    @if(isset($error) && $error)
+    <div class="searchResult"><h3 >-> Search Result</h3></div>
+    <div class="products__content grid">
+        <p>{{ $error }}</p>
         </div>
-    </section>
+    @elseif(isset($results) && count($results) > 0)
+    <div class="searchResult"><h3 >-> Search Result</h3></div>
+    <div class="products__content grid">
+   
+        @foreach ($results as $result)
+            <article class="products__card {{ $result->category->slug }} all">
+                <div class="products__shape">
+                    <img src="{{ asset('assets/img/' . $result->product_image) }}" alt="" class="products__img">
+                </div>
+                <div class="products__data">
+                    <h2 class="products__price">{{ $result->product_price }} Pesos</h2>
+                    <h3 class="products__name">{{ $result->product_name }}</h3>
+                    <!-- Add product to cart button -->
+                    <form action="{{ route('home.inserttocart') }}" method="POST" class="add-to-cart-form">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $result->id }}">
+                        <button type="submit" class="button products__button">
+                            <i class='bx bx-shopping-bag'></i>
+                        </button>
+                    </form>
+                </div>
+            </article>
+        @endforeach
+        </div>
+    @else
+      <!-- categories -->
+      <ul class="products__filters">
+            @foreach ($categories as $category)
+                <li class="products__item products__line" data-filter=".{{ $category->slug }}.all">
+                    <h3 class="products__title">{{ $category->category_name }}</h3>
+                    <span class="products__stock">{{ $category->products_count }} Products</span>
+                </li>
+            @endforeach
+        </ul>
+    <div class="products__content grid">
+        @foreach ($products as $product)
+            <article class="products__card {{ $product->category->slug }} all">
+                <div class="products__shape">
+                    <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="" class="products__img">
+                </div>
+                <div class="products__data">
+                    <h2 class="products__price">{{ $product->product_price }} Pesos</h2>
+                    <h3 class="products__name">{{ $product->product_name }}</h3>
+                    <!-- Add product to cart button -->
+                    <form action="{{ route('home.inserttocart') }}" method="POST" class="add-to-cart-form">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $product->id }}">
+                        <button type="submit" class="button products__button">
+                            <i class='bx bx-shopping-bag'></i>
+                        </button>
+                    </form>
+                </div>
+            </article>
+        @endforeach
+        </div>
+    @endif
+
+
+    </div>
+</section>
+
+
 </main>
