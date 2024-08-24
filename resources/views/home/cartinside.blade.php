@@ -42,4 +42,11 @@
     @else
         <p>Your cart is empty.</p>
     @endif
+
+    <!-- <button class="checkout">CHECKOUT</button> -->
+    <button class="cart__checkout-button">
+        <a href="{{route('home.checkout')}}">
+            Checkout
+        </a>
+    </button>
 </div>
