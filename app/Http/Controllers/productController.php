@@ -72,19 +72,23 @@ class productController extends Controller
     // search product
     public function search(Request $request)
     {
+        // Fetch all categories with product counts
+        $categories = Category::withCount('products')->get();
+    
+        // Initialize the query for products
+        $products = Product::all();
         $query = Product::query();
     
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->input('search'))) {
             $keyword = e($request->input('search'));
             $firstLetter = substr($keyword, 0, 1);  // Get the first letter of the keyword
             $query->where('product_name', 'LIKE', "$firstLetter%");
         }
     
-        $products = $query->with('category')->get();
-        $categories = Category::withCount('products')->get();
-        // $categories = Category::where('name', '!=', 'Show All')->get();
-
+        // Get the filtered products
+        $results = $query->with('category')->get();
     
+        // Check if the user is authenticated to fetch their cart items
         if (Auth::check()) {
             $cart = Cart::where('user_id', Auth::id())->first();
             $cartItems = $cart ? $cart->items : collect();
@@ -92,10 +96,13 @@ class productController extends Controller
             $cartItems = collect();
         }
     
-        $error = $products->isEmpty() ? 'No products found for "' . $request->input('search') . '"' : null;
+        // Define the error message if no products are found
+        $error = $results->isEmpty() ? 'No products found for "' . $request->input('search') . '"' : null;
     
+        // Return the view with the necessary data
         return view('home.index', compact(
             'products', 
+            'results',
             'categories',
             'cartItems',
             'error'

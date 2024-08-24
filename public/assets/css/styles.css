@@ -1194,3 +1194,8 @@ img {
   color: red;
   margin-top: 10px;
 }
+
+.searchResult{
+  position: relative;
+  margin-bottom: 20px;
+}
