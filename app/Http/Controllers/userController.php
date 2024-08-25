@@ -102,7 +102,7 @@ class UserController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->intended(route('home.index'));
+            return redirect()->route('home.index')->with('message', 'Login Successful!');
         }
 
         // If login fails, return back with an error
@@ -114,48 +114,50 @@ class UserController extends Controller
 
 
     public function postRegister(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'mobile' => [
-            'required',
-            'string',
-            'max:15',
-            'unique:users_area',
-            function ($attribute, $value, $fail) {
-                // Check if the mobile number exists in the admins table
-                if (Admin::where('mobile', $value)->exists()) {
-                    $fail('The mobile number is already associated with an admin account.');
-                }
-            },
-        ],
-        
-        'password' => 'required|string|min:8|confirmed',
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'mobile' => [
+                'required',
+                'string',
+                'max:15',
+                'unique:users_area',
+                function ($attribute, $value, $fail) {
+                    // Check if the mobile number exists in the admins table
+                    if (Admin::where('mobile', $value)->exists()) {
+                        $fail('The mobile number is already associated with an admin account.');
+                    }
+                },
+            ],
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        // Generate OTP code
+        $otp = rand(100000, 999999);
+    
+        // Temporarily store user data in session
+        $request->session()->put('user_data', [
+            'name' => $request->name,
+            'mobile' => $request->mobile,
+            'address' => $request->address,
+            'password' => Hash::make($request->password),
+            'otp' => $otp,
+            'is_admin' => $request->is_admin ?? 0,
+        ]);
+    
+        // Send OTP via Semaphore
+        $otpController = new OtpController();
+        $otpController->sendOtp($request->mobile, $otp);
+    
+        return redirect()->route('users.otp')
+        ->with('message', 'Registration successful! Please check your mobile for the OTP.');
     }
-
-    // Generate OTP code
-    $otp = rand(100000, 999999);
-
-    // Create the user
-    $user = User::create([
-        'name' => $request->name,
-        'mobile' => $request->mobile,
-        'address' => $request->address,
-        'password' => Hash::make($request->password),
-        'otp' => $otp,
-        'is_admin' => $request->is_admin ?? 0,
-    ]);
-
-    // Send OTP via Semaphore
-    $otpController = new OtpController();
-    $otpController->sendOtp($user->mobile, $otp);
-
-    return redirect()->route('users.otp');
-}
+    
 
     public function logout(Request $request)
     {

@@ -10,14 +10,6 @@
             @csrf
             <h2 class="login__title">OTP Verification</h2>
 
-            @if(session('error'))
-                <p style="color: red;">{{ session('error') }}</p>
-            @endif
-
-            @if(session('success'))
-                <p style="color: green;">{{ session('success') }}</p>
-            @endif
-
             @if ($errors->any())
                 <div style="color: red;">
                     <ul>
@@ -35,13 +27,11 @@
 
             <button type="submit" class="login__button">Submit</button>
             
-            <!-- Resend OTP Link -->
             <p class="login__resend">
                 Didn't receive the OTP? <a href="#" onclick="event.preventDefault(); document.getElementById('resend-otp-form').submit();">Resend OTP</a>
             </p>
         </form>
 
-        <!-- Hidden Form to Resend OTP -->
         <form id="resend-otp-form" action="{{ route('users.resendOtp') }}" method="POST" style="display: none;">
             @csrf
         </form>
@@ -49,5 +39,34 @@
 
     @include('home.main')
     @include('home.footer')
-    <script src="assets/js/login.js"></script>
+
+    <!-- Custom scripts after Toastr -->
+   
+    @if (Session::has('message'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+
+        toastr.success("{{ Session::get('message') }}");
+    </script>
+    @endif
+
+    @if (Session::has('error'))
+        <script>
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000",
+            };
+
+            toastr.error("{{ Session::get('error') }}");
+        </script>
+    @endif
+
+
 @endsection
