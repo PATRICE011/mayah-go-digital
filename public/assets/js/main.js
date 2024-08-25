@@ -167,4 +167,105 @@ window.addEventListener('load', function() {
 });
 
 
+// Add to Cart function using AJAX
+document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const productId = this.getAttribute('data-id');
+        
+        // Set a flag in localStorage to keep the cart open
+        localStorage.setItem('keepCartOpen', 'true');
+        
+        // AJAX request to add product to cart
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ product_id: productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the cart contents dynamically
+                document.querySelector('.cart__container').innerHTML = data.cart_html;
+                document.querySelector('.cart__prices-total').textContent = `$${data.total}`;
+                document.querySelector('.cart__prices-item').textContent = `${data.items} items`;
+
+                // Keep the cart open
+                document.getElementById('cart').classList.add('show-cart');
+            } else {
+                alert('Failed to add product to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding product to cart:', error);
+        });
+    });
+});
+
+// Side cart management on page load
+window.addEventListener('load', function() {
+    const keepCartOpen = localStorage.getItem('keepCartOpen');
+    
+    if (keepCartOpen === 'true') {
+        // Remove the flag from localStorage
+        localStorage.removeItem('keepCartOpen');
+        
+        // Open the side cart
+        document.getElementById('cart').classList.add('show-cart');
+    }
+});
+
+// Side cart
+
+document.querySelectorAll('.cart__amount-trash').forEach(button => {
+    button.addEventListener('click', function() {
+        // Set a flag in localStorage to keep the cart open
+        localStorage.setItem('keepCartOpen', 'true');
+        
+        // Submit the form to delete the item
+        const itemId = this.getAttribute('data-id');
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/cart/${itemId}`;
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    });
+});
+
+window.addEventListener('load', function() {
+    const keepCartOpen = localStorage.getItem('keepCartOpen');
+    
+    if (keepCartOpen === 'true') {
+        // Remove the flag from localStorage
+        localStorage.removeItem('keepCartOpen');
+        
+        // Open the side cart
+        document.getElementById('cart').classList.add('show-cart'); // Add 'show-cart' class to open the cart
+    }
+});
+
+
+
+
+
 

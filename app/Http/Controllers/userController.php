@@ -102,7 +102,7 @@ class UserController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->route('home.index')->with('message', 'Login Successful!');
+            return redirect()->route('users.usersdashboard')->with('message', 'Login Successful!');
         }
 
         // If login fails, return back with an error
