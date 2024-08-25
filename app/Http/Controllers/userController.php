@@ -166,7 +166,7 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         $request->session()->forget('name');
 
-        return redirect(route('home.index'));
+        return redirect(route('home.index'))->with('message',' Logout Successful');
     }
 }
 
