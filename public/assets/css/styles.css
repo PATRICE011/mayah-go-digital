@@ -275,25 +275,23 @@ img {
 }
 
 .cart__container {
-  /* display: grid;
-  row-gap: 1.5rem; */
-
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1.5rem; 
   height: 100%;
 }
 
+
 .cart__checkout-button {
-  margin-top: auto; /* Pushes the button to the bottom */
-  margin-bottom: 20px; /* Adds spacing at the bottom */
-  width: 100%; /* Make the button full-width if desired */
-  padding: 1rem; /* Adjust padding for button size */
-  background-color: var(--first-color); /* Button background color */
-  color: #fff; /* Button text color */
-  text-align: center; /* Center the text inside the button */
-  cursor: pointer; /* Pointer cursor on hover */
-  border-radius: 10px; /* Rounded corners */
+  margin-top: 15px; 
+  margin-bottom: auto; 
+  width: 100%; 
+  padding: 1rem; 
+  background-color: var(--first-color); 
+  color: #fff; 
+  text-align: center; 
+  cursor: pointer; 
+  border-radius: 10px; 
 }
 
 .cart__checkout-button a{
@@ -308,12 +306,13 @@ img {
 
 .cart__box {
   background-color: var(--container-color);
-  padding: .75rem 1.25rem;
+  padding: .50rem 0.90rem;
   border: 1px solid var(--border-color);
+  border-radius: 10px;
 }
 
 .cart__img {
-  width: 50px;
+  width: 60px;
 }
 
 .cart__title {

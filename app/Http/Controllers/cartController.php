@@ -68,4 +68,17 @@ class cartController extends Controller
         // This could be redirecting to a checkout view or handling payment processing
         return view('home.checkout'); // Assuming you have a 'checkout.blade.php' in your views folder
     }
+
+    // delete 
+    public function destroy($id)
+    {
+        // Find the cart item by ID
+        $cartItem = CartItem::findOrFail($id);
+
+        // Delete the cart item
+        $cartItem->delete();
+
+       
+        return redirect()->route('users.usersdashboard')->with('message', 'Item removed from cart.');
+    }
 }

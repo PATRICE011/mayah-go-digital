@@ -48,5 +48,19 @@
     
     @include('home.main')
     @include('home.footer')
+
     <script src="assets/js/login.js"></script>
+
+    @if (Session::has('message'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+
+        toastr.success("{{ Session::get('message') }}");
+    </script>
+    @endif
 @endsection

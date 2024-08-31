@@ -28,7 +28,13 @@
                                 </span>
                             </div>
 
-                            <i class='bx bx-trash-alt cart__amount-trash'></i>
+                            <form action="{{ route('cartDestroy', $item->id) }}" method="POST" class="cart__delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="cart__amount-trash">
+                                    <i class='bx bx-trash-alt'></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </article>
@@ -39,14 +45,17 @@
             <span class="cart__prices-item">{{ count($cartItems) }} items</span>
             <span class="cart__prices-total">${{ $cartItems->sum(fn($item) => $item->product->product_price * $item->quantity) }}</span>
         </div>
+
+        <button class="cart__checkout-button">
+            <a href="{{route('home.checkout')}}">
+                Checkout
+            </a>
+        </button>
+      
     @else
         <p>Your cart is empty.</p>
     @endif
 
     <!-- <button class="checkout">CHECKOUT</button> -->
-    <button class="cart__checkout-button">
-        <a href="{{route('home.checkout')}}">
-            Checkout
-        </a>
-    </button>
+    
 </div>
