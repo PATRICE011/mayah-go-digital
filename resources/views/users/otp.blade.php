@@ -28,7 +28,8 @@
             <button type="submit" class="login__button">Submit</button>
             
             <p class="login__resend">
-                Didn't receive the OTP? <a href="#" id="resend-link" onclick="event.preventDefault(); if(!this.classList.contains('disabled')) { document.getElementById('resend-otp-form').submit(); }">Resend OTP</a>
+                Didn't receive the OTP? <a href="#" id="resendLink" onclick="startTimer(60, this)">Resend OTP</a>
+                <span id="timer" style="display:none;">Please wait for 60 seconds to resend OTP.</span>
             </p>
 
         </form>
@@ -42,32 +43,6 @@
     @include('home.footer')
 
     <!-- Custom scripts after Toastr -->
-
-    @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var resendLink = document.getElementById('resend-link');
-        var timer = 60; // Timer set for 60 seconds
-
-        // Disable the link initially
-        resendLink.classList.add('disabled');
-        resendLink.style.pointerEvents = 'none';
-
-        var interval = setInterval(function() {
-            if (timer <= 0) {
-                clearInterval(interval);
-                resendLink.textContent = 'Resend OTP';
-                resendLink.classList.remove('disabled');
-                resendLink.style.pointerEvents = 'auto';
-            } else {
-                resendLink.textContent = 'Please wait ' + timer + ' seconds';
-                timer--;
-            }
-        }, 1000);
-    });
-</script>
-@endsection
-
    
     @if (Session::has('message'))
     <script>
@@ -95,5 +70,30 @@
         </script>
     @endif
 
+    <script>
+        function startTimer(duration, linkElement) {
+            var timer = duration, minutes, seconds;
+            linkElement.style.display = 'none';
+            var timerSpan = document.getElementById('timer');
+            timerSpan.style.display = '';
+
+            var interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                timerSpan.textContent = 'Please wait ' + minutes + ":" + seconds + ' seconds to resend OTP.';
+
+                if (--timer < 0) {
+                    timer = duration;
+                    clearInterval(interval);
+                    linkElement.style.display = '';
+                    timerSpan.style.display = 'none';
+                    document.getElementById('resend-otp-form').submit();
+                }
+            }, 1000);
+        }
+    </script>
 
 @endsection

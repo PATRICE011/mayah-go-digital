@@ -293,11 +293,6 @@ img {
   transform: translateY(0);
 }
 
-.disabled {
-  color: grey;
-  cursor: not-allowed;
-}
-
 /*=============== LOGIN AND REGISTER ===============*/
 .login__form, 
 .login__group {
