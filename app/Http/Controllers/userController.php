@@ -13,7 +13,7 @@ use App\Models\Product;
 use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Category;
-
+use Carbon\Carbon; 
 class UserController extends Controller
 {
     public function viewDashboard()
@@ -111,8 +111,6 @@ class UserController extends Controller
         ]);
     }
 
-
-
     public function postRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -137,16 +135,19 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        // Generate OTP code
-        $otp = rand(100000, 999999);
     
-        // Temporarily store user data in session
+        // Generate OTP code and its creation time
+        $otp = rand(100000, 999999);
+        $otpCreatedAt = new \DateTime(); // Current time
+    
+        // Temporarily store user data and OTP creation time in session
         $request->session()->put('user_data', [
             'name' => $request->name,
             'mobile' => $request->mobile,
             'address' => $request->address,
             'password' => Hash::make($request->password),
             'otp' => $otp,
+            'otp_created_at' => $otpCreatedAt->format('Y-m-d H:i:s'), // Store as string
             'is_admin' => $request->is_admin ?? 0,
         ]);
     
@@ -155,18 +156,8 @@ class UserController extends Controller
         $otpController->sendOtp($request->mobile, $otp);
     
         return redirect()->route('users.otp')
-        ->with('message', 'Registration successful! Please check your mobile for the OTP.');
+            ->with('message', 'Registration successful! Please check your mobile for the OTP.');
     }
     
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        $request->session()->forget('name');
-
-        return redirect(route('home.index'))->with('message',' Logout Successful');
-    }
 }
 
