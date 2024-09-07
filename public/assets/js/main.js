@@ -206,6 +206,43 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
     });
 });
 
+document.querySelectorAll('.increase').forEach(button => {
+    button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const quantityElement = document.getElementById(`quantity-${id}`);
+        let quantity = parseInt(quantityElement.textContent);
+        quantityElement.textContent = ++quantity;
+        document.getElementById(`input-quantity-${id}`).value = quantity;
+
+        updateTotalPrice();
+    });
+});
+
+document.querySelectorAll('.decrease').forEach(button => {
+    button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const quantityElement = document.getElementById(`quantity-${id}`);
+        let quantity = parseInt(quantityElement.textContent);
+        if (quantity > 1) {
+            quantityElement.textContent = --quantity;
+            document.getElementById(`input-quantity-${id}`).value = quantity;
+
+            updateTotalPrice();
+        }
+    });
+});
+
+function updateTotalPrice() {
+    let total = 0;
+    document.querySelectorAll('.cart__card').forEach(card => {
+        const id = card.querySelector('.decrease').getAttribute('data-id');
+        const price = parseFloat(document.getElementById(`price-${id}`).textContent.replace('$', ''));
+        const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent);
+        total += price * quantity;
+    });
+    document.querySelector('.cart__prices-total').textContent = `$${total.toFixed(2)}`;
+}
+
 // Side cart management on page load
 window.addEventListener('load', function() {
     const keepCartOpen = localStorage.getItem('keepCartOpen');
@@ -263,9 +300,3 @@ window.addEventListener('load', function() {
         document.getElementById('cart').classList.add('show-cart'); // Add 'show-cart' class to open the cart
     }
 });
-
-
-
-
-
-

@@ -65,6 +65,11 @@
             </div>
       </footer>
 
+      <!--=============== MESSAGE US ===============-->
+      <a href="#" class="scrollup-1" id="scroll-up-1">
+        <i class='bx bx-message-square-dots'></i>
+      </a>
+
       <!--=============== SCROLL UP ===============-->
       <a href="#" class="scrollup" id="scroll-up">
         <i class='bx bx-up-arrow-alt' ></i>
