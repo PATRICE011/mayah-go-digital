@@ -115,7 +115,7 @@ class otpController extends Controller
         // Check if OTP is expired
         if ($interval->i > $otpValidityPeriod || ($interval->i == $otpValidityPeriod && $interval->s > 0)) {
             // OTP is expired
-            $request->session()->forget('user_data'); // Clear the session data
+           
             return redirect()->back()->with('error', 'The OTP has expired. Please request a new one.');
         }
 
@@ -144,39 +144,34 @@ class otpController extends Controller
     }
 }
 
-    
-    
-    // request new otp
-    public function resendOtp(Request $request)
-    {
-        // Validate mobile number or other necessary fields
-    $request->validate([
-        'mobile' => 'required|string'
-    ]);
+public function resendOtp(Request $request)
+{
+    // Retrieve user data from session
+    $userData = $request->session()->get('user_data');
 
-    // Find the user by mobile number
-    $user = User::where('mobile', $request->mobile)->first();
-
-    if (!$user) {
-        return redirect()->back()->with('error', 'User not found.');
+    if (!$userData || !isset($userData['mobile'])) {
+        return redirect()->back()->with('error', 'Session data not found or mobile number missing.');
     }
 
     // Generate a new OTP
     $otp = rand(100000, 999999); // Generate a 6-digit OTP
 
-    // Update user with new OTP and reset attempts
-    $user->otp = $otp;
-    $user->otp_created_at = now(); // Update the OTP timestamp
-    $user->otp_attempts = 0; // Reset the OTP attempts counter
-    $user->save();
+    // Update session data with new OTP and timestamp
+    $request->session()->put('user_data', array_merge($userData, [
+        'otp' => $otp,
+        'otp_created_at' => now()->toDateTimeString(), // Update the OTP timestamp
+    ]));
 
     // Send the new OTP
     try {
-        $this->sendOtp($user->mobile, $otp);
-        return redirect()->back()->with('success', 'A new OTP has been sent to your mobile number.');
+        $this->sendOtp($userData['mobile'], $otp);
+        return redirect()->back()->with('message', 'A new OTP has been sent to your mobile number.');
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
     }
-    }
+}
+
+
+    
 
 }
