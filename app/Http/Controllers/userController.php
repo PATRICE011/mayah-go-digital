@@ -14,7 +14,7 @@ use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Category;
 use Carbon\Carbon; 
-class UserController extends Controller
+class userController extends Controller
 {
     public function viewDashboard()
     {
@@ -158,6 +158,14 @@ class UserController extends Controller
         return redirect()->route('users.otp')
             ->with('message', 'Registration successful! Please check your mobile for the OTP.');
     }
-    
-}
 
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $request->session()->forget('name');
+
+        return redirect(route('home.index'))->with('message',' Logout Successful');
+    }
+}

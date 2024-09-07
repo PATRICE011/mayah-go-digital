@@ -28,8 +28,9 @@
             <button type="submit" class="login__button">Submit</button>
             
             <p class="login__resend">
-                Didn't receive the OTP? <a href="#" onclick="event.preventDefault(); document.getElementById('resend-otp-form').submit();">Resend OTP</a>
+                Didn't receive the OTP? <a href="#" id="resend-link" onclick="event.preventDefault(); if(!this.classList.contains('disabled')) { document.getElementById('resend-otp-form').submit(); }">Resend OTP</a>
             </p>
+
         </form>
 
         <form id="resend-otp-form" action="{{ route('users.resendOtp') }}" method="POST" style="display: none;">
@@ -41,6 +42,32 @@
     @include('home.footer')
 
     <!-- Custom scripts after Toastr -->
+
+    @section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var resendLink = document.getElementById('resend-link');
+        var timer = 60; // Timer set for 60 seconds
+
+        // Disable the link initially
+        resendLink.classList.add('disabled');
+        resendLink.style.pointerEvents = 'none';
+
+        var interval = setInterval(function() {
+            if (timer <= 0) {
+                clearInterval(interval);
+                resendLink.textContent = 'Resend OTP';
+                resendLink.classList.remove('disabled');
+                resendLink.style.pointerEvents = 'auto';
+            } else {
+                resendLink.textContent = 'Please wait ' + timer + ' seconds';
+                timer--;
+            }
+        }, 1000);
+    });
+</script>
+@endsection
+
    
     @if (Session::has('message'))
     <script>
