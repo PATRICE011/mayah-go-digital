@@ -10,7 +10,8 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-class otpController extends Controller
+use Carbon\Carbon; 
+class OtpController extends Controller
 {
     //
     public function showOtp(){
@@ -44,7 +45,7 @@ class otpController extends Controller
         $client = new Client();
     
         // Message content
-        $message = "Your OTP for MAYAHSTORE is $otp. Please enter this code to verify your account. This code is valid for 5 minutes.";
+        $message = "Your OTP for MAYAHSTORE is $otp. Please enter this code to verify your account. This code is valid for 1 minute.";
     
         try {
             // Log the request payload
@@ -102,27 +103,49 @@ class otpController extends Controller
     // Retrieve user data from session
     $userData = $request->session()->get('user_data');
 
-    if ($userData && $userData['otp'] == $request->otp) {
-        // Create the user
-        $user = User::create([
-            'name' => $userData['name'],
-            'mobile' => $userData['mobile'],
-            'address' => $userData['address'],
-            'password' => $userData['password'],
-            'is_admin' => $userData['is_admin'],
-        ]);
-        return redirect(route('users.login'))->with('message', 'OTP verified successfully.');
-        
+    if ($userData) {
+        $otp = $userData['otp'];
+        $otpCreatedAt = new \DateTime($userData['otp_created_at']); // Parse stored date-time string
+        $otpValidityPeriod = 1; // in minutes
 
-       
+        // Check if OTP is still valid
+        $currentDateTime = new \DateTime(); // Current time
+        $interval = $currentDateTime->diff($otpCreatedAt);
+
+        // Check if OTP is expired
+        if ($interval->i > $otpValidityPeriod || ($interval->i == $otpValidityPeriod && $interval->s > 0)) {
+            // OTP is expired
+            $request->session()->forget('user_data'); // Clear the session data
+            return redirect()->back()->with('error', 'The OTP has expired. Please request a new one.');
+        }
+
+        // Check if OTP is correct
+        if ($otp == $request->otp) {
+            // Create the user
+            $user = User::create([
+                'name' => $userData['name'],
+                'mobile' => $userData['mobile'],
+                'address' => $userData['address'],
+                'password' => $userData['password'],
+                'is_admin' => $userData['is_admin'],
+            ]);
+
+            // Clear the OTP from session
+            $request->session()->forget('user_data');
+
+            return redirect(route('users.login'))->with('message', 'OTP verified successfully.');
+        } else {
+            // OTP is invalid or wrong
+            return redirect()->back()->with('error', 'Invalid OTP, please try again.');
+        }
     } else {
-        // Handle invalid OTP and redirect back with an error message
-        return redirect()->back()->with('error', 'Invalid OTP, please try again.');
+        // Handle missing session data
+        return redirect()->back()->with('error', 'Session data not found. Please try again.');
     }
 }
 
     
-
+    
     // request new otp
     public function resendOtp(Request $request)
     {
