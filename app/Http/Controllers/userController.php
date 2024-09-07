@@ -111,6 +111,8 @@ class UserController extends Controller
         ]);
     }
 
+
+
     public function postRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -159,5 +161,15 @@ class UserController extends Controller
             ->with('message', 'Registration successful! Please check your mobile for the OTP.');
     }
     
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $request->session()->forget('name');
+
+        return redirect(route('home.index'))->with('message',' Logout Successful');
+    }
 }
 
