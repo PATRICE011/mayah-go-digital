@@ -68,3 +68,14 @@ Route::middleware('auth:admin')->group(function () {
     Route::put('/admin/categories/{id}', [categoryController::class, 'update'])->name('admins.category.update');
     Route::delete('/admin/categories/{id}', [categoryController::class, 'destroy'])->name('admins.category.destroy');
 });
+
+// Add this to your web.php for quick testing or create a new command
+Route::get('/test-sms', function () {
+    $admin = App\Models\Admin::first(); // Assuming Admin is correctly set up
+    if ($admin) {
+        app('App\Console\Commands\CheckLowStock')->sendSms($admin->mobile, 'Test SMS from Laravel');
+        return 'SMS sent!';
+    }
+    return 'Admin not found.';
+});
+

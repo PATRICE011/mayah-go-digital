@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
        // Apply filter
        const filter = this.getAttribute('data-filter');
-       // Check if filter is 'all' and apply an empty filter to show all products
+    //    Check if filter is 'all' and apply an empty filter to show all products
        mixerProducts.filter(filter === '.all' ? '' : filter);
    }
 

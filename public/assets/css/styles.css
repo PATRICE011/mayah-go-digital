@@ -698,10 +698,6 @@ img {
 }
 
 .products__item{
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
   cursor: pointer;
 }
 
@@ -764,6 +760,18 @@ img {
 
 .products__card:hover .products__img{
   transform: translateY(-0.25rem);
+}
+
+.low-of-stock,
+.out-of-stock{
+  color: red;
+  font-weight: bold;
+}
+
+.grayed-out {
+  opacity: 0.6;
+  background-color: #f0f0f0;
+  pointer-events: none; /* Disables interactions */
 }
 
 /* Active link products */

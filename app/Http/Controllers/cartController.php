@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class CartController extends Controller
+class cartController extends Controller
 {
     //
     public function addtocart(Request $request)
