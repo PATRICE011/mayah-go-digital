@@ -1231,3 +1231,8 @@ img {
   position: relative;
   margin-bottom: 20px;
 }
+
+sup{
+  font-size: 15px;
+  padding-left: 3px;
+}

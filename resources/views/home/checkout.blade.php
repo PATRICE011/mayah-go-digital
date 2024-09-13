@@ -16,7 +16,7 @@
                     <strong>Mayah Store</strong>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Payment amount: <strong>₱ 750.00</strong></h5>
+                 
                     <p class="card-text">Payment for: This is the checkout description</p>
                     
                     <table class="table">
@@ -28,44 +28,64 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @foreach($cartItems as $item)
                             <tr>
-                                <td>Down Payment</td>
-                                <td>1</td>
-                                <td>₱ 750.00</td>
+                                <td>{{ $item->product->product_name }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td>₱ {{ number_format($item->product->product_price * $item->quantity, 2) }}</td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                     
                     <div class="total mb-3">
-                        <h5>Total: <strong>₱ 750.00</strong></h5>
+                        <h5>Total: <strong>₱ {{ number_format($cartItems->sum(function($item) { return $item->product->product_price * $item->quantity; }), 2) }}</strong></h5>
                     </div>
 
-                    <form>
+                    <form action="{{ route('goCheckout') }}" method="POST">
+                        @csrf
                         <div class="mb-3">
                             <label for="paymentMethod" class="form-label">Payment Method</label>
-                            <select class="form-select" id="paymentMethod">
+                            <select class="form-select" id="paymentMethod" name="paymentMethod">
                                 <option selected>Gcash</option>
                                 <option value="1">PayMaya</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter your name">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="name@example.com">
                         </div>
                         <div class="mb-3">
                             <label for="mobile" class="form-label">Mobile number (optional)</label>
-                            <input type="text" class="form-control" id="mobile" placeholder="+63">
+                            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ old('mobile') }}" placeholder="+63">
                         </div>
                         <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" id="terms">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" {{ old('terms') ? 'checked' : '' }}>
                             <label class="form-check-label" for="terms">I have read and agree to the terms and conditions</label>
                         </div>
-                        <button type="submit" class="btn btn-success">Checkout</button>
+                        <button type="submit" class="btn btn-success">Pay</button>
                     </form>
+                    
+                    @if(session('success'))
+                        <div class="alert alert-success mt-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger mt-3">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
                 </div>
             </div>
         </div>

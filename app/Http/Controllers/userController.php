@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Admin;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\Category;
 use Carbon\Carbon; 
 class UserController extends Controller
@@ -22,7 +23,18 @@ class UserController extends Controller
         $cart = Cart::where('user_id', Auth::id())->first();
         $categories = Category::withCount('products')->get();
         $cartItems = $cart ? $cart->items : collect();
+
+        // cart count
+        $userId = Auth::id(); 
+        $cart2 = Cart::where('user_id', $userId)->first(); // Get the cart associated with this user
         
+        if ($cart2) {
+            $count = CartItem::where('cart_id', $cart2->id)->count(); // Count cart items for the specific cart
+        } else {
+            $count = 0; // No cart found for this user
+        }
+
+
         $categories->prepend((object) [
             'slug' => 'all',
             'category_name' => 'Show All',
@@ -32,7 +44,8 @@ class UserController extends Controller
         return view('users.usersdashboard', [
             'products' => $products,
             'cartItems' => $cartItems,
-            'categories' =>  $categories
+            'categories' =>  $categories,
+            'count' => $count
         ]);
     }
 

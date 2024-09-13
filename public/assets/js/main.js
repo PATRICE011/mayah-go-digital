@@ -215,6 +215,7 @@ document.querySelectorAll('.increase').forEach(button => {
         document.getElementById(`input-quantity-${id}`).value = quantity;
 
         updateTotalPrice();
+        saveQuantityToDatabase(id, quantity);
     });
 });
 
@@ -228,9 +229,11 @@ document.querySelectorAll('.decrease').forEach(button => {
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
             updateTotalPrice();
+            saveQuantityToDatabase(id, quantity);
         }
     });
 });
+
 
 function updateTotalPrice() {
     let total = 0;
@@ -242,6 +245,31 @@ function updateTotalPrice() {
     });
     document.querySelector('.cart__prices-total').textContent = `$${total.toFixed(2)}`;
 }
+
+function saveQuantityToDatabase(id, quantity) {
+    fetch('/update-quantity', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // For Laravel
+        },
+        body: JSON.stringify({ id: id, quantity: quantity })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            toastr.success('Quantity updated successfully');
+        } else {
+            toastr.error('Failed to update quantity');
+        }
+    })
+    .catch(error => toastr.error('Error: ' + error.message));
+}
+
+
+
+
+
 
 // Side cart management on page load
 window.addEventListener('load', function() {

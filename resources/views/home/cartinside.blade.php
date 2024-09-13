@@ -57,6 +57,6 @@
         <p>Your cart is empty.</p>
     @endif
 
-    <!-- <button class="checkout">CHECKOUT</button> -->
+  
     
 </div>
