@@ -28,8 +28,10 @@
             <button type="submit" class="login__button">Submit</button>
             
             <p class="login__resend">
-                Didn't receive the OTP? <a href="#" onclick="event.preventDefault(); document.getElementById('resend-otp-form').submit();">Resend OTP</a>
+                Didn't receive the OTP? <a href="#" id="resendLink" onclick="startTimer(60, this)">Resend OTP</a>
+                <span id="timer" style="display:none;">Please wait for 60 seconds to resend OTP.</span>
             </p>
+
         </form>
 
         <form id="resend-otp-form" action="{{ route('users.resendOtp') }}" method="POST" style="display: none;">
@@ -68,5 +70,30 @@
         </script>
     @endif
 
+    <script>
+        function startTimer(duration, linkElement) {
+            var timer = duration, minutes, seconds;
+            linkElement.style.display = 'none';
+            var timerSpan = document.getElementById('timer');
+            timerSpan.style.display = '';
+
+            var interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                timerSpan.textContent = 'Please wait ' + minutes + ":" + seconds + ' seconds to resend OTP.';
+
+                if (--timer < 0) {
+                    timer = duration;
+                    clearInterval(interval);
+                    linkElement.style.display = '';
+                    timerSpan.style.display = 'none';
+                    document.getElementById('resend-otp-form').submit();
+                }
+            }, 1000);
+        }
+    </script>
 
 @endsection
