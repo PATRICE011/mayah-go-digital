@@ -67,59 +67,48 @@ class cartController extends Controller
         $cart = Cart::where('user_id', $user->id)->first();
         $cartItems = CartItem::where('cart_id', $cart->id)->get();
 
-        // $order = new Order();
-        // $order->user_id = $user->id;
-        // $order->total_price = $cartItems->sum(fn($item) => $item->product->product_price * $item->quantity);
-        // $order->status = 'Pending'; 
-        // $order->save();
         
         return view('home.checkout', compact('cartItems')); 
     }
 
     public function processCheckout(Request $request)
     {
-        // ===== FETCH USER NAME INSTEAD IN CHECKOUT PAGE ====
-         // Validate the request
-         $user = Auth::user();
-         $request->validate([
-            'paymentMethod' => 'required|string',
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'mobile' => 'nullable|string',
-            'terms' => 'required|accepted',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'email',
+            'paymentMethod' => 'required',
+            'terms' => 'accepted',
         ]);
-
-        // Fetch cart items
-        $cartItems = Cart::where('user_id', $user->id)->get();
-
-        // Calculate total amount
-        $totalAmount = $cartItems->sum(function($item) {
-            return $item->product->product_price * $item->quantity;
-        });
-
-        // Create an order
+        $user = Auth::user();
+        // Create the order
         $order = Order::create([
-            'user_id' =>$user->id,
-            'total_amount' => $totalAmount,
-            'payment_method' => $request->input('paymentMethod'),
-            'status' => 'Pending', // or other status as needed
+            'user_id' => $user->id,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'payment_method' => $validated['paymentMethod'],
+            'total_amount' => array_sum(array_map(function($item) {
+                return $item['price'] * $item['quantity'];
+            }, $request->cartItems)),
+            'status' => 'pending'
         ]);
-
-        // Store order items
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->product->product_price,
+    
+        // Save cart items to order_items table (assuming this relation exists)
+        
+        foreach ($request->cartItems as $item) {
+            $order->OrderItems()->create([
+                
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
             ]);
         }
-
-        // Optionally, clear the cart
-        CartItem::where('user_id',$user->id)->delete();
-
-        // Redirect with success message
-        return redirect()->route('checkout.form')->with('success', 'Your order has been placed successfully!');
+        // Find the user's cart and delete it along with its cartItems
+        $cart = $user->cart; // Assuming each user has a 'cart' relationship
+        if ($cart) {
+            $cart->items()->delete(); // Delete all cart items
+            $cart->delete(); // Delete the cart itself
+        }
+        return redirect(route("users.usersdashboard"))->with('message', 'Order placed successfully!');
     }
     
     // update

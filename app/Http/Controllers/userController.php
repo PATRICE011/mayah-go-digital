@@ -26,12 +26,12 @@ class userController extends Controller
 
         // cart count
         $userId = Auth::id(); 
-        $cart2 = Cart::where('user_id', $userId)->first(); // Get the cart associated with this user
+        $cart2 = Cart::where('user_id', $userId)->first(); 
         
         if ($cart2) {
-            $count = CartItem::where('cart_id', $cart2->id)->count(); // Count cart items for the specific cart
+            $count = CartItem::where('cart_id', $cart2->id)->count(); 
         } else {
-            $count = 0; // No cart found for this user
+            $count = 0; 
         }
 
 
