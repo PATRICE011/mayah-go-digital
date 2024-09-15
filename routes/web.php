@@ -46,7 +46,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/update/{id}', 'CartController@update')->name('cartUpdate');
 
     Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
-    
+    // Correct route capitalization
+    Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdate');
+    Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
+
 });
 
 // Admin Routes

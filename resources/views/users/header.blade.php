@@ -36,7 +36,7 @@
 
                <!-- Cart button -->
                 <div class="nav_shop" id="cart-shop">
-                    <i class="ri-shopping-cart-2-line nav__shop"></i>
+                    <i class="ri-shopping-cart-2-line nav__shop"></i><sup>{{$count}}</sup>
                 </div>
 
                 <div class="nav_shop" id="cart-shop">

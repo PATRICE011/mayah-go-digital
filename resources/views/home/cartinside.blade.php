@@ -13,7 +13,7 @@
 
                 <div class="cart__details">
                     <h3 class="cart__title">{{ $item->product->product_name }}</h3>
-                    <span class="cart__price" id="price-{{ $item->id }}">${{ $item->product->product_price }}</span>
+                    <span class="cart__price" id="price-{{ $item->id }}">₱ {{ $item->product->product_price }}</span>
 
                     <div class="cart__amount">
                         <div class="cart__amount-content">
@@ -44,7 +44,7 @@
 
         <div class="cart__prices">
             <span class="cart__prices-item">{{ count($cartItems) }} items</span>
-            <span class="cart__prices-total">${{ $cartItems->sum(fn($item) => $item->product->product_price * $item->quantity) }}</span>
+            <span class="cart__prices-total">₱ {{ $cartItems->sum(fn($item) => $item->product->product_price * $item->quantity) }}</span>
         </div>
 
         <button class="cart__checkout-button">
@@ -57,6 +57,6 @@
         <p>Your cart is empty.</p>
     @endif
 
-    <!-- <button class="checkout">CHECKOUT</button> -->
+  
     
 </div>
