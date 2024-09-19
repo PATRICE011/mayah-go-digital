@@ -135,4 +135,12 @@ class cartController extends Controller
        
         return redirect()->route('users.usersdashboard')->with('message', 'Item removed from cart.');
     }
+
+    // my orders
+    public function viewOrders(){
+
+        $orders = Order::where('user_id', Auth::id())->with('orderItems.product')->get();
+        
+        return view ('home.myorders', compact('orders'));
+    }
 }

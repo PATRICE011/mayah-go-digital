@@ -7,8 +7,10 @@
     "require": {
         "php": "^8.2",
         "guzzlehttp/guzzle": "^7.9",
+        "ixudra/curl": "^6.22",
         "laravel/framework": "^11.9",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "luigel/laravel-paymongo": "^2.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

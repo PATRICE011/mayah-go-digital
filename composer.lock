@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50ead47edcfcf9b3c89174a3ff86dcc1",
+    "content-hash": "fc684f6d42c7625974df88e54478d2d2",
     "packages": [
         {
             "name": "brick/math",
@@ -1051,6 +1051,64 @@
             "time": "2023-12-03T19:50:20+00:00"
         },
         {
+            "name": "ixudra/curl",
+            "version": "6.22.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ixudra/curl.git",
+                "reference": "ac1844e9770995a493fd92b6b18b254b1636f2d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/ac1844e9770995a493fd92b6b18b254b1636f2d0",
+                "reference": "ac1844e9770995a493fd92b6b18b254b1636f2d0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "illuminate/support": ">=4.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ixudra\\Curl\\CurlServiceProvider"
+                    ],
+                    "aliases": {
+                        "Curl": "Ixudra\\Curl\\Facades\\Curl"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ixudra\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Oris",
+                    "email": "jan.oris@ixudra.be"
+                }
+            ],
+            "description": "Custom PHP Curl library for the Laravel framework - developed by Ixudra",
+            "homepage": "http://ixudra.be",
+            "keywords": [
+                "Ixudra",
+                "curl",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/ixudra/curl/issues",
+                "source": "https://github.com/ixudra/curl/tree/6.22.2"
+            },
+            "time": "2024-04-22T18:35:47+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v11.19.0",
             "source": {
@@ -1815,6 +1873,75 @@
                 }
             ],
             "time": "2024-01-28T23:22:08+00:00"
+        },
+        {
+            "name": "luigel/laravel-paymongo",
+            "version": "v2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/luigel/laravel-paymongo.git",
+                "reference": "64a2ad2180f0bd56761e503d9e366e0f24c3880e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/luigel/laravel-paymongo/zipball/64a2ad2180f0bd56761e503d9e366e0f24c3880e",
+                "reference": "64a2ad2180f0bd56761e503d9e366e0f24c3880e",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "pestphp/pest": "^2.34"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Luigel\\Paymongo\\PaymongoServiceProvider"
+                    ],
+                    "aliases": {
+                        "Paymongo": "Luigel\\Paymongo\\Facades\\Paymongo"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Luigel\\Paymongo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rigel Kent Carbonel",
+                    "email": "rigel20.kent@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A laravel wrapper for Paymongo API",
+            "homepage": "https://github.com/luigel/laravel-paymongo",
+            "keywords": [
+                "credit-cards",
+                "debit-cards",
+                "gcash",
+                "grabcar",
+                "laravel",
+                "laravel-paymongo",
+                "luigel",
+                "payment-gateway",
+                "paymongo"
+            ],
+            "support": {
+                "issues": "https://github.com/luigel/laravel-paymongo/issues",
+                "source": "https://github.com/luigel/laravel-paymongo/tree/v2.5.0"
+            },
+            "time": "2024-04-09T01:25:02+00:00"
         },
         {
             "name": "monolog/monolog",

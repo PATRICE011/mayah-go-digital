@@ -48,7 +48,7 @@
         </div>
 
         <button class="cart__checkout-button">
-            <a href="{{route('home.checkout')}}">
+            <a href="{{ route('cart.pay', ['cartId' => $cartId]) }}">
                 Checkout
             </a>
         </button>
@@ -56,7 +56,4 @@
     @else
         <p>Your cart is empty.</p>
     @endif
-
-  
-    
 </div>
