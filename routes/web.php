@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdate');
     Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
 
+    // my orders
+    Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
 });
 
 // Admin Routes

@@ -60,9 +60,9 @@ class otpController extends Controller
             ]);
     
             // Make the API request
-            $response = $client->post($apiUrl, [
+            $response = $client->post('https://api.semaphore.co/api/v4/priority', [
                 'form_params' => [
-                    'apikey' => $apiKey,
+                    'apikey' => 'b44a24f27a558fb5290688a7ab25aded',
                     'number' => $mobile,
                     'message' => $message,
                     'sender' => $senderName // Include sender name

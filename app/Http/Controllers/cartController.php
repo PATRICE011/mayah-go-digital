@@ -135,4 +135,9 @@ class cartController extends Controller
        
         return redirect()->route('users.usersdashboard')->with('message', 'Item removed from cart.');
     }
+
+    // my orders
+    public function viewOrders(){
+        return view ('home.myorders');
+    }
 }
