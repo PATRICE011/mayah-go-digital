@@ -138,6 +138,9 @@ class cartController extends Controller
 
     // my orders
     public function viewOrders(){
-        return view ('home.myorders');
+
+        $orders = Order::where('user_id', Auth::id())->with('orderItems.product')->get();
+        
+        return view ('home.myorders', compact('orders'));
     }
 }

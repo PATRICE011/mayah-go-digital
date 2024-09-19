@@ -70,161 +70,57 @@
 
 <div class="container mt-5">
     <h2>My Orders</h2>
-    <!-- Order Status Tabs -->
-    <ul class="nav nav-tabs" id="orderTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="toPay-tab" data-bs-toggle="tab" href="#toPay" role="tab" aria-controls="toPay" aria-selected="true">To Pay</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="readyForPickup-tab" data-bs-toggle="tab" href="#readyForPickup" role="tab" aria-controls="readyForPickup" aria-selected="false">Ready for Pickup</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="returnRefund-tab" data-bs-toggle="tab" href="#returnRefund" role="tab" aria-controls="returnRefund" aria-selected="false">Return/Refund</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab" aria-controls="cancelled" aria-selected="false">Cancelled</a>
-        </li>
-    </ul>
 
-    <!-- Tab Content -->
-    <div class="tab-content mt-3" id="orderTabsContent">
-        <!-- To Pay Tab -->
-        <div class="tab-pane fade show active" id="toPay" role="tabpanel" aria-labelledby="toPay-tab">
-            <div class="order-wrapper">
-                <div class="order-number">Order #12345</div> <!-- Sample Order Number -->
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Electronics</p>
-                            <p><strong>Quantity:</strong> 2</p>
-                            <p class="order-price"><strong>Price per item:</strong> $31</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Electronics</p>
-                            <p><strong>Quantity:</strong> 2</p>
-                            <p class="order-price"><strong>Price per item:</strong> $31</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Amount Payable and Pay Now Button Outside the Card -->
-                <div class="order-actions">
-                    <p class="amount-payable">Amount Payable: $62</p> <!-- Total price for quantity -->
-                    <a href="#" class="btn btn-primary">Pay Now</a>
-                </div>
-            </div>
-        </div>
+    @if($orders->isEmpty())
+        <p>No orders found.</p>
+    @else
+        <!-- Order Tabs -->
+        <ul class="nav nav-tabs" id="orderTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="toPay-tab" data-bs-toggle="tab" href="#toPay" role="tab" aria-controls="toPay" aria-selected="true">To Pay</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="readyForPickup-tab" data-bs-toggle="tab" href="#readyForPickup" role="tab" aria-controls="readyForPickup" aria-selected="false">Ready for Pickup</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="false">Completed</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="cancelled-tab" data-bs-toggle="tab" href="#cancelled" role="tab" aria-controls="cancelled" aria-selected="false">Cancelled</a>
+            </li>
+        </ul>
 
-        <!-- Ready for Pickup Tab -->
-        <div class="tab-pane fade" id="readyForPickup" role="tabpanel" aria-labelledby="readyForPickup-tab">
-            <div class="order-wrapper">
-                <div class="order-number">Order #98765</div> <!-- Sample Order Number -->
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Home Appliances</p>
-                            <p><strong>Quantity:</strong> 1</p>
-                            <p class="order-price"><strong>Price per item:</strong> $200</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Pickup Time Information -->
-                <div class="order-actions">
-                    <p class="amount-payable">Ready for Pickup at 4 PM</p>
-                </div>
-            </div>
-        </div>
+        <!-- Tab Content -->
+        <div class="tab-content mt-3" id="orderTabsContent">
+            @foreach ($orders as $order)
+                <div class="order-wrapper">
+                    <div class="order-number">Order #{{ $order->id }}</div>
 
-        <!-- Return/Refund Tab -->
-        <div class="tab-pane fade" id="returnRefund" role="tabpanel" aria-labelledby="returnRefund-tab">
-            <div class="order-wrapper">
-                <div class="order-number">Order #65432</div> <!-- Sample Order Number -->
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Fashion</p>
-                            <p><strong>Quantity:</strong> 3</p>
-                            <p class="order-price"><strong>Price per item:</strong> $30</p>
+                    @foreach ($order->orderItems as $item)
+                        <div class="order-card">
+                            <div class="d-flex align-items-start position-relative">
+                                <!-- Product Image -->
+                                <img src="{{ asset('assets/img/' . $item->product->product_image ) }}" class="order-image" alt="Product Image">
+                                <!-- Product Details -->
+                                <div class="order-info">
+                                    <h5>{{ $item->product->product_name }}</h5>
+                                    <p><strong>Category:</strong> {{ $item->product->category->category_name }}</p>
+                                    <p><strong>Quantity:</strong> {{ $item->quantity }}</p>
+                                    <p class="order-price"><strong>Price per item:</strong> ₱ {{ $item->price }}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <!-- Refund Information -->
-                <div class="order-actions">
-                    <p class="amount-payable">Refund Requested: $90</p> <!-- Total refund amount -->
-                </div>
-            </div>
-        </div>
+                    @endforeach
 
-        <!-- Completed Tab -->
-        <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tab">
-            <div class="order-wrapper">
-                <div class="order-number">Order #34567</div> <!-- Sample Order Number -->
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Grocery</p>
-                            <p><strong>Quantity:</strong> 5</p>
-                            <p class="order-price"><strong>Price per item:</strong> $12</p>
-                        </div>
+                    <!-- Amount Payable -->
+                    <div class="order-actions">
+                        <p class="amount-payable">Amount Payable: ₱ {{ $order->total_amount }}</p>
+                        <a href="{{ route('order.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
                     </div>
                 </div>
-                <!-- Completion Information -->
-                <div class="order-actions">
-                    <p class="amount-payable">Completed on 10th Sept</p>
-                </div>
-            </div>
+            @endforeach
         </div>
-
-        <!-- Cancelled Tab -->
-        <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
-            <div class="order-wrapper">
-                <div class="order-number">Order #24680</div> <!-- Sample Order Number -->
-                <div class="order-card">
-                    <div class="d-flex align-items-start position-relative">
-                        <!-- Product Image -->
-                        <img src="https://via.placeholder.com/100" class="order-image" alt="Product Image">
-                        <!-- Product Details -->
-                        <div class="order-info">
-                            <h5>Product Name</h5>
-                            <p><strong>Category:</strong> Books</p>
-                            <p><strong>Quantity:</strong> 2</p>
-                            <p class="order-price"><strong>Price per item:</strong> $15</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Cancellation Information -->
-                <div class="order-actions">
-                    <p class="amount-payable">Cancelled on 9th Sept</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 </div>
 
 <!-- Latest Bootstrap JS -->

@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PaymentController;
 
 
 // public routes
@@ -45,13 +45,18 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
     Route::post('/cart/update/{id}', 'CartController@update')->name('cartUpdate');
 
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
+    // Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
     // Correct route capitalization
     Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdate');
-    Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
+    // Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
 
     // my orders
     Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
+    
+    // paymongo
+    Route::get('/pay/{cartId}', [PaymentController::class, 'createPaymentMain'])->name('cart.pay');
+    Route::get('/pay/{orderId}', [PaymentController::class, 'createPayment'])->name('order.pay');
+    Route::get('/success', [PaymentController::class, 'success'])->name('order.success');
 });
 
 // Admin Routes
