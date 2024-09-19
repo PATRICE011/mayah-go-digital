@@ -1,5 +1,3 @@
-
-
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById('nav-menu'),
       navToggle = document.getElementById('nav-toggle'),
@@ -102,58 +100,89 @@ function navigateToPage() {
    window.location.href = "register.html";
 }
 
-
-/*=============== SHOW SCROLL UP ===============*/ 
-const scrollUp = () =>{
-	const scrollUp = document.getElementById('scroll-up')
-    // When the scroll is higher than 350 viewport height, add the show-scroll class to the a tag with the scrollup class
-	this.scrollY >= 350 ? scrollUp.classList.add('show-scroll')
-						: scrollUp.classList.remove('show-scroll')
+/*=============== CHANGE BACKGROUND HEADER ===============*/
+function scrollHeader(){
+    const header = document.getElementById('header')
+    // When the scroll is greater than 80 viewport height, add the scroll-header class to the header tag
+    if(this.scrollY >= 80) header.classList.add('scroll-header'); else header.classList.remove('scroll-header')
 }
-window.addEventListener('scroll', scrollUp)
+window.addEventListener('scroll', scrollHeader)
+
+/*=============== QUESTIONS ACCORDION ===============*/
+const accordionItems = document.querySelectorAll('.questions__item')
+
+accordionItems.forEach((item) =>{
+    const accordionHeader = item.querySelector('.questions__header')
+
+    accordionHeader.addEventListener('click', () =>{
+        const openItem = document.querySelector('.accordion-open')
+
+        toggleItem(item)
+
+        if(openItem && openItem!== item){
+            toggleItem(openItem)
+        }
+    })
+})
+
+const toggleItem = (item) =>{
+    const accordionContent = item.querySelector('.questions__content')
+
+    if(item.classList.contains('accordion-open')){
+        accordionContent.removeAttribute('style')
+        item.classList.remove('accordion-open')
+    }else{
+        accordionContent.style.height = accordionContent.scrollHeight + 'px'
+        item.classList.add('accordion-open')
+    }
+
+}
 
 /*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
 const sections = document.querySelectorAll('section[id]')
-    
-const scrollActive = () =>{
-  	const scrollDown = window.scrollY
 
-	sections.forEach(current =>{
-		const sectionHeight = current.offsetHeight,
-			  sectionTop = current.offsetTop - 58,
-			  sectionId = current.getAttribute('id'),
-			  sectionsClass = document.querySelector('.nav__menu a[href*=' + sectionId + ']')
+function scrollActive(){
+    const scrollY = window.pageYOffset
 
-		if(scrollDown > sectionTop && scrollDown <= sectionTop + sectionHeight){
-			sectionsClass.classList.add('active-link')
-		}else{
-			sectionsClass.classList.remove('active-link')
-		}                                                    
-	})
+    sections.forEach(current =>{
+        const sectionHeight = current.offsetHeight,
+              sectionTop = current.offsetTop - 58,
+              sectionId = current.getAttribute('id')
+
+        if(scrollY > sectionTop && scrollY <= sectionTop + sectionHeight){
+            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.add('active-link')
+        }else{
+            document.querySelector('.nav__menu a[href*=' + sectionId + ']').classList.remove('active-link')
+        }
+    })
 }
 window.addEventListener('scroll', scrollActive)
 
-/*=============== SCROLL REVEAL ANIMATIONS ===============*/
+/*=============== SHOW SCROLL UP ===============*/ 
+function scrollUp(){
+    const scrollUp = document.getElementById('scroll-up');
+    // When the scroll is higher than 400 viewport height, add the show-scroll class to the a tag with the scroll-top class
+    if(this.scrollY >= 400) scrollUp.classList.add('show-scroll'); else scrollUp.classList.remove('show-scroll')
+}
+window.addEventListener('scroll', scrollUp)
+
+/*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
-   origin: 'top',
-   distance: '60px',
-   duration: 2500,
-   delay: 300,
-   // reset: true
+    origin: 'top',
+    distance: '60px',
+    duration: 2500,
+    delay: 400,
+    // reset: true
 })
 
-sr.reveal('.home__data')
-sr.reveal('.home__circle, .home__img', {delay: 600, scale: 0.5})
-sr.reveal('.home__chips-1, .home__chips-2, .home__chips-3', {delay: 1000, interval: 600})
-sr.reveal('.home__leaf', {delay: 1200})
-sr.reveal('.home__tomato-1, .home__tomato-2', {delay: 1400, interval: 100})
+sr.reveal(`.home__data`)
+sr.reveal(`.home__img`, {delay: 500})
+sr.reveal(`.home__social`, {delay: 600})
+sr.reveal(`.about__img, .contact__box`,{origin: 'left'})
+sr.reveal(`.about__data, .contact__form`,{origin: 'right'})
+sr.reveal(`.steps__card, .product__card, .questions__group, .footer`,{interval: 100})
 
-sr.reveal('.about__data', {delay: 800})
-sr.reveal('.about__img', {delay: 1200})
-
-sr.reveal('.products', {delay: 800})
-
-// search product 
+/*=============== SEARCH PRODUCT ===============*/
 window.addEventListener('load', function() {
    setTimeout(function() {
        var element = document.getElementById('products');
@@ -266,12 +295,7 @@ function saveQuantityToDatabase(id, quantity) {
     .catch(error => toastr.error('Error: ' + error.message));
 }
 
-
-
-
-
-
-// Side cart management on page load
+/*=============== SIDE CART MANAGEMENT ON PAGE LOAD ===============*/
 window.addEventListener('load', function() {
     const keepCartOpen = localStorage.getItem('keepCartOpen');
     
@@ -284,8 +308,7 @@ window.addEventListener('load', function() {
     }
 });
 
-// Side cart
-
+/*=============== SIDE CART ===============*/
 document.querySelectorAll('.cart__amount-trash').forEach(button => {
     button.addEventListener('click', function() {
         // Set a flag in localStorage to keep the cart open

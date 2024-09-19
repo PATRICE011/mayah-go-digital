@@ -2,22 +2,26 @@
 <header class="header" id="header">
    <nav class="nav container">
       <a href="index.php" class="nav__logo">
-          <img src="assets/img/MAYAH-STORE-LOGO.jpg" alt="" class="nav__logo-img">
-          Mayah Store
+          <!-- <img src="assets/img/MAYAH-STORE-LOGO.jpg" alt="" class="nav__logo-img"> -->
+          <i class="ri-leaf-line nav__logo-icon"></i> Mayah Store
       </a>
 
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link active-link">Home</a>
+               <a href="{{route('home.index')}}" class="nav__link">Home</a>
             </li>
             
             <li class="nav__item">
-               <a href="#about" class="nav__link">About Us</a>
+               <a href="#about" class="nav__link">About</a>
             </li>
 
             <li class="nav__item">
                <a href="#products" class="nav__link">Products</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="#faqs" class="nav__link">FAQs</a>
             </li>
 
             <li class="nav__item">
