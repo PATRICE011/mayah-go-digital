@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <p class="footer__copy">&#169; Bedimcode. All rigths reserved</p>
+    <p class="footer__copy">&#169; Mayah Store. All rigths reserved</p>
 </footer>
         
 <!--=============== SCROLL UP ===============-->
