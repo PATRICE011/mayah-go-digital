@@ -69,7 +69,9 @@
                             <input type="checkbox" class="form-check-input" id="terms" name="terms" {{ old('terms') ? 'checked' : '' }} required>
                             <label class="form-check-label" for="terms">I have read and agree to the terms and conditions</label>
                         </div>
-                        <button type="submit" class="btn btn-success">Pay</button>
+                        <button type="submit" class="btn btn-success">
+                            Pay
+                        </button>
                     </form>
 
                     <!-- Success and error messages -->

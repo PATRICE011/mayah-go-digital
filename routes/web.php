@@ -45,10 +45,10 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
     Route::post('/cart/update/{id}', 'CartController@update')->name('cartUpdate');
 
-    // Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('home.checkout');
     // Correct route capitalization
     Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdate');
-    // Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
+    Route::post('/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
 
     // my orders
     Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');

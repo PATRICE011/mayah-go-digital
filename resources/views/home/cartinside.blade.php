@@ -48,7 +48,7 @@
         </div>
 
         <button class="cart__checkout-button">
-            <a href="{{ route('cart.pay', ['cartId' => $cartId]) }}">
+            <a href="{{ route('home.checkout') }}">
                 Checkout
             </a>
         </button>

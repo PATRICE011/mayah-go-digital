@@ -20,7 +20,7 @@ class PaymentController extends Controller
                     'line_items' => [
                         [
                             'currency'      => 'PHP',
-                            'amount'        => 10000,
+                            'amount'        => 50000,
                             'description'   => 'text',
                             'name'          => 'Test Product',
                             'quantity'      => 1,
@@ -75,7 +75,7 @@ class PaymentController extends Controller
                     'line_items' => [
                         [
                             'currency'      => 'PHP',
-                            'amount'        => 10000,
+                            'amount'        => 50000,
                             'description'   => 'text',
                             'name'          => 'Test Product',
                             'quantity'      => 1,
