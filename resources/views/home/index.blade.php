@@ -1,4 +1,3 @@
-
 @extends('home.layout')
 @section('title')
 @section('content')

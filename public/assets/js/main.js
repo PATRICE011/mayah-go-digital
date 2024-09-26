@@ -3,102 +3,31 @@ const navMenu = document.getElementById('nav-menu'),
       navToggle = document.getElementById('nav-toggle'),
       navClose = document.getElementById('nav-close')
 
-/* Menu show */
-navToggle.addEventListener('click', () =>{
-   navMenu.classList.add('show-menu')
-})
-
-/* Menu hidden */
-navClose.addEventListener('click', () =>{
-   navMenu.classList.remove('show-menu')
-})
-/*=============== SHOW CART ===============*/
-const cart = document.getElementById('cart'),
-      cartShop = document.getElementById('cart-shop'),
-      cartClose = document.getElementById('cart-close')
-
-/*=============== CART SHOW ===============*/
+/*===== MENU SHOW =====*/
 /* Validate if constant exists */
-if(cartShop){
-    cartShop.addEventListener('click', () =>{
-      console.log('Cart button clicked');
-        cart.classList.add('show-cart')
+if(navToggle){
+    navToggle.addEventListener('click', () =>{
+        navMenu.classList.add('show-menu')
     })
 }
 
-/*=============== CART HIDDEN ===============*/
+/*===== MENU HIDDEN =====*/
 /* Validate if constant exists */
-if(cartClose){
-    cartClose.addEventListener('click', () =>{
-        cart.classList.remove('show-cart')
+if(navClose){
+    navClose.addEventListener('click', () =>{
+        navMenu.classList.remove('show-menu')
     })
 }
-/*=============== MIXITUP FILTER PRODUCTS ===============*/
 
-document.addEventListener('DOMContentLoaded', function() {
-   // Initialize MixItUp
-   let mixerProducts = mixitup('.products__content', {
-       selectors: {
-           target: '.products__card'
-       },
-       animation: {
-           duration: 300
-       }
-   });
+/*=============== REMOVE MENU MOBILE ===============*/
+const navLink = document.querySelectorAll('.nav__link')
 
-   // Get filter links
-   const linkProducts = document.querySelectorAll('.products__item');
-
-   // Function to set active class and apply filter
-   function activeProducts() {
-       linkProducts.forEach(l => l.classList.remove('active-product'));
-       this.classList.add('active-product');
-
-       // Apply filter
-       const filter = this.getAttribute('data-filter');
-    //    Check if filter is 'all' and apply an empty filter to show all products
-       mixerProducts.filter(filter === '.all' ? '' : filter);
-   }
-
-   // Add event listeners to filter links
-   linkProducts.forEach(l => l.addEventListener('click', activeProducts));
-});
-
-
-/*=============== SEARCH ===============*/
-const search = document.getElementById('search'),
-      searchBtn = document.getElementById('search-btn'),
-      searchClose = document.getElementById('search-close')
-
-/* Search show */
-searchBtn.addEventListener('click', () =>{
-   search.classList.add('show-search')
-})
-
-/* Search hidden */
-searchClose.addEventListener('click', () =>{
-   search.classList.remove('show-search')
-})
-
-
-/*=============== LOGIN ===============*/
-const login = document.getElementById('login'),
-      loginBtn = document.getElementById('login-btn'),
-      loginClose = document.getElementById('login-close')
-
-/* Login show */
-loginBtn.addEventListener('click', () =>{
-   login.classList.add('show-login')
-})
-
-/* Login hidden */
-loginClose.addEventListener('click', () =>{
-   login.classList.remove('show-login')
-})
-
-function navigateToPage() {
-   window.location.href = "register.html";
+function linkAction(){
+    const navMenu = document.getElementById('nav-menu')
+    // When we click on each nav__link, we remove the show-menu class
+    navMenu.classList.remove('show-menu')
 }
+navLink.forEach(n => n.addEventListener('click', linkAction))
 
 /*=============== CHANGE BACKGROUND HEADER ===============*/
 function scrollHeader(){
@@ -166,6 +95,123 @@ function scrollUp(){
 }
 window.addEventListener('scroll', scrollUp)
 
+/*=============== DARK LIGHT THEME ===============*/ 
+const themeButton = document.getElementById('theme-button')
+const darkTheme = 'dark-theme'
+const iconTheme = 'ri-sun-line'
+
+// Previously selected topic (if user selected)
+const selectedTheme = localStorage.getItem('selected-theme')
+const selectedIcon = localStorage.getItem('selected-icon')
+
+// We obtain the current theme that the interface has by validating the dark-theme class
+const getCurrentTheme = () => document.body.classList.contains(darkTheme) ? 'dark' : 'light'
+const getCurrentIcon = () => themeButton.classList.contains(iconTheme) ? 'ri-moon-line' : 'ri-sun-line'
+
+// We validate if the user previously chose a topic
+if (selectedTheme) {
+  // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated the dark
+  document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
+  themeButton.classList[selectedIcon === 'ri-moon-line' ? 'add' : 'remove'](iconTheme)
+}
+
+// Activate / deactivate the theme manually with the button
+themeButton.addEventListener('click', () => {
+    // Add or remove the dark / icon theme
+    document.body.classList.toggle(darkTheme)
+    themeButton.classList.toggle(iconTheme)
+    // We save the theme and the current icon that the user chose
+    localStorage.setItem('selected-theme', getCurrentTheme())
+    localStorage.setItem('selected-icon', getCurrentIcon())
+})
+
+/*=============== SHOW CART ===============*/
+const cart = document.getElementById('cart'),
+      cartShop = document.getElementById('cart-shop'),
+      cartClose = document.getElementById('cart-close')
+
+/*=============== CART SHOW ===============*/
+/* Validate if constant exists */
+if(cartShop){
+    cartShop.addEventListener('click', () =>{
+      console.log('Cart button clicked');
+        cart.classList.add('show-cart')
+    })
+}
+
+/*=============== CART HIDDEN ===============*/
+/* Validate if constant exists */
+if(cartClose){
+    cartClose.addEventListener('click', () =>{
+        cart.classList.remove('show-cart')
+    })
+}
+
+/*=============== SEARCH ===============*/
+const search = document.getElementById('search'),
+      searchBtn = document.getElementById('search-btn'),
+      searchClose = document.getElementById('search-close')
+
+// Search show
+searchBtn.addEventListener('click', () =>{
+   search.classList.add('show-search')
+})
+
+// Search hidden
+searchClose.addEventListener('click', () =>{
+   search.classList.remove('show-search')
+})
+
+
+/*=============== LOGIN ===============*/
+const login = document.getElementById('login'),
+      loginBtn = document.getElementById('login-btn'),
+      loginClose = document.getElementById('login-close')
+
+/* Login show */
+loginBtn.addEventListener('click', () =>{
+   login.classList.add('show-login')
+})
+
+/* Login hidden */
+loginClose.addEventListener('click', () =>{
+   login.classList.remove('show-login')
+})
+
+function navigateToPage() {
+   window.location.href = "register.html";
+}
+
+/*=============== MIXITUP FILTER PRODUCTS ===============*/
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize MixItUp
+    let mixerProducts = mixitup('.products__content', {
+        selectors: {
+            target: '.products__card'
+        },
+        animation: {
+            duration: 300
+        }
+    });
+ 
+    // Get filter links
+    const linkProducts = document.querySelectorAll('.products__item');
+ 
+    // Function to set active class and apply filter
+    function activeProducts() {
+        linkProducts.forEach(l => l.classList.remove('active-product'));
+        this.classList.add('active-product');
+ 
+        // Apply filter
+        const filter = this.getAttribute('data-filter');
+     //    Check if filter is 'all' and apply an empty filter to show all products
+        mixerProducts.filter(filter === '.all' ? '' : filter);
+    }
+ 
+    // Add event listeners to filter links
+    linkProducts.forEach(l => l.addEventListener('click', activeProducts));
+ });
+
 /*=============== SCROLL REVEAL ANIMATION ===============*/
 const sr = ScrollReveal({
     origin: 'top',
@@ -182,19 +228,20 @@ sr.reveal(`.about__img, .contact__box`,{origin: 'left'})
 sr.reveal(`.about__data, .contact__form`,{origin: 'right'})
 sr.reveal(`.steps__card, .product__card, .questions__group, .footer`,{interval: 100})
 
-/*=============== SEARCH PRODUCT ===============*/
+// Scroll to products
 window.addEventListener('load', function() {
-   setTimeout(function() {
-       var element = document.getElementById('products');
-       if (element) {
-           console.log("Element found:", element);
-           element.scrollIntoView({ behavior: 'smooth' });
-       } else {
-           console.log("Element not found for ID: products");
-       }
-   }, 100);
-});
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const scrollToProducts = urlParams.get('scrollToProducts');
+ 
+    if (scrollToProducts === 'true') {
+        setTimeout(function() {
+            var element = document.getElementById('products');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+    }
+ });
 
 // Add to Cart function using AJAX
 document.querySelectorAll('.add-to-cart-btn').forEach(button => {

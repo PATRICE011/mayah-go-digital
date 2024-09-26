@@ -33,7 +33,7 @@
             <h3 class="footer__title">Contact Us</h3>
 
             <ul class="footer__data">
-                <li class="footer__information">+999 888 777</li>
+                <li class="footer__information">+63 9999 888 7777</li>
                     
                 <div class="footer__social">
                     <a href="https://www.facebook.com/" class="footer__social-link">
@@ -47,19 +47,6 @@
                     </a>
                 </div>
             </ul>
-        </div>
-
-        <div class="footer__content">
-            <h3 class="footer__title">
-                We accept all credit cards
-            </h3>
-
-            <div class="footer__cards">
-                <img src="assets/img/card1.png" alt="" class="footer__card">
-                <img src="assets/img/card2.png" alt="" class="footer__card">
-                <img src="assets/img/card3.png" alt="" class="footer__card">
-                <img src="assets/img/card4.png" alt="" class="footer__card">
-            </div>
         </div>
     </div>
 
