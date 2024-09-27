@@ -61,54 +61,56 @@ class cartController extends Controller
         return view('home.cartinside', ['cartItems' => $cartItems]);
     }
 
-    public function checkout()
-    {
-        $user = Auth::user();
-        $cart = Cart::where('user_id', $user->id)->first();
-        $cartItems = CartItem::where('cart_id', $cart->id)->get();
+    // public function checkout()
+    // {
+        
+    //     $user = Auth::user();
+    //     $cart = Cart::where('user_id', $user->id)->first();
+    //     $cartItems = CartItem::where('cart_id', $cart->id)->get();
+
 
         
-        return view('home.checkout', compact('cartItems')); 
-    }
+        
+    //     return view('home.checkout', compact('cartItems')); 
+    // }
 
     public function processCheckout(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'email',
-            'paymentMethod' => 'required',
-            'terms' => 'accepted',
-        ]);
+        // Get the authenticated user
         $user = Auth::user();
-        // Create the order
-        $order = Order::create([
-            'user_id' => $user->id,
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'payment_method' => $validated['paymentMethod'],
-            'total_amount' => array_sum(array_map(function($item) {
-                return $item['price'] * $item['quantity'];
-            }, $request->cartItems)),
-            'status' => 'pending'
-        ]);
     
-        // Save cart items to order_items table (assuming this relation exists)
-        
-        foreach ($request->cartItems as $item) {
-            $order->OrderItems()->create([
-                
-                'product_id' => $item['product_id'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
+        // Find the user's cart
+        $cart = Cart::where('user_id', $user->id)->first();
+    
+        // If the cart exists and has items
+        if ($cart && $cart->items()->count() > 0) {
+    
+            // Create a new order for the user
+            $order = Order::create([
+                'user_id' => $user->id,
+                'status' => 'pending', // Initial status before payment
             ]);
+    
+            // Loop through the cart items and create order items
+            foreach ($cart->items as $cartItem) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $cartItem->product_id,
+                    'quantity' => $cartItem->quantity,
+                    'price' => $cartItem->price,
+                ]);
+            }
+    
+            // Delete the cart and its items after transferring to orders
+            $cart->items()->delete(); // Delete cart items
+            $cart->delete(); // Delete cart
+    
+            // Proceed to PayMongo for payment (assuming route exists)
+            return redirect(route("cart.pay",['orderId' => $order->id]))->with('message', 'Order placed successfully!');
+    
+        } else {
+            return redirect()->back()->with('error', 'Your cart is empty.');
         }
-        // Find the user's cart and delete it along with its cartItems
-        $cart = $user->cart; // Assuming each user has a 'cart' relationship
-        if ($cart) {
-            $cart->items()->delete(); // Delete all cart items
-            $cart->delete(); // Delete the cart itself
-        }
-        return redirect(route("users.usersdashboard"))->with('message', 'Order placed successfully!');
     }
     
     // update
@@ -143,4 +145,12 @@ class cartController extends Controller
         
         return view ('home.myorders', compact('orders'));
     }
+<<<<<<< HEAD
+=======
+
+
+
+    
+    
+>>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
 }

@@ -36,7 +36,11 @@
                     </div>
 
                     <!-- Single form submission -->
+<<<<<<< HEAD
                     <form action="{{ route('goCheckout') }}" method="POST">
+=======
+                    <form action="" method="">
+>>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
                         @csrf
 
                         <!-- Pass cart details as hidden inputs -->

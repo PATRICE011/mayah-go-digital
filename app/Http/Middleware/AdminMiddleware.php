@@ -15,7 +15,7 @@ class CheckAdmin
             return $next($request);
         }
 
-        // return redirect('/'); // Redirect if not an admin
+        // Redirect if not an admin
         return redirect()->route('home.login')
                      ->withErrors(['error' => 'Invalid credentials.']);
     }

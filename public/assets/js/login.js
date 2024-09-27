@@ -35,10 +35,18 @@ const login = document.getElementById('login'),
       // const homeIndexUrl = "{{ route('home.index') }}";
 
 /* Login show */
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
 loginBtn.addEventListener('click', () =>{
    login.classList.add('show-login')
 })
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
 /* Login hidden */
 loginClose.addEventListener('click', () =>{
    // redirectToIndex()
@@ -48,7 +56,10 @@ loginClose.addEventListener('click', () =>{
 });
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
 function navigateToPage() {
    window.location.href = "register.html";
 }
