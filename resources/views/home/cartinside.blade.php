@@ -48,7 +48,11 @@
         </div>
 
         <button class="cart__checkout-button">
+<<<<<<< HEAD
             <a href="{{route('goCheckout')}}">
+=======
+            <a href="{{ route('home.checkout') }}">
+>>>>>>> f34311beac8de708ebd5077e4f6ef3faccf837da
                 Checkout
             </a>
         </button>

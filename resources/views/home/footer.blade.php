@@ -1,76 +1,59 @@
-<footer class="footer">
-            <div class="footer__container container">
-                <h1 class="footer__title">
-                    <img src="assets/img/MAYAH-STORE-LOGO.jpg" alt="Mayah Store">
-                    Mayah Store
-                </h1>
+<!--==================== FOOTER ====================-->
+<footer class="footer section">
+    <div class="footer__container container grid">
+        <div class="footer__content">
+            <a href="#" class="footer__logo">
+                <i class="ri-leaf-line footer__logo-icon"></i> Mayah Store
+            </a>
 
-                <div class="footer__content grid">
-                    <div class="footer__data">
-                        <p class="footer__description">
-                            Subscribe to our newsletter
-                        </p>
+            <h3 class="footer__title">
+                Subscribe to our newsletter <br> to stay update
+            </h3>
 
-                        <div class="footer__newsletter">
-                            <input type="email" placeholder="Your email address" class="footer__input"> 
-                            <button class="footer__button">
-                                <i class='bx bx-right-arrow-alt'></i>
-                            </button>
-                        </div>
-                    </div>
+            <div class="footer__subscribe">
+                <input type="email" placeholder="Enter your email" class="footer__input">
 
-                    <div class="footer__data">
-                        <h2 class="footer__subtitle">Address</h2>
-                        <p class="footer__information">
-                            Valenzuela, Philippines
-                        </p>
-                    </div>
-
-                    <div class="footer__data">
-                        <h2 class="footer__subtitle">Contact</h2>
-                        <p class="footer__information">
-                            0900 000 0000 <br>
-                            mayahstore@gmail.com
-                        </p>
-                    </div>
-
-                    <div class="footer__data">
-                        <h2 class="footer__subtitle">Office</h2>
-                        <p class="footer__information">
-                            Monday - Sunday <br>
-                            7am - 12am
-                        </p>
-                    </div>
-                </div>
-
-                <div class="footer__group">
-                    <ul class="footer__social">
-                        <a href="https://www.instagram.com/" target="_blank" class="footer__social-link">
-                            <i class='bx bxl-instagram' ></i>
-                        </a>
-
-                        <a href="https://www.facebook.com/" target="_blank" class="footer__social-link">
-                            <i class='bx bxl-facebook' ></i>
-                        </a>
-
-                        <a href="https://www.twitter.com/" target="_blank" class="footer__social-link">
-                            <i class='bx bxl-twitter'></i>
-                        </a>
-                    </ul>
-
-                    <span class="footer__copy">
-                        &#169; Mayah Store. All rights reserved 2024
-                    </span>
-                </div>
+                <button class="button button--flex footer__button">
+                    Subscribe
+                    <i class="ri-arrow-right-up-line button__icon"></i>
+                </button>
             </div>
-      </footer>
+        </div>
 
-      <!--=============== MESSAGE US ===============-->
-      <a href="#" class="scrollup-1" id="scroll-up-1">
-        <i class='bx bx-message-square-dots'></i>
-      </a>
+        <div class="footer__content">
+            <h3 class="footer__title">Our Address</h3>
 
-      <!--=============== SCROLL UP ===============-->
-      <a href="#" class="scrollup" id="scroll-up">
-        <i class='bx bx-up-arrow-alt' ></i>
-      </a>
+            <ul class="footer__data">
+                <li class="footer__information">Valenzuela, Philippines</li>
+                <li class="footer__information">123-456-789</li>
+            </ul>
+        </div>
+
+        <div class="footer__content">
+            <h3 class="footer__title">Contact Us</h3>
+
+            <ul class="footer__data">
+                <li class="footer__information">+63 9999 888 7777</li>
+                    
+                <div class="footer__social">
+                    <a href="https://www.facebook.com/" class="footer__social-link">
+                        <i class="ri-facebook-fill"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" class="footer__social-link">
+                        <i class="ri-instagram-line"></i>
+                    </a>
+                    <a href="https://twitter.com/" class="footer__social-link">
+                        <i class="ri-twitter-fill"></i>
+                    </a>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+    <p class="footer__copy">&#169; Mayah Store. All rigths reserved</p>
+</footer>
+        
+<!--=============== SCROLL UP ===============-->
+<a href="#" class="scrollup" id="scroll-up"> 
+    <i class="ri-arrow-up-fill scrollup__icon"></i>
+</a>
