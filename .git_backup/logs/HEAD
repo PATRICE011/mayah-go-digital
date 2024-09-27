@@ -1,0 +1,22 @@
+0000000000000000000000000000000000000000 317c52da0883d014ca0a43915069f53f99fdcbca tony <itslapada1124@gmail.com> 1724396394 +0800	clone: from https://github.com/PATRICE011/mayah-go-digital.git
+317c52da0883d014ca0a43915069f53f99fdcbca 423534247cbd06a7e7d70839f4d7c5d95e3253e2 tony <itslapada1124@gmail.com> 1724470363 +0800	commit: added checkout button
+423534247cbd06a7e7d70839f4d7c5d95e3253e2 7b37eaf4d95130c13cf883429c0c46f9f1bcbb48 tony <itslapada1124@gmail.com> 1724470540 +0800	commit (merge): fixed bugs in web
+7b37eaf4d95130c13cf883429c0c46f9f1bcbb48 a9f1e47224434e1fcfe6b1577d3a2158b30afd2c tony <itslapada1124@gmail.com> 1724475374 +0800	commit: fixed search button
+a9f1e47224434e1fcfe6b1577d3a2158b30afd2c ad4894b4a5c125ceccffab572ab0bb99d44be6a9 tony <itslapada1124@gmail.com> 1724475484 +0800	commit (merge): fixed
+ad4894b4a5c125ceccffab572ab0bb99d44be6a9 dd559f9116b7553fe3a7272e7e09098ca0a3df21 tony <itslapada1124@gmail.com> 1724482850 +0800	commit: clean codes
+dd559f9116b7553fe3a7272e7e09098ca0a3df21 f23418dfa05950bcba1c0777e55694714a3b0eab tony <itslapada1124@gmail.com> 1724482980 +0800	commit (merge): Merge branch 'main' of https://github.com/PATRICE011/mayah-go-digital
+f23418dfa05950bcba1c0777e55694714a3b0eab 4fc05263b26cee1104eecc12097232148378bc79 tony <itslapada1124@gmail.com> 1724497181 +0800	commit: added low stocks indicator and out of stocks
+4fc05263b26cee1104eecc12097232148378bc79 3e288de7741786133f0a80a1810177f55d12d4bc tony <itslapada1124@gmail.com> 1725088817 +0800	commit (merge): made slight changes
+3e288de7741786133f0a80a1810177f55d12d4bc a21cbe24416d02816746ddbd7ed830178e310b98 tony <itslapada1124@gmail.com> 1725695101 +0800	commit: added ui for checkout page and fixed cart issues
+a21cbe24416d02816746ddbd7ed830178e310b98 080057e2b27892250badf596136ba9d2d8cd5003 tony <itslapada1124@gmail.com> 1725695168 +0800	commit (merge): added ui for checkout page and fixed cart issues
+080057e2b27892250badf596136ba9d2d8cd5003 5b1616d4cd2f6eec423102afa7089e7ebd075036 tony <itslapada1124@gmail.com> 1725696624 +0800	commit: fixed errors
+5b1616d4cd2f6eec423102afa7089e7ebd075036 adb6d638a7dc10f342ec434a839ca5d14ab02620 tony <itslapada1124@gmail.com> 1725696762 +0800	commit (merge): fixed errors
+adb6d638a7dc10f342ec434a839ca5d14ab02620 b203f3a9944d00a8cd72b1805a054ec0a654a8a0 tony <itslapada1124@gmail.com> 1725699884 +0800	commit: added otp timer
+b203f3a9944d00a8cd72b1805a054ec0a654a8a0 8c396c5f6ae50c710591ca286a29e4cd462fda70 tony <itslapada1124@gmail.com> 1726400647 +0800	commit: modified nav bar
+8c396c5f6ae50c710591ca286a29e4cd462fda70 c50c966afb68a3106056d6399b3c74fe95229668 tony <itslapada1124@gmail.com> 1726400801 +0800	commit (merge): modified nav bar
+c50c966afb68a3106056d6399b3c74fe95229668 5e24997ce5be55b5b210a8a1f31e268c0d8f9cfe tony <itslapada1124@gmail.com> 1726762886 +0800	commit: changed frontend ui
+5e24997ce5be55b5b210a8a1f31e268c0d8f9cfe 79e83e41ba1521429bc281f3fa36635490b16bf7 tony <itslapada1124@gmail.com> 1726762993 +0800	commit (merge): changed FE UI
+79e83e41ba1521429bc281f3fa36635490b16bf7 07b8ada5f49c933604e5af01db3e0a755beb0b59 tony <itslapada1124@gmail.com> 1727052739 +0800	commit: fixed payment connections
+07b8ada5f49c933604e5af01db3e0a755beb0b59 8f785ccc00d14c30ca9a6d07a8b68b5b279bf7a7 tony <itslapada1124@gmail.com> 1727052833 +0800	commit: fixed footer
+8f785ccc00d14c30ca9a6d07a8b68b5b279bf7a7 7e9a3bc1983edd81bbe42ec9482f1a4a6583d056 tony <itslapada1124@gmail.com> 1727320920 +0800	commit: did major updates for the ecomm
+7e9a3bc1983edd81bbe42ec9482f1a4a6583d056 f34311beac8de708ebd5077e4f6ef3faccf837da tony <itslapada1124@gmail.com> 1727320965 +0800	commit: fixed header, still has bugs
