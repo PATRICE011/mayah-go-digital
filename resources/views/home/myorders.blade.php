@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders</title>
     <!-- Latest Bootstrap CSS (Bootstrap 5) -->
+      <!-- ====== toastr ========-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .order-wrapper {
@@ -115,15 +118,58 @@
                     <!-- Amount Payable -->
                     <div class="order-actions">
                         <p class="amount-payable">Amount Payable: ₱ {{ $order->total_amount }}</p>
-                        <a href="{{ route('order.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
+                        <a href="{{ route('cart.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
                     </div>
                 </div>
             @endforeach
         </div>
     @endif
-</div>
 
+   
+</div>
+@if (Session::has('message'))
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+
+        toastr.success("{{ Session::get('message') }}");
+    </script>
+    @endif
+
+    @if (Session::has('error'))
+        <script>
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000",
+            };
+
+            toastr.error("{{ Session::get('error') }}");
+        </script>
+    @endif
+
+    @if ($errors->any())
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+
+        @foreach ($errors->all() as $error)
+            toastr.error("{{ $error }}");
+        @endforeach
+    </script>
+@endif
 <!-- Latest Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

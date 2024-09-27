@@ -35,9 +35,11 @@ const login = document.getElementById('login'),
       // const homeIndexUrl = "{{ route('home.index') }}";
 
 /* Login show */
+
 loginBtn.addEventListener('click', () =>{
    login.classList.add('show-login')
 })
+
 
 /* Login hidden */
 loginClose.addEventListener('click', () =>{
@@ -46,7 +48,6 @@ loginClose.addEventListener('click', () =>{
    window.location.href = "/";
    
 });
-
 
 
 function navigateToPage() {
