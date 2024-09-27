@@ -5,12 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders</title>
     <!-- Latest Bootstrap CSS (Bootstrap 5) -->
-<<<<<<< HEAD
-=======
       <!-- ====== toastr ========-->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
 
->>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .order-wrapper {
@@ -121,21 +118,12 @@
                     <!-- Amount Payable -->
                     <div class="order-actions">
                         <p class="amount-payable">Amount Payable: ₱ {{ $order->total_amount }}</p>
-<<<<<<< HEAD
-                        <a href="{{ route('order.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
-=======
                         <a href="{{ route('cart.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
->>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
                     </div>
                 </div>
             @endforeach
         </div>
     @endif
-<<<<<<< HEAD
-</div>
-
-<!-- Latest Bootstrap JS -->
-=======
 
    
 </div>
@@ -182,7 +170,6 @@
 <!-- Latest Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
->>>>>>> 49d8031bb7a2b73a36d608fa139f3b6cffe92565
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
