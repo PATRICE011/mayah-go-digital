@@ -48,7 +48,7 @@
         </div>
 
         <button class="cart__checkout-button">
-            <a href="{{ route('home.checkout') }}">
+            <a href="{{ route('goCheckout') }}">
                 Checkout
             </a>
         </button>
