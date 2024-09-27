@@ -145,4 +145,9 @@ class cartController extends Controller
         
         return view ('home.myorders', compact('orders'));
     }
+
+
+
+    
+    
 }
