@@ -127,46 +127,7 @@
 
    
 </div>
-@if (Session::has('message'))
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
 
-        toastr.success("{{ Session::get('message') }}");
-    </script>
-    @endif
-
-    @if (Session::has('error'))
-        <script>
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "timeOut": "5000",
-            };
-
-            toastr.error("{{ Session::get('error') }}");
-        </script>
-    @endif
-
-    @if ($errors->any())
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-
-        @foreach ($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    </script>
-@endif
 <!-- Latest Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

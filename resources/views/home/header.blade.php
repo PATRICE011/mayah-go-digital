@@ -39,7 +39,7 @@
                   </li>
 
                   <li class="nav__item">
-                     <a href="#">
+                     <a href="{{route('home.myorders')}}">
                         <i class="ri-shopping-cart-line"></i>
                         Orders
                      </a>
