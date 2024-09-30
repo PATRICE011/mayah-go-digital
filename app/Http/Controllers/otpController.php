@@ -106,7 +106,7 @@ class otpController extends Controller
     if ($userData) {
         $otp = $userData['otp'];
         $otpCreatedAt = new \DateTime($userData['otp_created_at']); // Parse stored date-time string
-        $otpValidityPeriod = 1; // in minutes
+        $otpValidityPeriod = 5; // in minutes
 
         // Check if OTP is still valid
         $currentDateTime = new \DateTime(); // Current time

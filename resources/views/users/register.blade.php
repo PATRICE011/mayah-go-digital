@@ -41,7 +41,7 @@
 
         <div>
             <p class="login__signup">
-                Already have an account? <a href="login.php">Sign in</a>
+                Already have an account? <a href="{{route('users.login')}}">Sign in</a>
             </p>
 
             <button type="submit" class="login__button">Register</button>
