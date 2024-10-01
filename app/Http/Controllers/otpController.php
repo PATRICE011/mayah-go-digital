@@ -95,7 +95,7 @@ class otpController extends Controller
         }
     }
     
-    public function verifyOtp(Request $request)
+    public function verifyOtp(Request $request) 
 {
     // Validate the OTP input
     $request->validate(['otp' => 'required|string']);
@@ -115,7 +115,6 @@ class otpController extends Controller
         // Check if OTP is expired
         if ($interval->i > $otpValidityPeriod || ($interval->i == $otpValidityPeriod && $interval->s > 0)) {
             // OTP is expired
-           
             return redirect()->back()->with('error', 'The OTP has expired. Please request a new one.');
         }
 
@@ -130,10 +129,14 @@ class otpController extends Controller
                 'is_admin' => $userData['is_admin'],
             ]);
 
-            // Clear the OTP from session
+            // Log the user in after creation
+            Auth::login($user);
+
+            // Clear the OTP and user data from the session
             $request->session()->forget('user_data');
 
-            return redirect(route('users.login'))->with('message', 'OTP verified successfully.');
+            // Redirect to the homepage (users.usersdashboard)
+            return redirect()->route('users.usersdashboard')->with('message', 'OTP verified successfully and you are now logged in.');
         } else {
             // OTP is invalid or wrong
             return redirect()->back()->with('error', 'Invalid OTP, please try again.');
@@ -143,6 +146,7 @@ class otpController extends Controller
         return redirect()->back()->with('error', 'Session data not found. Please try again.');
     }
 }
+
 
 public function resendOtp(Request $request)
 {

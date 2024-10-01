@@ -38,7 +38,7 @@
                      </a>
                   </li>
 
-                  <li class="nav__item">
+                  <!-- <li class="nav__item">
                      <a href="{{route('home.myorders')}}">
                         <i class="ri-shopping-cart-line"></i>
                         Orders
@@ -50,7 +50,7 @@
                         <i class="ri-settings-2-line"></i>
                         Settings
                      </a>
-                  </li>
+                  </li> -->
                </ul>
             </li>
          </ul>
