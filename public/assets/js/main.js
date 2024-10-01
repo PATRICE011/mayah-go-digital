@@ -251,8 +251,7 @@ document.querySelectorAll('.increase').forEach(button => {
         quantityElement.textContent = ++quantity;
         document.getElementById(`input-quantity-${id}`).value = quantity;
 
-        updateTotalPrice();
-        saveQuantityToDatabase(id, quantity);
+        updateTotalPrice(); // Update total price after increasing quantity
     });
 });
 
@@ -265,23 +264,33 @@ document.querySelectorAll('.decrease').forEach(button => {
             quantityElement.textContent = --quantity;
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
-            updateTotalPrice();
-            saveQuantityToDatabase(id, quantity);
+            updateTotalPrice(); // Update total price after decreasing quantity
         }
     });
 });
 
-
 function updateTotalPrice() {
     let total = 0;
+    
     document.querySelectorAll('.cart__card').forEach(card => {
         const id = card.querySelector('.decrease').getAttribute('data-id');
-        const price = parseFloat(document.getElementById(`price-${id}`).textContent.replace('$', ''));
+        
+        // Get the price and quantity
+        const priceText = document.getElementById(`price-${id}`).textContent;
+        const price = parseFloat(priceText.replace('₱', '').replace(',', '').trim()); // Ensure correct formatting
         const quantity = parseInt(document.getElementById(`quantity-${id}`).textContent);
-        total += price * quantity;
+
+        // Add to total if price and quantity are valid
+        if (!isNaN(price) && !isNaN(quantity)) {
+            total += price * quantity;
+        }
     });
-    document.querySelector('.cart__prices-total').textContent = `$${total.toFixed(2)}`;
+
+    // Update total price element
+    document.querySelector('.cart__prices-total').textContent = `₱${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 }
+
+
 
 function saveQuantityToDatabase(id, quantity) {
     fetch('/update-quantity', {
