@@ -242,7 +242,7 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         });
     });
 });
-
+  
 document.querySelectorAll('.increase').forEach(button => {
     button.addEventListener('click', function() {
         const id = this.getAttribute('data-id');
@@ -252,6 +252,7 @@ document.querySelectorAll('.increase').forEach(button => {
         document.getElementById(`input-quantity-${id}`).value = quantity;
 
         updateTotalPrice(); // Update total price after increasing quantity
+        updateQuantityInDatabase(id, quantity); // Update quantity in database
     });
 });
 
@@ -265,6 +266,7 @@ document.querySelectorAll('.decrease').forEach(button => {
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
             updateTotalPrice(); // Update total price after decreasing quantity
+            updateQuantityInDatabase(id, quantity); // Update quantity in database
         }
     });
 });
@@ -290,26 +292,27 @@ function updateTotalPrice() {
     document.querySelector('.cart__prices-total').textContent = `₱${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 }
 
+// Fetch CSRF token from the meta tag
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-
-function saveQuantityToDatabase(id, quantity) {
-    fetch('/update-quantity', {
+function updateQuantityInDatabase(id, quantity) {
+    fetch(`/cart/update/${id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // For Laravel
+            'X-CSRF-TOKEN': csrfToken // Include CSRF token
         },
-        body: JSON.stringify({ id: id, quantity: quantity })
+        body: JSON.stringify({ quantity: quantity })
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            toastr.success('Quantity updated successfully');
+            console.log('Quantity updated successfully.');
         } else {
-            toastr.error('Failed to update quantity');
+            console.error('Failed to update quantity.');
         }
     })
-    .catch(error => toastr.error('Error: ' + error.message));
+    .catch(error => console.error('Error:', error));
 }
 
 /*=============== SIDE CART MANAGEMENT ON PAGE LOAD ===============*/

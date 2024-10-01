@@ -114,16 +114,24 @@ class cartController extends Controller
     }
     
     // update
-    public function updateQuantity(Request $request)
+   // CartController.php
+    public function updateQuantity(Request $request, $id)
     {
-        $cartItem = CartItem::find($request->id);
+        $request->validate([
+            'quantity' => 'required|integer|min:1', // Ensure quantity is valid
+        ]);
+
+        // Find the cart item by ID and update the quantity
+        $cartItem = CartItem::find($id);
         if ($cartItem) {
             $cartItem->quantity = $request->quantity;
             $cartItem->save();
             return response()->json(['success' => true]);
         }
-        return response()->json(['success' => false, 'message' => 'Item not found']);
+
+        return response()->json(['success' => false], 404);
     }
+
     
     // delete 
     public function destroy($id)

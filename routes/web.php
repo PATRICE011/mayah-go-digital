@@ -45,8 +45,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/show', [CartController::class, 'showCart'])->name('home.cartinside');
         Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
         Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
-        Route::post('/update/{id}', 'CartController@update')->name('cartUpdate');
-        Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdate');
+        
+        Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
+
     });
 
     // ===== MY ORDERS ====
