@@ -39,73 +39,74 @@ class PaymentController extends Controller
      }
 }
 
-    public function createPaymentTest($orderId)
-    {
-        // Get the authenticated user
-        $user = Auth::user();
-    
-        // Find the specified order by order ID
-        $order = Order::where('id', $orderId)
-            ->where('user_id', $user->id)
-            ->where('status', 'pending') // Only pending orders
-            ->first();
-    
-        // Check if the order exists and has items
-        if ($order && $order->orderItems()->count() > 0) {
-            // Initialize variables for total amount and line items
-            $lineItems = [];
-            $totalAmount = 0;
-    
-            foreach ($order->orderItems as $orderItem) {
-                $itemTotalPrice = $orderItem->price * $orderItem->quantity; // Calculate total price for each item
-                $totalAmount += $itemTotalPrice; // Accumulate total amount
-    
-                // Add to line items array
-                $lineItems[] = [
-                    'currency'    => 'PHP',
-                    'amount'      => $itemTotalPrice * 100, // Multiply by 100 for cents
-                    'name'        => $orderItem->product->product_name, // Product name
-                    'quantity'    => $orderItem->quantity,
-                ];
-            }
-    
-            // Prepare data for PayMongo API request
-            $data = [
-                'data' => [
-                    'attributes' => [
-                        'line_items' => $lineItems,
-                        'payment_method_types' => ['gcash', 'paymaya'],
-                        'success_url' => route('payment.success'),
-                        // 'cancel_url' => route('payment.cancel'),
-                    ],
-                ]
+public function createPaymentTest($orderId)
+{
+    // Get the authenticated user
+    $user = Auth::user();
+
+    // Find the specified order by order ID
+    $order = Order::where('id', $orderId)
+        ->where('user_id', $user->id)
+        ->where('status', 'pending') // Only pending orders
+        ->first();
+
+    // Check if the order exists and has items
+    if ($order && $order->orderItems()->count() > 0) {
+        // Initialize variables for total amount and line items
+        $lineItems = [];
+        $totalAmount = 0;
+
+        foreach ($order->orderItems as $orderItem) {
+            $itemTotalPrice = $orderItem->price * $orderItem->quantity; // Calculate total price for each item
+            $totalAmount += $itemTotalPrice; // Accumulate total amount
+
+            // Add to line items array
+            $lineItems[] = [
+                'currency'    => 'PHP',
+                'amount'      => $orderItem->price  * 100, // Multiply by 100 for cents (price per item, not total amount)
+                'name'        => $orderItem->product->product_name, // Product name
+                'quantity'    => $orderItem->quantity,
             ];
-    
-            // Make the API request to PayMongo
-            $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions')
-                ->withHeader('Content-Type: application/json')
-                ->withHeader('accept: application/json')
-                ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))
-                ->withData($data)
-                ->asJson()
-                ->post();
-    
-            // Debugging: Check the response
-            if (isset($response->data)) {
-                // Store the session ID and order ID in the session
-                Session::put('session_id', $response->data->id);
-                Session::put('order_id', $order->id);
-    
-                // Redirect to the checkout URL
-                return redirect()->to($response->data->attributes->checkout_url);
-            } else {
-                // Log any error from the response
-                Log::error('PayMongo API response', (array)$response);
-    
-                return redirect()->back()->with('error', 'Payment initiation failed. Please try again.');
-            }
-        } else {
-            return redirect()->back()->with('error', 'No pending orders found.');
         }
+
+        // Prepare data for PayMongo API request
+        $data = [
+            'data' => [
+                'attributes' => [
+                    'line_items' => $lineItems,
+                    'payment_method_types' => ['gcash', 'paymaya'],
+                    'success_url' => route('payment.success'),
+                    // 'cancel_url' => route('payment.cancel'),
+                ],
+            ]
+        ];
+
+        // Make the API request to PayMongo
+        $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions')
+            ->withHeader('Content-Type: application/json')
+            ->withHeader('accept: application/json')
+            ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))
+            ->withData($data)
+            ->asJson()
+            ->post();
+
+        // Debugging: Check the response
+        if (isset($response->data)) {
+            // Store the session ID and order ID in the session
+            Session::put('session_id', $response->data->id);
+            Session::put('order_id', $order->id);
+
+            // Redirect to the checkout URL
+            return redirect()->to($response->data->attributes->checkout_url);
+        } else {
+            // Log any error from the response
+            Log::error('PayMongo API response', (array)$response);
+
+            return redirect()->back()->with('error', 'Payment initiation failed. Please try again.');
+        }
+    } else {
+        return redirect()->back()->with('error', 'No pending orders found.');
     }
+}
+
 }

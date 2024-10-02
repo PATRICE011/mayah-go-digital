@@ -63,9 +63,9 @@
 
       <div class="nav__actions">
          <!-- Cart button -->
-         <div class="nav_shop" id="cart-shop">
+         <!-- <div class="nav_shop" id="cart-shop">
              <i class="ri-shopping-cart-2-line nav__shop"></i>
-         </div>
+         </div> -->
 
          <!-- Search button -->
          <i class="ri-search-line nav__search" id="search-btn"></i>
