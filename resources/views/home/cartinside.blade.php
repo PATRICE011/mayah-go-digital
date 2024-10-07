@@ -23,7 +23,7 @@
 
                             <span class="cart__amount-number" id="quantity-{{ $item->id }}">{{ $item->quantity }}</span>
 
-                            <span class="cart__amount-box increase" data-id="{{ $item->id }}">
+                            <span class="cart__amount-box increase" data-id="{{ $item->id }}" data-stock="{{ $item->product->product_stocks }}">
                                 <i class='bx bx-plus'></i>
                             </span>
                         </div>

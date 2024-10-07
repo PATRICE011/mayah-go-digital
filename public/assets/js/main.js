@@ -245,14 +245,27 @@ document.querySelectorAll('.add-to-cart-btn').forEach(button => {
   
 document.querySelectorAll('.increase').forEach(button => {
     button.addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
+        const id = this.getAttribute('data-id'); // Get product ID
+        const stock = parseInt(this.getAttribute('data-stock')); // Get the available stock
         const quantityElement = document.getElementById(`quantity-${id}`);
-        let quantity = parseInt(quantityElement.textContent);
-        quantityElement.textContent = ++quantity;
-        document.getElementById(`input-quantity-${id}`).value = quantity;
+        let quantity = parseInt(quantityElement.textContent); // Current quantity
 
-        updateTotalPrice(); // Update total price after increasing quantity
-        updateQuantityInDatabase(id, quantity); // Update quantity in database
+        // Check if the quantity exceeds the available stock
+        if (quantity < stock) {
+            quantityElement.textContent = ++quantity; // Increase the quantity
+            document.getElementById(`input-quantity-${id}`).value = quantity;
+
+            updateTotalPrice(); // Update total price after increasing quantity
+        } else {
+            // Trigger Toastr warning if user tries to add more than the available stock
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+            toastr.warning(`Only ${stock} stock(s) available for this product.`);
+        }
     });
 });
 
@@ -261,12 +274,12 @@ document.querySelectorAll('.decrease').forEach(button => {
         const id = this.getAttribute('data-id');
         const quantityElement = document.getElementById(`quantity-${id}`);
         let quantity = parseInt(quantityElement.textContent);
+
         if (quantity > 1) {
-            quantityElement.textContent = --quantity;
+            quantityElement.textContent = --quantity; // Decrease the quantity
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
             updateTotalPrice(); // Update total price after decreasing quantity
-            updateQuantityInDatabase(id, quantity); // Update quantity in database
         }
     });
 });
