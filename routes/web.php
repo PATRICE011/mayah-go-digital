@@ -71,6 +71,12 @@ Route::middleware('auth:admin')->group(function () {
     // dashboard
     Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admins.dashboard');
     
+    // orders
+    Route::get('/orders', [AdminController::class, 'showOrders'])->name('admins.orders');
+
+    // orders
+    Route::get('/orders/view', [AdminController::class, 'showView'])->name('admins.view');
+
     // inventory
     Route::get('/inventory', [AdminController::class, 'showInventory'])->name('admins.inventory');
     Route::post('/inventory', [ProductController::class, 'getProduct'])->name('admins.insertProduct');

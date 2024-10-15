@@ -42,7 +42,7 @@
                     <span class="nav__name">Dashboard</span>
                 </a>
 
-                <a href="#" class="nav__link">
+                <a href="{{ route('admins.orders') }}" class="nav__link">
                     <i class='bx bx-cart-alt'></i>
                     <span class="nav__name">Orders</span>
                 </a>
