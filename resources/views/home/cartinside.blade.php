@@ -43,7 +43,7 @@
         </div>
 
         <div class="cart__prices">
-            <span class="cart__prices-item">{{ count($cartItems) }} items</span>
+            <span class="cart__prices-item">{{ count($cartItems) }} item(s)</span>
             <span class="cart__prices-total">₱ {{ $cartItems->sum(fn($item) => $item->product->product_price * $item->quantity) }}</span>
         </div>
 

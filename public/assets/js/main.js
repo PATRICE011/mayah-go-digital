@@ -1,3 +1,6 @@
+
+// Fetch CSRF token from the meta tag
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 /*=============== SHOW MENU ===============*/
 const navMenu = document.getElementById('nav-menu'),
       navToggle = document.getElementById('nav-toggle'),
@@ -205,44 +208,45 @@ window.addEventListener('load', function() {
  });
 
 // Add to Cart function using AJAX
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const productId = this.getAttribute('data-id');
-        
-        // Set a flag in localStorage to keep the cart open
-        localStorage.setItem('keepCartOpen', 'true');
-        
-        // AJAX request to add product to cart
-        fetch('/cart/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ product_id: productId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the cart contents dynamically
-                document.querySelector('.cart__container').innerHTML = data.cart_html;
-                document.querySelector('.cart__prices-total').textContent = `$${data.total}`;
-                document.querySelector('.cart__prices-item').textContent = `${data.items} items`;
+// document.addEventListener('DOMContentLoaded', function () {
+//     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
-                // Keep the cart open
-                document.getElementById('cart').classList.add('show-cart');
-            } else {
-                alert('Failed to add product to cart');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding product to cart:', error);
-        });
-    });
-});
-  
+//     addToCartButtons.forEach(button => {
+//         button.addEventListener('click', function () {
+//             const productId = this.getAttribute('data-id');
+
+//             fetch('/cart/add', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//                 },
+//                 body: JSON.stringify({ id: productId })
+//             })
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Failed to add product');
+//                 }
+//                 return response.json();
+//             })
+//             .then(data => {
+//                 if (data.success) {
+//                     alert('Product added to cart successfully!');
+                   
+//                 } else {
+//                     alert('Failed to add product to cart');
+//                 }
+//             })
+//             .catch(error => {
+//                 console.error('Error:', error);
+//                 alert('There was an error adding the product to the cart.');
+//             });
+//         });
+//     });
+
+   
+// });
+
 document.querySelectorAll('.increase').forEach(button => {
     button.addEventListener('click', function() {
         const id = this.getAttribute('data-id'); // Get product ID
@@ -305,8 +309,7 @@ function updateTotalPrice() {
     document.querySelector('.cart__prices-total').textContent = `₱${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 }
 
-// Fetch CSRF token from the meta tag
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 
 function updateQuantityInDatabase(id, quantity) {
     fetch(`/cart/update/${id}`, {
