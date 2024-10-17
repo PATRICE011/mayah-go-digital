@@ -50,7 +50,17 @@ class PaymentController extends Controller
             // Update the order status to 'paid'
             $order->status = 'paid';
             $order->save();
-
+            // Subtract stock for each item in the order
+            foreach ($order->orderItems as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->product_stocks -= $item->quantity;
+                    if ($product->product_stocks < 0) {
+                        return redirect()->back()->with('error', 'Insufficient stock for product: ' . $product->product_name);
+                    }
+                    $product->save();
+                }
+            }
             // Generate unique 7-digit order ID for order details
             $customOrderId = $this->generateUniqueOrderId();
 
