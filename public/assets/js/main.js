@@ -260,6 +260,7 @@ document.querySelectorAll('.increase').forEach(button => {
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
             updateTotalPrice(); // Update total price after increasing quantity
+            updateQuantityInDatabase(id, quantity);
         } else {
             // Trigger Toastr warning if user tries to add more than the available stock
             toastr.options = {
@@ -284,6 +285,7 @@ document.querySelectorAll('.decrease').forEach(button => {
             document.getElementById(`input-quantity-${id}`).value = quantity;
 
             updateTotalPrice(); // Update total price after decreasing quantity
+            updateQuantityInDatabase(id, quantity);
         }
     });
 });

@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
          // paymongo
         Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
         Route::get('/create/{orderId}', [PaymentController::class, 'createPaymentTest'])->name('cart.pay');
-        Route::get('/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+        Route::match(['get', 'post'],'/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
    });
 });
@@ -72,7 +72,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admins.dashboard');
     
     // orders
-    Route::get('/orders', [AdminController::class, 'showOrders'])->name('admins.orders');
+    // Route::get('/orders', [AdminController::class, 'showOrders'])->name('admins.orders');
+    Route::get('/orders', [AdminController::class, 'onlineOrders'])->name('admins.orders');
 
     // orders
     Route::get('/orders/view', [AdminController::class, 'showView'])->name('admins.view');
