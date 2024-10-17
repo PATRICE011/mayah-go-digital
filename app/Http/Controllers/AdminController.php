@@ -27,6 +27,15 @@ class AdminController extends Controller
     public function showDashboard(){
         return view("admins.dashboard");
     }
+
+    public function showOrders(){
+        return view("admins.orders");
+    }
+
+    public function showView(){
+        return view("admins.view");
+    }
+
     // edit invenotry page
     public function edit($id){
         $product = Product::findOrFail($id);

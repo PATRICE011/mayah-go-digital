@@ -1,9 +1,8 @@
 @extends('admins.layout')
 @section('title')
 @section('content')
-
 <main class="container section">
-    <!-- <h1>Dashboard</h1> -->
+    <h2>view</h2>
 </main>
 @endsection
 
