@@ -74,9 +74,8 @@ Route::middleware('auth:admin')->group(function () {
     // orders
     // Route::get('/orders', [AdminController::class, 'showOrders'])->name('admins.orders');
     Route::get('/orders', [AdminController::class, 'onlineOrders'])->name('admins.orders');
-
-    // orders
-    Route::get('/orders/view', [AdminController::class, 'showView'])->name('admins.view');
+    Route::get('/orders/view/{id}', [AdminController::class, 'showView'])->name('admins.view');
+    Route::post('/orders/{order}/confirm', [AdminController::class, 'confirmOrder'])->name('orders.confirm');
 
     // inventory
     Route::get('/inventory', [AdminController::class, 'showInventory'])->name('admins.inventory');

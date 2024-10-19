@@ -16,19 +16,19 @@ class Product extends Model
         'product_image',
         'product_price',
         'product_stocks',
-        'category_id'
-        
+        'category_id',
     ];
-    public function cartItems()
-    {
-        return $this->hasMany(CartItem::class);
-    }
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+
+    // One-to-Many relationship with OrderItems
     public function orderItems()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'product_id');
+    }
+
+    // Belongs-to relationship with Category
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
+

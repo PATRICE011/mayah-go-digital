@@ -32,11 +32,11 @@
             <tbody>
                 @forelse ($orders as $order)
                     <tr>
-                        <td>{{ $order->order_id }}</td>
-                        <td>{{ $order->customer }}</td>
-                        <td>{{ ucfirst($order->payment_method) }}</td>
-                        <td>₱ {{ number_format($order->amount, 2) }}</td>
-                        <td>{{ \Carbon\Carbon::parse($order->date)->format('h:i A, d-m-Y') }}</td>
+                        <td>{{ $order->orderDetail->order_id_custom }}</td>
+                        <td>{{ $order->user->name }}</td>
+                        <td>{{ ucfirst($order->orderDetail->payment_method) }}</td>
+                        <td>₱ {{ number_format($order->orderDetail->total_amount, 2) }}</td>
+                        <td>{{ $order->created_at->format('h:i A, d-m-Y') }}</td>
                         <td>
                             <span class="status {{ strtolower($order->status) }}">
                                 {{ ucfirst($order->status) }}
@@ -44,7 +44,7 @@
                         </td>
                         <td>
                             <button class="action-btn">
-                                <a href="{{ route('admins.view', ['id' => $order->order_id]) }}">
+                                <a href="{{ route('admins.view', ['id' => $order->orderDetail->order_id_custom]) }}">
                                     👁️
                                 </a>
                             </button>
@@ -58,7 +58,9 @@
             </tbody>
         </table>
 
-        <p class="footer">Showing {{ $orders->count() }} of {{ $orders->count() }} entries</p>
+        <p class="footer">
+            Showing {{ $orders->count() }} of {{ $orders->count() }} entries
+        </p>
     </div>
 </main>
 @endsection

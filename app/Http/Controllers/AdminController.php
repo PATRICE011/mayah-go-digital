@@ -34,8 +34,15 @@ class AdminController extends Controller
     //     return view("admins.orders");
     // }
 
-    public function showView(){
-        return view("admins.view");
+    public function showView($id){
+            // Fetch the order with related user, order details, and order items
+        $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
+        ->whereHas('orderDetail', function ($query) use ($id) {
+            $query->where('order_id_custom', $id);
+        })
+        ->firstOrFail();
+
+    return view('admins.view', compact('order'));
     }
 
     // edit invenotry page
@@ -64,19 +71,19 @@ class AdminController extends Controller
 
     public function onlineOrders()
     {
-        $orders = DB::table('orders')
-            ->join('users_area', 'orders.user_id', '=', 'users_area.id')
-            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
-            ->select(
-                'orderdetails.order_id_custom as order_id',
-                'users_area.name as customer',
-                'orderdetails.payment_method',
-                'orderdetails.total_amount as amount',
-                'orders.status',
-                'orders.created_at as date'
-            )
-            ->get();
-    
-        return view('admins.orders', compact('orders'));
+        // Eager load the related user and order details
+        $orders = \App\Models\Order::with(['user', 'orderDetail'])
+        ->get();
+
+    return view('admins.orders', compact('orders'));
     }
+
+    public function confirmOrder(Order $order)
+{
+    $order->update(['status' => 'confirmed']);
+    
+    // Optionally, redirect back with a success message
+    return redirect()->back()->with('message', 'Order has been confirmed.');
+}
+
 }
