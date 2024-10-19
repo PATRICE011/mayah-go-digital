@@ -47,10 +47,10 @@
                     <span class="nav__name">Orders</span>
                 </a>
 
-                <a href="#" class="nav__link">
+                <!-- <a href="#" class="nav__link">
                     <i class='bx bx-envelope'></i>
                     <span class="nav__name">Messages</span>
-                </a>
+                </a> -->
 
                 <a href="{{ route('admins.category') }}" class="nav__link">
                 <i class='bx bx-purchase-tag-alt' ></i>

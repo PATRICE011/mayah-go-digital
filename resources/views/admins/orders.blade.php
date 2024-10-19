@@ -35,7 +35,7 @@
                         <td>{{ $order->order_id }}</td>
                         <td>{{ $order->customer }}</td>
                         <td>{{ ucfirst($order->payment_method) }}</td>
-                        <td>{{ number_format($order->amount, 2) }}</td>
+                        <td>₱ {{ number_format($order->amount, 2) }}</td>
                         <td>{{ \Carbon\Carbon::parse($order->date)->format('h:i A, d-m-Y') }}</td>
                         <td>
                             <span class="status {{ strtolower($order->status) }}">
