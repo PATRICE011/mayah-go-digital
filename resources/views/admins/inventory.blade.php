@@ -16,8 +16,8 @@
                         <th>Price (₱)</th>
                         <th>Stocks</th>
                         <th>Category</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th>Actions</th>
+                        <!-- <th>Delete</th> -->
                     </tr>
                 </thead>
 
@@ -36,10 +36,9 @@
                                 <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editModal-{{ $product->id }}">
                                     Edit
                                 </button>
-                            </td>
-                            <td>
+
                                 <form action="{{ route('admins.inventory.destroy', $product->id) }}" method="POST" 
-                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                    onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn clr-color1">Delete</button>
