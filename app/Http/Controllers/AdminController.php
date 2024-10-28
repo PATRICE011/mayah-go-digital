@@ -41,7 +41,6 @@ class AdminController extends Controller
             $query->where('order_id_custom', $id);
         })
         ->firstOrFail();
-
     return view('admins.view', compact('order'));
     }
 
@@ -72,7 +71,7 @@ class AdminController extends Controller
     public function onlineOrders()
     {
         // Eager load the related user and order details
-        $orders = \App\Models\Order::with(['user', 'orderDetail'])
+        $orders = Order::with(['user', 'orderDetail'])
         ->get();
 
     return view('admins.orders', compact('orders'));

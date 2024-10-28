@@ -1,17 +1,16 @@
 @extends('admins.layout')
 @section('content')
 
-<div class="main-wrapper">
+<div class="category-wrapper">
     <main class="container section">
-
         <!-- Filters and Table for Categories List -->
-        <div class="containers mt-4">
-            <h1>Category Management</h1>
+        <div class="category__container mt-4">
+            <h1 class="category__title">Category Management</h1>
             
             <table class="table mt-3">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>No.</th>
                         <th>Name</th>
                         <th>Edit</th>
                         <th>Delete</th>

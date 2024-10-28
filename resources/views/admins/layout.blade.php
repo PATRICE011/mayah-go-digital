@@ -44,7 +44,7 @@
 
                 <a href="{{ route('admins.orders') }}" class="nav__link">
                     <i class='bx bx-cart-alt'></i>
-                    <span class="nav__name">Orders</span>
+                    <span class="nav__name">Manage Orders</span>
                 </a>
 
                 <!-- <a href="#" class="nav__link">
