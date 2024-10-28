@@ -60,3 +60,16 @@ function updateStatus(status) {
     // Prevent default link action
     return false;
 }
+
+function updateStatus(newStatus) {
+    // Get the status badge element
+    const statusBadge = document.getElementById('statusBadge');
+    
+    // Update the badge text and color based on the new status
+    statusBadge.textContent = newStatus;
+    statusBadge.className = ''; // Reset any existing classes
+    statusBadge.classList.add('badge', 'bg-danger'); // Change 'bg-warning' if you want a different color
+
+    // Optional: Send an AJAX request to update the status in the backend
+    // If you want to save this status change, send an AJAX POST request here
+}

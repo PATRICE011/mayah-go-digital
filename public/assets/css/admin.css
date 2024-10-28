@@ -334,6 +334,29 @@ a {
   font-size: 2.5rem;
 }
 
+.action-btn{
+  border: none;
+  background-color: transparent;
+}
+
+.action-btn-icon{
+  color: #B1D690;
+}
+
+
+.action-btn-icon:hover{
+  text-decoration: none;
+}
+
+.action-btn-icon:nth-child(1){
+  color: #B1D690;
+}
+
+.action-btn-icon:nth-child(2){
+  padding-left: 0.5rem;
+  color: #FFA24C;
+}
+
 /* CATEGORY, INVENTORY, AND ORDERS MANAGEMENT REUSABLE CLASSES */
 .table{
   width: 100%;
@@ -384,4 +407,12 @@ thead{
 /* VIEW ORDERS MANAGEMENT */
 .badge{
   color: #FFF;
+}
+
+.btn-success{
+  background-color: #B1D690;
+}
+
+.btn-danger{
+  background-color: #F95454;
 }
