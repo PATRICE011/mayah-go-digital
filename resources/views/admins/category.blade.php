@@ -13,13 +13,12 @@
                         <th>No.</th>
                         <th>Name</th>
                         <th>Actions</th>
-                        <!-- <th>Delete</th> -->
                     </tr>
                 </thead>
 
-                                <tbody>
+                <tbody>
                     @php $counter = 1; @endphp
-                    @foreach ($categories as $category)
+                    @forelse ($categories as $category)
                     <tr>
                         <td>{{ $counter++ }}</td>
                         <td>{{ $category->category_name }}</td>
@@ -28,17 +27,23 @@
                                 Edit
                             </button>
 
-                            <form action="{{ route('admins.category.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                            <form action="{{ route('admins.category.destroy', $category->id) }}" method="POST" 
+                                  onsubmit="return confirm('Are you sure you want to delete this category?');" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn clr-color1">Delete</button>
                             </form>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center">No categories available.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
 
             </table>
+
             <!-- Button to trigger modal -->
             <button type="button" class="btn clr-color1" data-toggle="modal" data-target="#addCategoryModal">
                 Add Category
@@ -64,9 +69,7 @@
                                 <input type="text" class="form-control" id="category_name" name="category_name" placeholder="e.g., Biscuits" required>
                             </div>
 
-                            <button type="submit" class="btn clr-color1">
-                                Add
-                            </button>
+                            <button type="submit" class="btn clr-color1">Add</button>
                         </form>
                     </div>
                 </div>
@@ -94,9 +97,7 @@
                                 <input type="text" class="form-control" id="category_name" name="category_name" value="{{ $category->category_name }}" required>
                             </div>
 
-                            <button type="submit" class="btn clr-color1">
-                                Update
-                            </button>
+                            <button type="submit" class="btn clr-color1">Update</button>
                         </form>
                     </div>
                 </div>
