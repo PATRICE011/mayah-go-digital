@@ -63,7 +63,11 @@ class SmsStatusController extends Controller
     {
         $order->update(['status' => 'rejected']);
         
+        $mobileNumber = $order->user->mobile;
+        $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} has been rejected. We apologize for any inconvenience. Thank you for choosing us.";
 
+        // Send SMS notification
+        $this->sendSmsNotification($mobileNumber, $message);
         // Redirect back with a success message
         return redirect()->back()->with('message', 'Order has been rejected and SMS notification sent.');
     }

@@ -18,7 +18,10 @@
 
                     <div>
                         <!-- Reject button with an onclick event -->
-                        <button class="btn btn-danger me-2" id="rejectButton" onclick="updateStatus('Rejected')"><i class="fa fa-times"></i> Reject</button>
+                        <form action="{{route('orders.reject',  $order->id)}}" method="POST" class="d-inline">
+                            @csrf
+                            <button class="btn btn-danger me-2" id="rejectButton" onclick="updateStatus('Rejected')"><i class="fa fa-times"></i> Reject</button>
+                        </form>
                         <form action="{{ route('orders.confirm', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Accept</button>
@@ -27,7 +30,17 @@
                 </div>
             </div>
             @endif
+            @if (strtolower($order->status) === 'rejected')
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <span class="badge bg-danger bg-{{ strtolower($order->status) }}" id="statusBadge">{{ ucfirst($order->status) }}</span>
+                    </div>
 
+                </div>
+            </div>
+            @endif
             <!-- Show this card only if status is 'confirmed' -->
             @if (strtolower($order->status) === 'confirmed')
             <div class="card mb-3">
