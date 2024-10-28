@@ -58,7 +58,15 @@ class SmsStatusController extends Controller
             Log::error('SMS sending failed: ' . $e->getMessage());
         }
     }
-    
+    // ===== STATUS REJECTED =======
+    public function rejectOrder(Order $order)
+    {
+        $order->update(['status' => 'rejected']);
+        
+
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Order has been rejected and SMS notification sent.');
+    }
     // ==== STATUS READY TO PICK UP ====
     // ===== STATUS REFUNDED ======
 }

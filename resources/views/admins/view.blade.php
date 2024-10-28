@@ -1,12 +1,14 @@
 @extends('admins.layout')
 @section('title', 'Order Details')
-<!-- @section('content') -->
 
+@section('content')
 <main class="container-xl my-4 section">
     <div class="row justify-content-center">
         <div class="col-12">
             <h1 class="display-6">Order Details</h1>
-            
+
+            <!-- Show this card only if status is 'paid' -->
+            @if (strtolower($order->status) === 'paid')
             <div class="card mb-3">
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
@@ -15,7 +17,9 @@
                     </div>
 
                     <div>
+                        <form action="{{ route('orders.reject', $order->id) }}" method="POST" class="d-inline">
                         <button class="btn btn-danger me-2"><i class="fa fa-times"></i> Reject</button>
+                        </form>
                         <form action="{{ route('orders.confirm', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Accept</button>
@@ -23,19 +27,22 @@
                     </div>
                 </div>
             </div>
+            @endif
 
+            <!-- Show this card only if status is 'confirmed' -->
+            @if (strtolower($order->status) === 'confirmed')
             <div class="card mb-3">
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
-                        <span class="badge bg-{{ strtolower($order->status) }}" id="statusBadge">{{ ucfirst($order->status) }}</span>
+                        <span class="badge bg-{{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span>
                     </div>
-                    
+
                     <div class="btn-group">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="statusButton" data-bs-toggle="dropdown" aria-expanded="false">
                             Status
                         </button>
-            
+
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
                             <li><a class="dropdown-item" href="#" onclick="updateStatus('Ready For Pickup')">Ready For Pickup</a></li>
@@ -43,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <div class="row g-3">
                 <!-- Order Items -->
@@ -52,14 +60,14 @@
                             <h5 class="card-title">Order Items</h5>
                             <ul class="list-group list-group-flush">
                                 @foreach($order->orderItems as $item)
-                                    <li class="list-group-item d-flex align-items-center">
-                                        <span class="badge bg-dark me-3">{{ $item->quantity }}</span>
-                                        <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}" class="rounded me-3" width="60">
-                                        <div>
-                                            <h6 class="mb-1">{{ $item->product->product_name }}</h6>
-                                            <small class="text-muted">₱ {{ number_format($item->price, 2) }}</small>
-                                        </div>
-                                    </li>
+                                <li class="list-group-item d-flex align-items-center">
+                                    <span class="badge bg-dark me-3">{{ $item->quantity }}</span>
+                                    <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}" class="rounded me-3" width="60">
+                                    <div>
+                                        <h6 class="mb-1">{{ $item->product->product_name }}</h6>
+                                        <small class="text-muted">₱ {{ number_format($item->price, 2) }}</small>
+                                    </div>
+                                </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -103,14 +111,14 @@
 </main>
 
 @if (Session::has('message'))
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-        toastr.success("{{ Session::get('message') }}");
-    </script>
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000",
+    };
+    toastr.success("{{ Session::get('message') }}");
+</script>
 @endif
 @endsection

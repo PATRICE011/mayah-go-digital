@@ -21,33 +21,38 @@
                     </tr>
                 </thead>
 
-                <tbody>
-                    <!-- Initialize a counter variable -->
-                    @php $counter =  $products->firstItem(); @endphp
-                    <!-- Dynamic rows for products -->
-                    @foreach ($products as $product)
-                    <tr>
-                        <td>{{ $counter++ }}</td>
-                        <td><img class="product__img" src="{{ asset('assets/img/' . $product->product_image) }}" alt="Product Image" width="50"></td>
-                        <td>{{ $product->product_name }}</td>
-                        <td>₱ {{ $product->product_price }}.00</td>
-                        <td>{{ $product->product_stocks }}</td>
-                        <td>{{ $product->category->category_name }}</td>
-                        <td>
-                            <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editModal-{{ $product->id }}">
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <form action="{{ route('admins.inventory.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn clr-color1">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
+                    <tbody>
+                    @php $counter = $products->firstItem(); @endphp
+
+                    @forelse ($products as $product)
+                        <tr>
+                            <td>{{ $counter++ }}</td>
+                            <td><img class="product__img" src="{{ asset('assets/img/' . $product->product_image) }}" alt="Product Image" width="50"></td>
+                            <td>{{ $product->product_name }}</td>
+                            <td>₱ {{ $product->product_price }}.00</td>
+                            <td>{{ $product->product_stocks }}</td>
+                            <td>{{ $product->category->category_name }}</td>
+                            <td>
+                                <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editModal-{{ $product->id }}">
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <form action="{{ route('admins.inventory.destroy', $product->id) }}" method="POST" 
+                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn clr-color1">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="text-center">No products available.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
+
             </table>
 
             <!-- Pagination links -->

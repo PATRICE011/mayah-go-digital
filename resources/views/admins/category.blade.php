@@ -17,28 +17,34 @@
                     </tr>
                 </thead>
 
-                <tbody>
-                    <!-- Initialize a counter variable -->
+                                <tbody>
                     @php $counter = 1; @endphp
-                    @foreach ($categories as $category)
-                    <tr>
-                        <td>{{ $counter++ }}</td>
-                        <td>{{ $category->category_name }}</td>
-                        <td>
-                            <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editCategoryModal-{{ $category->id }}">
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <form action="{{ route('admins.category.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn clr-color1">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
+
+                    @forelse ($categories as $category)
+                        <tr>
+                            <td>{{ $counter++ }}</td>
+                            <td>{{ $category->category_name }}</td>
+                            <td>
+                                <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editCategoryModal-{{ $category->id }}">
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <form action="{{ route('admins.category.destroy', $category->id) }}" method="POST" 
+                                    onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn clr-color1">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">No categories available.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
+
             </table>
             <!-- Button to trigger modal -->
             <button type="button" class="btn clr-color1" data-toggle="modal" data-target="#addCategoryModal">
