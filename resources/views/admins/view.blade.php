@@ -56,8 +56,10 @@
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
                             <li><a class="dropdown-item" href="#" onclick="updateStatus('Ready For Pickup')">Ready For Pickup</a></li>
+                            <!-- === IF COMPLETED THERE SHOULD BE A BUTTON FOR REFUND -->
+                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
+                            
                         </ul>
                     </div>
                 </div>
