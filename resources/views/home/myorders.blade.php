@@ -103,13 +103,14 @@
                         <div class="order-card">
                             <div class="d-flex align-items-start position-relative">
                                 <!-- Product Image -->
-                                <img src="{{ asset('assets/img/' . $item->product->product_image ) }}" class="order-image" alt="Product Image">
+                                <img src="{{ asset('assets/img/' . $item->product->product_image ) }}" class="order-image" alt="{{ $item->product->product_name }}">
+                                
                                 <!-- Product Details -->
                                 <div class="order-info">
                                     <h5>{{ $item->product->product_name }}</h5>
                                     <p><strong>Category:</strong> {{ $item->product->category->category_name }}</p>
                                     <p><strong>Quantity:</strong> {{ $item->quantity }}</p>
-                                    <p class="order-price"><strong>Price per item:</strong> ₱ {{ $item->price }}</p>
+                                    <p class="order-price"><strong>Price per item:</strong> ₱ {{ number_format($item->price, 2) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -117,16 +118,17 @@
 
                     <!-- Amount Payable -->
                     <div class="order-actions">
-                        <p class="amount-payable">Amount Payable: ₱ {{ $order->total_amount }}</p>
+                        <p class="amount-payable">Amount Payable: ₱ {{ number_format($order->total_amount, 2) }}</p>
                         <a href="{{ route('cart.pay', $order->id) }}" class="btn btn-primary">Pay Now</a>
                     </div>
                 </div>
             @endforeach
         </div>
     @endif
-
    
 </div>
+ 
+
 
 <!-- Latest Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>

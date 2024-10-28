@@ -148,12 +148,22 @@ class cartController extends Controller
     }
 
     // my orders
-    public function viewOrders(){
-
-        $orders = Order::where('user_id', Auth::id())->with('orderItems.product')->get();
-        
-        return view ('home.myorders', compact('orders'));
+    public function viewOrders()
+    {
+        $orders = Order::where('user_id', Auth::id())
+            ->with('orderItems.product')
+            ->get()
+            ->map(function ($order) {
+                // Calculate the total amount by summing up the price * quantity of all items
+                $order->total_amount = $order->orderItems->sum(function ($item) {
+                    return $item->price * $item->quantity;
+                });
+                return $order;
+            });
+    
+        return view('home.myorders', compact('orders'));
     }
+    
 
 
 

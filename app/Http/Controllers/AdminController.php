@@ -30,21 +30,6 @@ class AdminController extends Controller
         return view("admins.dashboard");
     }
 
-    // public function showOrders(){
-    //     return view("admins.orders");
-    // }
-
-    public function showView($id){
-            // Fetch the order with related user, order details, and order items
-        $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
-        ->whereHas('orderDetail', function ($query) use ($id) {
-            $query->where('order_id_custom', $id);
-        })
-        ->firstOrFail();
-    return view('admins.view', compact('order'));
-    }
-
-    // edit invenotry page
     public function edit($id){
         $product = Product::findOrFail($id);
         return view('admins.editv', compact('product'));
@@ -77,12 +62,17 @@ class AdminController extends Controller
     return view('admins.orders', compact('orders'));
     }
 
-    public function confirmOrder(Order $order)
-{
-    $order->update(['status' => 'confirmed']);
     
-    // Optionally, redirect back with a success message
-    return redirect()->back()->with('message', 'Order has been confirmed.');
-}
+    public function showView($id){
+        // Fetch the order with related user, order details, and order items
+        $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
+        ->whereHas('orderDetail', function ($query) use ($id) {
+            $query->where('order_id_custom', $id);
+        })
+        ->firstOrFail();
+
+    return view('admins.view', compact('order'));
+    }
+   
 
 }
