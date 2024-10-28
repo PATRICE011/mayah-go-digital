@@ -12,8 +12,8 @@
                     <tr>
                         <th>No.</th>
                         <th>Name</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th>Actions</th>
+                        <!-- <th>Delete</th> -->
                     </tr>
                 </thead>
 
@@ -28,8 +28,7 @@
                             <button type="button" class="btn clr-color2" data-toggle="modal" data-target="#editCategoryModal-{{ $category->id }}">
                                 Edit
                             </button>
-                        </td>
-                        <td>
+
                             <form action="{{ route('admins.category.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                 @csrf
                                 @method('DELETE')

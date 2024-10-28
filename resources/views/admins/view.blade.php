@@ -11,11 +11,12 @@
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
-                        <span class="badge bg-{{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span>
+                        <span class="badge bg-{{ strtolower($order->status) }}" id="statusBadge">{{ ucfirst($order->status) }}</span>
                     </div>
 
                     <div>
-                        <button class="btn btn-danger me-2"><i class="fa fa-times"></i> Reject</button>
+                        <!-- Reject button with an onclick event -->
+                        <button class="btn btn-danger me-2" id="rejectButton" onclick="updateStatus('Rejected')"><i class="fa fa-times"></i> Reject</button>
                         <form action="{{ route('orders.confirm', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Accept</button>
