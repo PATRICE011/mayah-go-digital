@@ -1,96 +1,106 @@
 @extends('admins.layout')
-
 @section('title', 'Order Details')
+<!-- @section('content') -->
 
-@section('content')
-<div class="view-wrapper">
-    <main class="container section">
-        <div class="view__container mt-4">
-            <h1 class="view__title">Order Details</h1>
+<main class="container-xl my-4 section">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h1 class="display-6">Order Details</h1>
             
-            <div class="order-container">
-                <div class="order-header">
-                    <div class="order-details">
-                        <h1>Order ID: #{{ $order->orderDetail->order_id_custom }}</h1>
-                        <div class="status">
-                            <span class="badge {{ strtolower($order->status) }}">
-                                {{ ucfirst($order->status) }}
-                            </span>
-                        </div>
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <span class="badge bg-{{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span>
                     </div>
 
-                    <div class="order-actions">
-                        <button class="reject-btn">
-                            <i class="fa fa-times"></i> Reject
-                        </button>
-
-                        <form action="{{ route('orders.confirm', $order->id) }}" method="POST" style="display: inline;">
+                    <div>
+                        <button class="btn btn-danger me-2"><i class="fa fa-times"></i> Reject</button>
+                        <form action="{{ route('orders.confirm', $order->id) }}" method="POST" class="d-inline">
                             @csrf
-                            <button type="submit" class="accept-btn">
-                                <i class="fa fa-check"></i> Accept
-                            </button>
+                            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Accept</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div class="SECOND">
-                <div class="order-details-container">
-                    <h2>Order Items</h2>
-                    <ul class="order-items-list">
-                        @foreach($order->orderItems as $item)
-                            <li class="order-item">
-                                <div class="item-quantity">
-                                    <span>{{ $item->quantity }}</span>
-                                </div>
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <span class="badge bg-{{ strtolower($order->status) }}" id="statusBadge">{{ ucfirst($order->status) }}</span>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="statusButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Status
+                        </button>
+            
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Ready For Pickup')">Ready For Pickup</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-                                <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
-                                
-                                <div class="item-info">
-                                    <p class="item-name">{{ $item->product->product_name }}</p>
-                                    <p class="item-price">₱ {{ number_format($item->price, 2) }}</p>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
+            <div class="row g-3">
+                <!-- Order Items -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Order Items</h5>
+                            <ul class="list-group list-group-flush">
+                                @foreach($order->orderItems as $item)
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <span class="badge bg-dark me-3">{{ $item->quantity }}</span>
+                                        <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}" class="rounded me-3" width="60">
+                                        <div>
+                                            <h6 class="mb-1">{{ $item->product->product_name }}</h6>
+                                            <small class="text-muted">₱ {{ number_format($item->price, 2) }}</small>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="idk">
-                    <div class="order-summary-container">
-                        <table class="summary-table">
-                            <tr>
-                                <td>Subtotal</td>
-                                <td class="order-price">
-                                    ₱ {{ number_format($order->orderItems->sum(fn($item) => $item->quantity * $item->price), 2) }}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Discount</td>
-                                <td class="order-price">₱ 0.00</td>
-                            </tr>
-
-                            <tr class="total-row">
-                                <td><strong>Total</strong></td>
-                                <td class="order-price"><strong>₱ {{ number_format($order->orderDetail->total_amount, 2) }}</strong></td>
-                            </tr>
-                        </table>
+                <!-- Order Summary -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Order Summary</h5>
+                            <table class="table">
+                                <tr>
+                                    <td>Subtotal</td>
+                                    <td class="text-end">₱ {{ number_format($order->orderItems->sum(fn($item) => $item->quantity * $item->price), 2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Discount</td>
+                                    <td class="text-end">₱ 0.00</td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Total</td>
+                                    <td class="text-end">₱ {{ number_format($order->orderDetail->total_amount, 2) }}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
-                    <div class="billing-address-container">
-                        <h2>Customer Information</h2>
-                        <div class="billing-details">
-                            <div class="contact-info">
-                                <p>{{ $order->user->name }}</p>
-                                <p><i class="fa fa-phone"></i> {{ $order->user->mobile }}</p>
-                            </div>
+                    <!-- Customer Information -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Customer Information</h5>
+                            <p class="mb-1">{{ $order->user->name }}</p>
+                            <p class="text-muted"><i class="fa fa-phone me-2"></i>{{ $order->user->mobile }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-</div>
+    </div>
+</main>
 
 @if (Session::has('message'))
     <script>
@@ -100,8 +110,7 @@
             "positionClass": "toast-top-right",
             "timeOut": "5000",
         };
-
         toastr.success("{{ Session::get('message') }}");
     </script>
-    @endif
+@endif
 @endsection

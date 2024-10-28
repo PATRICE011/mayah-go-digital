@@ -39,3 +39,24 @@ loginClose.addEventListener('click', () =>{
    login.classList.remove('show-login')
 })
 
+/*=============== VIEW ORDERS MANAGEMENT - STATUS BUTTON ===============*/
+function updateStatus(status) {
+    // Update the dropdown button text
+    document.getElementById("statusButton").textContent = status;
+    
+    // Optionally, update the badge text and color
+    const statusBadge = document.getElementById("statusBadge");
+    statusBadge.textContent = status;
+
+    // Update badge color based on status
+    if (status === 'Completed') {
+        statusBadge.classList.remove('bg-warning');
+        statusBadge.classList.add('bg-success');
+    } else if (status === 'Ready For Pickup') {
+        statusBadge.classList.remove('bg-success');
+        statusBadge.classList.add('bg-warning');
+    }
+
+    // Prevent default link action
+    return false;
+}
