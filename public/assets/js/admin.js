@@ -92,6 +92,8 @@ function updateStatus(newStatus) {
         statusBadge.classList.add('bg-success');
     } else if (newStatus === 'Ready For Pickup') {
         statusBadge.classList.add('bg-warning');
+    } else if (newStatus === 'Refunded') {
+        statusBadge.classList.add('bg-danger');
     } else if (newStatus === 'Rejected') {
         statusBadge.classList.add('bg-danger');
     } else {

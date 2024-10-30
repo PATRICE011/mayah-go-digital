@@ -117,6 +117,19 @@
             </div>
             @endif
 
+            <!-- Show this card only if status is 'refunded' -->
+            @if (strtolower($order->status) === 'refunded')
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <!-- Badge for Ready For Pickup status -->
+                        <span class="badge bg-warning">{{ ucfirst($order->status) }}</span>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="row g-3">
                 <!-- Order Items -->
                 <div class="col-md-6">
