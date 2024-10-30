@@ -79,6 +79,8 @@ Route::middleware('auth:admin')->group(function () {
     // status
     Route::post('/orders/{order}/confirm', [SmsStatusController::class, 'confirmOrder'])->name('orders.confirm');
     Route::post('/orders/{order}/reject', [SmsStatusController::class, 'rejectOrder'])->name('orders.reject');
+    Route::post('/orders/{order}/ready-for-pickup', [SmsStatusController::class, 'readyOrder'])->name('orders.ready');
+    Route::post('/orders/{order}/completed', [SmsStatusController::class, 'completeOrder'])->name('orders.complete');
     // inventory
     Route::get('/inventory', [AdminController::class, 'showInventory'])->name('admins.inventory');
     Route::post('/inventory', [ProductController::class, 'getProduct'])->name('admins.insertProduct');

@@ -56,11 +56,27 @@
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Ready For Pickup')">Ready For Pickup</a></li>
-                            <!-- === IF COMPLETED THERE SHOULD BE A BUTTON FOR REFUND -->
-                            <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
-                            
+                            <li>
+                                <form action="{{ route('orders.ready', $order->id) }}" method="POST" id="readyForm-{{ $order->id }}" style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="status" value="Ready For Pickup">
+                                </form>
+                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('readyForm-{{ $order->id }}').submit();">
+                                    Ready For Pickup
+                                </a>
+                            </li>
+
+                            <li>
+                                <form action="{{route('orders.complete', $order->id)}}" method="POST" id="completeForm-{{ $order->id }}" style="display: none;">
+                                    @csrf
+                                    <input type="hidden" name="status" value="Completed">
+                                </form>
+                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('completeForm-{{ $order->id }}').submit();">
+                                    Completed
+                                </a>
+                            </li>
                         </ul>
+
                     </div>
                 </div>
             </div>
