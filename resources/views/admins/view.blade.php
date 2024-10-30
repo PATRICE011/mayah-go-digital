@@ -93,15 +93,27 @@
                         <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
                         <span class="badge bg-primary">{{ ucfirst($order->status) }}</span>
                     </div>
-
-                    <!-- Refund Button
+                    
                     <div>
                         <form action="{{ route('orders.refund', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-warning"><i class="fa fa-undo"></i> Refund</button>
                         </form>
-                    </div> -->
-                </div>y
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Show this card only if status is 'ready for pickup' -->
+            @if (strtolower($order->status) === 'ready for pickup')
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <!-- Badge for Ready For Pickup status -->
+                        <span class="badge bg-warning">{{ ucfirst($order->status) }}</span>
+                    </div>
+                </div>
             </div>
             @endif
 
