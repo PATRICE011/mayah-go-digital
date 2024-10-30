@@ -67,7 +67,11 @@ class SmsStatusController extends Controller
     }
 
     // ===== STATUS REFUNDED ======
+    public function refundOrder (Order $order){
+        $order->update(['status' => 'refunded']);
 
+        return redirect()->back()->with('message', 'Order marked as refunded.');
+    }
 
     // Helper function to send SMS via Semaphore
     private function sendSmsNotification($mobileNumber, $message)

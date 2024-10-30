@@ -94,14 +94,14 @@
                         <span class="badge bg-primary">{{ ucfirst($order->status) }}</span>
                     </div>
 
-                    <!-- Refund Button
+                    
                     <div>
                         <form action="{{ route('orders.refund', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-warning"><i class="fa fa-undo"></i> Refund</button>
                         </form>
-                    </div> -->
-                </div>y
+                    </div>
+                </div>
             </div>
             @endif
 
