@@ -28,6 +28,47 @@ class SmsStatusController extends Controller
         // Redirect back with a success message
         return redirect()->back()->with('message', 'Order has been confirmed and SMS notification sent.');
     }
+    // ===== STATUS REJECTED =======
+    public function rejectOrder(Order $order)
+    {
+        $order->update(['status' => 'rejected']);
+        
+        $mobileNumber = $order->user->mobile;
+        $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} has been rejected. We apologize for any inconvenience. Thank you for choosing us.";
+
+        // Send SMS notification
+        $this->sendSmsNotification($mobileNumber, $message);
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Order has been rejected and SMS notification sent.');
+    }
+    // ==== STATUS READY TO PICK UP ====
+    public function readyOrder(Order $order)
+    {
+        // Update order status to 'ready for pickup'
+        $order->update(['status' => 'ready for pickup']);
+
+        // Get the user's mobile number
+        $mobileNumber = $order->user->mobile;
+
+        // Create the ready for pickup message
+        $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} is now ready for pickup. Thank you for choosing us!";
+
+        // Send SMS notification
+        $this->sendSmsNotification($mobileNumber, $message);
+
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Order marked as ready for pickup and SMS notification sent.');
+    }
+    // ======= STATUS COMPLETED =======
+    public function completeOrder (Order $order){
+        $order->update(['status' => 'completed']);
+
+        return redirect()->back()->with('message', 'Order marked as completed.');
+    }
+
+    // ===== STATUS REFUNDED ======
+
+
     // Helper function to send SMS via Semaphore
     private function sendSmsNotification($mobileNumber, $message)
     {
@@ -58,19 +99,4 @@ class SmsStatusController extends Controller
             Log::error('SMS sending failed: ' . $e->getMessage());
         }
     }
-    // ===== STATUS REJECTED =======
-    public function rejectOrder(Order $order)
-    {
-        $order->update(['status' => 'rejected']);
-        
-        $mobileNumber = $order->user->mobile;
-        $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} has been rejected. We apologize for any inconvenience. Thank you for choosing us.";
-
-        // Send SMS notification
-        $this->sendSmsNotification($mobileNumber, $message);
-        // Redirect back with a success message
-        return redirect()->back()->with('message', 'Order has been rejected and SMS notification sent.');
-    }
-    // ==== STATUS READY TO PICK UP ====
-    // ===== STATUS REFUNDED ======
 }
