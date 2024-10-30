@@ -1,7 +1,7 @@
 @extends('admins.layout')
 @section('title', 'Order Details')
+<!-- @section('content') -->
 
-@section('content')
 <main class="container-xl my-4 section">
     <div class="row justify-content-center">
         <div class="col-12">
@@ -22,6 +22,7 @@
                             @csrf
                             <button class="btn btn-danger me-2" id="rejectButton" onclick="updateStatus('Rejected')"><i class="fa fa-times"></i> Reject</button>
                         </form>
+
                         <form action="{{ route('orders.confirm', $order->id) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Accept</button>
@@ -30,6 +31,7 @@
                 </div>
             </div>
             @endif
+
             @if (strtolower($order->status) === 'rejected')
             <div class="card mb-3">
                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -41,13 +43,14 @@
                 </div>
             </div>
             @endif
+
             <!-- Show this card only if status is 'confirmed' -->
             @if (strtolower($order->status) === 'confirmed')
             <div class="card mb-3">
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div>
                         <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
-                        <span class="badge bg-{{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span>
+                        <span class="badge bg-{{ strtolower($order->status) }}" id="statusBadge">{{ ucfirst($order->status) }}</span>
                     </div>
 
                     <div class="btn-group">
@@ -59,9 +62,28 @@
                             <li><a class="dropdown-item" href="#" onclick="updateStatus('Ready For Pickup')">Ready For Pickup</a></li>
                             <!-- === IF COMPLETED THERE SHOULD BE A BUTTON FOR REFUND -->
                             <li><a class="dropdown-item" href="#" onclick="updateStatus('Completed')">Completed</a></li>
-                            
                         </ul>
                     </div>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Show this card only if status is 'completed' -->
+            @if (strtolower($order->status) === 'completed')
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h4">Order ID: #{{ $order->orderDetail->order_id_custom }}</h2>
+                        <span class="badge bg-primary">{{ ucfirst($order->status) }}</span>
+                    </div>
+
+                    <!-- Refund Button
+                    <div>
+                        <form action="{{ route('orders.refund', $order->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-warning"><i class="fa fa-undo"></i> Refund</button>
+                        </form>
+                    </div> -->
                 </div>
             </div>
             @endif

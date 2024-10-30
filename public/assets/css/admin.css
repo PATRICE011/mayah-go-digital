@@ -194,6 +194,7 @@ a {
     height: 100vh;
     padding: 2rem;
     transition: .3s;
+    z-index: 10000;
   }
 
   .nav__logo {
@@ -255,6 +256,7 @@ a {
 /* Show menu */
 .show-menu {
   width: 255px;
+  z-index: 10000;
 }
 
 /* Rotate toggle icon */
@@ -415,4 +417,16 @@ thead{
 
 .btn-danger{
   background-color: #F95454;
+}
+
+.dropdown-item-ready-for-pickup{
+  /* color: #C1CFA1; */
+  color: #A5B68D;
+
+}
+
+.dropdown-item-completed{
+  /* color: #A5B68D; */
+  color: #C1CFA1;
+
 }
