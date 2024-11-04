@@ -86,13 +86,13 @@ class PaymentController extends Controller
             Session::forget('order_id');
 
             // Redirect the user to the orders page
-            return redirect()->route('home.myorders')->with('success', 'Payment completed successfully.');
+            return redirect('/post-sucess')->with('success', 'Payment completed successfully.');
         } else {
-            return redirect()->route('home.myorders')->with('error', 'No matching pending order found.');
+            return redirect('/post-error')->with('error', 'No matching pending order found.');
         }
     } else {
         Log::error('Failed to retrieve PayMongo session details', (array)$response);
-        return redirect()->route('home.myorders')->with('error', 'Payment session retrieval failed.');
+        return redirect('/post-error')->with('error', 'Payment session retrieval failed.');
     }
 }
 
@@ -175,6 +175,15 @@ public function createPaymentTest($orderId)
     } else {
         return redirect()->back()->with('error', 'No pending orders found.');
     }
+}
+
+public function postSuccess(){
+    return view("home.postsuccess");
+
+}
+public function postError(){
+    return view("home.posterror");
+
 }
 
 }
