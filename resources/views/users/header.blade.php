@@ -14,7 +14,7 @@
             </li>
 
             <li class="nav__item">
-            <a href="#about" class="nav__link">About</a>
+               <a href="#about" class="nav__link">About</a>
             </li>
 
             <li class="nav__item">

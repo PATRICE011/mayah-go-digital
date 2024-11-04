@@ -142,108 +142,115 @@
                 </div>
 
                 <div class="content">
-                    <div id="overview" class="overview-header content-section active">
-                        <h3 class="overview__title">Overview</h3>
-                        <p class="overview__description">Welcome Back, Will Smith!</p>
+                    <div class="order-details-container">
+                        <h3 class="order-header">
+                            <a href="{{ route('home.myorders') }}">
+                                <i class="ri-arrow-left-line"></i>
+                            </a>
+                            Order Details
+                        </h3>
 
-                        <div class="stats-container">
-                            <div class="stat-box">
-                                <div class="icon icon-total-orders">
-                                    <i class="ri-building-fill"></i>
-                                </div>
+                        <h1 class="order-thank-you">Thank You</h1>
+                        <p class="order-status-text">Your Order status is as follows</p>
+                        <p class="order-status-id">Order ID: <strong>#2908243</strong></p>
 
-                                <h4 class="total-orders__quantity">3</h4>
-                                <p class="total-orders__title">Total Orders</p>
-                            </div>
+                        <div class="progress-bar">
+                           <div class="progress-line completed"></div>
+                           <div class="progress-line"></div>
+                           <div class="progress-step active">
+                               <div class="progress-icon">✓</div>
+                               <div class="progress-text">Order Pending</div>
+                           </div>
 
-                            <div class="stat-box">
-                                <div class="icon icon-total-completed">
-                                    <i class="ri-archive-fill"></i>    
-                                </div>
+                           <div class="progress-step">
+                               <div class="progress-icon">•</div>
+                               <div class="progress-text">Order Confirmed</div>
+                           </div>
 
-                                <h4 class="total-completed__quantity">2</h4>
-                                <p class="total-completed__title">Total Completed</p>
-                            </div>
+                           <div class="progress-step">
+                               <div class="progress-icon">•</div>
+                               <div class="progress-text">Order On The Way</div>
+                           </div>
 
-                            <div class="stat-box">
-                                <div class="icon icon-total-returned">
-                                    <i class="ri-corner-up-left-fill"></i>
-                                </div>
-
-                                <h4 class="total-returned__quantity">1</h4>
-                                <p class="total-returned__title">Total Returned</p>
-                            </div>
-
-                            <div class="stat-box">
-                                <div class="icon icon-wallet-balance">
-                                    <i class="ri-wallet-fill"></i>
-                                </div>
-
-                                <h4 class="wallet-balance__quantity">₱0.00</h4>
-                                <p class="wallet-balance__title">Wallet Balance</p>
-                            </div>
+                           <div class="progress-step">
+                               <div class="progress-icon">•</div>
+                               <div class="progress-text">Order Delivered</div>
+                           </div>
                         </div>
-                    </div>
 
-                    <div id="order-history" class="content-section">
-                        <h3 class="order-history__title">Order History</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Products</th>
-                                    <th>Status</th>
-                                    <th>Payment</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
+                        <div class="order-info">
+                            <!-- <p> -->
+                            <p><strong>Order Date:</strong> 30.08.2024 00:47</p>
+                            <p><strong>Order Type:</strong> Delivery</p>
+                            <p><strong>Order Status:</strong> <span class="badge pending">Pending</span></p>
+                            <p><strong>Payment Status:</strong> <span class="badge unpaid">Unpaid</span></p>
+                            <p><strong>Payment Method:</strong> Cash On Delivery</p>
+                        </div>
 
-                            <tbody>
-                                <tr>
-                                    <td>2908243</td>
-                                    <td>3 Product</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                    <td><span class="status unpaid">Unpaid</span></td>
-                                    <td>₱278.00</td>
-                                    <td>
-                                        <!-- <li class="action-btn"> -->
-                                            <a href="{{ route('home.viewmyorders') }}" class="action-btn">
-                                                <i class="ri-briefcase-line"></i>
-                                            </a>    
-                                        <!-- </li> -->
-                                    </td>
-                                </tr>
+                        <div class="order-summary-header">Order Summary</div>
+                            <div class="product-item">
+                                <div class="product-image">
+                                    <img src="air-hoodie.jpg" alt="Air Hoodie">
+                                </div>
 
-                                <tr>
-                                    <td>2908242</td>
-                                    <td>4 Product</td>
-                                    <td><span class="status delivered">Delivered</span></td>
-                                    <td><span class="status paid">Paid</span></td>
-                                    <td>₱720.00</td>
-                                    <td>
-                                        <button class="action-btn">
-                                            <i class="ri-briefcase-line"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <div class="product-details">
+                                    <div class="product-name">Air Hoodie</div>
+                                    <div class="product-info">Black | S</div>
+                                    <div class="product-price">$100.00</div>
+                                    <div class="product-info">Quantity: 1</div>
+                                </div>
+                            </div>
 
-                                <tr>
-                                    <td>2908241</td>
-                                    <td>4 Product</td>
-                                    <td><span class="status delivered">Delivered</span></td>
-                                    <td><span class="status paid">Paid</span></td>
-                                    <td>₱415.20</td>
-                                    <td>
-                                        <button class="action-btn">
-                                            <i class="ri-briefcase-line"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <p>Showing 1 to 3 of 3 results</p>
+                            <div class="product-item">
+                                <div class="product-image">
+                                    <img src="ultra-bounce-shoes.jpg" alt="Ultra Bounce Shoes">
+                                </div>
+
+                                <div class="product-details">
+                                    <div class="product-name">Ultra Bounce Shoes</div>
+                                    <div class="product-info">Black | S</div>
+                                    <div class="product-price">$80.00</div>
+                                    <div class="product-info">Quantity: 1</div>
+                                </div>
+                            </div>
+
+                            <div class="product-item">
+                                <div class="product-image">
+                                    <img src="essential-hat.jpg" alt="Essential Hat">
+                                </div>
+
+                                <div class="product-details">
+                                    <div class="product-name">Essential Hat</div>
+                                    <div class="product-info">Black | S</div>
+                                    <div class="product-price">$60.00</div>
+                                    <div class="product-info">Quantity: 1</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Subtotal</span>
+                                <span>$240.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Tax Fee</span>
+                                <span>$28.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Shipping Charge</span>
+                                <span>$10.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Discount</span>
+                                <span>$0.00</span>
+                            </div>
+
+                            <div class="summary-line total">
+                                <span>Total</span>
+                                <span>$278.00</span>
+                            </div>
                     </div>
                 </div>
             </div>

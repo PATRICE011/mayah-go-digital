@@ -161,12 +161,31 @@ class cartController extends Controller
                 return $order;
             });
     
-        return view('home.myorders', compact('orders'));
+        // Define the section variable to be used in the Blade template
+        $section = 'order-history'; // or 'overview', depending on the logic needed
+    
+        // Pass the orders and section variable to the view
+        return view('home.myorders', compact('orders', 'section'));
     }
     
-
-
-
+    public function viewMyorders()
+    {
+        // Get the orders for the authenticated user
+        $orders = Order::where('user_id', Auth::id())
+            ->with('orderItems.product')
+            ->get()
+            ->map(function ($order) {
+                // Calculate the total amount by summing up the price * quantity of all items
+                $order->total_amount = $order->orderItems->sum(function ($item) {
+                    return $item->price * $item->quantity;
+                });
+                return $order;
+            });
     
+        // Define the section variable to be used in the Blade template
+        $section = 'order-history'; // or 'overview', depending on the logic needed
     
+        // Pass the orders and section variable to the view
+        return view('home.viewmyorders', compact('orders', 'section'));
+    }
 }

@@ -53,13 +53,15 @@ Route::middleware(['auth'])->group(function () {
     // ===== MY ORDERS ====
     Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
 
-   Route::prefix('payment')->group(function(){
+    Route::prefix('payment')->group(function(){
          // paymongo
         Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
         Route::get('/create/{orderId}', [PaymentController::class, 'createPaymentTest'])->name('cart.pay');
         Route::match(['get', 'post'],'/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
    });
+
+   Route::get('/myorders/view', [cartController::class, 'viewMyorders'])->name('home.viewmyorders');
 });
 
 // Admin Routes
