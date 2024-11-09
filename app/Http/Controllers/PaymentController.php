@@ -21,7 +21,7 @@ class PaymentController extends Controller
     $orderId = Session::get('order_id');
 
     if (!$sessionId || !$orderId) {
-        return redirect()->route('home.myorders')->with('error', 'Session or Order not found.');
+        return redirect()->route('/home')->with('error', 'Session or Order not found.');
     }
 
     // Fetch session details from PayMongo API

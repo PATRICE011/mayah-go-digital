@@ -79,7 +79,7 @@
       <p>We received your purchase request;<br/> we'll be in touch shortly!</p>
       
       <!-- Button to navigate to 'My Orders' page -->
-      <a href="{{route('home.myorders')}}" class="button">Go to My Orders</a>
+      <a href="#" class="button">Go to My Orders</a>
     </div>
   </body>
 </html>

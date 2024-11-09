@@ -56,10 +56,10 @@ class AdminController extends Controller
     public function onlineOrders()
     {
         // Eager load the related user and order details
-        $orders = Order::with(['user', 'orderDetail'])
-        ->get();
+            $orders = Order::with(['user', 'orderDetail'])
+            ->get();
 
-    return view('admins.orders', compact('orders'));
+        return view('admins.orders', compact('orders'));
     }
 
     

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +20,15 @@
     <link rel="stylesheet" href="{{ asset('assets/css/overview.css') }}">
 
     <!-- ====== Toastr ========-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     @include('users.header')
-    
+
     <main class="main">
         <section class="myorders" id="myorders">
             <div class="container grid blockings">
@@ -39,7 +41,7 @@
                                 Overview
                             </a>
                         </li>
-                        
+
                         <li>
                             <a href="#" class="sidebar-link" onclick="showSection('order-history', event)">
                                 Order History
@@ -89,7 +91,7 @@
 
                             <div class="stat-box">
                                 <div class="icon icon-total-completed">
-                                    <i class="ri-archive-fill"></i>    
+                                    <i class="ri-archive-fill"></i>
                                 </div>
 
                                 <h4 class="total-completed__quantity">2</h4>
@@ -124,60 +126,36 @@
                                     <th>Order ID</th>
                                     <th>Products</th>
                                     <th>Status</th>
-                                    <th>Payment</th>
                                     <th>Amount</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-
                             <tbody>
+                                @forelse ($orders as $order)
                                 <tr>
-                                    <td>2908243</td>
-                                    <td>3 Product</td>
-                                    <td><span class="status pending">Pending</span></td>
-                                    <td><span class="status unpaid">Unpaid</span></td>
-                                    <td>₱278.00</td>
+                                    <td>{{ $order->orderDetail->order_id_custom }}</td>
+                                    <td>{{ $order->orderDetail->product_count }} Product{{ $order->orderDetail->product_count > 1 ? 's' : '' }}</td>
+                                    <td><span class="status {{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span></td>
+                                    <td>₱{{ number_format($order->orderDetail->total_amount, 2) }}</td>
                                     <td>
-                                        <!-- <li class="action-btn"> -->
-                                            <a href="{{ route('home.viewmyorders') }}" class="action-btn">
-                                                <i class="ri-briefcase-line"></i>
-                                            </a>    
-                                        <!-- </li> -->
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>2908242</td>
-                                    <td>4 Product</td>
-                                    <td><span class="status delivered">Delivered</span></td>
-                                    <td><span class="status paid">Paid</span></td>
-                                    <td>₱720.00</td>
-                                    <td>
-                                        <button class="action-btn">
+                                        <a href="{{ route('home.viewmyorders', ['id' => $order->id]) }}" class="action-btn">
                                             <i class="ri-briefcase-line"></i>
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
-
+                                @empty
                                 <tr>
-                                    <td>2908241</td>
-                                    <td>4 Product</td>
-                                    <td><span class="status delivered">Delivered</span></td>
-                                    <td><span class="status paid">Paid</span></td>
-                                    <td>₱415.20</td>
-                                    <td>
-                                        <button class="action-btn">
-                                            <i class="ri-briefcase-line"></i>
-                                        </button>
-                                    </td>
+                                    <td colspan="5" class="text-center">No orders found</td>
                                 </tr>
+                                @endforelse
                             </tbody>
                         </table>
-                        
-                        <p>Showing 1 to 3 of 3 results</p>
+
+                        <p>Showing {{ $orders->count() }} of {{ $orders->count() }} results</p>
+
                     </div>
+
                 </div>
-            </div>
         </section>
     </main>
 
@@ -202,19 +180,20 @@
 
     <!--=============== SCROLL REVEAL ANIMATION ===============-->
     <script src="{{ asset('assets/js/scrollreveal.min.js') }}"></script>
-    
+
     <!--=============== MIXITUP FILTER ===============-->
     <script src="{{ asset('assets/js/mixitup.min.js') }}"></script>
-    
+
     <!--=============== MAIN JS ===============-->
     <script src="{{ asset('assets/js/main.js') }}"></script>
-    
+
     <!-- Latest Bootstrap JS -->
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
