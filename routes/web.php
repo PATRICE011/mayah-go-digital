@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SmsStatusController;
 
 // public routes
@@ -51,9 +52,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // ===== MY ORDERS ====
-    Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
+    // Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
+   
     Route::get('/post-sucess', [PaymentController::class, 'postSuccess']);
     Route::get('/post-error', [PaymentController::class, 'postError']);
+
    Route::prefix('payment')->group(function(){
          // paymongo
         Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
@@ -62,7 +65,9 @@ Route::middleware(['auth'])->group(function () {
 
    });
 
-   Route::get('/myorders/view', [cartController::class, 'viewMyorders'])->name('home.viewmyorders');
+//    ==== SETTINGS =====
+   Route::get('/settings',[SettingsController::class, 'viewSettings'])->name('settings');
+   Route::get('/myorders/view', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 });
 
 // Admin Routes

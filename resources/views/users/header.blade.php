@@ -38,15 +38,15 @@
                      </a>
                   </li>
 
-                  <li class="nav__item">
-                     <a href="{{route("home.myorders")}}">
+                  <!-- <li class="nav__item">
+                     <a href="#">
                         <i class="ri-shopping-cart-line"></i>
                         Orders
                      </a>
-                  </li>
+                  </li> -->
 
                   <li class="nav__item">
-                     <a href="#">
+                     <a href="{{route('settings')}}">
                         <i class="ri-settings-2-line"></i>
                         Settings
                      </a>

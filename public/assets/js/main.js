@@ -25,12 +25,16 @@ if(navClose){
 document.addEventListener('DOMContentLoaded', function () {
     const userMenu = document.querySelector('.nav__item.dropdown');
     const dropdownContent = userMenu.querySelector('.dropdown-content');
-    
+
     userMenu.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default behavior if necessary
-        dropdownContent.classList.toggle('show-dropdown');
+        // Toggle dropdown when clicking on the main User menu button
+        if (e.target.closest('.nav__link')) { 
+            e.preventDefault(); // Only prevent default on main User link
+            dropdownContent.classList.toggle('show-dropdown');
+        }
     });
 });
+
 
 /*=============== SHOW CART ===============*/
 const cart = document.getElementById('cart'),
