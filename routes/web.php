@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['get', 'post'],'/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 
    });
+
+   Route::get('/myorders/view', [cartController::class, 'viewMyorders'])->name('home.viewmyorders');
 });
 
 // Admin Routes

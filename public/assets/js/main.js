@@ -118,6 +118,9 @@ function navigateToPage() {
    window.location.href = "register.html";
 }
 
+/*=============== MYORDERS ===============*/
+
+
 /*=============== CHANGE BACKGROUND HEADER ===============*/
 function scrollHeader(){
     const header = document.getElementById('header')
