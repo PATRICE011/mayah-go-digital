@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +20,15 @@
     <link rel="stylesheet" href="{{ asset('assets/css/overview.css') }}">
 
     <!-- ====== Toastr ========-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <title>Document</title>
+    <title>Order Details</title>
 </head>
+
 <body>
-  @include('users.header')
-    
+    @include('users.header')
+
     <main class="main">
         <section class="myorders" id="myorders">
             <div class="container grid blockings">
@@ -34,154 +36,92 @@
                     <h2>Will Smith</h2>
                     <p>+880125333344</p>
                     <ul>
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('overview', event)">
-                                Overview
-                            </a>
-                        </li>
-                        
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('order-history', event)">
-                                Order History
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('return-orders', event)">
-                                Return Orders
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('account-info', event)">
-                                Account Info
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('change-password', event)">
-                                Change Password
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('address', event)">
-                                Address
-                            </a>
-                        </li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('overview', event)">Overview</a></li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('order-history', event)">Order History</a></li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('return-orders', event)">Return Orders</a></li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('account-info', event)">Account Info</a></li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('change-password', event)">Change Password</a></li>
+                        <li><a href="#" class="sidebar-link" onclick="showSection('address', event)">Address</a></li>
                     </ul>
                 </div>
 
                 <div class="content">
                     <div class="order-details-container">
                         <h3 class="order-header">
-                            <a href="#">
-                                <i class="ri-arrow-left-line"></i>
-                            </a>
+                            <a href="#"><i class="ri-arrow-left-line"></i></a>
                             Order Details
                         </h3>
 
-                        <h1 class="order-thank-you">Thank You</h1>
-                        <p class="order-status-text">Your Order status is as follows</p>
-                        <p class="order-status-id">Order ID: <strong>#2908243</strong></p>
+                        @if ($latestOrder)
+                            <h1 class="order-thank-you">Thank You</h1>
+                            <p class="order-status-text">Your Order status is as follows</p>
+                            <p class="order-status-id">Order ID: <strong>#{{ $latestOrder->id }}</strong></p>
 
-                        <div class="progress-bar">
-                           <div class="progress-line completed"></div>
-                           <div class="progress-line"></div>
-                           <div class="progress-step active">
-                               <div class="progress-icon">✓</div>
-                               <div class="progress-text">Order Pending</div>
-                           </div>
+                            <!-- Progress Bar -->
+                            <div class="progress-bar">
+                                <div class="progress-line {{ in_array($latestOrder->status, ['pending', 'confirmed', 'ready_for_pickup', 'completed']) ? 'completed' : '' }}"></div>
 
-                           <div class="progress-step">
-                               <div class="progress-icon">•</div>
-                               <div class="progress-text">Order Confirmed</div>
-                           </div>
-
-                           <div class="progress-step">
-                               <div class="progress-icon">•</div>
-                               <div class="progress-text">Order On The Way</div>
-                           </div>
-
-                           <div class="progress-step">
-                               <div class="progress-icon">•</div>
-                               <div class="progress-text">Order Delivered</div>
-                           </div>
-                        </div>
-
-                        <div class="order-info">
-                            <!-- <p> -->
-                            <p><strong>Order Date:</strong> 30.08.2024 00:47</p>
-                            <p><strong>Order Type:</strong> Delivery</p>
-                            <p><strong>Order Status:</strong> <span class="badge pending">Pending</span></p>
-                            <p><strong>Payment Status:</strong> <span class="badge unpaid">Unpaid</span></p>
-                            <p><strong>Payment Method:</strong> Cash On Delivery</p>
-                        </div>
-
-                        <div class="order-summary-header">Order Summary</div>
-                            <div class="product-item">
-                                <div class="product-image">
-                                    <img src="air-hoodie.jpg" alt="Air Hoodie">
+                                <div class="progress-step {{ $latestOrder->status === 'pending' ? 'active' : ($latestOrder->status !== 'pending' ? 'completed' : '') }}">
+                                    <div class="progress-icon">{{ $latestOrder->status === 'pending' ? '✓' : '•' }}</div>
+                                    <div class="progress-text">Order Pending</div>
                                 </div>
 
-                                <div class="product-details">
-                                    <div class="product-name">Air Hoodie</div>
-                                    <div class="product-info">Black | S</div>
-                                    <div class="product-price">$100.00</div>
-                                    <div class="product-info">Quantity: 1</div>
+                                <div class="progress-step {{ in_array($latestOrder->status, ['confirmed', 'ready_for_pickup', 'completed']) ? 'completed' : '' }}">
+                                    <div class="progress-icon">{{ $latestOrder->status === 'confirmed' ? '✓' : '•' }}</div>
+                                    <div class="progress-text">Order Confirmed</div>
+                                </div>
+
+                                <div class="progress-step {{ in_array($latestOrder->status, ['ready_for_pickup', 'completed']) ? 'completed' : '' }}">
+                                    <div class="progress-icon">{{ $latestOrder->status === 'ready_for_pickup' ? '✓' : '•' }}</div>
+                                    <div class="progress-text">Ready for Pickup</div>
+                                </div>
+
+                                <div class="progress-step {{ $latestOrder->status === 'completed' ? 'completed' : '' }}">
+                                    <div class="progress-icon">{{ $latestOrder->status === 'completed' ? '✓' : '•' }}</div>
+                                    <div class="progress-text">Completed</div>
                                 </div>
                             </div>
 
-                            <div class="product-item">
-                                <div class="product-image">
-                                    <img src="ultra-bounce-shoes.jpg" alt="Ultra Bounce Shoes">
-                                </div>
-
-                                <div class="product-details">
-                                    <div class="product-name">Ultra Bounce Shoes</div>
-                                    <div class="product-info">Black | S</div>
-                                    <div class="product-price">$80.00</div>
-                                    <div class="product-info">Quantity: 1</div>
-                                </div>
+                            <!-- Order Information -->
+                            <div class="order-info">
+                                <p><strong>Order Date:</strong> {{ $latestOrder->created_at->format('d.m.Y H:i') }}</p>
+                                <p><strong>Order Status:</strong> <span class="badge {{ strtolower($latestOrder->status) }}">{{ ucfirst(str_replace('_', ' ', $latestOrder->status)) }}</span></p>
+                                <p><strong>Payment Method:</strong> {{ $latestOrder->orderDetail->payment_method ?? 'N/A' }}</p>
                             </div>
 
-                            <div class="product-item">
-                                <div class="product-image">
-                                    <img src="essential-hat.jpg" alt="Essential Hat">
+                            <!-- Order Summary -->
+                            <h3 class="order-summary-header">Order Summary</h3>
+                            @foreach ($latestOrder->orderItems as $item)
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
+                                    </div>
+                                    <div class="product-details">
+                                        <div class="product-name">{{ $item->product->product_name }}</div>
+                                        <div class="product-info">
+                                            {{ $item->product->category->category_name ?? 'Category not specified' }}
+                                        </div>
+                                        <div class="product-price">₱{{ number_format($item->price, 2) }}</div>
+                                        <div class="product-info">Quantity: {{ $item->quantity }}</div>
+                                    </div>
                                 </div>
-
-                                <div class="product-details">
-                                    <div class="product-name">Essential Hat</div>
-                                    <div class="product-info">Black | S</div>
-                                    <div class="product-price">$60.00</div>
-                                    <div class="product-info">Quantity: 1</div>
-                                </div>
-                            </div>
+                            @endforeach
 
                             <div class="summary-line">
                                 <span>Subtotal</span>
-                                <span>$240.00</span>
+                                <span>₱{{ number_format($subtotal, 2) }}</span>
                             </div>
-
-                            <div class="summary-line">
-                                <span>Tax Fee</span>
-                                <span>$28.00</span>
-                            </div>
-
-                            <div class="summary-line">
-                                <span>Shipping Charge</span>
-                                <span>$10.00</span>
-                            </div>
-
                             <div class="summary-line">
                                 <span>Discount</span>
-                                <span>$0.00</span>
+                                <span>₱0.00</span>
                             </div>
-
                             <div class="summary-line total">
                                 <span>Total</span>
-                                <span>$278.00</span>
+                                <span>₱{{ number_format($total, 2) }}</span>
                             </div>
+                        @else
+                            <p>No recent orders found.</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -209,19 +149,15 @@
 
     <!--=============== SCROLL REVEAL ANIMATION ===============-->
     <script src="{{ asset('assets/js/scrollreveal.min.js') }}"></script>
-    
+
     <!--=============== MIXITUP FILTER ===============-->
     <script src="{{ asset('assets/js/mixitup.min.js') }}"></script>
-    
+
     <!--=============== MAIN JS ===============-->
     <script src="{{ asset('assets/js/main.js') }}"></script>
-    
+
     <!-- Latest Bootstrap JS -->
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
