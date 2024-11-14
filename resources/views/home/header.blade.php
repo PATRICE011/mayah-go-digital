@@ -40,12 +40,12 @@
 
                  
 
-                  <li class="nav__item">
+                  <!-- <li class="nav__item">
                      <a href="#">
                         <i class="ri-settings-2-line"></i>
                         Settings
                      </a>
-                  </li> 
+                  </li>  -->
                </ul>
             </li>
          </ul>
