@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
 //    ==== SETTINGS =====
    Route::get('/settings',[SettingsController::class, 'viewSettings'])->name('settings');
    Route::get('/myorders/view', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
+
 });
 
 // Admin Routes
