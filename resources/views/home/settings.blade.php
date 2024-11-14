@@ -37,13 +37,13 @@
                     <p>{{ $user->mobile }}</p>
                     <ul>
                         <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('overview', event)">
+                            <a href="#overview" class="sidebar-link" onclick="showSection('overview', event)">
                                 Overview
                             </a>
                         </li>
 
                         <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('order-history', event)">
+                            <a href="#order-history" class="sidebar-link" onclick="showSection('order-history', event)">
                                 Order History
                             </a>
                         </li>
@@ -55,20 +55,14 @@
                         </li>
 
                         <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('account-info', event)">
+                            <a href="#account-info" class="sidebar-link" onclick="showSection('account-info', event)">
                                 Account Info
                             </a>
                         </li>
 
                         <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('change-password', event)">
+                            <a href="#change-password" class="sidebar-link" onclick="showSection('change-password', event)">
                                 Change Password
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" class="sidebar-link" onclick="showSection('address', event)">
-                                Address
                             </a>
                         </li>
                     </ul>
@@ -152,9 +146,55 @@
                         </table>
 
                         <p>Showing {{ $orders->count() }} of {{ $orders->count() }} results</p>
-
                     </div>
 
+                    <div id="account-info" class="content-section">
+                        <h3 class="account-info__title">Account Info</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="fullname">Full Name <span>*</span></label>
+                                <input type="text" id="fullname" name="fullname" value="Will Smith">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email <span>*</span></label>
+                                <input type="email" id="email" name="email" value="customer@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone <span>*</span></label>
+                                <div class="phone-input">
+                                    <!-- <span>BD +880 ▼</span> -->
+                                    <input type="text" id="phone" name="phone" value="125333344">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="save-button">Save Changes</button>
+                        </form>
+                    </div>
+
+                    <div id="change-password" class="content-section">
+                        <h3 class="change-password__title">Change Password</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="Old Password">Old Password <span>*</span></label>
+                                <input type="password" id="old-password" name="old-password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="New Password">New Password <span>*</span></label>
+                                <input type="password" id="new-password" name="new-password">
+                                <!-- <input type="email" id="email" name="email" value="customer@example.com"> -->
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="Password Confirmation">Password Confirmation <span>*</span></label>
+                                <input type="password" id="password-confirmation" name="password-confirmation">
+                            </div>
+                            
+                            <button type="submit" class="save-button">Save Changes</button>
+                        </form>
+                    </div>
                 </div>
         </section>
     </main>
