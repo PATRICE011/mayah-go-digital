@@ -33,8 +33,8 @@
         <section class="myorders" id="myorders">
             <div class="container grid blockings">
                 <div class="sidebar">
-                    <h2>Will Smith</h2>
-                    <p>+880125333344</p>
+                    <h2>{{ $user->name }}</h2>
+                    <p>{{ $user->mobile }}</p>
                     <ul>
                         <li>
                             <a href="#" class="sidebar-link" onclick="showSection('overview', event)">
