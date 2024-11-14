@@ -14,6 +14,7 @@ class SettingsController extends Controller
 {
     // Get the orders for the authenticated user with pagination
     $userId = Auth::id(); 
+    $user = Auth::user();
     $cart2 = Cart::where('user_id', $userId)->first(); 
 
     if ($cart2) {
@@ -26,7 +27,7 @@ class SettingsController extends Controller
         ->where('user_id', $userId) // Filter orders by the authenticated user
         ->paginate(10); // Adjust the number of items per page
 
-    return view('home.settings', compact('orders', 'count'));
+    return view('home.settings', compact('orders', 'count','user'));
 }
 
 

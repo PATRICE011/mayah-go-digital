@@ -86,7 +86,7 @@ class PaymentController extends Controller
             Session::forget('order_id');
 
             // Redirect the user to the orders page
-            return redirect('/post-sucess')->with('success', 'Payment completed successfully.');
+            return redirect('/home')->with('message', 'Order placed successfully.');
         } else {
             return redirect('/post-error')->with('error', 'No matching pending order found.');
         }

@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
     // ===== MY ORDERS ====
     // Route::get('/myorders',[CartController::class, 'viewOrders'])->name('home.myorders');
    
-    Route::get('/post-sucess', [PaymentController::class, 'postSuccess']);
+    Route::get('/post-success', [PaymentController::class, 'postSuccess']);
     Route::get('/post-error', [PaymentController::class, 'postError']);
 
    Route::prefix('payment')->group(function(){
