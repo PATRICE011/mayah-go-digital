@@ -1859,9 +1859,9 @@ table th {
 
 .progress-line.completed {
   background-color: #4caf50;
-  width: 12.5%; /* Adjust this percentage based on progress */
   height: 4px;
   z-index: 1;
+  width: 12.5%;
 }
 
 .progress-step {
@@ -1885,7 +1885,7 @@ table th {
   z-index: 2;
 }
 
-.progress-step.active .progress-icon {
+.progress-step.completed .progress-icon {
   background-color: #4caf50;
 }
 
@@ -1895,6 +1895,7 @@ table th {
   margin-top: 5px;
   z-index: 2;
 }
+
 
 .order-info {
   /* display: inline-block;

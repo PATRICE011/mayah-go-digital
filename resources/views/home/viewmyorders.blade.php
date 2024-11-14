@@ -53,74 +53,85 @@
                         </h3>
 
                         @if ($latestOrder)
-                            <h1 class="order-thank-you">Thank You</h1>
-                            <p class="order-status-text">Your Order status is as follows</p>
-                            <p class="order-status-id">Order ID: <strong>#{{ $latestOrder->id }}</strong></p>
+                        <h1 class="order-thank-you">Thank You</h1>
+                        <p class="order-status-text">Your Order status is as follows</p>
+                        <p class="order-status-id">Order ID: <strong>#{{ $latestOrder->id }}</strong></p>
 
-                            <!-- Progress Bar -->
-                            <div class="progress-bar">
-                                <div class="progress-line {{ in_array($latestOrder->status, ['pending', 'confirmed', 'ready_for_pickup', 'completed']) ? 'completed' : '' }}"></div>
+                        <div class="progress-bar">
+                            <!-- Background line for the entire progress bar -->
+                            <div class="progress-line"></div>
 
-                                <div class="progress-step {{ $latestOrder->status === 'pending' ? 'active' : ($latestOrder->status !== 'pending' ? 'completed' : '') }}">
-                                    <div class="progress-icon">{{ $latestOrder->status === 'pending' ? '✓' : '•' }}</div>
-                                    <div class="progress-text">Order Pending</div>
-                                </div>
-
-                                <div class="progress-step {{ in_array($latestOrder->status, ['confirmed', 'ready_for_pickup', 'completed']) ? 'completed' : '' }}">
-                                    <div class="progress-icon">{{ $latestOrder->status === 'confirmed' ? '✓' : '•' }}</div>
-                                    <div class="progress-text">Order Confirmed</div>
-                                </div>
-
-                                <div class="progress-step {{ in_array($latestOrder->status, ['ready_for_pickup', 'completed']) ? 'completed' : '' }}">
-                                    <div class="progress-icon">{{ $latestOrder->status === 'ready_for_pickup' ? '✓' : '•' }}</div>
-                                    <div class="progress-text">Ready for Pickup</div>
-                                </div>
-
-                                <div class="progress-step {{ $latestOrder->status === 'completed' ? 'completed' : '' }}">
-                                    <div class="progress-icon">{{ $latestOrder->status === 'completed' ? '✓' : '•' }}</div>
-                                    <div class="progress-text">Completed</div>
-                                </div>
+                            <!-- Progress line showing completed portion based on the status -->
+                            <div class="progress-line completed" style="width:
+                                @if($latestOrder->status === 'paid') 12%;
+                                @elseif($latestOrder->status === 'confirmed') 36%;
+                                @elseif($latestOrder->status === 'ready-for-pickup') 64%;
+                                @elseif($latestOrder->status === 'completed') 100%;
+                                @endif">
                             </div>
 
-                            <!-- Order Information -->
-                            <div class="order-info">
-                                <p><strong>Order Date:</strong> {{ $latestOrder->created_at->format('d.m.Y H:i') }}</p>
-                                <p><strong>Order Status:</strong> <span class="badge {{ strtolower($latestOrder->status) }}">{{ ucfirst(str_replace('_', ' ', $latestOrder->status)) }}</span></p>
-                                <p><strong>Payment Method:</strong> {{ $latestOrder->orderDetail->payment_method ?? 'N/A' }}</p>
+                            <!-- Progress Steps -->
+                            <div class="progress-step {{ $latestOrder->status === 'paid' || $latestOrder->status !== null ? 'completed' : '' }}">
+                                <div class="progress-icon">{{ $latestOrder->status === 'paid' ? '✓' : '•' }}</div>
+                                <div class="progress-text">Order Pending</div>
                             </div>
 
-                            <!-- Order Summary -->
-                            <h3 class="order-summary-header">Order Summary</h3>
-                            @foreach ($latestOrder->orderItems as $item)
-                                <div class="product-item">
-                                    <div class="product-image">
-                                        <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
-                                    </div>
-                                    <div class="product-details">
-                                        <div class="product-name">{{ $item->product->product_name }}</div>
-                                        <div class="product-info">
-                                            {{ $item->product->category->category_name ?? 'Category not specified' }}
-                                        </div>
-                                        <div class="product-price">₱{{ number_format($item->price, 2) }}</div>
-                                        <div class="product-info">Quantity: {{ $item->quantity }}</div>
-                                    </div>
+                            <div class="progress-step {{ in_array($latestOrder->status, ['confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }}">
+                                <div class="progress-icon">{{ $latestOrder->status === 'confirmed' ? '✓' : '•' }}</div>
+                                <div class="progress-text">Order Confirmed</div>
+                            </div>
+
+                            <div class="progress-step {{ in_array($latestOrder->status, ['ready-for-pickup', 'completed']) ? 'completed' : '' }}">
+                                <div class="progress-icon">{{ $latestOrder->status === 'ready-for-pickup' ? '✓' : '•' }}</div>
+                                <div class="progress-text">Ready for Pickup</div>
+                            </div>
+
+                            <div class="progress-step {{ $latestOrder->status === 'completed' ? 'completed' : '' }}">
+                                <div class="progress-icon">{{ $latestOrder->status === 'completed' ? '✓' : '•' }}</div>
+                                <div class="progress-text">Completed</div>
+                            </div>
+                        </div>
+
+
+                        <!-- Order Information -->
+                        <div class="order-info">
+                            <p><strong>Order Date:</strong> {{ $latestOrder->created_at->format('d.m.Y H:i') }}</p>
+                            <p><strong>Order Status:</strong> <span class="badge {{ strtolower($latestOrder->status) }}">{{ ucfirst(str_replace('_', ' ', $latestOrder->status)) }}</span></p>
+                            <p><strong>Payment Method:</strong> {{ $latestOrder->orderDetail->payment_method ?? 'N/A' }}</p>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <h3 class="order-summary-header">Order Summary</h3>
+                        @foreach ($latestOrder->orderItems as $item)
+                        <div class="product-item">
+                            <div class="product-image">
+                                <img src="{{ asset('assets/img/' . $item->product->product_image) }}" alt="{{ $item->product->product_name }}">
+                            </div>
+                            <div class="product-details">
+                                <div class="product-name">{{ $item->product->product_name }}</div>
+                                <div class="product-info">
+                                    {{ $item->product->category->category_name ?? 'Category not specified' }}
                                 </div>
-                            @endforeach
+                                <div class="product-price">₱{{ number_format($item->price, 2) }}</div>
+                                <div class="product-info">Quantity: {{ $item->quantity }}</div>
+                            </div>
+                        </div>
+                        @endforeach
 
-                            <div class="summary-line">
-                                <span>Subtotal</span>
-                                <span>₱{{ number_format($subtotal, 2) }}</span>
-                            </div>
-                            <div class="summary-line">
-                                <span>Discount</span>
-                                <span>₱0.00</span>
-                            </div>
-                            <div class="summary-line total">
-                                <span>Total</span>
-                                <span>₱{{ number_format($total, 2) }}</span>
-                            </div>
+                        <div class="summary-line">
+                            <span>Subtotal</span>
+                            <span>₱{{ number_format($subtotal, 2) }}</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Discount</span>
+                            <span>₱0.00</span>
+                        </div>
+                        <div class="summary-line total">
+                            <span>Total</span>
+                            <span>₱{{ number_format($total, 2) }}</span>
+                        </div>
                         @else
-                            <p>No recent orders found.</p>
+                        <p>No recent orders found.</p>
                         @endif
                     </div>
                 </div>
