@@ -45,7 +45,7 @@ class SmsStatusController extends Controller
     public function readyOrder(Order $order)
     {
         // Update order status to 'ready for pickup'
-        $order->update(['status' => 'ready for pickup']);
+        $order->update(['status' => 'ready-for-pickup']);
 
         // Get the user's mobile number
         $mobileNumber = $order->user->mobile;

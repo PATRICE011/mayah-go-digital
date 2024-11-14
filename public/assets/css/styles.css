@@ -1759,22 +1759,26 @@ table th {
   color: #fff;
 }
 
-.status.pending {
+.status.ready-for-pickup {
   color: rgba(245, 158, 11, 1);
   background-color: #FFE6A5;  
   /* color: #333; */
 }
 
-.status.delivered {
+.status.confirmed {
   color: rgb(34, 197, 94, 1);
   background-color: #C9E9D2;
 }
 
-.status.unpaid {
+.status.completed {
   background-color: #FFB0B0;
   color: rgb(251 78 78);
 }
 
+.status.refunded {
+  background-color: #FFB0B0;
+  color: rgb(251 78 78);
+}
 .status.paid {
   color: rgb(34, 197, 94, 1);
   background-color: #C9E9D2;
