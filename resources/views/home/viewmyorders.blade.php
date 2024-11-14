@@ -55,7 +55,8 @@
                         @if ($latestOrder)
                         <h1 class="order-thank-you">Thank You</h1>
                         <p class="order-status-text">Your Order status is as follows</p>
-                        <p class="order-status-id">Order ID: <strong>#{{ $latestOrder->id }}</strong></p>
+                        <p class="order-status-id">Order ID: <strong>#{{ $latestOrder->orderDetail->order_id_custom ?? 'N/A' }}</strong></p>
+
 
                         <div class="progress-bar">
                             <!-- Background line for the entire progress bar -->
@@ -112,7 +113,7 @@
                                 <div class="product-info">
                                     {{ $item->product->category->category_name ?? 'Category not specified' }}
                                 </div>
-                                <div class="product-price">₱{{ number_format($item->price, 2) }}</div>
+                                <div class="product-price">₱ ₱{{ number_format($item->price * $item->quantity, 2) }}</div>
                                 <div class="product-info">Quantity: {{ $item->quantity }}</div>
                             </div>
                         </div>
