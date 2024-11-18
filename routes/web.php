@@ -40,7 +40,7 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
-    
+    Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
     // // Cart routes
     Route::prefix('cart')->group(function(){
         Route::get('/show', [CartController::class, 'showCart'])->name('home.cartinside');
