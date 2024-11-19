@@ -49,16 +49,16 @@
                     <i class='bx bx-grid-alt'></i>
                     <span class="nav__name">Dashboard</span>
                 </a>
-
+                
                 <a href="{{ route('admins.orders') }}" class="nav__link">
                     <i class='bx bx-cart-alt'></i>
                     <span class="nav__name">Manage Orders</span>
                 </a>
 
-                <!-- <a href="#" class="nav__link">
+                <a href="{{ route('admins.pos') }}" class="nav__link">
                     <i class='bx bx-envelope'></i>
-                    <span class="nav__name">Messages</span>
-                </a> -->
+                    <span class="nav__name">POS</span>
+                </a>
 
                 <a href="{{ route('admins.category') }}" class="nav__link">
                 <i class='bx bx-purchase-tag-alt' ></i>
