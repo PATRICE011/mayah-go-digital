@@ -62,6 +62,11 @@ class AdminController extends Controller
         return view('admins.orders', compact('orders'));
     }
 
+    // POS
+    public function viewPOS(){
+        return view("admins.pos");
+    }
+
     
     public function showView($id){
         // Fetch the order with related user, order details, and order items
