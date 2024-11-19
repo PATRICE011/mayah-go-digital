@@ -137,13 +137,7 @@ class userController extends Controller
                 'required',
                 'string',
                 'max:15',
-                'unique:users_area',
-                function ($attribute, $value, $fail) {
-                    // Check if the mobile number exists in the admins table
-                    if (Admin::where('mobile', $value)->exists()) {
-                        $fail('The mobile number is already associated with an admin account.');
-                    }
-                },
+                'unique:users_area,mobile', // Ensure unique mobile numbers in the users_area table
             ],
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -156,26 +150,31 @@ class userController extends Controller
 
         // Generate OTP code and its creation time
         $otp = rand(100000, 999999);
-        $otpCreatedAt = new \DateTime(); // Current time
+        $otpCreatedAt = now(); // Use Laravel's helper for current time
 
         // Temporarily store user data and OTP creation time in session
         $request->session()->put('user_data', [
             'name' => $request->name,
             'mobile' => $request->mobile,
-            'address' => $request->address,
             'password' => Hash::make($request->password),
             'otp' => $otp,
-            'otp_created_at' => $otpCreatedAt->format('Y-m-d H:i:s'), // Store as string
-            'is_admin' => $request->is_admin ?? 0,
+            'otp_created_at' => $otpCreatedAt->toDateTimeString(), // Store as string
+            'role_id' => 3, // Default role
         ]);
 
-        // Send OTP via Semaphore
-        $otpController = new OtpController();
-        $otpController->sendOtp($request->mobile, $otp);
+        try {
+            // Send OTP via Semaphore
+            $otpController = new OtpController();
+            $otpController->sendOtp($request->mobile, $otp);
 
-        return redirect()->route('users.otp')
-            ->with('message', 'Registration successful! Please check your mobile for the OTP.');
+            return redirect()->route('users.otp')
+                ->with('message', 'Registration successful! Please check your mobile for the OTP.');
+        } catch (\Exception $e) {
+            // Handle any exception from sendOtp
+            return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
+        }
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
