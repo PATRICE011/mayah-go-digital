@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 
 return new class extends Migration
 {
@@ -11,24 +13,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orderdetails', function (Blueprint $table) {
+        Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');  // Foreign key for the Order
-            $table->string('order_id_custom', 7)->unique();  // Unique 7-digit Order ID
-            $table->string('payment_method');  // e.g., 'Gcash', 'Credit Card', etc.
-            $table->decimal('total_amount', 10, 2);  // Total order amount
+            $table->unsignedBigInteger('order_id')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->integer('quantity');
+            $table->decimal('price', 10, 2);
             $table->timestamps();
-        
+
+
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
-        
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('orderdetails');
+        Schema::dropIfExists('order_items');
     }
 };
