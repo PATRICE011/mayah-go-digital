@@ -14,7 +14,8 @@ use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
-use Carbon\Carbon; 
+
+
 class userController extends Controller
 {
     public function viewDashboard()
@@ -25,13 +26,13 @@ class userController extends Controller
         $cartItems = $cart ? $cart->items : collect();
 
         // cart count
-        $userId = Auth::id(); 
-        $cart2 = Cart::where('user_id', $userId)->first(); 
-        
+        $userId = Auth::id();
+        $cart2 = Cart::where('user_id', $userId)->first();
+
         if ($cart2) {
-            $count = CartItem::where('cart_id', $cart2->id)->count(); 
+            $count = CartItem::where('cart_id', $cart2->id)->count();
         } else {
-            $count = 0; 
+            $count = 0;
         }
 
 
@@ -81,7 +82,7 @@ class userController extends Controller
             'category_name' => 'Show All',
             'products_count' => $products->count()
         ]);
-        
+
         return view('users.login', [
             'products' => $products,
             'cartItems' => $cartItems,
@@ -92,30 +93,32 @@ class userController extends Controller
     public function postLogin(Request $request)
     {
         // Validate the login credentials
-        $request->validate([
+        $formFields = $request->validate([
             'mobile' => 'required',
             'password' => 'required',
         ]);
 
-        $mobile = $request->mobile;
-        $password = $request->password;
-
-        // Check if the credentials match an admin
-        $admin = Admin::where('mobile', $mobile)->first();
-        if ($admin && Hash::check($password, $admin->password)) {
-            Auth::guard('admin')->login($admin);
+        // Attempt login
+        if (Auth::attempt(['mobile' => $formFields['mobile'], 'password' => $formFields['password']])) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admins.index'));
-        }
+            $user = Auth::user(); // Authenticated user
+            $roleId = $user->role_id; // Use role_id to determine redirection
 
-        // Check if the credentials match a user
-        $user = User::where('mobile', $mobile)->first();
-        if ($user && Hash::check($password, $user->password)) {
-            Auth::login($user);
-            $request->session()->regenerate();
 
-            return redirect()->route('users.usersdashboard')->with('message', 'Login Successful!');
+
+            // Redirect based on role_id
+            switch ($roleId) {
+                case 1: // Admin
+                    return redirect()->route('admins.index')->with('message', 'Login Successful, Welcome Admin!');
+                case 2: // Staff
+                    return redirect()->route('admins.dashboard')->with('message', 'Login Successful, Welcome Staff!');
+                case 3: // Resident/User
+                    return redirect()->route('users.usersdashboard')->with('message', 'Login Successful, Welcome User!');
+                default:
+                    Auth::logout(); // Fallback for unrecognized roles
+                    return redirect('/')->withErrors(['error' => 'Unauthorized access.']);
+            }
         }
 
         // If login fails, return back with an error
@@ -144,17 +147,17 @@ class userController extends Controller
             ],
             'password' => 'required|string|min:8|confirmed',
         ]);
-    
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-    
+
         // Generate OTP code and its creation time
         $otp = rand(100000, 999999);
         $otpCreatedAt = new \DateTime(); // Current time
-    
+
         // Temporarily store user data and OTP creation time in session
         $request->session()->put('user_data', [
             'name' => $request->name,
@@ -165,11 +168,11 @@ class userController extends Controller
             'otp_created_at' => $otpCreatedAt->format('Y-m-d H:i:s'), // Store as string
             'is_admin' => $request->is_admin ?? 0,
         ]);
-    
+
         // Send OTP via Semaphore
         $otpController = new OtpController();
         $otpController->sendOtp($request->mobile, $otp);
-    
+
         return redirect()->route('users.otp')
             ->with('message', 'Registration successful! Please check your mobile for the OTP.');
     }
@@ -180,6 +183,6 @@ class userController extends Controller
         $request->session()->regenerateToken();
         $request->session()->forget('name');
 
-        return redirect(route('home.index'))->with('message',' Logout Successful');
+        return redirect(route('home.index'))->with('message', ' Logout Successful');
     }
 }

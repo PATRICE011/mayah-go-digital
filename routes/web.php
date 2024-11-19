@@ -11,16 +11,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SmsStatusController;
+use App\Http\Middleware\RoleMiddleware;
 
-// public routes
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
-// search
-Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
+
+
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
     // public routes
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
     Route::prefix('user')->group(function () { 
         Route::get('/register', [UserController::class, 'getRegister'])->name('users.register');
         Route::get('/login', [UserController::class, 'getLogin'])->name('users.login');
@@ -37,10 +37,10 @@ Route::middleware(['guest'])->group(function () {
 
 
 // Authenticated User Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
-    
+    Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
     // // Cart routes
     Route::prefix('cart')->group(function(){
         Route::get('/show', [CartController::class, 'showCart'])->name('home.cartinside');
@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware('auth:admin')->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
    Route::prefix('admin')->group(function(){
     Route::get('/index', [AdminController::class, 'index'])->name('admins.index');
     Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
