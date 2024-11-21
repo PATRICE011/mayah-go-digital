@@ -69,8 +69,22 @@ class AdminController extends Controller
     }
 
 
+<<<<<<< HEAD
     public function showView($id)
     {
+=======
+    public function viewPOSorders(){
+        return view("admins.posOrders");
+    }
+    
+    public function showPOSorders(){
+
+        $orders = Order::with(['orderDetail', 'user'])->get();
+
+        return view("admins.viewposOrders", compact('orders'));
+    }
+    public function showView($id){
+>>>>>>> b5be3676688e5e9b9af3c685328229db7600d128
         // Fetch the order with related user, order details, and order items
         $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
             ->whereHas('orderDetail', function ($query) use ($id) {
