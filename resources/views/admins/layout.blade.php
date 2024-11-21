@@ -60,6 +60,11 @@
                     <span class="nav__name">POS</span>
                 </a>
 
+                <a href="{{ route('admins.posOrders') }}" class="nav__link">
+                    <i class='bx bx-envelope'></i>
+                    <span class="nav__name">POS Orders</span>
+                </a>
+
                 <a href="{{ route('admins.category') }}" class="nav__link">
                 <i class='bx bx-purchase-tag-alt' ></i>
                     <span class="nav__name">Manage Category</span>

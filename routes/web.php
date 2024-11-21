@@ -86,6 +86,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
 
     // POS
     Route::get('/pos', [AdminController::class, 'viewPOS'])->name('admins.pos');
+    Route::get('/posorders', [AdminController::class, 'viewPOSorders'])->name('admins.posOrders');
+    Route::get('/viewposorders', [AdminController::class, 'showPOSorders'])->name('admins.viewposOrders');
 
     // status
     Route::post('/orders/{order}/confirm', [SmsStatusController::class, 'confirmOrder'])->name('orders.confirm');
