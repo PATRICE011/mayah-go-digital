@@ -1,7 +1,7 @@
 @extends('admins.layout')
 @section('title', 'POS Order Details')
-
 <!-- @section('content') -->
+ 
 <main class="container-xl my-4 section">
     <div class="row justify-content-center">
         <div class="col-12">
