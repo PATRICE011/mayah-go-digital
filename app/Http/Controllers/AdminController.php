@@ -69,34 +69,13 @@ class AdminController extends Controller
     }
 
 
-<<<<<<< HEAD
-    public function showView($id)
-    {
-=======
     public function viewPOSorders(){
         return view("admins.posOrders");
     }
     
     public function showPOSorders(){
-
-        $orders = Order::with(['orderDetail', 'user'])->get();
-
-        return view("admins.viewposOrders", compact('orders'));
+        return view("admins.viewposOrders");
     }
-    public function showView($id){
->>>>>>> b5be3676688e5e9b9af3c685328229db7600d128
-        // Fetch the order with related user, order details, and order items
-        $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
-            ->whereHas('orderDetail', function ($query) use ($id) {
-                $query->where('order_id_custom', $id);
-            })
-            ->firstOrFail();
-
-        return view('admins.view', compact('order'));
-    }
-
-    // POSuse App\Models\Product;
-
     public function viewPOS(Request $request)
 {
     $categories = Category::all(); // Fetch all categories
