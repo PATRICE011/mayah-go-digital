@@ -1,26 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
-
 class AdminController extends Controller
 {
     //
-    public function index()
-    {
+    public function index(){
         $products = Product::with('category')->paginate(5);
-        return view("admins.index", ['products' => $products]);
+        return view("admins.index",['products' =>$products]);
     }
     public function showInventory()
     {
         $categories = Category::all(); // Fetch all categories
-        // Fetch products with pagination (5 products per page)
+    // Fetch products with pagination (5 products per page)
         $products = Product::with('category')->paginate(5);
 
         return view('admins.inventory', [
@@ -28,25 +25,22 @@ class AdminController extends Controller
             'categories' => $categories
         ]);
     }
-
-    public function showDashboard()
-    {
+    
+    public function showDashboard(){
         return view("admins.dashboard");
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $product = Product::findOrFail($id);
         return view('admins.editv', compact('product'));
     }
 
     // 
-    public function showCategories()
-    {
+    public function showCategories(){
 
         // fetch category
         $categories = Category::all();
-        return view('admins.category', compact('categories'));
+        return view ('admins.category', compact('categories'));
     }
 
     // log out
@@ -62,7 +56,7 @@ class AdminController extends Controller
     public function onlineOrders()
     {
         // Eager load the related user and order details
-        $orders = Order::with(['user', 'orderDetail'])
+            $orders = Order::with(['user', 'orderDetail'])
             ->get();
 
         return view('admins.orders', compact('orders'));
@@ -88,6 +82,4 @@ class AdminController extends Controller
 
     return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
 }
-
-    
 }
