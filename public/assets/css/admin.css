@@ -430,52 +430,156 @@ thead{
   color: #C1CFA1;
 }
 
-/* POS */
+/* pos */
+/* Main Layout */
+.d-flex {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent stacking unless on small screens */
+  gap: 1.5rem; /* Add spacing between elements */
+  align-items: center; /* Vertically align items within the container */
+}
+
+/* Input and Dropdown Styling */
+.form-control,
+.form-select {
+  width: 300px; /* Keep input and dropdown widths consistent */
+  height: 38px; /* Ensure both are the same height */
+  box-sizing: border-box; /* Include padding and border in size */
+  padding: 5px 10px; /* Add inner padding for better text spacing */
+  border: 1px solid #ddd; /* Subtle border for clean design */
+  border-radius: 5px; /* Rounded corners for consistent look */
+  font-size: 1rem; /* Uniform font size */
+  transition: all 0.3s ease; /* Smooth transitions for focus/hover states */
+}
+
+/* Focus Styles for Input and Dropdown */
+.form-control:focus,
+.form-select:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none; /* Remove the default focus outline */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add subtle shadow on focus */
+}
+
+/* Product Card Styles */
 .product-card {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-  background-color: #fff;
+  border: 1px solid #ddd; /* Add border around product card */
+  border-radius: 10px; /* Rounded corners */
+  overflow: hidden; /* Ensure content stays within the card */
+  transition: box-shadow 0.3s ease; /* Smooth hover effect */
+  background-color: #fff; /* White background for cards */
 }
 
 .product-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
 }
 
 .product-card img {
-  width: 100%;
-  height: auto;
+  width: 100%; /* Responsive image width */
+  height: auto; /* Preserve image aspect ratio */
 }
 
 .product-details {
-  padding: 15px;
-  text-align: center;
+  padding: 15px; /* Space around product details */
+  text-align: center; /* Center align text */
+}
+
+.product-name {
+  font-size: 1rem; /* Product name font size */
+  font-weight: 600; /* Bold product name */
+  margin-bottom: 0.5rem; /* Add space below name */
 }
 
 .product-price {
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: bold; /* Bold product price */
+  font-size: 1.2rem; /* Price font size */
 }
 
 .original-price {
-  text-decoration: line-through;
-  color: #888;
-  font-size: 0.9em;
+  text-decoration: line-through; /* Strike-through for original price */
+  color: #888; /* Subtle color for original price */
+  font-size: 0.9rem; /* Slightly smaller font size */
 }
 
+/* Flash Sale Badge */
 .flash-sale {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #f00;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.8em;
+  position: absolute; /* Positioned on top of the card */
+  top: 10px; /* Adjust vertical position */
+  left: 10px; /* Adjust horizontal position */
+  background: #f00; /* Red background for flash sale */
+  color: #fff; /* White text for contrast */
+  padding: 5px 10px; /* Padding inside badge */
+  border-radius: 5px; /* Rounded corners for badge */
+  font-size: 0.8rem; /* Smaller font size */
+}
+
+/* Order Details Styling */
+.order-details-wrapper {
+  position: sticky; /* Keep it fixed while scrolling */
+  top: 20px; /* Add spacing from the top */
+  flex-shrink: 0; /* Prevent shrinking */
+  width: 100%; /* Full width for smaller screens */
+  max-width: 300px; /* Fixed width on larger screens */
+  margin-left: auto; /* Align to the right */
+  height: auto; /* Ensure it adjusts to content */
+  z-index: 10; /* Keep above other elements */
 }
 
 .bg-light {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Space around content */
 }
+
+.bg-light img {
+  margin-bottom: 20px; /* Add space below the cart image */
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .d-flex {
+    flex-wrap: wrap; /* Stack elements on smaller screens */
+    gap: 1rem; /* Reduce spacing between elements */
+  }
+
+  .form-control,
+  .form-select {
+    width: 100%; /* Full width for input and dropdown */
+  }
+
+  .order-details-wrapper {
+    position: relative; /* Disable sticky positioning on small screens */
+    top: 0; /* Reset top position */
+    margin-left: 0; /* Normal alignment */
+    max-width: 100%; /* Full width on small screens */
+  }
+
+  .product-card {
+    margin-bottom: 1.5rem; /* Add spacing between product cards */
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card img {
+    height: auto; /* Prevent image distortion */
+  }
+
+  .product-details {
+    padding: 10px; /* Adjust padding for smaller cards */
+  }
+
+  .flash-sale {
+    font-size: 0.7rem; /* Smaller font size for badge */
+  }
+}
+
+/* Optional: Add subtle hover effect for dropdown */
+.form-select:hover {
+  cursor: pointer; /* Change cursor to indicate interactivity */
+  border-color: #aaa; /* Slightly darker border on hover */
+}
+
+
+
+
+
+
