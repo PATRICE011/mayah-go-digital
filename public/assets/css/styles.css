@@ -1779,6 +1779,10 @@ table th {
   background-color: #FFB0B0;
   color: rgb(251 78 78);
 }
+.status.pending {
+  background-color: #FFB0B0;
+  color: rgb(251 78 78);
+}
 .status.paid {
   color: rgb(34, 197, 94, 1);
   background-color: #C9E9D2;

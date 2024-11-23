@@ -129,12 +129,22 @@
                                 <tr>
                                     <td>{{ $order->orderDetail->order_id_custom }}</td>
                                     <td>{{ $order->orderDetail->product_count }} Product{{ $order->orderDetail->product_count > 1 ? 's' : '' }}</td>
-                                    <td><span class="status {{ strtolower($order->status) }}">{{ ucfirst($order->status) }}</span></td>
+                                    <td>
+                                        <span class="status {{ strtolower($order->status) }}">
+                                            {{ ucfirst($order->status) }}
+                                        </span>
+                                    </td>
                                     <td>₱{{ number_format($order->orderDetail->total_amount, 2) }}</td>
                                     <td>
+                                        @if (strtolower($order->status) === 'pending')
+                                        <a href="{{route("cart.pay",['orderId' => $order->id]) }}" class="action-btn btn btn-primary">
+                                            Pay
+                                        </a>
+                                        @else
                                         <a href="{{ route('home.viewmyorders', ['id' => $order->id]) }}" class="action-btn">
                                             <i class="ri-briefcase-line"></i>
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
@@ -148,6 +158,7 @@
                         <p>Showing {{ $orders->count() }} of {{ $orders->count() }} results</p>
                     </div>
 
+
                     <div id="account-info" class="content-section">
                         <h3 class="account-info__title">Account Info</h3>
                         <form>
@@ -155,12 +166,12 @@
                                 <label for="fullname">Full Name <span>*</span></label>
                                 <input type="text" id="fullname" name="fullname" value="Will Smith">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="email">Email <span>*</span></label>
                                 <input type="email" id="email" name="email" value="customer@example.com">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="phone">Phone <span>*</span></label>
                                 <div class="phone-input">
@@ -168,7 +179,7 @@
                                     <input type="text" id="phone" name="phone" value="125333344">
                                 </div>
                             </div>
-                            
+
                             <button type="submit" class="save-button">Save Changes</button>
                         </form>
                     </div>
@@ -180,18 +191,18 @@
                                 <label for="Old Password">Old Password <span>*</span></label>
                                 <input type="password" id="old-password" name="old-password">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="New Password">New Password <span>*</span></label>
                                 <input type="password" id="new-password" name="new-password">
                                 <!-- <input type="email" id="email" name="email" value="customer@example.com"> -->
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="Password Confirmation">Password Confirmation <span>*</span></label>
                                 <input type="password" id="password-confirmation" name="password-confirmation">
                             </div>
-                            
+
                             <button type="submit" class="save-button">Save Changes</button>
                         </form>
                     </div>
