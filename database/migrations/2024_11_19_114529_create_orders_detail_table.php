@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');  // Foreign key for the Order
             $table->string('order_id_custom', 7)->unique();  // Unique 7-digit Order ID
-            $table->string('payment_method');  // e.g., 'Gcash', 'Credit Card', etc.
-            $table->decimal('total_amount', 10, 2);  // Total order amount
+            $table->string('payment_method')->nullable();
+            $table->decimal('total_amount', 10, 2)->nullable();  // Total order amount
             $table->timestamps();
        
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
