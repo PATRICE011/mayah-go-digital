@@ -2,7 +2,7 @@
 <section class="footer container">
     <div class="footer__container grid">
         <div class="footer__content">
-            <a href="{{route('home.index')}}" class="footer__logo">
+            <a href="{{url('/')}}" class="footer__logo">
                 <i class="ri-restaurant-2-fill footer__logo-icon"></i> Mayah Store
             </a>
 

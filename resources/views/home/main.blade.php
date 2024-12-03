@@ -14,7 +14,7 @@
                     our extensive collection ensures you're well-prepared and set for success.
                 </p>
 
-                <a href="{{route('home.shop')}}" class="btn">
+                <a href="" class="btn">
                     Shop Now
                 </a>
             </div>
