@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\UserController;
@@ -13,29 +14,30 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
 
-// Guest Routes
+
 Route::middleware(['guest'])->group(function () {
-    // public routes
-    Route::get('/', [HomeController::class, 'index'])->name('home.index');
-    Route::get('/products', [ProductController::class, 'search'])->name('searchProduct');
+    
+    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/products', [ProductController::class, 'search']);
+
+    
     Route::prefix('user')->group(function () { 
-        Route::get('/register', [UserController::class, 'getRegister'])->name('users.register');
-        Route::get('/login', [UserController::class, 'getLogin'])->name('users.login');
+        Route::get('/register', [AuthController::class, 'getRegister']);
+        Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
         
-        Route::post('/login', [UserController::class, 'postLogin'])->name('login');
-        Route::post('/register', [UserController::class, 'postRegister'])->name('users.makereg');
+        Route::post('/login', [AuthController::class, 'postLogin'] );
+        Route::post('/register', [AuthController::class, 'postRegister']);
         
-        // OTP routes
-        Route::get('/otp', [OtpController::class, 'showOtp'])->name('users.otp');
-        Route::post('/otp', [OtpController::class, 'verifyOtp'])->name('users.verifyOtp');
-        Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('users.resendOtp');
+        Route::get('/otp', [OtpController::class, 'showOtp']);
+        Route::post('/otp', [OtpController::class, 'verifyOtp']);
+        Route::post('/resend-otp', [OtpController::class, 'resendOtp']);
     }); 
 });
 
 // Authenticated User Routes
 Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
-    Route::get('/home', [UserController::class, 'viewDashboard'])->name('users.usersdashboard');
-    Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
+    Route::get('/home', [HomeController::class, 'home']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
     Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
     // // Cart routes
     Route::prefix('cart')->group(function(){
@@ -103,6 +105,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
    });
 });
 
+<<<<<<< HEAD
 Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
 Route::get('/details', [UserController::class, 'details'])->name('home.details');
 Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
@@ -110,3 +113,11 @@ Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlis
 Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::get('/myaccount', [UserController::class, 'myaccount'])->name('home.myaccount');
+=======
+// Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
+// Route::get('/details', [UserController::class, 'details'])->name('home.details');
+// Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
+// Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlist');
+// Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
+// Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
+>>>>>>> 3393a99c292d9fa4f8b27df2d8a1e66d70a6b5f5

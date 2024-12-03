@@ -1,5 +1,5 @@
 @extends('home.layout')
-@section('title','Mayah Store - Login')
+@section('title','Mayah Store - OTP Verification')
 
 <header class="header" id="header">
    <div class="header__top">
@@ -15,30 +15,30 @@
          </p>
 
          <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
          </div>
       </div>
    </div>
 
    <nav class="nav container">
-      <a href="{{route('home.index')}}" class="nav__logo">
+      <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
 
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link">HOME</a>
             </li>
 
             <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
+               <a href="{{url('shop')}}" class="nav__link">SHOP</a>
             </li>
 
             <li class="nav__item">
-               <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
          </ul>
 
@@ -52,13 +52,13 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart' ></i>
+         <a href="{{url('wishlist')}}" class="header__action-btn">
+            <i class='bx bx-heart'></i>
             <span class="count">3</span>
          </a>
 
-         <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt' ></i>
+         <a href="{{url('cart')}}" class="header__action-btn">
+            <i class='bx bx-cart-alt'></i>
             <span class="count">3</span>
          </a>
       </div>
@@ -69,51 +69,72 @@
 
 <!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
-    <ul class="breadcrumb__list flex container">
-        <li>
-            <a href="{{route('home.index')}}" class="breadcrumb__link">
-                Home
-            </a>
-        </li>
+   <ul class="breadcrumb__list flex container">
+      <li>
+         <a href="{{url('/')}}" class="breadcrumb__link">
+            Home
+         </a>
+      </li>
 
-        <li>
-            <span class="breadcrumb__link">
-                >
-            </span>
-        </li>
+      <li>
+         <span class="breadcrumb__link"> > </span>
+      </li>
 
-        <li>
-            <a href="{{route('users.otp')}}" class="breadcrumb__link">
-                OTP
-            </a>
-        </li>
-    </ul>
+      <li>
+         <span class="breadcrumb__link">OTP</span>
+      </li>
+   </ul>
 </section>
 
 <!--==================== OTP ====================-->
 <section class="login-register section--lg">
-    <div class="login-register__container container grid">
-        <div class="register">
-            <h3 class="section__title">
-                OTP
-            </h3>
+   <div class="login-register__container container grid">
+      <div class="register">
+         <h3 class="section__title">OTP</h3>
 
-            <form action="" class="form grid">
-                <label for="name" class="login-register__label">One-Time Password</label>
-                <input type="text" placeholder="Enter OTP" class="form__input">
+         <form action="{{ url('user/otp') }}" method="POST" class="form grid">
+            @csrf
+            <label for="otp" class="login-register__label">One-Time Password</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter OTP" class="form__input" required>
 
-                <div>
-                    <p class="login__signup">
-                        Didn't Receive Code? <a href="#">Resend Code</a>
-                    </p>
-                </div>
+            <div>
+               <p class="login__signup">
+                  Didn't receive a code? <a href="{{ url('user/resend-otp') }}">Resend Code</a>
+               </p>
+            </div>
 
-                <div class="form__btn">
-                    <button class="btn">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="form__btn">
+               <button type="submit" class="btn">Submit</button>
+            </div>
+         </form>
+      </div>
+   </div>
 </section>
 
 @include('home.footer')
+
+@if (session('error'))
+<script>
+   toastr.options = {
+      "closeButton": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "timeOut": "5000",
+   };
+   toastr.error("{{ session('error') }}");
+</script>
+@endif
+
+@if (session('message'))
+<script>
+   toastr.options = {
+      "closeButton": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "timeOut": "5000",
+   };
+   toastr.success("{{ session('message') }}");
+</script>
+@endif
+
+@endsection
