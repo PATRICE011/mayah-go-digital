@@ -77,14 +77,21 @@
 @include('home.footer')
 
 @endsection
-@if (Session::has('message'))
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-        toastr.success("{{ Session::get('message') }}");
-    </script>
+<script>
+    toastr.options = {
+      "closeButton": true,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "timeOut": "5000",
+    };
+
+    // Display success message if available
+    @if (session('message'))
+      toastr.success("{{ session('message') }}");
     @endif
+
+    // Display error message if available
+    @if (session('error'))
+      toastr.error("{{ session('error') }}");
+    @endif
+  </script>
