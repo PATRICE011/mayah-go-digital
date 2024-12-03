@@ -124,14 +124,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -174,14 +166,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -223,14 +207,6 @@
                             <a href="details.html">
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
-
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
 
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
@@ -278,14 +254,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -327,14 +295,6 @@
                             <a href="details.html">
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
-
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
 
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
@@ -378,14 +338,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -427,14 +379,6 @@
                             <a href="details.html">
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
-
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
 
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
@@ -482,14 +426,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -531,14 +467,6 @@
                             <a href="details.html">
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
-
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
 
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
@@ -582,14 +510,6 @@
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
 
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
-
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
                                 <span class="old__price">₱ 9.00</span>
@@ -631,14 +551,6 @@
                             <a href="details.html">
                                 <h3 class="product__title">Bread Stix - Blue</h3>
                             </a>
-
-                            <div class="product__rating">
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                                <i class='bx bx-star' ></i>
-                            </div>
 
                             <div class="product__price flex">
                                 <span class="new__price">₱ 7.00</span>
@@ -777,14 +689,6 @@
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
 
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
-
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>
                             <span class="old__price">₱ 9.00</span>
@@ -827,14 +731,6 @@
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
 
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
-
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>
                             <span class="old__price">₱ 9.00</span>
@@ -876,14 +772,6 @@
                         <a href="details.html">
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
-
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
 
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>
@@ -927,14 +815,6 @@
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
 
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
-
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>
                             <span class="old__price">₱ 9.00</span>
@@ -977,14 +857,6 @@
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
 
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
-
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>
                             <span class="old__price">₱ 9.00</span>
@@ -1026,14 +898,6 @@
                         <a href="details.html">
                             <h3 class="product__title">Bread Stix - Blue</h3>
                         </a>
-
-                        <div class="product__rating">
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                            <i class='bx bx-star' ></i>
-                        </div>
 
                         <div class="product__price flex">
                             <span class="new__price">₱ 7.00</span>

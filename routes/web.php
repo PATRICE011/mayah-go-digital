@@ -44,7 +44,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
         
         Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
-
     });
 
     // ===== MY ORDERS ====
@@ -110,3 +109,4 @@ Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlist');
 Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
+Route::get('/myaccount', [UserController::class, 'myaccount'])->name('home.myaccount');

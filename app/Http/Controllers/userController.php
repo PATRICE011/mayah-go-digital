@@ -212,4 +212,9 @@ class userController extends Controller
     {
         return view('home.checkout');
     }
+
+    public function MyAccount()
+    {
+        return view('home.myaccount');
+    }
 }

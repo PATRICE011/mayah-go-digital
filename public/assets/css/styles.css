@@ -1109,200 +1109,8 @@ input{
 
 /*=============== COMPARE ===============*/
 
-<<<<<<< HEAD
 /*=============== LOGIN & REGISTER ===============*/
 .login-register__container{
-=======
-.order-history__title{
-  color: #f58025;
-  margin: 0;
-  font-size: 28px; 
-  padding-bottom: 1rem; 
-}
-
-.content h3 {
-  /* margin-bottom: 20px; */
-  /* color: #133E87; */
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-table th, table td {
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  text-align: center;
-}
-
-table th {
-  background-color: #f2f2f2;
-}
-
-.status {
-  padding: 5px 10px;
-  border-radius: 4px;
-  color: #fff;
-}
-
-.status.ready-for-pickup {
-  color: rgba(245, 158, 11, 1);
-  background-color: #FFE6A5;  
-  /* color: #333; */
-}
-
-.status.confirmed {
-  color: rgb(34, 197, 94, 1);
-  background-color: #C9E9D2;
-}
-
-.status.completed {
-  background-color: #FFB0B0;
-  color: rgb(251 78 78);
-}
-
-.status.refunded {
-  background-color: #FFB0B0;
-  color: rgb(251 78 78);
-}
-.status.rejected {
-  background-color: #FFB0B0;
-  color: rgb(251 78 78);
-}
-.status.pending {
-  background-color: #FFB0B0;
-  color: rgb(251 78 78);
-}
-.status.paid {
-  color: rgb(34, 197, 94, 1);
-  background-color: #C9E9D2;
-}
-
-.action-btn {
-  background-color: #608BC1;
-  color: #fff;
-  border: none;
-  border-radius: 20%;
-  padding: 10px;
-  cursor: pointer;
-  transition: .4s ease-in-out;
-}
-
-.action-btn:hover {
-  background-color: #133E87;
-}
-
-.blockings{
-  display: flex;
-  max-width: 1000px;
-  margin: 40px auto;
-  background-color: #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-.myorders{
-  padding-top: 5rem;
-}
-
-/* MYORDERS VIEW MYORDERS */
-.order-header {
-  color: #f58025;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.order-header a{
-  color: #f58025;
-}
-
-.order-thank-you {
-  font-size: 16px;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.order-status-text,
-.order-status-id{
-  text-align: center;
-}
-
-.order-status-id{
-  padding-bottom: 2rem;
-}
-
-.progress-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 900px;
-  position: relative;
-  padding-bottom: 2rem;
-}
-
-.progress-line {
-  position: absolute;
-  top: 15%;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background-color: #e0e0e0;
-  z-index: 0;
-}
-
-.progress-line.completed {
-  background-color: #4caf50;
-  height: 4px;
-  z-index: 1;
-  width: 12.5%;
-}
-
-.progress-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  flex: 1;
-}
-
-.progress-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-  color: #fff;
-  margin-bottom: 10px;
-  z-index: 2;
-}
-
-.progress-step.completed .progress-icon {
-  background-color: #4caf50;
-}
-
-.progress-text {
-  font-size: 14px;
-  color: #333;
-  margin-top: 5px;
-  z-index: 2;
-}
-
-
-.order-info {
-  /* display: inline-block;
-  width: 48%;
-  vertical-align: top;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fefefe;
-  margin-bottom: 20px; */
->>>>>>> 85a7964d29a6af01e15f89420771dc8448e158a0
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1329,6 +1137,70 @@ table th {
 }
 
 /*=============== ACCOUNTS ===============*/
+.accounts__container{
+  grid-template-columns: 4fr 8fr;
+}
+
+.account__tabs{
+  border: 1px solid var(--border-color-alt);
+  border-radius: 0.25rem;
+}
+
+.account__tab{
+  padding: 1rem 2rem;
+  color: var(--title-color);
+  font-size: var(--small-font-size);
+  display: flex;
+  align-items: center;
+  column-gap: 0.625rem;
+  cursor: pointer;
+}
+
+.account__tab.active-tab{
+  background-color: var(--first-color);
+  color: var(--first-color-alt);
+}
+
+.account__tab:not(:last-child){
+  border-bottom: 1px solid var(--border-color-alt);
+}
+
+.tab__content:not(.active-tab){
+  display: none;
+}
+
+.tab__content{
+  border: 1px solid var(--border-color-alt);
+}
+
+.tab__header{
+  background-color: var(--container-color);
+  border-bottom: 1px solid var(--border-color-alt);
+  padding: 1rem;
+  font-size: var(--small-font-size);
+}
+
+.tab__body{
+  padding: 1rem;
+}
+
+.placed__order-table tr th{
+  color: var(--title-color);
+  text-align: left;
+  width: 10rem;
+}
+
+.placed__order-table tr th,
+.placed__order-table tr td{
+  border: 1px solid var(--border-color-alt);
+  padding: 0.5rem;
+  font-size: var(--small-font-size);
+}
+
+.view__order,
+.edit{
+  color: var(--first-color);
+}
 
 /*=============== BREAKPOINTS ===============*/
 /* For large devices */

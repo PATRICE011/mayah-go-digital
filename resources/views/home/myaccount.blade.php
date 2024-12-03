@@ -1,0 +1,209 @@
+@extends('home.layout')
+@section('title','Mayah Store - My Account')
+
+<header class="header" id="header">
+   <div class="header__top">
+      <div class="header__container container">
+         <div class="header__contact">
+            <span>
+               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+            </span>
+         </div>
+
+         <p class="header__alert-news">
+            Super Value Deals - Save More!
+         </p>
+
+         <div>
+            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <span> / </span>
+            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+         </div>
+      </div>
+   </div>
+
+   <nav class="nav container">
+      <a href="{{route('home.index')}}" class="nav__logo">
+         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+         <ul class="nav__list">
+            <li class="nav__item">
+               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="{{route('home.shop')}}" class="nav__link">SHOP</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="{{route('home.myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+            </li>
+         </ul>
+
+         <div class="header__search">
+            <input type="text" placeholder="Search Item" class="form__input">
+
+            <button class="search__btn">
+               <i class='bx bx-search search'></i>
+            </button>
+         </div>
+      </div>
+
+      <div class="header__user-actions">
+         <a href="{{route('home.wishlist')}}" class="header__action-btn">
+            <i class='bx bx-heart' ></i>
+            <span class="count">3</span>
+         </a>
+
+         <a href="{{route('home.cart')}}" class="header__action-btn">
+            <i class='bx bx-cart-alt' ></i>
+            <span class="count">3</span>
+         </a>
+      </div>
+   </nav>
+</header>
+
+<!--==================== BREADCRUMB ====================-->
+<section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+        <li>
+            <a href="{{route('home.index')}}" class="breadcrumb__link">
+                Home
+            </a>
+        </li>
+
+        <li>
+            <span class="breadcrumb__link">
+                >
+            </span>
+        </li>
+
+        <li>
+            <span class="breadcrumb__link">
+                Account
+            </span>
+        </li>
+    </ul>
+</section>
+
+<!--==================== MY ACCOUNT ====================-->
+<section class="accounts section--lg">
+    <div class="accounts__container container grid">
+        <div class="account__tabs">
+            <p class="account__tab active-tab" data-target="#dashboard">
+                <i class='bx bx-box' ></i> Dashboard
+            </p>
+
+            <p class="account__tab" data-target="#orders">
+                <i class='bx bx-cart-download' ></i> Orders
+            </p>
+
+            <p class="account__tab" data-target="#update-profile">
+                <i class='bx bxs-hand-up' ></i> Update Profile
+            </p>
+
+            <p class="account__tab" data-target="#change-password">
+                <i class='bx bx-cog' ></i> Change Password
+            </p>
+
+            <p class="account__tab">
+                <i class='bx bx-exit' ></i> Logout
+            </p>
+        </div>
+
+        <div class="tabs__content">
+            <div class="tab__content active-tab" content id="dashboard">
+                <h3 class="tab__header">Hello "Name Here"</h3>
+
+                <div class="tab__body">
+                    <p class="tab__description">
+                        Account dashboard, you can easily check and view your recent orders
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab__content" content id="orders">
+                <h3 class="tab__header">Your Orders</h3>
+
+                <div class="tab__body">
+                    <table class="placed__order-table">
+                        <tr>
+                            <th>Orders</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab__content" content id="update-profile">
+                <h3 class="tab__header">Update Profile</h3>
+
+                <div class="tab__body">
+                    <form action="" class="form grid">
+                        <input type="text" placeholder="Name" class="form__input">
+                        <input type="tel" placeholder="Phone Number" class="form__input">
+
+                        <div class="form__btn">
+                            <button class="btn btn--md">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab__content" content id="change-password">
+                <h3 class="tab__header">Change Password</h3>
+
+                <div class="tab__body">
+                    <form action="" class="form grid">
+                        <input type="password" placeholder="Old Password" class="form__input">
+                        <input type="password" placeholder="New Password" class="form__input">
+                        <input type="password" placeholder="Confirm Password" class="form__input">
+
+                        <div class="form__btn">
+                            <button class="btn btn--md">
+                                Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

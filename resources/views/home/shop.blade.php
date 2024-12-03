@@ -15,9 +15,9 @@
          </p>
 
          <div>
-            <a href="login.html" class="header__top-action">Login</a>
+            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="register.html" class="header__top-action"> Sign-up</a>
+            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
          </div>
       </div>
    </div>
@@ -38,7 +38,7 @@
             </li>
 
             <li class="nav__item">
-               <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
          </ul>
 

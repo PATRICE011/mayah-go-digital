@@ -35,7 +35,7 @@
             </li>
 
             <li class="nav__item">
-               <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
          </ul>
 

@@ -20,18 +20,30 @@ var swiperCategories = new Swiper('.categories__container', {
     },
 
     breakpoints: {
-        640: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-        },
-        768: {
-          slidesPerView: 4,
-          spaceBetween: 40,
-        },
-        1400: {
-          slidesPerView: 6,
-          spaceBetween: 24,
-        },
+      350: {
+        slidesPerView: 2,
+        spaceBetween: 24,
+      },
+
+      768: {
+        slidesPerView: 3,
+        spaceBetween: 24,
+      },
+
+      992: {
+        slidesPerView: 2,
+        spaceBetween: 24,
+      },
+
+      1200: {
+        slidesPerView: 5,
+        spaceBetween: 24,
+      },
+
+      1400: {
+        slidesPerView: 6,
+        spaceBetween: 24,
+      },
     },
 });
 
@@ -45,13 +57,13 @@ var swiperProducts = new Swiper('.new__container', {
     },
 
     breakpoints: {
-        640: {
-          slidesPerView: 2,
-          spaceBetween: 20,
-        },
         768: {
-          slidesPerView: 4,
-          spaceBetween: 40,
+          slidesPerView: 2,
+          spaceBetween: 24,
+        },
+        992: {
+          slidesPerView: 3,
+          spaceBetween: 24,
         },
         1400: {
           slidesPerView: 4,
