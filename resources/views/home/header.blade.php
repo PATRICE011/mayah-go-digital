@@ -51,11 +51,7 @@
 
             @auth
             <li class="nav__item">
-<<<<<<< HEAD
-               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
-=======
-               <a href="{{url('user/account')}}" class="nav__link">MY ACCOUNT</a>
->>>>>>> 3393a99c292d9fa4f8b27df2d8a1e66d70a6b5f5
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
@@ -69,7 +65,7 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{ url('user/wishlist') }}" class="header__action-btn">
+         <a href="{{ url('wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
