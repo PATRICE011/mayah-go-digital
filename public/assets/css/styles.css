@@ -194,6 +194,17 @@ input{
   color: var(--text-color);
 }
 
+.header__top-action span{
+  color: var(--first-color);
+  font-weight: var(--weight-600);
+}
+
+.header__top-action-btn{
+  border: none; 
+  background: none; 
+  cursor: pointer;
+}
+
 .nav,
 .nav__menu,
 .nav__list,

@@ -23,12 +23,14 @@
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                @csrf
-               <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+               <button type="submit" class="header__top-action-btn">Logout</button>
             </form>
             @endauth
 
             <span> / </span>
-            <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+            <span class="header__top-action">
+               Welcome, <span>{{ Auth::user()->name }}</span>!
+            </span>
             @endguest
          </div>
       </div>
@@ -51,11 +53,7 @@
 
             @auth
             <li class="nav__item">
-<<<<<<< HEAD
-               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
-=======
-               <a href="{{url('user/account')}}" class="nav__link">MY ACCOUNT</a>
->>>>>>> 3393a99c292d9fa4f8b27df2d8a1e66d70a6b5f5
+               <a href="{{url('/myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
