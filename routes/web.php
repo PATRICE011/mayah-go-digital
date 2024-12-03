@@ -13,9 +13,6 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
 
-
-
-
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
     // public routes
@@ -34,7 +31,6 @@ Route::middleware(['guest'])->group(function () {
         Route::post('/resend-otp', [OtpController::class, 'resendOtp'])->name('users.resendOtp');
     }); 
 });
-
 
 // Authenticated User Routes
 Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
@@ -57,17 +53,16 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/post-success', [PaymentController::class, 'postSuccess']);
     Route::get('/post-error', [PaymentController::class, 'postError']);
 
-   Route::prefix('payment')->group(function(){
-         // paymongo
+    Route::prefix('payment')->group(function(){
+        // paymongo
         Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
         Route::get('/create/{orderId}', [PaymentController::class, 'createPaymentTest'])->name('cart.pay');
         Route::match(['get', 'post'],'/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+    });
 
-   });
-
-//    ==== SETTINGS =====
-   Route::get('/settings',[SettingsController::class, 'viewSettings'])->name('settings');
-   Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
+    // ==== SETTINGS =====
+    Route::get('/settings',[SettingsController::class, 'viewSettings'])->name('settings');
+    Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 });
 
 // Admin Routes
@@ -109,4 +104,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
    });
 });
 
-
+Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
+Route::get('/details', [UserController::class, 'details'])->name('home.details');
+Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
+Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlist');
+Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
+Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');

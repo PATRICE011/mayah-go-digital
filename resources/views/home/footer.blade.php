@@ -1,59 +1,101 @@
 <!--==================== FOOTER ====================-->
-<footer class="footer section">
-    <div class="footer__container container grid">
+<section class="footer container">
+    <div class="footer__container grid">
         <div class="footer__content">
-            <a href="#" class="footer__logo">
-                <i class="ri-leaf-line footer__logo-icon"></i> Mayah Store
+            <a href="{{route('home.index')}}" class="footer__logo">
+                <i class="ri-restaurant-2-fill footer__logo-icon"></i> Mayah Store
             </a>
 
+            <h4 class="footer__subtitle">Contact</h4>
+
+            <p class="footer__description">
+                <span>Address:</span> Valenzuela, Philippines
+            </p>
+
+            <p class="footer__description">
+                <span>Phone:</span> +63 9999 888 777
+            </p>
+
+            <p class="footer__description">
+                <span>Hours:</span> 7:00am - 7:00pm
+            </p>
+        </div>
+
+        <div class="footer__content">
             <h3 class="footer__title">
-                Subscribe to our newsletter <br> to stay update
+                Address
+            </h3>
+            
+            <ul class="footer__links">
+                <li>
+                    <a href="" class="footer__link">About Us</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Pickup Information</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Privacy Policy</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Terms and Conditions</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Support Center</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer__content">
+            <h3 class="footer__title">
+                My Account
+            </h3>
+            
+            <ul class="footer__links">
+                <li>
+                    <a href="" class="footer__link">Sign In</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">View Cart</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">My Wishlist</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Track My Order</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Help</a>
+                </li>
+
+                <li>
+                    <a href="" class="footer__link">Order</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer__content">
+            <h3 class="footer__title">
+                Payment Gateways
             </h3>
 
-            <div class="footer__subscribe">
-                <input type="email" placeholder="Enter your email" class="footer__input">
-
-                <button class="button button--flex footer__button">
-                    Subscribe
-                    <i class="ri-arrow-right-up-line button__icon"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="footer__content">
-            <h3 class="footer__title">Our Address</h3>
-
-            <ul class="footer__data">
-                <li class="footer__information">Valenzuela, Philippines</li>
-                <li class="footer__information">123-456-789</li>
-            </ul>
-        </div>
-
-        <div class="footer__content">
-            <h3 class="footer__title">Contact Us</h3>
-
-            <ul class="footer__data">
-                <li class="footer__information">+63 9999 888 7777</li>
-                    
-                <div class="footer__social">
-                    <a href="https://www.facebook.com/" class="footer__social-link">
-                        <i class="ri-facebook-fill"></i>
-                    </a>
-                    <a href="https://www.instagram.com/" class="footer__social-link">
-                        <i class="ri-instagram-line"></i>
-                    </a>
-                    <a href="https://twitter.com/" class="footer__social-link">
-                        <i class="ri-twitter-fill"></i>
-                    </a>
-                </div>
-            </ul>
+            <img src="{{ asset('assets/img/GCASH-LOGO.png')}}" alt="Gcash" class="payment__img">
+            <img src="{{ asset('assets/img/MAYA-LOGO.png')}}" alt="Gcash" class="payment__img">
         </div>
     </div>
 
-    <p class="footer__copy">&#169; Mayah Store. All rigths reserved</p>
-</footer>
-        
-<!--=============== SCROLL UP ===============-->
-<a href="#" class="scrollup" id="scroll-up"> 
-    <i class="ri-arrow-up-fill scrollup__icon"></i>
-</a>
+    <div class="footer__bottom">
+        <p class="copyright">&copy; MAYAH STORE. All rights reserved</p>
+    </div>
+</section>
