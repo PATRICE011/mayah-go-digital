@@ -1,100 +1,128 @@
 @extends('home.layout')
+@section('title','Mayah Store - Login')
+
+<header class="header" id="header">
+   <div class="header__top">
+      <div class="header__container container">
+         <div class="header__contact">
+            <span>
+               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+            </span>
+         </div>
+
+         <p class="header__alert-news">
+            Super Value Deals - Save More!
+         </p>
+
+         <div>
+            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <span> / </span>
+            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+         </div>
+      </div>
+   </div>
+
+   <nav class="nav container">
+      <a href="{{route('home.index')}}" class="nav__logo">
+         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+         <ul class="nav__list">
+            <li class="nav__item">
+               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+            </li>
+         </ul>
+
+         <div class="header__search">
+            <input type="text" placeholder="Search Item" class="form__input">
+
+            <button class="search__btn">
+               <i class='bx bx-search search'></i>
+            </button>
+         </div>
+      </div>
+
+      <div class="header__user-actions">
+         <a href="{{route('home.wishlist')}}" class="header__action-btn">
+            <i class='bx bx-heart' ></i>
+            <span class="count">3</span>
+         </a>
+
+         <a href="{{route('home.cart')}}" class="header__action-btn">
+            <i class='bx bx-cart-alt' ></i>
+            <span class="count">3</span>
+         </a>
+      </div>
+   </nav>
+</header>
+
 @section('content')
-@include('home.header')
-@include('home.search')
-@include('home.cartinside')
 
-<div class="login show-login" id="login">
-    <form action="{{ route('users.makereg') }}" method="POST" class="login__form">
-        @csrf
-        <h2 class="login__title">Register</h2>
+<!--==================== BREADCRUMB ====================-->
+<section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+        <li>
+            <a href="{{route('home.index')}}" class="breadcrumb__link">
+                Home
+            </a>
+        </li>
 
-        <div class="login__group">
+        <li>
+            <span class="breadcrumb__link">
+                >
+            </span>
+        </li>
 
-            <div>
-                <label for="name" class="login__label">Name</label>
-                
-                <input type="text" placeholder="Write your Name" id="name" name="name" class="login__input" value="{{ old('name') }}" required>
-            </div>
+        <li>
+            <a href="{{route('users.register')}}" class="breadcrumb__link">
+                Register
+            </a>
+        </li>
+    </ul>
+</section>
 
-            <div>
-                <label for="mobile" class="login__label">Mobile Number</label>
-                
-                <input type="tel" placeholder="Write your Mobile Number" id="mobile" name="mobile" class="login__input" value="{{ old('mobile') }}" required>
-            </div>
+<!--==================== REGISTER ====================-->
+<section class="login-register section--lg">
+    <div class="login-register__container container grid">
+        <div class="register">
+            <h3 class="section__title">
+                Register
+            </h3>
 
-           
-            
-            <div>
-                <label for="password" class="login__label">Password</label>
-                
-                <input type="password" placeholder="Enter your password" id="password" name="password" class="login__input" required>
-            </div>
-            
-            <div>
-                <label for="password_confirmation" class="login__label">Confirm Password</label>
-                
-                <input type="password" placeholder="Confirm your password" id="password_confirmation" name="password_confirmation" class="login__input" required>
-            </div>
-            
+            <form action="" class="form grid">
+                <label for="name" class="login-register__label">Name</label>
+                <input type="text" placeholder="Enter your Name" class="form__input">
+
+                <label for="name" class="login-register__label">Phone Number</label>
+                <input type="tel" placeholder="Enter your Phone Number" class="form__input">
+
+                <label for="name" class="login-register__label">Password</label>
+                <input type="password" placeholder="Enter you Password" class="form__input">
+
+                <label for="name" class="login-register__label">Confirm Password</label>
+                <input type="password" placeholder="Confirm Password" class="form__input">
+
+                <div>
+                    <p class="login__signup">
+                        Already have an account? <a href="{{route('users.login')}}" class="login-register__link">Sign In</a>
+                    </p>
+                </div>
+
+                <div class="form__btn">
+                    <button class="btn">Register</button>
+                </div>
+            </form>
         </div>
+    </div>
+</section>
 
-        <div>
-            <p class="login__signup">
-                Already have an account? <a href="{{route('users.login')}}">Sign in</a>
-            </p>
-
-            <button type="submit" class="login__button">Register</button>
-        </div>
-    </form>
-
-    <i class="ri-close-line login__close" id="login-close"></i>
-</div>
-
-@include('home.main')
 @include('home.footer')
-<script src="assets/js/register.js"></script>
-
- <!-- Custom scripts after Toastr -->
-   
- @if (Session::has('message'))
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-
-        toastr.success("{{ Session::get('message') }}");
-    </script>
-    @endif
-
-    @if (Session::has('error'))
-        <script>
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "timeOut": "5000",
-            };
-
-            toastr.error("{{ Session::get('error') }}");
-        </script>
-    @endif
-
-    @if ($errors->any())
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-
-        @foreach ($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    </script>
-@endif
-@endsection

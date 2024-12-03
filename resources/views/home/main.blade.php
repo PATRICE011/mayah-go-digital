@@ -1,254 +1,1069 @@
+<!--==================== MAIN ====================-->
 <main class="main">
     <!--==================== HOME ====================-->
-    <section class="home" id="home">
+    <section class="home section--lg">
         <div class="home__container container grid">
-            <img src="{{ asset('assets/img/home.png') }}" alt="" class="home__img">
-
-            <div class="home__data">
+            <div class="home__content">
                 <h1 class="home__title">
-                    SHOP WITH NO <br> LIMITS
+                    Shop With <span>No Limits</span>
                 </h1>
 
                 <p class="home__description">
                     We got everything for your schooling needs!
-                    Our extensive collection ensures you're well-prepared and set for success.
+                    From essential supplies to the latest gadgets,
+                    our extensive collection ensures you're well-prepared and set for success.
                 </p>
 
-                <a href="#products" class="button button--flex">
-                    Shop Now <i class="ri-arrow-right-down-line button__icon"></i>
+                <a href="{{route('home.shop')}}" class="btn">
+                    Shop Now
                 </a>
             </div>
 
-            <div class="home__social">
-                <span class="home__social-follow">Follow Us</span>
-
-                <div class="home__social-links">
-                    <a href="https://www.facebook.com/" target="_blank" class="home__social-link">
-                        <i class="ri-facebook-fill"></i>
-                    </a>
-                    <a href="https://www.instagram.com/" target="_blank" class="home__social-link">
-                        <i class="ri-instagram-line"></i>
-                    </a>
-                    <a href="https://twitter.com/" target="_blank" class="home__social-link">
-                        <i class="ri-twitter-fill"></i>
-                    </a>
-                </div>
-            </div>
+            <img src="{{ asset('assets/img/home.png') }}" alt="" class="home__img">
         </div>
     </section>
 
-    <!--==================== ABOUT ====================-->
-    <section class="about section container" id="about">
-        <div class="about__container grid">
-            <div class="about__images">
-                <img src="{{ asset('assets/img/MAYAH.jpg') }}" alt="" class="about__img">
-            </div>
-            
-            <div class="about__data">
-                <h2 class="section__title about__title">
-                    Who we really are & <br> why choose us
-                </h2>
+    <!--==================== CATEGORIES ====================-->
+    <section class="categories container section">
+        <h3 class="section__title"><span>Popular</span> Categories</h3>
 
-                <p class="about__description">
-                    At Mayah Store, we understand that preparation is the key to success. <br><br>
+        <div class="categories__container swiper">
+            <div class="swiper-wrapper">
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
 
-                    That's why we offer a comprehensive selection of products tailored to meet all your academic and personal needs.
-                    From basic school supplies like notebooks and pens to advanced tech gadgets that keep you ahead of the curve,
-                    our inventory is carefully curated to enhance your educational experience. <br><br>
+                    <h3 class="category__title">Biscuits</h3>
+                </a>
 
-                    Dive into our extensive collection of high-quality items, including eco-friendly stationery,
-                    innovative study aids, and the latest electronic devices,
-                    all designed to support and inspire your journey towards academic excellence and personal growth.
-                    Whether you're gearing up for a new school year or tackling everyday challenges,
-                    Mayah Store is your trusted partner in achieving success and exceeding your goals.
-                </p>
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
 
-                <div class="about__details">
-                    <p class="about__details-description">
-                        <i class="ri-checkbox-fill about__details-icon"></i>
-                        We ensure your orders are processed promptly.
-                    </p>
-                    <p class="about__details-description">
-                        <i class="ri-checkbox-fill about__details-icon"></i>
-                        We provide guides to help you make the best use of your products.
-                    </p>
-                    <p class="about__details-description">
-                        <i class="ri-checkbox-fill about__details-icon"></i>
-                        We're always available for support after your purchase.
-                    </p>
-                    <p class="about__details-description">
-                        <i class="ri-checkbox-fill about__details-icon"></i>
-                        100% satisfaction guaranteed.
-                    </p>
-                </div>
+                    <h3 class="category__title">Drinks</h3>
+                </a>
 
-                <a href="#products" class="button--link button--flex">
-                    Shop Now <i class="ri-arrow-right-down-line button__icon"></i>
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
+
+                    <h3 class="category__title">School Supplies</h3>
+                </a>
+
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
+
+                    <h3 class="category__title">Biscuits</h3>
+                </a>
+
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
+
+                    <h3 class="category__title">Drinks</h3>
+                </a>
+
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
+
+                    <h3 class="category__title">School Supplies</h3>
+                </a>
+
+                <a href="shop.html" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
+
+                    <h3 class="category__title">Biscuits</h3>
                 </a>
             </div>
-        </div>
-    </section>
 
-    <!--==================== STEPS ====================-->
-    <section class="steps section container">
-        <div class="steps__bg">
-            <h2 class="section__title-center steps__title">
-                Steps to Start Shopping with <br> Mayah Store
-            </h2>
+            <div class="swiper-button-next">
+                <i class="ri-arrow-right-s-line"></i>
+            </div>
 
-            <div class="steps__container grid">
-                <div class="steps__card">
-                    <div class="steps__card-number">01</div>
-                    <h3 class="steps__card-title">Browse Our Products</h3>
-                    <p class="steps__card-description">
-                        Explore a wide selection of digital and physical products tailored to your needs. Simply browse through our categories and select the items that interest you.
-                    </p>
-                </div>
-
-                <div class="steps__card">
-                    <div class="steps__card-number">02</div>
-                    <h3 class="steps__card-title">Add to Cart</h3>
-                    <p class="steps__card-description">
-                        Once you find the products you love, add them to your shopping cart. You can review your selections before proceeding to checkout.
-                    </p>
-                </div>
-
-                <div class="steps__card">
-                    <div class="steps__card-number">03</div>
-                    <h3 class="steps__card-title">Checkout and Enjoy</h3>
-                    <p class="steps__card-description">
-                        Complete your order by providing the necessary details. Your order will be confirmed and prepared in advance, ensuring a smooth and timely process for collection or future arrangements.
-                    </p>
-                </div>
+            <div class="swiper-button-prev">
+                <i class="ri-arrow-left-s-line"></i>
             </div>
         </div>
     </section>
 
     <!--==================== PRODUCTS ====================-->
-    <section class="products section container" id="products">
-        <div class="products__container container">
-            <h2 class="section__title-center">
-                Choose our delicious and best products
-            </h2>
-
-            <p class="product__description">
-                Here are some selected products from our showroom, all are in excellent 
-                shape and has a long life span. Buy and enjoy best quality.
-            </p>
-
-            <!-- products -->
-        
-            @if(isset($error) && $error)
-            <div class="searchResult">
-                <h3>
-                    -> Search Result
-                </h3>
-            </div>
-
-            <div class="products__content grid">
-                <p>
-                    {{ $error }}
-                </p>
-            </div>
-
-            @elseif(isset($results) && count($results) > 0)
-            <div class="searchResult">
-                <h3>
-                    -> Search Result
-                </h3>
-            </div>
-
-            <div class="products__content grid">
-                @foreach ($results as $result)
-                    <article class="products__card {{ $result->category->slug }} all">
-                        <div class="products__shape">
-                            <img src="{{ asset('assets/img/' . $result->product_image) }}" alt="" class="products__img">
-                        </div>
-
-                        <div class="products__data">
-                            <h2 class="products__price">
-                                {{ $result->product_price }} Pesos
-                            </h2>
-
-                            <h3 class="products__name">
-                                {{ $result->product_name }}
-                            </h3>
-
-                            <!-- Add product to cart button -->
-                            <form action="{{ route('home.inserttocart') }}" method="POST" class="add-to-cart-form">
-                                @csrf
-                                <input type="hidden" name="id" value="{{ $result->id }}">
-                                <button type="submit" class="button products__button">
-                                    <i class='bx bx-shopping-bag'></i>
-                                </button>
-                            </form>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
-            @else
-
-        <!-- categories -->
-        <ul class="products__filters">
-            @foreach ($categories as $category)
-                <li class="products__item products__line" data-filter=".{{ $category->slug }}.all">
-                    <h3 class="products__title">
-                        {{ $category->category_name }}
-                    </h3>
-
-                    <span class="products__stock">
-                        {{ $category->products_count }} Products
-                    </span>
-                </li>
-            @endforeach
-        </ul>
-      
-        <div class="products__content grid">
-            @foreach ($products as $product)
-                <article class="products__card {{ $product->category->slug }} all {{ $product->product_stocks == 0 ? 'grayed-out' : '' }}">
-                    <div class="products__shape">
-                        <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="" class="products__img">
-                    </div>
-
-                    <div class="products__data">
-                        <h2 class="products__price">
-                            {{ $product->product_price }} Pesos
-                        </h2>
-
-                        <h3 class="products__name">
-                            {{ $product->product_name }}
-                        </h3>
-
-                        <!-- Display out of stock or low stock warning -->
-                        @if($product->product_stocks == 0)
-                            <div class="out-of-stock">
-                                Out of Stock
-                            </div>
-
-                        @elseif($product->product_stocks < 10)
-                            <div class="low-of-stock">
-                                Only {{ $product->product_stocks }} left in stock!
-                            </div>
-
-                        @endif
-
-                        <!-- Add product to cart button -->
-                        <form action="{{ route('home.inserttocart') }}" method="POST" class="add-to-cart-form">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $product->id }}">
-                            <button type="submit" class="button products__button" {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
-                                <i class='bx bx-shopping-bag'></i>
-                            </button>
-                        </form>
-                    </div>
-                </article>
-            @endforeach
+    <section class="products section container">
+        <div class="tab__btns">
+            <div class="tab__btn active-tab" data-target="#featured">Featured</div>
+            <div class="tab__btn" data-target="#popular">Popular</div>
+            <div class="tab__btn" data-target="#new-added">Newly Added</div>
         </div>
-        @endif
+
+        <div class="tab__items">
+            <div class="tab__item active-tab" content id="featured">
+                <div class="products__container grid">
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-pink">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-green">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-orange">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab__item" content id="popular">
+                <div class="products__container grid">
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-pink">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-green">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-orange">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img default">
+
+                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-blue">-22%</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab__item" content id="new-added">
+                <div class="products__container grid">
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-pink">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-green">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-orange">Hot</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product__item">
+                        <div class="product__banner">
+                            <a href="detail.html" class="product__images">
+                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img default">
+
+                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img hover">
+                            </a>
+
+                            <div class="product__actions">
+                                <a href="#" class="action__btn" aria-label="Quick View">
+                                    <i class='bx bx-expand-horizontal' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart' ></i>
+                                </a>
+
+                                <a href="#" class="action__btn" aria-label="Compare">
+                                    <i class='bx bx-shuffle' ></i>
+                                </a>
+                            </div>
+
+                            <div class="product__badge light-blue">-22%</div>
+                        </div>
+
+                        <div class="product__content">
+                            <span class="product__category">Biscuits</span>
+                            <a href="details.html">
+                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            </a>
+
+                            <div class="product__rating">
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                                <i class='bx bx-star' ></i>
+                            </div>
+
+                            <div class="product__price flex">
+                                <span class="new__price">₱ 7.00</span>
+                                <span class="old__price">₱ 9.00</span>
+                            </div>
+
+                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt' ></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
+    <!--==================== DEALS ====================-->
+    <section class="deals section">
+        <div class="deals__container container grid">
+            <div class="deals__item">
+                <div class="deals__group">
+                    <h3 class="deals__brand">Deal of the Day</h3>
+                    <span class="deals__category">Limited Quantities</span>
+                </div>
+
+                <h4 class="deals__title">New Flavors</h4>
+
+                <div class="deals__price flex">
+                    <span class="new__price">₱ 100.00</span>
+                    <span class="old__price">₱ 120.00</span>
+                </div>
+
+                <div class="countdown">
+                    <div class="countdown__amount">
+                        <p class="countdown__period">02</p>
+                        <span class="unit">Days</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">22</p>
+                        <span class="unit">Hours</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">57</p>
+                        <span class="unit">Mins</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">24</p>
+                        <span class="unit">Secs</span>
+                    </div>
+                </div>
+
+                <div class="deals__btn">
+                    <a href="details.html" class="btn btn--md">Shop Now</a>
+                </div>
+            </div>
+
+            <div class="deals__item">
+                <div class="deals__group">
+                    <h3 class="deals__brand">Deal of the Week</h3>
+                    <span class="deals__category">Limited Quantities</span>
+                </div>
+
+                <h4 class="deals__title">Try new flavors</h4>
+
+                <div class="deals__price flex">
+                    <span class="new__price">₱ 100.00</span>
+                    <span class="old__price">₱ 120.00</span>
+                </div>
+
+                <div class="countdown">
+                    <div class="countdown__amount">
+                        <p class="countdown__period">02</p>
+                        <span class="unit">Days</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">22</p>
+                        <span class="unit">Hours</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">57</p>
+                        <span class="unit">Mins</span>
+                    </div>
+
+                    <div class="countdown__amount">
+                        <p class="countdown__period">24</p>
+                        <span class="unit">Secs</span>
+                    </div>
+                </div>
+
+                <div class="deals__btn">
+                    <a href="details.html" class="btn btn--md">Shop Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--==================== NEW ARRIVALS ====================-->
+    <section class="new__arrivals container section">
+        <h3 class="section__title"><span>New</span> Arrivals</h3>
+
+        <div class="new__container swiper">
+            <div class="swiper-wrapper">
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-pink">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-green">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-orange">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-pink">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-green">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product__item swiper-slide">
+                    <div class="product__banner">
+                        <a href="detail.html" class="product__images">
+                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                        </a>
+
+                        <div class="product__actions">
+                            <a href="#" class="action__btn" aria-label="Quick View">
+                                <i class='bx bx-expand-horizontal' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                                <i class='bx bx-heart' ></i>
+                            </a>
+
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle' ></i>
+                            </a>
+                        </div>
+
+                        <div class="product__badge light-orange">Hot</div>
+                    </div>
+
+                    <div class="product__content">
+                        <span class="product__category">Biscuits</span>
+                        <a href="details.html">
+                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        </a>
+
+                        <div class="product__rating">
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                            <i class='bx bx-star' ></i>
+                        </div>
+
+                        <div class="product__price flex">
+                            <span class="new__price">₱ 7.00</span>
+                            <span class="old__price">₱ 9.00</span>
+                        </div>
+
+                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                            <i class='bx bx-cart-alt' ></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-button-next">
+                <i class="ri-arrow-right-s-line"></i>
+            </div>
+
+            <div class="swiper-button-prev">
+                <i class="ri-arrow-left-s-line"></i>
+            </div>
+        </div>
+    </section>
+
+    <!--==================== SHOWCASE ====================-->
+    <section class="showcase section">
+
+    </section>
+    
     <!--==================== QUESTIONS ====================-->
-    <section class="questions section" id="faqs">
+    <!-- <section class="questions section" id="faqs">
         <h2 class="section__title-center questions__title container">
             Some common questions <br> were often asked
         </h2>
@@ -348,5 +1163,5 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 </main>

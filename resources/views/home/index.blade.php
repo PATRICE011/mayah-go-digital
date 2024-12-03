@@ -3,13 +3,6 @@
 @section('content')
       <!--==================== HEADER ====================-->
       @include('home.header')
-
-      <!--==================== CART ====================-->
-      @include('home.cartinside')
-      <!--==================== SEARCH ====================-->
-      @include('home.search')
-      <!--==================== LOGIN/REGISTER ====================-->
-      @include('home.users')
       
       <!--==================== MAIN ====================-->
       @include('home.main')

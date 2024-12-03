@@ -12,9 +12,9 @@
          </p>
 
          <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <a href="login.html" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+            <a href="register.html" class="header__top-action"> Sign-up</a>
          </div>
       </div>
    </div>
@@ -31,7 +31,7 @@
             </li>
 
             <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link">SHOP</a>
+               <a href="shop.blade.html" class="nav__link">SHOP</a>
             </li>
 
             <li class="nav__item">
@@ -49,12 +49,12 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
+         <a href="wishlist.html" class="header__action-btn">
             <i class='bx bx-heart' ></i>
             <span class="count">3</span>
          </a>
 
-         <a href="{{route('home.cart')}}" class="header__action-btn">
+         <a href="cart.html" class="header__action-btn">
             <i class='bx bx-cart-alt' ></i>
             <span class="count">3</span>
          </a>

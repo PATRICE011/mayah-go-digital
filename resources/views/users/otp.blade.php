@@ -1,99 +1,119 @@
 @extends('home.layout')
+@section('title','Mayah Store - Login')
+
+<header class="header" id="header">
+   <div class="header__top">
+      <div class="header__container container">
+         <div class="header__contact">
+            <span>
+               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+            </span>
+         </div>
+
+         <p class="header__alert-news">
+            Super Value Deals - Save More!
+         </p>
+
+         <div>
+            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <span> / </span>
+            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+         </div>
+      </div>
+   </div>
+
+   <nav class="nav container">
+      <a href="{{route('home.index')}}" class="nav__logo">
+         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+         <ul class="nav__list">
+            <li class="nav__item">
+               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
+            </li>
+
+            <li class="nav__item">
+               <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+            </li>
+         </ul>
+
+         <div class="header__search">
+            <input type="text" placeholder="Search Item" class="form__input">
+
+            <button class="search__btn">
+               <i class='bx bx-search search'></i>
+            </button>
+         </div>
+      </div>
+
+      <div class="header__user-actions">
+         <a href="{{route('home.wishlist')}}" class="header__action-btn">
+            <i class='bx bx-heart' ></i>
+            <span class="count">3</span>
+         </a>
+
+         <a href="{{route('home.cart')}}" class="header__action-btn">
+            <i class='bx bx-cart-alt' ></i>
+            <span class="count">3</span>
+         </a>
+      </div>
+   </nav>
+</header>
 
 @section('content')
-    @include('home.header')
-    @include('home.search')
-    @include('home.cartinside')
 
-    <div class="login show-login" id="login">
-        <form action="{{ route('users.verifyOtp') }}" method="POST" class="login__form">
-            @csrf
-            <h2 class="login__title">OTP Verification</h2>
+<!--==================== BREADCRUMB ====================-->
+<section class="breadcrumb">
+    <ul class="breadcrumb__list flex container">
+        <li>
+            <a href="{{route('home.index')}}" class="breadcrumb__link">
+                Home
+            </a>
+        </li>
 
-            @if ($errors->any())
-                <div style="color: red;">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+        <li>
+            <span class="breadcrumb__link">
+                >
+            </span>
+        </li>
+
+        <li>
+            <a href="{{route('users.otp')}}" class="breadcrumb__link">
+                OTP
+            </a>
+        </li>
+    </ul>
+</section>
+
+<!--==================== OTP ====================-->
+<section class="login-register section--lg">
+    <div class="login-register__container container grid">
+        <div class="register">
+            <h3 class="section__title">
+                OTP
+            </h3>
+
+            <form action="" class="form grid">
+                <label for="name" class="login-register__label">One-Time Password</label>
+                <input type="text" placeholder="Enter OTP" class="form__input">
+
+                <div>
+                    <p class="login__signup">
+                        Didn't Receive Code? <a href="#">Resend Code</a>
+                    </p>
                 </div>
-            @endif
 
-            <div class="login__group">
-                <label for="otp" class="login__label">OTP</label>
-                <input type="text" placeholder="Enter your One-Time Password" id="otp" name="otp" class="login__input" required>
-            </div>
-
-            <button type="submit" class="login__button">Submit</button>
-            
-            <p class="login__resend">
-                Didn't receive the OTP? <a href="#" id="resendLink" onclick="startTimer(60, this)">Resend OTP</a>
-                <span id="timer" style="display:none;">Please wait for 60 seconds to resend OTP.</span>
-            </p>
-
-        </form>
-
-        <form id="resend-otp-form" action="{{ route('users.resendOtp') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
+                <div class="form__btn">
+                    <button class="btn">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
+</section>
 
-    @include('home.main')
-    @include('home.footer')
-
-    <!-- Custom scripts after Toastr -->
-   
-    @if (Session::has('message'))
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000",
-        };
-
-        toastr.success("{{ Session::get('message') }}");
-    </script>
-    @endif
-
-    @if (Session::has('error'))
-        <script>
-            toastr.options = {
-                "closeButton": true,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "timeOut": "5000",
-            };
-
-            toastr.error("{{ Session::get('error') }}");
-        </script>
-    @endif
-
-    <script>
-        function startTimer(duration, linkElement) {
-            var timer = duration, minutes, seconds;
-            linkElement.style.display = 'none';
-            var timerSpan = document.getElementById('timer');
-            timerSpan.style.display = '';
-
-            var interval = setInterval(function () {
-                minutes = parseInt(timer / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                timerSpan.textContent = 'Please wait ' + minutes + ":" + seconds + ' seconds to resend OTP.';
-
-                if (--timer < 0) {
-                    timer = duration;
-                    clearInterval(interval);
-                    linkElement.style.display = '';
-                    timerSpan.style.display = 'none';
-                    document.getElementById('resend-otp-form').submit();
-                }
-            }, 1000);
-        }
-    </script>
-
-@endsection
+@include('home.footer')

@@ -127,8 +127,6 @@ class userController extends Controller
         ]);
     }
 
-
-
     public function postRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -183,5 +181,35 @@ class userController extends Controller
         $request->session()->forget('name');
 
         return redirect(route('home.index'))->with('message', ' Logout Successful');
+    }
+
+    public function shop()
+    {
+        return view('home.shop');
+    }
+
+    public function details()
+    {
+        return view('home.details');
+    }
+
+    public function cart()
+    {
+        return view('home.cart');
+    }
+
+    public function wishlist()
+    {
+        return view('home.wishlist');
+    }
+
+    public function otp()
+    {
+        return view('users.otp');
+    }
+
+    public function checkout()
+    {
+        return view('home.checkout');
     }
 }
