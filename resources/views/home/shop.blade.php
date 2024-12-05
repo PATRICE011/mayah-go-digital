@@ -54,7 +54,7 @@
 
                 @auth
                 <li class="nav__item">
-                   <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+                    <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -112,12 +112,12 @@
     <p class="total__products">We found <span>"idk what #"</span> items for you!</p>
 
     <div class="products__container grid">
+        @foreach($products as $product)
         <div class="product__item">
             <div class="product__banner">
-                <a href="detail.html" class="product__images">
-                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
-
-                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                <a href="#" class="product__images">
+                    <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="product__img default">
+                    <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="product__img hover">
                 </a>
 
                 <div class="product__actions">
@@ -136,9 +136,9 @@
             </div>
 
             <div class="product__content">
-                <span class="product__category">Biscuits</span>
+                <span class="product__category">{{ $product->category_name }}</span>
                 <a href="details.html">
-                    <h3 class="product__title">Bread Stix - Blue</h3>
+                    <h3 class="product__title">{{ $product->product_name }}</h3>
                 </a>
                 <div class="product__rating">
                     <i class='bx bx-star'></i>
@@ -148,7 +148,7 @@
                     <i class='bx bx-star'></i>
                 </div>
                 <div class="product__price flex">
-                    <span class="new__price">₱ 7.00</span>
+                    <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
@@ -156,7 +156,7 @@
                 </a>
             </div>
         </div>
-
+        @endforeach
         <div class="product__item">
             <div class="product__banner">
                 <a href="detail.html" class="product__images">

@@ -4,25 +4,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\OtpController;
-use App\Models\User;
-use App\Models\Product;
-use App\Models\Admin;
-use App\Models\Cart;
-use App\Models\CartItem;
-use App\Models\Category;
 
+use Illuminate\Support\Facades\DB;
 
 class userController extends Controller
 {
-  
+
 
     public function shop()
     {
-        return view('home.shop');
+        // Fetch all products and their associated categories
+        $products = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name')  // select necessary columns
+            ->get();
+
+        // Pass the products to the view
+        return view('home.shop', compact('products'));
     }
 
     public function details()
@@ -40,7 +38,7 @@ class userController extends Controller
         return view('home.wishlist');
     }
 
- 
+
     public function checkout()
     {
         return view('home.checkout');
