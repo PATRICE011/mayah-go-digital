@@ -45,7 +45,7 @@
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{url('/')}}" class="nav__link active-link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link">HOME</a>
             </li>
 
             <li class="nav__item">
@@ -54,7 +54,7 @@
 
             @auth
             <li class="nav__item">
-               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
@@ -128,8 +128,9 @@
                 <i class='bx bx-exit' ></i> Logout
             </p>
         </div>
-
+        
         <div class="tabs__content">
+            @if ($activeSection == 'dashboard')
             <div class="tab__content active-tab" content id="dashboard">
                 <h3 class="tab__header">Hello "Name Here"</h3>
 
@@ -215,6 +216,7 @@
                     </table>
                 </div>
             </div>
+            @endif
 
             <div class="tab__content" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
@@ -235,7 +237,7 @@
                             <td>Ready for Pickup</td>
                             <td>₱ 7.00</td>
                             <td>
-                                <a href="#" class="view__order">View</a>
+                                <a href="{{url('/orderdetails')}}" class="view__order">View</a>
                             </td>
                         </tr>
 
@@ -269,6 +271,7 @@
                     <form action="" class="form grid">
                         <input type="text" placeholder="Name" class="form__input">
                         <input type="tel" placeholder="Phone Number" class="form__input">
+                        <input type="number" placeholder="OTP" class="form__input">
 
                         <div class="form__btn">
                             <a href="{{url('')}}">
@@ -289,6 +292,7 @@
                         <input type="password" placeholder="Old Password" class="form__input">
                         <input type="password" placeholder="New Password" class="form__input">
                         <input type="password" placeholder="Confirm Password" class="form__input">
+                        <input type="number" placeholder="OTP" class="form__input">
 
                         <div class="form__btn">
                             <button class="btn btn--md">
@@ -301,3 +305,5 @@
         </div>
     </div>
 </section>
+
+@include('home.footer')

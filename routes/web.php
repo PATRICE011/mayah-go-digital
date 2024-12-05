@@ -112,3 +112,6 @@ Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlis
 // Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::get('/myaccount', [UserController::class,'MyAccount']);
+Route::get('/orderdetails', [UserController::class,'orderDetails']);
+
+Route::get('/myaccount', [UserController::class, 'dashboard'])->name('myaccount.dashboard');
