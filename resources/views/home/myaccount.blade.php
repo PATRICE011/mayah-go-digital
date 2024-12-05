@@ -15,36 +15,52 @@
          </p>
 
          <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            @guest
+            <!-- For guest (non-authenticated users) -->
+            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+            @else
+            <!-- For authenticated users -->
+            <!-- For authenticated users -->
+            @auth
+            <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+               @csrf
+               <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+            </form>
+            @endauth
+
+            <span> / </span>
+            <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+            @endguest
          </div>
       </div>
    </div>
 
    <nav class="nav container">
-      <a href="{{route('home.index')}}" class="nav__logo">
+      <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
 
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link active-link">HOME</a>
             </li>
 
             <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link">SHOP</a>
+               <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
             </li>
 
+            @auth
             <li class="nav__item">
-               <a href="{{route('home.myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
+            @endauth
          </ul>
 
          <div class="header__search">
             <input type="text" placeholder="Search Item" class="form__input">
-
             <button class="search__btn">
                <i class='bx bx-search search'></i>
             </button>
@@ -52,14 +68,14 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart' ></i>
-            <span class="count">3</span>
+         <a href="{{ url('wishlist') }}" class="header__action-btn">
+            <i class='bx bx-heart'></i>
+            <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
 
-         <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt' ></i>
-            <span class="count">3</span>
+         <a href="{{ url('user/cart') }}" class="header__action-btn">
+            <i class='bx bx-cart-alt'></i>
+            <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
       </div>
    </nav>
@@ -69,7 +85,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{route('home.index')}}" class="breadcrumb__link">
+            <a href="{{url('/')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>
@@ -118,9 +134,85 @@
                 <h3 class="tab__header">Hello "Name Here"</h3>
 
                 <div class="tab__body">
-                    <p class="tab__description">
-                        Account dashboard, you can easily check and view your recent orders
-                    </p>
+                    <div class="stat__container">
+                        <div class="stat-box">
+                            <div class="icon icon-total-orders">
+                                <i class="ri-building-fill"></i>
+                            </div>
+
+                            <h4 class="total-orders__quantity">3</h4>
+                            <p class="total-orders__title">Total Orders</p>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="icon icon-total-completed">
+                                <i class="ri-archive-fill"></i>
+                            </div>
+
+                            <h4 class="total-completed__quantity">2</h4>
+                            <p class="total-completed__title">Total Completed</p>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="icon icon-total-returned">
+                                <i class="ri-corner-up-left-fill"></i>
+                            </div>
+
+                            <h4 class="total-returned__quantity">1</h4>
+                            <p class="total-returned__title">Total Returned</p>
+                        </div>
+
+                        <div class="stat-box">
+                            <div class="icon icon-wallet-balance">
+                                <i class="ri-wallet-fill"></i>
+                            </div>
+
+                            <h4 class="wallet-balance__quantity">₱0.00</h4>
+                            <p class="wallet-balance__title">Wallet Balance</p>
+                        </div>
+                    </div>
+
+                    <h3 class="tab__header-title">Recent Orders</h3>
+
+                    <table class="placed__order-table">
+                        <tr>
+                            <th>Orders</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#1</td>
+                            <td>December 3, 2024</td>
+                            <td>Ready for Pickup</td>
+                            <td>₱ 7.00</td>
+                            <td>
+                                <a href="#" class="view__order">View</a>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -179,9 +271,11 @@
                         <input type="tel" placeholder="Phone Number" class="form__input">
 
                         <div class="form__btn">
-                            <button class="btn btn--md">
-                                Update Profile
-                            </button>
+                            <a href="{{url('')}}">
+                                <button class="btn btn--md">
+                                    Update Profile
+                                </button>
+                            </a>
                         </div>
                     </form>
                 </div>

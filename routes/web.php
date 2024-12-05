@@ -109,6 +109,6 @@ Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
 Route::get('/details', [UserController::class, 'details'])->name('home.details');
 Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlist');
-Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
+// Route::get('/otp', [UserController::class, 'otp'])->name('users.otp');
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
-Route::get('/myaccount', [UserController::class, 'myaccount'])->name('home.myaccount');
+Route::get('/myaccount', [UserController::class,'MyAccount']);

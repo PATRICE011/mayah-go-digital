@@ -26,14 +26,12 @@
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                @csrf
-               <button type="submit" class="header__top-action-btn">Logout</button>
+               <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
             </form>
             @endauth
 
             <span> / </span>
-            <span class="header__top-action">
-               Welcome, <span>{{ Auth::user()->name }}</span>!
-            </span>
+            <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
             @endguest
          </div>
       </div>
@@ -54,9 +52,11 @@
                <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
             </li>
 
+            @auth
             <li class="nav__item">
-               <a href="{{url('/myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="" class="nav__link">MY ACCOUNT</a>
             </li>
+            @endauth
          </ul>
 
          <div class="header__search">
@@ -68,12 +68,12 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{ url('user/wishlist') }}" class="header__action-btn">
+         <a href="{{ url('/wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
 
-         <a href="{{ url('user/cart') }}" class="header__action-btn">
+         <a href="{{ url('/cart') }}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
@@ -170,4 +170,4 @@
     @if (session('error'))
       toastr.error("{{ session('error') }}");
     @endif
-  </script>
+</script>

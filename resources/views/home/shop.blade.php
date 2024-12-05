@@ -2,67 +2,84 @@
 @section('title','Mayah Store - Shop')
 
 <header class="header" id="header">
-   <div class="header__top">
-      <div class="header__container container">
-         <div class="header__contact">
-            <span>
-               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
-            </span>
-         </div>
+    <div class="header__top">
+        <div class="header__container container">
+            <div class="header__contact">
+                <span>
+                    <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+                </span>
+            </div>
 
-         <p class="header__alert-news">
-            Super Value Deals - Save More!
-         </p>
+            <p class="header__alert-news">
+                Super Value Deals - Save More!
+            </p>
 
-         <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
-            <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
-         </div>
-      </div>
-   </div>
+            <div>
+                @guest
+                <!-- For guest (non-authenticated users) -->
+                <a href="{{url('user/login')}}" class="header__top-action">Login</a>
+                <span> / </span>
+                <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+                @else
+                <!-- For authenticated users -->
+                <!-- For authenticated users -->
+                @auth
+                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+                </form>
+                @endauth
 
-   <nav class="nav container">
-      <a href="{{route('home.index')}}" class="nav__logo">
-         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
-      </a>
+                <span> / </span>
+                <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+                @endguest
+            </div>
+        </div>
+    </div>
 
-      <div class="nav__menu" id="nav-menu">
-         <ul class="nav__list">
-            <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
-            </li>
+    <nav class="nav container">
+        <a href="{{url('/')}}" class="nav__logo">
+            <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+        </a>
 
-            <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
-            </li>
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a href="{{url('/')}}" class="nav__link">HOME</a>
+                </li>
 
-            <li class="nav__item">
-               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
-            </li>
-         </ul>
+                <li class="nav__item">
+                    <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
+                </li>
 
-         <div class="header__search">
-            <input type="text" placeholder="Search Item" class="form__input">
+                @auth
+                <li class="nav__item">
+                   <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+                </li>
+                @endauth
+            </ul>
 
-            <button class="search__btn">
-               <i class='bx bx-search search'></i>
-            </button>
-         </div>
-      </div>
+            <div class="header__search">
+                <input type="text" placeholder="Search Item" class="form__input">
 
-      <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart' ></i>
-            <span class="count">3</span>
-         </a>
+                <button class="search__btn">
+                    <i class='bx bx-search search'></i>
+                </button>
+            </div>
+        </div>
 
-         <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt' ></i>
-            <span class="count">3</span>
-         </a>
-      </div>
-   </nav>
+        <div class="header__user-actions">
+            <a href="{{url('/wishlist')}}" class="header__action-btn">
+                <i class='bx bx-heart'></i>
+                <span class="count">3</span>
+            </a>
+
+            <a href="{{url('/cart')}}" class="header__action-btn">
+                <i class='bx bx-cart-alt'></i>
+                <span class="count">3</span>
+            </a>
+        </div>
+    </nav>
 </header>
 
 @section('content')
@@ -71,7 +88,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{route('home.index')}}" class="breadcrumb__link">
+            <a href="{{url('/')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>
@@ -104,14 +121,14 @@
                 </a>
 
                 <div class="product__actions">
-                    <a href="{{route('home.details')}}" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                    <a href="{{url('/details')}}" class="action__btn" aria-label="Quick View">
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -124,18 +141,18 @@
                     <h3 class="product__title">Bread Stix - Blue</h3>
                 </a>
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
                 <div class="product__price flex">
                     <span class="new__price">₱ 7.00</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -150,15 +167,15 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -173,11 +190,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -186,7 +203,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -200,15 +217,15 @@
                 </a>
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -222,11 +239,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -235,7 +252,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -250,13 +267,13 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -269,18 +286,18 @@
                     <h3 class="product__title">Bread Stix - Blue</h3>
                 </a>
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
                 <div class="product__price flex">
                     <span class="new__price">₱ 7.00</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -295,15 +312,15 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -318,11 +335,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -331,7 +348,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -345,15 +362,15 @@
                 </a>
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -367,11 +384,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -380,7 +397,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -395,13 +412,13 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -414,18 +431,18 @@
                     <h3 class="product__title">Bread Stix - Blue</h3>
                 </a>
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
                 <div class="product__price flex">
                     <span class="new__price">₱ 7.00</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -440,15 +457,15 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -463,11 +480,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -476,7 +493,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -490,15 +507,15 @@
                 </a>
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -512,11 +529,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -525,7 +542,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -540,13 +557,13 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -559,18 +576,18 @@
                     <h3 class="product__title">Bread Stix - Blue</h3>
                 </a>
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
                 <div class="product__price flex">
                     <span class="new__price">₱ 7.00</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -585,15 +602,15 @@
 
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -608,11 +625,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -621,7 +638,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>
@@ -635,15 +652,15 @@
                 </a>
                 <div class="product__actions">
                     <a href="#" class="action__btn" aria-label="Quick View">
-                        <i class='bx bx-expand-horizontal' ></i>
+                        <i class='bx bx-expand-horizontal'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class='bx bx-heart' ></i>
+                        <i class='bx bx-heart'></i>
                     </a>
 
                     <a href="#" class="action__btn" aria-label="Compare">
-                        <i class='bx bx-shuffle' ></i>
+                        <i class='bx bx-shuffle'></i>
                     </a>
                 </div>
 
@@ -657,11 +674,11 @@
                 </a>
 
                 <div class="product__rating">
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
-                    <i class='bx bx-star' ></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
                 </div>
 
                 <div class="product__price flex">
@@ -670,7 +687,7 @@
                 </div>
 
                 <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt' ></i>
+                    <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
         </div>

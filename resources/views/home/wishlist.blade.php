@@ -15,31 +15,33 @@
          </p>
 
          <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
          </div>
       </div>
    </div>
 
    <nav class="nav container">
-      <a href="{{route('home.index')}}" class="nav__logo">
+      <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
 
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link">HOME</a>
             </li>
 
             <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
+               <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
             </li>
 
+            @auth
             <li class="nav__item">
-               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
+            @endauth
          </ul>
 
          <div class="header__search">
@@ -71,7 +73,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{route('home.index')}}" class="breadcrumb__link">
+            <a href="{{url('/')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>

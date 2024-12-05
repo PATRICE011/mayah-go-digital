@@ -15,31 +15,33 @@
          </p>
 
          <div>
-            <a href="{{route('users.login')}}" class="header__top-action">Login</a>
+            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
-            <a href="{{route('users.register')}}" class="header__top-action"> Sign-up</a>
+            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
          </div>
       </div>
    </div>
 
    <nav class="nav container">
-      <a href="{{route('home.index')}}" class="nav__logo">
+      <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
 
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{route('home.index')}}" class="nav__link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link">HOME</a>
             </li>
 
             <li class="nav__item">
-               <a href="{{route('home.shop')}}" class="nav__link active-link">SHOP</a>
+               <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
             </li>
 
+            @auth
             <li class="nav__item">
-               <a href="{{route('home.myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
+            @endauth
          </ul>
 
          <div class="header__search">
@@ -52,12 +54,12 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
+         <a href="{{url('/wishlist')}}" class="header__action-btn">
             <i class='bx bx-heart' ></i>
             <span class="count">3</span>
          </a>
 
-         <a href="{{route('home.cart')}}" class="header__action-btn">
+         <a href="{{url('cart')}}" class="header__action-btn">
             <i class='bx bx-cart-alt' ></i>
             <span class="count">3</span>
          </a>
@@ -71,7 +73,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{route('home.index')}}" class="breadcrumb__link">
+            <a href="{{url('/cart')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>
@@ -83,7 +85,7 @@
         </li>
 
         <li>
-            <a href="{{route('home.shop')}}" class="breadcrumb__link">
+            <a href="{{url('/shop')}}" class="breadcrumb__link">
                 Shop
             </a>
         </li>
@@ -220,7 +222,7 @@
    </div>
 
    <div class="cart__actions">
-      <a href="{{route('home.shop')}}" class="btn flex btn--md">
+      <a href="{{url('/shop')}}" class="btn flex btn--md">
          <i class='bx bx-shopping-bag' ></i> Continue Shopping
       </a>
    </div>
@@ -295,7 +297,7 @@
             </tr>
          </table>
 
-         <a href="{{route('home.checkout')}}" class="btn flex btn--md">
+         <a href="{{url('/checkout')}}" class="btn flex btn--md">
             <i class='bx bx-package' ></i> Proceed to Checkout
          </a>
       </div>

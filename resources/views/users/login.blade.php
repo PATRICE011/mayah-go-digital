@@ -37,9 +37,11 @@
                     <a href="" class="nav__link active-link">SHOP</a>
                 </li>
 
+                @auth
                 <li class="nav__item">
-                    <a href="myaccount.html" class="nav__link">MY ACCOUNT</a>
+                   <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
                 </li>
+                @endauth
             </ul>
 
             <div class="header__search">

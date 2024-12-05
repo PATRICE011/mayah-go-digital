@@ -53,7 +53,7 @@
 
             @auth
             <li class="nav__item">
-               <a href="{{url('/myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
@@ -67,12 +67,12 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{ url('user/wishlist') }}" class="header__action-btn">
+         <a href="{{ url('wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
 
-         <a href="{{ url('user/cart') }}" class="header__action-btn">
+         <a href="{{ url('cart') }}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>

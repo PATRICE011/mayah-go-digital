@@ -37,9 +37,11 @@
                <a href="{{url('shop')}}" class="nav__link">SHOP</a>
             </li>
 
+            @auth
             <li class="nav__item">
                <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
+            @endauth
          </ul>
 
          <div class="header__search">
