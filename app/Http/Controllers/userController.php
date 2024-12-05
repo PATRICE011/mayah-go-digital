@@ -48,4 +48,14 @@ class userController extends Controller
     {
         return view('home.myaccount');
     }
+
+    public function orderDetails()
+    {
+        return view('home.orderdetails');
+    }
+
+    public function dashboard()
+    {
+        return view('home.myaccount', ['activeSection' => 'dashboard']);
+    }
 }
