@@ -39,7 +39,7 @@
 
                 @auth
                 <li class="nav__item">
-                   <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+                    <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -55,12 +55,12 @@
 
         <div class="header__user-actions">
             <a href="" class="header__action-btn">
-                <i class='bx bx-heart' ></i>
+                <i class='bx bx-heart'></i>
                 <span class="count">3</span>
             </a>
 
             <a href="" class="header__action-btn">
-                <i class='bx bx-cart-alt' ></i>
+                <i class='bx bx-cart-alt'></i>
                 <span class="count">3</span>
             </a>
         </div>
@@ -100,25 +100,23 @@
                 Login
             </h3>
 
-            <!-- Update form to post to postLogin route -->
-            <form action="{{ url('user/login') }}" method="POST" class="form grid">
-                @csrf  <!-- Add CSRF token for security -->
-                
+            <form action="{{url('/user/login')}}" method="POST" class="form grid">
+                @csrf
                 <!-- Mobile number input -->
                 <label for="mobile" class="login-register__label">Phone Number</label>
                 <input type="tel" id="mobile" name="mobile" value="{{ old('mobile') }}" placeholder="Enter your Phone Number" class="form__input @error('mobile') is-invalid @enderror">
-                
+
                 <!-- Password input -->
                 <label for="password" class="login-register__label">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" class="form__input @error('password') is-invalid @enderror">
-                
+
                 <!-- Display validation errors for mobile and password -->
                 @error('mobile')
-                    <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                 @enderror
-                
+
                 @error('password')
-                    <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
+                <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                 @enderror
 
                 <div>
@@ -126,11 +124,12 @@
                         Don't have an account? <a href="{{url('user/register')}}" class="login-register__link">Sign Up</a>
                     </p>
                 </div>
-                
+
                 <div class="form__btn">
                     <button type="submit" class="btn">Login</button>
                 </div>
             </form>
+
         </div>
     </div>
 </section>
