@@ -2,33 +2,48 @@
 
 return [
     'defaults' => [
-        'guard' => 'web',         // Default guard for user authentication
-        'passwords' => 'users',   // Password reset table provider
+        'guard' => 'web',
+        'passwords' => 'users',
+        'login' => 'users.login', 
     ],
 
     'guards' => [
         'web' => [
-            'driver' => 'session',  // Uses session for authentication
-            'provider' => 'users',  // Points to the provider for both users and admins
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
     ],
 
     'providers' => [
-        // Use a single provider for users and admins, identified by role_id
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,  // Specifies the User model
+            'model' => App\Models\User::class,
+        ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
     ],
 
     'passwords' => [
         'users' => [
-            'provider' => 'users',            // Which provider to use for both users and admins
-            'table' => 'password_resets',     // Table for password resets
-            'expire' => 60,                   // OTP expiration time in minutes
-            'throttle' => 60,                 // Throttling attempts
+            'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
         ],
     ],
 
-    'password_timeout' => 10800,  // How long a user can stay logged in before session expires (3 hours)
+    'password_timeout' => 10800,
 ];
+

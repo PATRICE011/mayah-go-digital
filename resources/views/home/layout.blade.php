@@ -59,7 +59,7 @@
       toastr.error("{{ session('error') }}");
     @endif
   </script>
-  @yield('scripts')
+
 </body>
 
 </html>

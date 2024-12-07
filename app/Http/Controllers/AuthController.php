@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -23,43 +22,28 @@ class AuthController extends Controller
     public function postLogin(Request $request)
     {
         $formFields = $request->validate([
-            'mobile' => 'required|exists:users_area,mobile',
+            'mobile' => 'required',
             'password' => 'required',
         ]);
 
-
-        // Retrieve the form fields
-        $formFields = $request->only('mobile', 'password');
-
-        // Check if the mobile exists and attempt authentication
         if (Auth::attempt(['mobile' => $formFields['mobile'], 'password' => $formFields['password']])) {
-            // Regenerate the session to prevent session fixation
             $request->session()->regenerate();
 
-            // Get the authenticated user
             $user = Auth::user();
-
-            // Handle role-based redirection
             $roleId = $user->role_id;
+
             switch ($roleId) {
                 case 1:
-                    // Admin role
-                    return redirect()->to(url('/admin/index'))->with('message', 'Login Successful, Welcome Admin!');
+                    return redirect()->to(url('/admins'))->with('message', 'Login Successful, Welcome Admin!');
                 case 2:
-                    // Staff role
-                    return redirect()->to(url('/admin/index'))->with('message', 'Login Successful, Welcome Staff!');
+                    return redirect()->to(url('/admins/dashboard'))->with('message', 'Login Successful, Welcome Staff!');
                 case 3:
-                    // User role
                     return redirect()->to(url('/home'))->with('message', 'Login Successful, Welcome User!');
                 default:
-                    // Invalid role
                     Auth::logout();
-                    return redirect(url('/'))->withErrors(['error' => 'Unauthorized access']);
+                    return redirect(url('/'))->withErrors(['error' => 'Unauthorized access.']);
             }
         }
-
-        // If authentication failed, log the failure and return error
-        Log::error('Login attempt failed for mobile: ' . $formFields['mobile']);  // Corrected log usage
 
         return back()->withErrors([
             'mobile' => 'The provided credentials do not match our records.',
