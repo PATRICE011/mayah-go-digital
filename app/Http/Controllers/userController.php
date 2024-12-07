@@ -38,7 +38,6 @@ class userController extends Controller
         return view('home.wishlist');
     }
 
-
     public function checkout()
     {
         return view('home.checkout');
