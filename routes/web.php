@@ -64,21 +64,22 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         // My Orders
         Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
-        // Settings
-        // Route::get('/settings', [SettingsController::class, 'viewSettings'])->name('settings');
 
         // User Dashboard
         Route::get('/myaccount', [UserController::class, 'dashboard'])->name('myaccount.dashboard');
         
 
-        // Route for sending OTP to mobile number
-        Route::post('/send-otp', [UserController::class, 'sendOtp'])->name('send-otp');
+       // My Orders
+       Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
-        // Route for verifying OTP and updating the profile
-        Route::post('/update-profile', [UserController::class, 'updateProfile'])->name('update-profile');
+       // Show the update profile form
+       Route::get('/update-profile', [userController::class, 'updateProfileForm'])->name('user.update-profile.form');
 
-        // Route for verifying OTP
-        Route::post('/verify-otp', [UserController::class, 'verifyOtp'])->name('verify-otp');
+       // Handle the profile update form submission (with OTP generation)
+       Route::post('/update-profile', [userController::class, 'updateProfile'])->name('user.update-profile');
+
+       // Verify OTP and allow profile update
+       Route::post('/verify-otp', [userController::class, 'verifyOtp'])->name('user.verify-otp');
     });
 });
 

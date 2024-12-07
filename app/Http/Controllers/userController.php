@@ -8,8 +8,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Log;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class userController extends Controller
 {
@@ -63,105 +65,43 @@ class userController extends Controller
         return view('home.myaccount', ['activeSection' => 'dashboard']);
     }
 
+    //    ========== UPDATE PROFILE ===========
     public function updateProfile(Request $request)
     {
-        // Validate user input
-        $request->validate([
+        // Validate inputs
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'mobile' => 'required|numeric|digits:10',
-            'otp' => 'required|numeric|digits:6'
-        ]);
-    
-        // Get user data from session
-        $userData = $request->session()->get('user_data');
-    
-        // Check if user data exists in session and validate mobile number
-        if (!$userData || $userData['mobile'] !== $request->mobile) {
-            return redirect()->back()->with('error', 'Invalid mobile number');
-        }
-    
-        // Verify OTP
-        $otp = $userData['otp'];
-        if ($otp !== $request->otp) {
-            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
-        }
-    
-        // Update user profile in the database using Eloquent
-        $user = User::find(Auth::id()); // Find the logged-in user
-        if ($user) {
-            $user->name = $request->name;  // Assign the new name
-            $user->mobile = $request->mobile;  // Assign the new mobile number
-            $user->save();  // Save the changes
-        } else {
-            return redirect()->back()->with('error', 'User not found.');
-        }
-    
-        // Forget OTP session data after successful update
-        $request->session()->forget('user_data');
-    
-        // Redirect to 'my-account' route with success message
-        return redirect()->route('my-account')->with('message', 'Profile updated successfully');
-    }
-    
-
-    public function sendOtp(Request $request)
-    {
-        // Validate the mobile number
-        $request->validate([
-            'mobile' => 'required|numeric|digits:10'
+            'mobile' => 'required|string', // Valid mobile number format
         ]);
 
-        $mobile = $request->mobile;
-        $otp = rand(100000, 999999);
-        $otpCreatedAt = now();
+        // Get the authenticated user
+        $user = Auth::user();
 
-        // Store OTP in session
-        $request->session()->put('user_data', [
-            'mobile' => $mobile,
-            'otp' => $otp,
-            'otp_created_at' => $otpCreatedAt,
-        ]);
+        // Generate OTP and save it to the database
+        $otp = rand(100000, 999999); // Generate a 6-digit OTP
 
-        // Send OTP via API
-        try {
-            $this->sendOtpToUser($mobile, $otp);
-            return redirect()->back()->with('message', 'OTP sent successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
-        }
-    }
-
-    public function sendOtpToUser($mobile, $otp)
-    {
-        $apiKey = 'b44a24f27a558fb5290688a7ab25aded';
-        $apiUrl = 'https://api.semaphore.co/api/v4/priority';
-        $senderName = 'MAYAHSTORE';
-
-        $message = "Your OTP for MAYAHSTORE is $otp. Please enter this code to verify your account. This code is valid for 1 minute.";
-
-        $client = new Client();
-
-        try {
-            $response = $client->post($apiUrl, [
-                'form_params' => [
-                    'apikey' => $apiKey,
-                    'number' => $mobile,
-                    'message' => $message,
-                    'sender' => $senderName,
-                ],
-                'verify' => false,
+        // Using DB facade to update the user's OTP and timestamp
+        DB::table('users_area')  // Assuming you have a 'users' table
+            ->where('id', $user->id)
+            ->update([
+                'otp' => $otp,
+                'otp_created_at' => now(),
             ]);
 
-            $responseBody = json_decode($response->getBody(), true);
-            if ($response->getStatusCode() !== 200 || isset($responseBody['error'])) {
-                throw new \Exception('Failed to send OTP');
-            }
-        } catch (\Exception $e) {
-            Log::error('Error sending OTP: ' . $e->getMessage());
-            throw new \Exception('Failed to send OTP');
+        // Send OTP to the user's mobile via Semaphore
+        $this->sendOtp($user->mobile, $otp);
+
+        // Return success response for AJAX
+        if ($request->ajax()) {
+            return response()->json(['success' => true]);
         }
+
+        // Otherwise, fall back to redirect
+        return back()->with('message', 'Profile updated successfully!');
     }
 
+
+    // OTP verification
     public function verifyOtp(Request $request)
     {
         // Validate OTP
@@ -169,22 +109,54 @@ class userController extends Controller
             'otp' => 'required|numeric|digits:6',
         ]);
 
-        // Get user data from session
-        $userData = $request->session()->get('user_data');
-        if (!$userData || $userData['otp'] !== $request->otp) {
-            return redirect()->back()->with('error', 'Invalid OTP');
+        $user = Auth::user();
+
+        // Get the user's OTP and OTP creation time from the database
+        $userData = DB::table('users_area')->where('id', $user->id)->first();
+
+        // Check if OTP is correct and within validity period (5 minutes)
+        if ($userData && $userData->otp == $request->otp && Carbon::parse($userData->otp_created_at)->addMinutes(5)->isAfter(now())) {
+            // OTP is valid, update the user's profile in the database
+            DB::table('users_area')
+                ->where('id', $user->id)
+                ->update([
+                    'name' => $request->name,
+                    'mobile' => $request->mobile,
+                    'otp' => null, // Clear OTP after successful verification
+                    'otp_created_at' => null, // Clear OTP timestamp
+                ]);
+
+            return back()->with('message', 'Profile updated successfully!');
         }
 
-        // Check if OTP is expired (valid for 1 minute)
-        $otpCreatedAt = new \DateTime($userData['otp_created_at']);
-        $otpValidityPeriod = 1; // minute
-        $currentDateTime = new \DateTime();
-        $interval = $currentDateTime->diff($otpCreatedAt);
+        // If OTP is invalid or expired
+        return back()->withErrors(['otp' => 'Invalid or expired OTP.']);
+    }
 
-        if ($interval->i > $otpValidityPeriod || ($interval->i == $otpValidityPeriod && $interval->s > 0)) {
-            return redirect()->back()->with('error', 'OTP has expired');
+    // Function to send OTP via Semaphore
+    private function sendOtp($mobile, $otp)
+    {
+        Log::info("Sending OTP {$otp} to user mobile: {$mobile}");
+
+        // Semaphore API integration (replace with your API credentials)
+        $apiKey = env('SEMAPHORE_API_KEY');  // Store your Semaphore API Key in .env
+        $senderName = env('SEMAPHORE_SENDER'); // Your Semaphore sender name (if any)
+
+        // Use the Http facade with 'verify' => false to bypass SSL verification
+        $response = Http::withOptions([
+            'verify' => false,  // Disable SSL verification
+        ])->post('https://api.semaphore.co/api/v4/priority', [
+            'apikey' => $apiKey,
+            'to' => $mobile,
+            'from' => $senderName,
+            'message' => "Your OTP code is: {$otp}",
+        ]);
+
+        // Check for successful SMS delivery
+        if ($response->successful()) {
+            Log::info('OTP sent successfully via Semaphore');
+        } else {
+            Log::error('Failed to send OTP via Semaphore');
         }
-
-        return redirect()->route('update-profile');
     }
 }
