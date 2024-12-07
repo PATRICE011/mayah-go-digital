@@ -8,7 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
-
+use App\Models\Cart;
+use App\Models\CartItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -57,7 +58,15 @@ class userController extends Controller
 
     public function cart()
     {
-        return view('home.cart');
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->first();
+    
+        if ($cart) {
+            $cartItems = CartItem::where('cart_id', $cart->id)->get();
+        } else {
+            $cartItems = collect();
+        }
+        return view('home.cart', ['cartItems' => $cartItems]);
     }
 
     public function wishlist()

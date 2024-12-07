@@ -1,8 +1,8 @@
-@extends('home.layout')
+@extends('home.layout') 
 @section('title','Mayah Store - Cart')
 
 <header class="header" id="header">
-   <div class="header__top">
+<div class="header__top">
       <div class="header__container container">
          <div class="header__contact">
             <span>
@@ -15,9 +15,26 @@
          </p>
 
          <div>
+            @guest
+            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+            @else
+            <!-- For authenticated users -->
+            <!-- For authenticated users -->
+            @auth
+            <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+               @csrf
+               <button type="submit" class="header__top-action-btn">Logout</button>
+            </form>
+            @endauth
+
+            <span> / </span>
+            <span class="header__top-action">
+               Welcome, <span>{{ Auth::user()->name }}</span>!
+            </span>
+            @endguest
          </div>
       </div>
    </div>
@@ -39,7 +56,7 @@
 
             @auth
             <li class="nav__item">
-               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('user/myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
@@ -55,12 +72,12 @@
 
       <div class="header__user-actions">
          <a href="{{url('/wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart' ></i>
+            <i class='bx bx-heart'></i>
             <span class="count">3</span>
          </a>
 
          <a href="{{url('cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt' ></i>
+            <i class='bx bx-cart-alt'></i>
             <span class="count">3</span>
          </a>
       </div>
@@ -117,113 +134,40 @@
             <th>Remove</th>
          </tr>
 
+         @foreach ($cartItems as $cartItem)
          <tr>
             <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
+               <img src="{{ asset('assets/img/'.$cartItem->product->product_image) }}" alt="{{ $cartItem->product->name }}" class="table__img">
             </td>
 
             <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
-
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
+               <h2 class="table__title">{{ $cartItem->product->product_name }}</h2>
+               <p class="table__description">{{ $cartItem->product->product_description }}</p>
             </td>
 
             <td>
-               <span class="table__price">₱ 7.00</span>
+               <span class="table__price">₱ {{ number_format($cartItem->product->product_price, 2) }}</span>
             </td>
 
             <td>
-               <input type="number" value="1" class="quantity">
+               <input type="number" value="{{ $cartItem->quantity }}" class="quantity" data-id="{{ $cartItem->id }}">
             </td>
 
             <td>
-               <span class="table__subtotal">
-                  ₱ 7.00
-               </span>
+               <span class="table__subtotal">₱ {{ number_format($cartItem->product->product_price * $cartItem->quantity, 2) }}</span>
             </td>
 
             <td>
-               <i class='bx bx-trash table__trash'></i>
+               <i class="bx bx-trash table__trash" data-id="{{ $cartItem->id }}"></i>
             </td>
          </tr>
-
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
-            </td>
-   
-            <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
-   
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
-            </td>
-   
-            <td>
-               <span class="table__price">₱ 7.00</span>
-            </td>
-   
-            <td>
-               <input type="number" value="1" class="quantity">
-            </td>
-   
-            <td>
-               <span class="table__subtotal">
-                  ₱ 7.00
-               </span>
-            </td>
-   
-            <td>
-               <i class='bx bx-trash table__trash'></i>
-            </td>
-         </tr>
-
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
-            </td>
-   
-            <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
-   
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
-            </td>
-   
-            <td>
-               <span class="table__price">₱ 7.00</span>
-            </td>
-   
-            <td>
-               <input type="number" value="1" class="quantity">
-            </td>
-   
-            <td>
-               <span class="table__subtotal">
-                  ₱ 7.00
-               </span>
-            </td>
-   
-            <td>
-               <i class='bx bx-trash table__trash'></i>
-            </td>
-         </tr>
+         @endforeach
       </table>
    </div>
 
    <div class="cart__actions">
       <a href="{{url('/shop')}}" class="btn flex btn--md">
-         <i class='bx bx-shopping-bag' ></i> Continue Shopping
+         <i class='bx bx-shopping-bag'></i> Continue Shopping
       </a>
    </div>
 
@@ -242,7 +186,7 @@
 
                   <div class="form__btn">
                      <button class="btn flex btn--sm">
-                        <i class='bx bx-shuffle' ></i> Apply
+                        <i class='bx bx-shuffle'></i> Apply
                      </button>   
                   </div>
                </div>
@@ -263,7 +207,7 @@
 
                <td>
                   <span class="cart__total-price">
-                     ₱ 7.00
+                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->price; }), 2) }}
                   </span>
                </td>
             </tr>
@@ -291,17 +235,19 @@
 
                <td>
                   <span class="cart__total-price">
-                     ₱ 7.00
+                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->price; }), 2) }}
                   </span>
                </td>
             </tr>
          </table>
 
          <a href="{{url('/checkout')}}" class="btn flex btn--md">
-            <i class='bx bx-package' ></i> Proceed to Checkout
+            <i class='bx bx-package'></i> Proceed to Checkout
          </a>
       </div>
    </div>
 </section>
 
 @include('home.footer')
+
+@endsection

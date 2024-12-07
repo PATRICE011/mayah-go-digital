@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
 class ProductSeeder extends Seeder
 {
     /**
@@ -17,7 +18,6 @@ class ProductSeeder extends Seeder
             ['id' => 1, 'category_name' => 'Snacks', 'slug' => Str::slug('Snacks')],
             ['id' => 2, 'category_name' => 'Drinks', 'slug' => Str::slug('Drinks')],
         ];
-        
 
         DB::table('categories')->insert($categories);
 
@@ -28,6 +28,7 @@ class ProductSeeder extends Seeder
                 'product_price' => 16,
                 'product_stocks' => 20,
                 'category_id' => 1, 
+                'product_description' => 'Crunchy and baked breadsticks, perfect as a savory snack. A popular choice for snack lovers.',
             ],
             [
                 'product_name' => 'Fita',
@@ -35,6 +36,7 @@ class ProductSeeder extends Seeder
                 'product_price' => 10,
                 'product_stocks' => 20,
                 'category_id' => 1, 
+                'product_description' => 'Deliciously crunchy biscuits with a delightful taste. Fita is a classic Filipino snack.',
             ],
             [
                 'product_name' => 'C2 Green',
@@ -42,6 +44,7 @@ class ProductSeeder extends Seeder
                 'product_price' => 25,
                 'product_stocks' => 20,
                 'category_id' => 2, 
+                'product_description' => 'C2 Green Tea is a refreshing drink made from real tea leaves, perfect for quenching your thirst.',
             ],
             [
                 'product_name' => 'C2 Yellow',
@@ -49,6 +52,7 @@ class ProductSeeder extends Seeder
                 'product_price' => 25,
                 'product_stocks' => 20,
                 'category_id' => 2,
+                'product_description' => 'C2 Yellow is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
             ],
         ];
 

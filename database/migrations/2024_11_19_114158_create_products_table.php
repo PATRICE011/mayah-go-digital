@@ -17,11 +17,13 @@ return new class extends Migration
             $table->id(); // Auto-incrementing primary key
             $table->string('product_name');
             $table->string('product_image', 300);
+            $table->text('product_description')->nullable(); 
             $table->integer('product_price');
+            $table->integer('product_old_price')->nullable(); 
             $table->integer('product_stocks')->default(0)->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Foreign key to categories
             $table->timestamps();
-       
+            
            
         });
        
