@@ -76,7 +76,7 @@
 
             <a href="{{url('/cart')}}" class="header__action-btn">
                 <i class='bx bx-cart-alt'></i>
-                <span class="count">3</span>
+                <span class="count">{{ $cartCount }}</span>
             </a>
         </div>
     </nav>
@@ -151,9 +151,14 @@
                     <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
-                <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
+                @csrf
+                <input type="hidden" name="id" value="{{ $product->id }}">
+                <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
                     <i class='bx bx-cart-alt'></i>
-                </a>
+                </button>
+            </form>
+
             </div>
         </div>
         @endforeach
