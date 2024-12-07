@@ -301,7 +301,6 @@
                 </div>
             </div>
 
-<<<<<<< HEAD
                 <!-- OTP Modal -->
                 <!-- <div id="otp-modal" class="modal">
                     <div class="modal-content">
@@ -318,8 +317,6 @@
                 </div> -->
             </div>
 
-=======
->>>>>>> 93986219e07936bf636365f5c8e93f2e574e6257
             <div class="tab__content" content id="change-password">
                 <h3 class="tab__header">Change Password</h3>
 
