@@ -13,7 +13,7 @@ class OtpController extends Controller
 {
     public function showOtp()
     {
-    
+
         return view('users.otp');
     }
 
@@ -92,7 +92,9 @@ class OtpController extends Controller
     {
         $request->validate(['otp' => 'required|string']);
 
+        // Get user data from session
         $userData = $request->session()->get('user_data');
+        Log::debug('User data in session', $userData); // Log session data
 
         if ($userData) {
             $otp = $userData['otp'];
@@ -102,24 +104,44 @@ class OtpController extends Controller
             $currentDateTime = new \DateTime();
             $interval = $currentDateTime->diff($otpCreatedAt);
 
+            // Check OTP expiry
+            Log::debug('OTP validity check', [
+                'otp_created_at' => $otpCreatedAt->format('Y-m-d H:i:s'),
+                'current_time' => $currentDateTime->format('Y-m-d H:i:s'),
+                'interval' => $interval->format('%i minutes %s seconds')
+            ]);
+
             if ($interval->i > $otpValidityPeriod || ($interval->i == $otpValidityPeriod && $interval->s > 0)) {
                 return redirect()->back()->with('error', 'The OTP has expired. Please request a new one.');
             }
 
+            // Check if OTP matches
             if ($otp == $request->otp) {
+                // Insert new user into the database with hashed password
+                // $hashedPassword = bcrypt($userData['password']);
+                // Log::debug('Password before hashing', ['password' => $userData['password']]);
+                // Log::debug('Password after hashing', ['hashedPassword' => $hashedPassword]);
+
                 DB::table('users_area')->insert([
                     'name' => $userData['name'],
                     'mobile' => $userData['mobile'],
-                    'password' => bcrypt($userData['password']),
+                    'password' => $userData['password'],
                     'role_id' => $userData['role_id'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
 
+                // Retrieve user and log in
                 $user = DB::table('users_area')->where('mobile', $userData['mobile'])->first();
-                Auth::loginUsingId($user->id);
+                Log::debug('User inserted into DB', (array) $user); // Log inserted user
 
-                $request->session()->forget('user_data');
-
-                return redirect('/home')->with('message', 'OTP verified successfully and you are now logged in.');
+                if ($user) {
+                    Auth::loginUsingId($user->id); // Log the user in
+                    $request->session()->forget('user_data'); // Clear session data
+                    return redirect('/home')->with('message', 'OTP verified successfully and you are now logged in.');
+                } else {
+                    return redirect()->back()->with('error', 'User creation failed. Please try again.');
+                }
             } else {
                 return redirect()->back()->with('error', 'Invalid OTP, please try again.');
             }

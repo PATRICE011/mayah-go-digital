@@ -53,7 +53,7 @@
 
             @auth
             <li class="nav__item">
-               <a href="{{url('myaccount')}}" class="nav__link">MY ACCOUNT</a>
+               <a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a>
             </li>
             @endauth
          </ul>
