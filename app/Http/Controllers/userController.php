@@ -22,11 +22,32 @@ class userController extends Controller
         // Fetch all products and their associated categories
         $products = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name')  // select necessary columns
+            ->select('products.*', 'categories.category_name')
             ->get();
-
-        // Pass the products to the view
-        return view('home.shop', compact('products'));
+    
+        // Get the authenticated user
+        $user = Auth::user();
+    
+        // Default cart count to 0
+        $cartCount = 0;
+    
+        // If the user is logged in, fetch the cart item count
+        if ($user) {
+            // Fetch the cart's ID for the authenticated user
+            $cartId = DB::table('carts')
+                ->where('user_id', $user->id)
+                ->value('id'); // Get the cart ID for the current user
+    
+            // If the cart exists, get the count of items
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')
+                    ->where('cart_id', $cartId)
+                    ->sum('quantity'); // Sum the quantity of items in the cart
+            }
+        }
+    
+        // Pass the products and cartCount to the view
+        return view('home.shop', compact('products', 'cartCount'));
     }
 
     public function details()
@@ -66,97 +87,5 @@ class userController extends Controller
     }
 
     //    ========== UPDATE PROFILE ===========
-    public function updateProfile(Request $request)
-    {
-        // Validate inputs
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'mobile' => 'required|string', // Valid mobile number format
-        ]);
-
-        // Get the authenticated user
-        $user = Auth::user();
-
-        // Generate OTP and save it to the database
-        $otp = rand(100000, 999999); // Generate a 6-digit OTP
-
-        // Using DB facade to update the user's OTP and timestamp
-        DB::table('users_area')  // Assuming you have a 'users' table
-            ->where('id', $user->id)
-            ->update([
-                'otp' => $otp,
-                'otp_created_at' => now(),
-            ]);
-
-        // Send OTP to the user's mobile via Semaphore
-        $this->sendOtp($user->mobile, $otp);
-
-        // Return success response for AJAX
-        if ($request->ajax()) {
-            return response()->json(['success' => true]);
-        }
-
-        // Otherwise, fall back to redirect
-        return back()->with('message', 'Profile updated successfully!');
-    }
-
-
-    // OTP verification
-    public function verifyOtp(Request $request)
-    {
-        // Validate OTP
-        $request->validate([
-            'otp' => 'required|numeric|digits:6',
-        ]);
-
-        $user = Auth::user();
-
-        // Get the user's OTP and OTP creation time from the database
-        $userData = DB::table('users_area')->where('id', $user->id)->first();
-
-        // Check if OTP is correct and within validity period (5 minutes)
-        if ($userData && $userData->otp == $request->otp && Carbon::parse($userData->otp_created_at)->addMinutes(5)->isAfter(now())) {
-            // OTP is valid, update the user's profile in the database
-            DB::table('users_area')
-                ->where('id', $user->id)
-                ->update([
-                    'name' => $request->name,
-                    'mobile' => $request->mobile,
-                    'otp' => null, // Clear OTP after successful verification
-                    'otp_created_at' => null, // Clear OTP timestamp
-                ]);
-
-            return back()->with('message', 'Profile updated successfully!');
-        }
-
-        // If OTP is invalid or expired
-        return back()->withErrors(['otp' => 'Invalid or expired OTP.']);
-    }
-
-    // Function to send OTP via Semaphore
-    private function sendOtp($mobile, $otp)
-    {
-        Log::info("Sending OTP {$otp} to user mobile: {$mobile}");
-
-        // Semaphore API integration (replace with your API credentials)
-        $apiKey = env('SEMAPHORE_API_KEY');  // Store your Semaphore API Key in .env
-        $senderName = env('SEMAPHORE_SENDER'); // Your Semaphore sender name (if any)
-
-        // Use the Http facade with 'verify' => false to bypass SSL verification
-        $response = Http::withOptions([
-            'verify' => false,  // Disable SSL verification
-        ])->post('https://api.semaphore.co/api/v4/priority', [
-            'apikey' => $apiKey,
-            'to' => $mobile,
-            'from' => $senderName,
-            'message' => "Your OTP code is: {$otp}",
-        ]);
-
-        // Check for successful SMS delivery
-        if ($response->successful()) {
-            Log::info('OTP sent successfully via Semaphore');
-        } else {
-            Log::error('Failed to send OTP via Semaphore');
-        }
-    }
+   
 }
