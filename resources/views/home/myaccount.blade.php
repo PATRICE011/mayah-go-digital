@@ -21,7 +21,7 @@
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
             @else
-            <!-- For authenticated users -->
+
             <!-- For authenticated users -->
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
@@ -70,12 +70,12 @@
       <div class="header__user-actions">
          <a href="{{ url('wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">3</span> <!-- This should be dynamically populated -->
+            <span class="count">0</span>
          </a>
 
-         <a href="{{ url('user/cart') }}" class="header__action-btn">
+         <a href="{{ url('cart') }}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">3</span> <!-- This should be dynamically populated -->
+            <span class="count">0</span>
          </a>
       </div>
    </nav>
@@ -264,7 +264,7 @@
                 </div>
             </div>
 
-            <div class="tab__content" id="update-profile">
+            <div class="tab__content" content id="update-profile">
                 <h3 class="tab__header">Update Profile</h3>
                 <div class="tab__body">
                     <!-- Profile Update Form -->
@@ -289,22 +289,6 @@
                 </div>
             </div>
 
-                <!-- OTP Modal -->
-                <!-- <div id="otp-modal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h3>Enter OTP</h3>
-                        <form id="otp-form" action="{{ route('user.verify-otp') }}" method="POST">
-                            @csrf
-                            <input type="number" name="otp" placeholder="Enter OTP" class="form__input @error('otp') is-invalid @enderror">
-                            <div class="form__btn">
-                                <button type="submit" class="btn btn--md">Submit OTP</button>
-                            </div>
-                        </form>
-                    </div>
-                </div> -->
-            </div>
-
             <div class="tab__content" content id="change-password">
                 <h3 class="tab__header">Change Password</h3>
 
@@ -321,7 +305,7 @@
 
                         <div class="form__btn">
                             <button class="btn btn--md">
-                                Update Profile
+                                Change Password
                             </button>
                         </div>
                     </form>

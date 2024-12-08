@@ -17,9 +17,11 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); // Auto-incrementing primary key
+            $table->string('category_image', 300)->nullable();
             $table->string('category_name')->unique(); // Category name with a unique constraint if needed
             $table->string('slug')->unique();
             $table->timestamps(); // Created at and Updated at timestamps
+            // add product image
         });
        
        
