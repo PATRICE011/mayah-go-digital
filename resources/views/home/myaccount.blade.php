@@ -30,13 +30,6 @@
             </form>
             @endauth
 
-<<<<<<< HEAD
-   <nav class="nav container">
-      <a href="{{url('/')}}" class="nav__logo">
-         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
-      </a>
-
-=======
             <span> / </span>
             <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
             @endguest
@@ -49,7 +42,6 @@
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
 
->>>>>>> 93986219e07936bf636365f5c8e93f2e574e6257
       <div class="nav__menu" id="nav-menu">
          <ul class="nav__list">
             <li class="nav__item">
@@ -81,11 +73,7 @@
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
 
-<<<<<<< HEAD
-         <a href="{{ url('cart') }}" class="header__action-btn">
-=======
          <a href="{{ url('user/cart') }}" class="header__action-btn">
->>>>>>> 93986219e07936bf636365f5c8e93f2e574e6257
             <i class='bx bx-cart-alt'></i>
             <span class="count">3</span> <!-- This should be dynamically populated -->
          </a>
