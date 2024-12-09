@@ -121,7 +121,6 @@
    </ul>
 </section>
 
-<!--==================== CART ====================-->
 <section class="cart section--lg container">
    @if($cartItems->isEmpty())
    <!-- If cart is empty -->
@@ -223,7 +222,7 @@
 
                <td>
                   <span class="cart__total-price">
-                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->price; }), 2) }}
+                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
                   </span>
                </td>
             </tr>
@@ -251,19 +250,29 @@
 
                <td>
                   <span class="cart__total-price">
-                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->price; }), 2) }}
+                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
                   </span>
                </td>
             </tr>
          </table>
-         
-         <a href="{{ url('/checkout') }}" class="btn flex btn--md">
-            <i class='bx bx-package'></i> Proceed to Checkout
-         </a>
+
+         @auth
+         <!-- Hidden form to submit to checkout route -->
+         <form id="checkout-button" action="{{ route('goCheckout') }}" method="POST" style="display: inline;">
+            @csrf
+            <!-- Use a button for submission -->
+            <button type="submit" class="btn flex btn--md">
+               <i class='bx bx-package'></i> Proceed to Checkout
+            </button>
+         </form>
+         @endauth
+
+
       </div>
    </div>
    @endif
 </section>
+
 
 
 @include('home.footer')
