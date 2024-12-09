@@ -116,7 +116,7 @@
                 <ul>
                     @foreach($categories as $category)
                     <li>
-                        <input type="checkbox" id="{{ $category->slug }}" value="{{ $category->category_name }}" class="brand-filter"> 
+                        <input type="checkbox" id="{{ $category->slug }}" value="{{ $category->category_name }}" class="brand-filter">
                         <label for="{{ $category->slug }}">{{ $category->category_name }}</label>
                     </li>
                     @endforeach
@@ -127,7 +127,7 @@
         <div class="products__grid">
             <div class="products__container grid">
                 @foreach($products as $product)
-                <div class="product__item"> 
+                <div class="product__item">
                     <div class="product__banner">
                         <a href="#" class="product__images">
                             <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="product__img default">
@@ -139,9 +139,18 @@
                                 <i class='bx bx-expand-horizontal'></i>
                             </a>
 
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                            <!-- wishlist -->
+                            <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
+                                @csrf
+
+                            </form>
+                            <a href="#" class="action__btn" aria-label="Add To Wishlist" onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
                                 <i class='bx bx-heart'></i>
                             </a>
+                            <a href="#" class="action__btn" aria-label="Compare">
+                                <i class='bx bx-shuffle'></i>
+                            </a>
+
                         </div>
 
                         <div class="product__badge light-pink">Hot</div>
@@ -160,12 +169,12 @@
                         </div>
 
                         <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $product->id }}">
-                        <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt'></i>
-                        </button>
-                    </form>
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $product->id }}">
+                            <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
+                                <i class='bx bx-cart-alt'></i>
+                            </button>
+                        </form>
 
                     </div>
                 </div>
