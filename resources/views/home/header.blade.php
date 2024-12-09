@@ -13,13 +13,11 @@
 
          <div>
             @guest
-            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
-            @else
-            <!-- For authenticated users -->
-            <!-- For authenticated users -->
+            @elsey
+            
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                @csrf

@@ -37,6 +37,9 @@
   <!--=============== MAIN JS ===============-->
   <script src="{{ asset('assets/js/main.js') }}"></script>
 
+  <!--=============== JQUERY AJAX ===============-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <!--=============== TOASTER NOTIFICATION ===============-->
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

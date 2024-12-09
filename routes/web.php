@@ -128,3 +128,5 @@ Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlis
 // Routes for checkout and my account
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::get('/orderdetails', [UserController::class, 'orderDetails']);
+
+Route::post('/filter-products', [UserController::class, 'filterProducts']);

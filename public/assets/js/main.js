@@ -1,3 +1,26 @@
+document.querySelectorAll('.brand-filter').forEach(filter => {
+  filter.addEventListener('change', function () {
+      const selectedCategories = Array.from(document.querySelectorAll('.brand-filter:checked')).map(input => input.value);
+
+      console.log('Selected Categories:', selectedCategories); // Debug: Log selected categories
+
+      fetch('/filter-products', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: JSON.stringify({ categories: selectedCategories })
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log('Response:', data); // Debug: Log server response
+          document.querySelector('.products__container').innerHTML = data.html;
+          document.querySelector('.total__products span').innerText = data.count;
+      })
+      .catch(error => console.error('Error:', error));
+  });
+});
 
 /*=============== IMAGE GALLERY ===============*/
 function imgGallery(){
