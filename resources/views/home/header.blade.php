@@ -13,11 +13,13 @@
 
          <div>
             @guest
+            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
-            @elsey
-            
+            @else
+            <!-- For authenticated users -->
+            <!-- For authenticated users -->
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                @csrf
@@ -65,14 +67,14 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{url('/wishlist')}}" class="header__action-btn">
+         <a href="{{ url('wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">{{$wishlistCount}}</span>
+            <span class="count">0</span>
          </a>
 
-         <a href="{{url('/cart')}}" class="header__action-btn">
+         <a href="{{ url('cart') }}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">{{$cartCount}}</span>
+            <span class="count">{{ $cartCount }}</span>
          </a>
       </div>
    </nav>
