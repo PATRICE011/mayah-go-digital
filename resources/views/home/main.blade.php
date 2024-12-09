@@ -29,43 +29,43 @@
 
         <div class="categories__container swiper">
             <div class="swiper-wrapper">
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
 
                     <h3 class="category__title">Biscuits</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
 
                     <h3 class="category__title">Drinks</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
 
                     <h3 class="category__title">School Supplies</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
 
                     <h3 class="category__title">Biscuits</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
 
                     <h3 class="category__title">Drinks</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
 
                     <h3 class="category__title">School Supplies</h3>
                 </a>
 
-                <a href="shop.html" class="category__item swiper-slide">
+                <a href="{{url('/shop')}}" class="category__item swiper-slide">
                     <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
 
                     <h3 class="category__title">Biscuits</h3>

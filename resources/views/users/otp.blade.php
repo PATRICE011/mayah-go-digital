@@ -34,7 +34,7 @@
             </li>
 
             <li class="nav__item">
-               <a href="{{url('shop')}}" class="nav__link">SHOP</a>
+               <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
             </li>
 
             @auth
@@ -56,12 +56,12 @@
       <div class="header__user-actions">
          <a href="{{url('wishlist')}}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">3</span>
+            <span class="count">0</span>
          </a>
 
          <a href="{{url('cart')}}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">3</span>
+            <span class="count">0</span>
          </a>
       </div>
    </nav>

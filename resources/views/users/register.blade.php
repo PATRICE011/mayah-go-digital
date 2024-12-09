@@ -70,12 +70,12 @@
       <div class="header__user-actions">
          <a href="{{ url('/wishlist') }}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">3</span> <!-- This should be dynamically populated -->
+            <span class="count">0</span>
          </a>
 
          <a href="{{ url('/cart') }}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">3</span> <!-- This should be dynamically populated -->
+            <span class="count">0</span>
          </a>
       </div>
    </nav>
@@ -86,9 +86,17 @@
 <!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
-        <li><a href="{{ url('/') }}" class="breadcrumb__link">Home</a></li>
-        <li><span class="breadcrumb__separator">&gt;</span></li>
-        <li><a href="{{ url('user/register') }}" class="breadcrumb__link">Register</a></li>
+         <li>
+            <a href="{{ url('/') }}" class="breadcrumb__link">Home</a>
+         </li>
+
+         <li>
+            <span class="breadcrumb__separator">&gt;</span>
+         </li>
+
+         <li>
+            <a href="{{ url('user/register') }}" class="breadcrumb__link">Register</a>
+         </li>
     </ul>
 </section>
 

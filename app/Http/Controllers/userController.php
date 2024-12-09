@@ -93,7 +93,5 @@ class userController extends Controller
     {
         return view('home.myaccount', ['activeSection' => 'dashboard']);
     }
-
-    //    ========== UPDATE PROFILE ===========
    
 }

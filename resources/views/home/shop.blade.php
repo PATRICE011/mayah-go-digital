@@ -695,6 +695,56 @@
                     <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
+            
+        </div>
+
+        <div class="product__item">
+            <div class="product__banner">
+                <a href="detail.html" class="product__images">
+                    <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
+
+                    <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
+                </a>
+                <div class="product__actions">
+                    <a href="#" class="action__btn" aria-label="Quick View">
+                        <i class='bx bx-expand-horizontal'></i>
+                    </a>
+
+                    <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                        <i class='bx bx-heart'></i>
+                    </a>
+
+                    <a href="#" class="action__btn" aria-label="Compare">
+                        <i class='bx bx-shuffle'></i>
+                    </a>
+                </div>
+
+                <div class="product__badge light-orange">Hot</div>
+            </div>
+
+            <div class="product__content">
+                <span class="product__category">Biscuits</span>
+                <a href="details.html">
+                    <h3 class="product__title">Bread Stix - Blue</h3>
+                </a>
+
+                <div class="product__rating">
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                </div>
+
+                <div class="product__price flex">
+                    <span class="new__price">₱ 7.00</span>
+                    <span class="old__price">₱ 9.00</span>
+                </div>
+
+                <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
+                    <i class='bx bx-cart-alt'></i>
+                </a>
+            </div>
         </div>
     </div>
 

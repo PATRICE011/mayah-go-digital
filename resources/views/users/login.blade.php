@@ -34,7 +34,7 @@
                 </li>
 
                 <li class="nav__item">
-                    <a href="" class="nav__link active-link">SHOP</a>
+                    <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
                 </li>
 
                 @auth
@@ -56,12 +56,12 @@
         <div class="header__user-actions">
             <a href="" class="header__action-btn">
                 <i class='bx bx-heart'></i>
-                <span class="count">3</span>
+                <span class="count">0</span>
             </a>
 
             <a href="" class="header__action-btn">
                 <i class='bx bx-cart-alt'></i>
-                <span class="count">3</span>
+                <span class="count">0</span>
             </a>
         </div>
     </nav>
@@ -102,15 +102,12 @@
 
             <form action="{{url('/user/login')}}" method="POST" class="form grid">
                 @csrf
-                <!-- Mobile number input -->
                 <label for="mobile" class="login-register__label">Phone Number</label>
                 <input type="tel" id="mobile" name="mobile" value="{{ old('mobile') }}" placeholder="Enter your Phone Number" class="form__input @error('mobile') is-invalid @enderror">
 
-                <!-- Password input -->
                 <label for="password" class="login-register__label">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" class="form__input @error('password') is-invalid @enderror">
 
-                <!-- Display validation errors for mobile and password -->
                 @error('mobile')
                 <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                 @enderror
