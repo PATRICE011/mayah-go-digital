@@ -9,13 +9,15 @@ class CreateWishlistTable extends Migration
     public function up()
     {
         Schema::create('wishlists', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing primary key
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade'); // Foreign key to products table
-            $table->timestamps(); // Track when the product was added to the wishlist
-
-            $table->foreign('user_id')->references('id')->on('users_area')->onDelete('set null');
+            $table->id();
+            $table->unsignedBigInteger('user_id'); // No longer nullable
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->timestamps();
+        
+            // The user_id foreign key references the users_area table, deleting wishlist when user is deleted
+            $table->foreign('user_id')->references('id')->on('users_area')->onDelete('cascade');
         });
+        
     }
 
     public function down()

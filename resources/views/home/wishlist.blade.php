@@ -71,12 +71,12 @@
       <div class="header__user-actions">
          <a href="{{route('home.wishlist')}}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">3</span>
+            <span class="count">{{$wishlistCount}}</span>
          </a>
 
          <a href="{{route('home.cart')}}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">3</span>
+            <span class="count">{{$cartCount}}</span>
          </a>
       </div>
    </nav>

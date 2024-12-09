@@ -1,6 +1,7 @@
 @extends('home.layout')
 @section('title','Mayah Store - My Account')
 
+@section('content')
 <header class="header" id="header">
     <div class="header__top">
         <div class="header__container container">
@@ -70,12 +71,12 @@
         <div class="header__user-actions">
             <a href="{{ url('wishlist') }}" class="header__action-btn">
                 <i class='bx bx-heart'></i>
-                <span class="count">0</span>
+                <span class="count">{{$wishlistCount}}</span>
             </a>
 
             <a href="{{ url('cart') }}" class="header__action-btn">
                 <i class='bx bx-cart-alt'></i>
-                <span class="count">0</span>
+                <span class="count">{{$cartCount}}</span>
             </a>
         </div>
     </nav>
@@ -124,16 +125,9 @@
                 <i class='bx bx-cog'></i> Change Password
             </p>
 
-            <!-- Logout Tab (with dynamic handling) -->
-            @auth
-            <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-            <p class="account__tab" onclick="document.getElementById('logout-form').submit();">
+            <p class="account__tab">
                 <i class='bx bx-exit'></i> Logout
             </p>
-            @endauth
-
         </div>
 
         <div class="tabs__content">
@@ -323,3 +317,4 @@
 </section>
 
 @include('home.footer')
+@endsection

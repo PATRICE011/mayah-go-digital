@@ -8,7 +8,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -48,18 +48,56 @@ class cartController extends Controller
     }
     
 
-    public function showCart()
+    public function cart()
     {
+        // Check if the user is authenticated
         $user = Auth::user();
+    
+        // Default cart count and wishlist count to 0
+        $cartCount = 0;
+        $wishlistCount = 0;
+    
+        // If the user is logged in, fetch the cart item count and wishlist count
+        if ($user) {
+            // Fetch the cart's ID for the authenticated user
+            $cartId = DB::table('carts')
+                ->where('user_id', $user->id)
+                ->value('id'); // Get the cart ID for the current user
+    
+            // If the cart exists, get the count of items
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')
+                    ->where('cart_id', $cartId)
+                    ->sum('quantity'); // Sum the quantity of items in the cart
+            }
+    
+            // Get the count of products in the user's wishlist
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count(); // Count the number of products in the wishlist
+        }
+    
+        // If the user is not logged in, redirect to the login page
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You need to log in to view your cart.');
+        }
+    
+        // If the user is authenticated, get their cart
         $cart = Cart::where('user_id', $user->id)->first();
     
+        // If the cart exists, get the items, otherwise, return an empty collection
         if ($cart) {
             $cartItems = CartItem::where('cart_id', $cart->id)->get();
         } else {
-            $cartItems = collect();
+            $cartItems = collect(); // Empty collection if no cart exists
         }
     
-        return view('home.cartinside', ['cartItems' => $cartItems]);
+        // Pass the data to the view
+        return view('home.cart', [
+            'cartItems' => $cartItems,
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount
+        ]);
     }
 
     // public function checkout()
