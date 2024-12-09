@@ -71,7 +71,7 @@
         <div class="header__user-actions">
             <a href="{{url('/wishlist')}}" class="header__action-btn">
                 <i class='bx bx-heart'></i>
-                <span class="count">0</span>
+                <span class="count">{{$wishlistCount}}</span>
             </a>
 
             <a href="{{url('/cart')}}" class="header__action-btn">
@@ -124,7 +124,13 @@
                     <a href="{{url('/details')}}" class="action__btn" aria-label="Quick View">
                         <i class='bx bx-expand-horizontal'></i>
                     </a>
-                    <a href="#" class="action__btn" aria-label="Add To Wishlist">
+
+                    <!-- wishlist -->
+                    <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
+                        @csrf
+                        
+                    </form>
+                    <a href="#" class="action__btn" aria-label="Add To Wishlist" onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
                         <i class='bx bx-heart'></i>
                     </a>
                     <a href="#" class="action__btn" aria-label="Compare">
@@ -152,12 +158,12 @@
                     <span class="old__price">₱ 9.00</span>
                 </div>
                 <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
-                @csrf
-                <input type="hidden" name="id" value="{{ $product->id }}">
-                <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
-                    <i class='bx bx-cart-alt'></i>
-                </button>
-            </form>
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $product->id }}">
+                    <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
+                        <i class='bx bx-cart-alt'></i>
+                    </button>
+                </form>
 
             </div>
         </div>
@@ -695,7 +701,7 @@
                     <i class='bx bx-cart-alt'></i>
                 </a>
             </div>
-            
+
         </div>
 
         <div class="product__item">

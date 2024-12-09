@@ -144,7 +144,7 @@ class cartController extends Controller
         $cartItem->delete();
 
        
-        return redirect()->route('users.usersdashboard')->with('message', 'Item removed from cart.');
+        return back()->with('message', 'Item removed from cart.');
     }
 
     // my orders

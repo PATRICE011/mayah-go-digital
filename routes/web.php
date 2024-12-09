@@ -53,7 +53,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
             Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
         });
-
+        Route::prefix('wishlist')->group(function () {
+            Route::post('/add/{productId}', [userController::class, 'addToWishlist'])->name('addtowish');
+            Route::delete('/delete/{wishlistId}', [userController::class, 'removeFromWishlist'])->name('wishlist.remove');
+        });
         // Payment Routes
         Route::prefix('payment')->group(function () {
             Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');

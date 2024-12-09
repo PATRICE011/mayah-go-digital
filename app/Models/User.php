@@ -11,13 +11,16 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     protected $table = 'users_area';
-    protected $fillable = ['name', 'mobile',  'password', 'otp', 'otp_created_at', 'otp_attempts','role_id'];
+    protected $fillable = ['name', 'mobile',  'password', 'otp', 'otp_created_at', 'otp_attempts', 'role_id'];
     protected $hidden = ['password', 'remember_token'];
 
-    
-        public function cart()
+
+    public function cart()
     {
         return $this->hasOne(Cart::class);
     }
-
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }

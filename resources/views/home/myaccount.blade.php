@@ -2,83 +2,83 @@
 @section('title','Mayah Store - My Account')
 
 <header class="header" id="header">
-   <div class="header__top">
-      <div class="header__container container">
-         <div class="header__contact">
-            <span>
-               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
-            </span>
-         </div>
+    <div class="header__top">
+        <div class="header__container container">
+            <div class="header__contact">
+                <span>
+                    <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+                </span>
+            </div>
 
-         <p class="header__alert-news">
-            Super Value Deals - Save More!
-         </p>
+            <p class="header__alert-news">
+                Super Value Deals - Save More!
+            </p>
 
-         <div>
-            @guest
-            <!-- For guest (non-authenticated users) -->
-            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
-            <span> / </span>
-            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
-            @else
+            <div>
+                @guest
+                <!-- For guest (non-authenticated users) -->
+                <a href="{{url('user/login')}}" class="header__top-action">Login</a>
+                <span> / </span>
+                <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+                @else
 
-            <!-- For authenticated users -->
-            @auth
-            <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
-               @csrf
-               <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
-            </form>
-            @endauth
+                <!-- For authenticated users -->
+                @auth
+                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+                </form>
+                @endauth
 
-            <span> / </span>
-            <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
-            @endguest
-         </div>
-      </div>
-   </div>
+                <span> / </span>
+                <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+                @endguest
+            </div>
+        </div>
+    </div>
 
-   <nav class="nav container">
-      <a href="{{url('/')}}" class="nav__logo">
-         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
-      </a>
+    <nav class="nav container">
+        <a href="{{url('/')}}" class="nav__logo">
+            <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+        </a>
 
-      <div class="nav__menu" id="nav-menu">
-         <ul class="nav__list">
-            <li class="nav__item">
-               <a href="{{url('/')}}" class="nav__link">HOME</a>
-            </li>
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a href="{{url('/')}}" class="nav__link">HOME</a>
+                </li>
 
-            <li class="nav__item">
-               <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
-            </li>
+                <li class="nav__item">
+                    <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
+                </li>
 
-            @auth
-            <li class="nav__item">
-               <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
-            </li>
-            @endauth
-         </ul>
+                @auth
+                <li class="nav__item">
+                    <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+                </li>
+                @endauth
+            </ul>
 
-         <div class="header__search">
-            <input type="text" placeholder="Search Item" class="form__input">
-            <button class="search__btn">
-               <i class='bx bx-search search'></i>
-            </button>
-         </div>
-      </div>
+            <div class="header__search">
+                <input type="text" placeholder="Search Item" class="form__input">
+                <button class="search__btn">
+                    <i class='bx bx-search search'></i>
+                </button>
+            </div>
+        </div>
 
-      <div class="header__user-actions">
-         <a href="{{ url('wishlist') }}" class="header__action-btn">
-            <i class='bx bx-heart'></i>
-            <span class="count">0</span>
-         </a>
+        <div class="header__user-actions">
+            <a href="{{ url('wishlist') }}" class="header__action-btn">
+                <i class='bx bx-heart'></i>
+                <span class="count">0</span>
+            </a>
 
-         <a href="{{ url('cart') }}" class="header__action-btn">
-            <i class='bx bx-cart-alt'></i>
-            <span class="count">0</span>
-         </a>
-      </div>
-   </nav>
+            <a href="{{ url('cart') }}" class="header__action-btn">
+                <i class='bx bx-cart-alt'></i>
+                <span class="count">0</span>
+            </a>
+        </div>
+    </nav>
 </header>
 
 <!--==================== BREADCRUMB ====================-->
@@ -109,26 +109,33 @@
     <div class="accounts__container container grid">
         <div class="account__tabs">
             <p class="account__tab active-tab" data-target="#dashboard">
-                <i class='bx bx-box' ></i> Dashboard
+                <i class='bx bx-box'></i> Dashboard
             </p>
 
             <p class="account__tab" data-target="#orders">
-                <i class='bx bx-cart-download' ></i> Orders
+                <i class='bx bx-cart-download'></i> Orders
             </p>
 
             <p class="account__tab" data-target="#update-profile">
-                <i class='bx bxs-hand-up' ></i> Update Profile
+                <i class='bx bxs-hand-up'></i> Update Profile
             </p>
 
             <p class="account__tab" data-target="#change-password">
-                <i class='bx bx-cog' ></i> Change Password
+                <i class='bx bx-cog'></i> Change Password
             </p>
 
-            <p class="account__tab">
-                <i class='bx bx-exit' ></i> Logout
+            <!-- Logout Tab (with dynamic handling) -->
+            @auth
+            <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+            <p class="account__tab" onclick="document.getElementById('logout-form').submit();">
+                <i class='bx bx-exit'></i> Logout
             </p>
+            @endauth
+
         </div>
-        
+
         <div class="tabs__content">
             @if ($activeSection == 'dashboard')
             <div class="tab__content active-tab" content id="dashboard">
@@ -136,10 +143,10 @@
 
                 <div class="tab__body">
                     <div class="stat__container">
-                    <div class="stat-box">
-                        <div class="icon icon-total-orders">
-                            <i class="ri-building-fill"></i>
-                        </div>
+                        <div class="stat-box">
+                            <div class="icon icon-total-orders">
+                                <i class="ri-building-fill"></i>
+                            </div>
 
                             <h4 class="total-orders__quantity">3</h4>
                             <p class="total-orders__title">Total Orders</p>
@@ -272,7 +279,7 @@
                         @csrf
                         <input type="text" name="name" value="{{ old('name', auth()->user()->name) }}" placeholder="Name" class="form__input @error('name') is-invalid @enderror">
                         <input type="tel" name="mobile" value="{{ old('mobile', auth()->user()->mobile) }}" placeholder="Phone Number" class="form__input @error('mobile') is-invalid @enderror">
-                        
+
                         <div>
                             <input type="tel" name="mobile" placeholder="Enter OTP" class="form__input">
                             <button class="btn btn--md">Get OTP</button>

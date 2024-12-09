@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -29,10 +30,11 @@ class userController extends Controller
         // Get the authenticated user
         $user = Auth::user();
     
-        // Default cart count to 0
+        // Default cart count and wishlist count to 0
         $cartCount = 0;
+        $wishlistCount = 0;
     
-        // If the user is logged in, fetch the cart item count
+        // If the user is logged in, fetch the cart item count and wishlist count
         if ($user) {
             // Fetch the cart's ID for the authenticated user
             $cartId = DB::table('carts')
@@ -45,11 +47,17 @@ class userController extends Controller
                     ->where('cart_id', $cartId)
                     ->sum('quantity'); // Sum the quantity of items in the cart
             }
+    
+            // Get the count of products in the user's wishlist
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count(); // Count the number of products in the wishlist
         }
     
-        // Pass the products and cartCount to the view
-        return view('home.shop', compact('products', 'cartCount'));
+        // Pass the products, cartCount, and wishlistCount to the view
+        return view('home.shop', compact('products', 'cartCount', 'wishlistCount'));
     }
+    
 
     public function details()
     {
@@ -58,21 +66,80 @@ class userController extends Controller
 
     public function cart()
     {
+        // Check if the user is authenticated
         $user = Auth::user();
+
+        // If the user is not authenticated, redirect to the login page
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You need to log in to view your cart.');
+        }
+
+        // If the user is authenticated, get their cart
         $cart = Cart::where('user_id', $user->id)->first();
-    
+
+        // If the cart exists, get the items, otherwise, return an empty collection
         if ($cart) {
             $cartItems = CartItem::where('cart_id', $cart->id)->get();
         } else {
-            $cartItems = collect();
+            $cartItems = collect(); // Empty collection if no cart exists
         }
+
+        // Return the view with the cart items
         return view('home.cart', ['cartItems' => $cartItems]);
     }
 
+
+
     public function wishlist()
     {
-        return view('home.wishlist');
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'You need to log in to view your cart.');
+        }
+        $wishlistItems = Wishlist::where('user_id', $user->id)->with('product')->get();
+        return view('home.wishlist', compact('wishlistItems'));
     }
+    public function addToWishlist($productId)
+    {
+        $user = Auth::user();
+    
+        // Ensure the user is logged in
+        if (!$user) {
+            return redirect()->route('login')->with('message', 'Please log in to add items to your wishlist.');
+        }
+    
+        // Check if the product is already in the user's wishlist
+        $existingWishlist = Wishlist::where('user_id', $user->id)
+            ->where('product_id', $productId)
+            ->first();
+    
+        if ($existingWishlist) {
+            return redirect()->back()->with('message', 'This product is already in your wishlist.');
+        }
+    
+        // Add to the wishlist
+        Wishlist::create([
+            'user_id' => $user->id,
+            'product_id' => $productId,
+        ]);
+    
+        return back()->with('message', 'Product added to wishlist!');
+    }
+    
+    
+
+    public function removeFromWishlist($wishlistId)
+    {
+        $wishlist = Wishlist::find($wishlistId);
+        $wishlist->delete();
+
+        return back()->with('message', 'Product removed from wishlist.');
+    }
+
+
+
+
+
 
     public function checkout()
     {
@@ -93,5 +160,4 @@ class userController extends Controller
     {
         return view('home.myaccount', ['activeSection' => 'dashboard']);
     }
-   
 }
