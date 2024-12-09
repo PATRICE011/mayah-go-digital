@@ -72,7 +72,7 @@
 
          <a href="{{url('/cart')}}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">{{ $cartCount }}</span>
+            <span class="count">{{$cartCount}}</span>
          </a>
       </div>
    </nav>

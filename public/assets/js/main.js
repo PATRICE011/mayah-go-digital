@@ -4,6 +4,12 @@ document.querySelectorAll('.brand-filter').forEach(filter => {
 
       console.log('Selected Categories:', selectedCategories); // Debug: Log selected categories
 
+      const spinner = document.getElementById('loading-spinner');
+      const productsContainer = document.querySelector('.products__container');
+
+      spinner.style.display = 'flex';
+      productsContainer.classList.add('hidden');
+
       fetch('/filter-products', {
           method: 'POST',
           headers: {
@@ -14,11 +20,17 @@ document.querySelectorAll('.brand-filter').forEach(filter => {
       })
       .then(response => response.json())
       .then(data => {
-          console.log('Response:', data); // Debug: Log server response
-          document.querySelector('.products__container').innerHTML = data.html;
+          console.log('Server Response:', data); // Debug server response
+          productsContainer.innerHTML = data.html;
           document.querySelector('.total__products span').innerText = data.count;
+
+          spinner.style.display = 'none';
+          productsContainer.classList.remove('hidden');
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+          console.error('Error:', error); // Debug errors
+          spinner.style.display = 'none';
+      });
   });
 });
 
