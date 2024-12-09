@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingsController;
@@ -53,7 +54,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
             Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
         });
-
+        Route::prefix('wishlist')->group(function () {
+            Route::post('/add/{productId}', [WishlistController::class, 'addToWishlist'])->name('addtowish');
+            Route::delete('/delete/{wishlistId}', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+        });
         // Payment Routes
         Route::prefix('payment')->group(function () {
             Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
@@ -122,8 +126,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
 // Public User Routes (No authentication required)
 Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
 Route::get('/details', [UserController::class, 'details'])->name('home.details');
-Route::get('/cart', [UserController::class, 'cart'])->name('home.cart');
-Route::get('/wishlist', [UserController::class, 'wishlist'])->name('home.wishlist');
+Route::get('/cart', [cartController::class, 'cart'])->name('home.cart');
+Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
 
 // Routes for checkout and my account
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');

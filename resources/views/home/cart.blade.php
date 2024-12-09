@@ -1,8 +1,8 @@
-@extends('home.layout') 
+@extends('home.layout')
 @section('title','Mayah Store - Cart')
 
 <header class="header" id="header">
-<div class="header__top">
+   <div class="header__top">
       <div class="header__container container">
          <div class="header__contact">
             <span>
@@ -71,14 +71,14 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{url('/wishlist')}}" class="header__action-btn">
+         <a href="{{route('home.wishlist')}}" class="header__action-btn">
             <i class='bx bx-heart'></i>
-            <span class="count">3</span>
+            <span class="count">{{$wishlistCount}}</span>
          </a>
 
-         <a href="{{url('cart')}}" class="header__action-btn">
+         <a href="{{route('home.cart')}}" class="header__action-btn">
             <i class='bx bx-cart-alt'></i>
-            <span class="count">3</span>
+            <span class="count">{{$cartCount}}</span>
          </a>
       </div>
    </nav>
@@ -88,41 +88,52 @@
 
 <!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
-    <ul class="breadcrumb__list flex container">
-        <li>
-            <a href="{{url('/cart')}}" class="breadcrumb__link">
-                Home
-            </a>
-        </li>
+   <ul class="breadcrumb__list flex container">
+      <li>
+         <a href="{{url('/cart')}}" class="breadcrumb__link">
+            Home
+         </a>
+      </li>
 
-        <li>
-            <span class="breadcrumb__link">
-                >
-            </span>
-        </li>
+      <li>
+         <span class="breadcrumb__link">
+            >
+         </span>
+      </li>
 
-        <li>
-            <a href="{{url('/shop')}}" class="breadcrumb__link">
-                Shop
-            </a>
-        </li>
+      <li>
+         <a href="{{url('/shop')}}" class="breadcrumb__link">
+            Shop
+         </a>
+      </li>
 
-        <li>
-            <span class="breadcrumb__link">
-                >
-            </span>
-        </li>
+      <li>
+         <span class="breadcrumb__link">
+            >
+         </span>
+      </li>
 
-        <li>
-            <span class="breadcrumb__link">
-                Cart
-            </span>
-        </li>
-    </ul>
+      <li>
+         <span class="breadcrumb__link">
+            Cart
+         </span>
+      </li>
+   </ul>
 </section>
 
 <!--==================== CART ====================-->
 <section class="cart section--lg container">
+   @if($cartItems->isEmpty())
+   <!-- If cart is empty -->
+   <div class="empty-cart-message">
+      <h2>Your cart is empty!</h2>
+      <p>Looks like you haven't added anything to your cart yet. Start shopping now.</p>
+      <a href="{{ url('/shop') }}" class="btn flex btn--md">
+         <i class='bx bx-shopping-bag'></i> Continue Shopping
+      </a>
+   </div>
+   @else
+   <!-- If cart has items -->
    <div class="table__container">
       <table class="table">
          <tr class="table__row">
@@ -158,15 +169,20 @@
             </td>
 
             <td>
-               <i class="bx bx-trash table__trash" data-id="{{ $cartItem->id }}"></i>
+               <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
+                  @csrf
+                  @method('DELETE')
+               </form>
+               <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button-{{ $cartItem->id }}').submit();"></i>
             </td>
+
          </tr>
          @endforeach
       </table>
    </div>
 
    <div class="cart__actions">
-      <a href="{{url('/shop')}}" class="btn flex btn--md">
+      <a href="{{ url('/shop') }}" class="btn flex btn--md">
          <i class='bx bx-shopping-bag'></i> Continue Shopping
       </a>
    </div>
@@ -187,7 +203,7 @@
                   <div class="form__btn">
                      <button class="btn flex btn--sm">
                         <i class='bx bx-shuffle'></i> Apply
-                     </button>   
+                     </button>
                   </div>
                </div>
             </form>
@@ -241,12 +257,14 @@
             </tr>
          </table>
 
-         <a href="{{url('/checkout')}}" class="btn flex btn--md">
+         <a href="{{ url('/checkout') }}" class="btn flex btn--md">
             <i class='bx bx-package'></i> Proceed to Checkout
          </a>
       </div>
    </div>
+   @endif
 </section>
+
 
 @include('home.footer')
 

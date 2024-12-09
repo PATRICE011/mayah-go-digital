@@ -15,9 +15,24 @@
          </p>
 
          <div>
+            @guest
+            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+            @else
+
+            <!-- For authenticated users -->
+            @auth
+            <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+               @csrf
+               <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+            </form>
+            @endauth
+
+            <span> / </span>
+            <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+            @endguest
          </div>
       </div>
    </div>
@@ -55,13 +70,13 @@
 
       <div class="header__user-actions">
          <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart' ></i>
-            <span class="count">3</span>
+            <i class='bx bx-heart'></i>
+            <span class="count">{{$wishlistCount}}</span>
          </a>
 
          <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt' ></i>
-            <span class="count">3</span>
+            <i class='bx bx-cart-alt'></i>
+            <span class="count">{{$cartCount}}</span>
          </a>
       </div>
    </nav>
@@ -71,135 +86,89 @@
 
 <!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
-    <ul class="breadcrumb__list flex container">
-        <li>
-            <a href="{{url('/')}}" class="breadcrumb__link">
-                Home
-            </a>
-        </li>
+   <ul class="breadcrumb__list flex container">
+      <li>
+         <a href="{{url('/')}}" class="breadcrumb__link">
+            Home
+         </a>
+      </li>
 
-        <li>
-            <span class="breadcrumb__link">
-                >
-            </span>
-        </li>
+      <li>
+         <span class="breadcrumb__link">
+            >
+         </span>
+      </li>
 
-        <li>
-            <a href="{{route('home.wishlist')}}" class="breadcrumb__link">
-                Wishlist
-            </a>
-        </li>
-    </ul>
+      <li>
+         <a href="{{route('home.wishlist')}}" class="breadcrumb__link">
+            Wishlist
+         </a>
+      </li>
+   </ul>
 </section>
 
 <!--==================== WISHLIST ====================-->
 <section class="wishlist section--lg container">
-<div class="table__container">
+   <div class="table__container">
       <table class="table">
-         <tr class="table__row">
-            <th>Image</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock Status</th>
-            <th>Action</th>
-            <th>Remove</th>
-         </tr>
+         <thead>
+            <tr class="table__row">
+               <th>Image</th>
+               <th>Name</th>
+               <th>Price</th>
+               <th>Stock Status</th>
+               <th>Action</th>
+               <th>Remove</th>
+            </tr>
+         </thead>
 
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
-            </td>
+         <tbody>
+            @forelse ($wishlistItems as $wishlistItem)
+            <tr>
+               <td>
+                  <img src="{{ asset('assets/img/'.$wishlistItem->product->product_image) }}" alt="{{ $wishlistItem->product->product_name }}" class="table__img">
+               </td>
 
-            <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
+               <td>
+                  <h2 class="table__title">{{ $wishlistItem->product->product_name }}</h2>
+                  <p class="table__description">{{ $wishlistItem->product->product_description }}</p>
+               </td>
 
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
-            </td>
+               <td>
+                  <span class="table__price">₱ {{ number_format($wishlistItem->product->product_price, 2) }}</span>
+               </td>
 
-            <td>
-               <span class="table__price">₱ 7.00</span>
-            </td>
+               <td>
+                  @if ($wishlistItem->product->product_stocks > 0)
+                  <span class="table__stock">In Stock</span>
+                  @else
+                  <span class="table__stock">Out of Stock</span>
+                  @endif
+               </td>
 
-            <td>
-               <span class="table__stock">In Stock</span>
-            </td>
+               <td>
+                  @if ($wishlistItem->product->product_stocks > 0)
+                  <a href="{{ route('home.inserttocart', $wishlistItem->product->id) }}" class="btn btn--sm">Add to Cart</a>
+                  @else
+                  <button class="btn btn--sm" disabled>Out of Stock</button>
+                  @endif
+               </td>
 
-            <td>
-               <a href="" class="btn btn btn--sm">Add to Cart</a>
-            </td>
-
-            <td>
-               <i class='bx bx-trash table__trash'></i>
-            </td>
-         </tr>
-
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
-            </td>
-   
-            <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
-   
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
-            </td>
-   
-            <td>
-               <span class="table__price">₱ 7.00</span>
-            </td>
-   
-            <td>
-               <span class="table__stock">In Stock</span>
-            </td>
-
-            <td>
-               <a href="" class="btn btn btn--sm">Add to Cart</a>
-            </td>
-   
-            <td>
-               <i class='bx bx-trash table__trash'></i>
-            </td>
-         </tr>
-
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="" class="table__img">
-            </td>
-   
-            <td>
-               <h2 class="table__title">
-                  Bread Stix - Blue
-               </h2>
-   
-               <p class="table__description">
-                  Nissin Bread Stix are crunchy, baked breadsticks that serve as a light and savory snack.
-               </p>
-            </td>
-   
-            <td>
-               <span class="table__price">₱ 7.00</span>
-            </td>
-   
-            <td>
-               <span class="table__stock">In Stock</span>
-            </td>
-
-            <td>
-               <a href="" class="btn btn btn--sm">Add to Cart</a>
-            </td>
-   
-            <td>
-               <i class='bx bx-trash table__trash'></i>
-            </td>
-         </tr>
+               <td>
+                  <form id="destroy-button" action="{{ route('wishlist.remove',$wishlistItem->id) }}" method="POST">
+                     @csrf
+                     @method('DELETE')
+                  </form>
+                  <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button').submit();"></i>
+               </td>
+            </tr>
+            @empty
+            <tr>
+               <td colspan="6" class="text-center">Your wishlist is empty.</td>
+            </tr>
+            @endforelse
+         </tbody>
       </table>
    </div>
 </section>
+@include('home.footer')

@@ -69,7 +69,7 @@
         <div class="header__user-actions">
             <a href="{{url('/wishlist')}}" class="header__action-btn">
                 <i class='bx bx-heart'></i>
-                <span class="count">0</span>
+                <span class="count">{{$wishlistCount}}</span>
             </a>
 
             <a href="{{url('/cart')}}" class="header__action-btn">
