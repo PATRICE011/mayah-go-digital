@@ -125,9 +125,15 @@
                 <i class='bx bx-cog'></i> Change Password
             </p>
 
-            <p class="account__tab">
+            <!-- Logout Tab (with dynamic handling) -->
+            @auth
+            <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+            <p class="account__tab" onclick="document.getElementById('logout-form').submit();">
                 <i class='bx bx-exit'></i> Logout
             </p>
+            @endauth
         </div>
 
         <div class="tabs__content">

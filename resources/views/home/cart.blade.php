@@ -256,7 +256,7 @@
                </td>
             </tr>
          </table>
-
+         
          <a href="{{ url('/checkout') }}" class="btn flex btn--md">
             <i class='bx bx-package'></i> Proceed to Checkout
          </a>
