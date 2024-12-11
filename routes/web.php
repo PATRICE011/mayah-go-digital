@@ -126,7 +126,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
 
 // Public User Routes (No authentication required)
 Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
-Route::get('/details', [UserController::class, 'details'])->name('home.details');
+Route::get('/details/{id}', [UserController::class, 'details'])->name('home.details');
 Route::get('/cart', [cartController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
 

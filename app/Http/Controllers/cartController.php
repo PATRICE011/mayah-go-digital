@@ -19,33 +19,38 @@ class cartController extends Controller
     {
         $productId = $request->input('id');
         $product = Product::find($productId);
-
+    
+        // Check if the product exists
         if (!$product) {
             return redirect()->back()->with('error', 'Product not found');
         }
-
+    
         $user = Auth::user();
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
+    
+        // Check if the product is already in the cart
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $productId)
             ->first();
-
+    
+        // If the product is already in the cart, display a toastr message
         if ($cartItem) {
-            $cartItem->quantity += 1;
-            $cartItem->save();
-        } else {
-            CartItem::create([
-                'cart_id' => $cart->id,
-                'product_id' => $productId,
-                'quantity' => 1,
-                'price' => $product->product_price,  // Store the price when adding a new item
-            ]);
+            // Instead of adding more items, we show a toastr message
+            return redirect()->back()->with('error', 'This product is already in your cart.');
         }
-
-        return redirect()->back()->with('success', 'Product added to cart');
-        // return response()->json(['success' => true, 'message' => 'Product added to cart']);
+    
+        // If the product is not in the cart, add it
+        CartItem::create([
+            'cart_id' => $cart->id,
+            'product_id' => $productId,
+            'quantity' => 1,
+            'price' => $product->product_price,  // Store the price when adding a new item
+        ]);
+    
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Product added to cart.');
     }
+    
 
 
     public function cart()
