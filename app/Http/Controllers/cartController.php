@@ -100,21 +100,11 @@ class cartController extends Controller
         ]);
     }
 
-    // public function checkout()
-    // {
-        
-    //     $user = Auth::user();
-    //     $cart = Cart::where('user_id', $user->id)->first();
-    //     $cartItems = CartItem::where('cart_id', $cart->id)->get();
 
-
-        
-        
-    //     return view('home.checkout', compact('cartItems')); 
-    // }
 
     public function processCheckout(Request $request)
     {
+        // dd($request->all());
         // Get the authenticated user
         $user = Auth::user();
     

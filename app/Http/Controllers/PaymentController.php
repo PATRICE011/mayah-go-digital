@@ -123,59 +123,76 @@ class PaymentController extends Controller
             ->where('status', 'pending') // Only pending orders
             ->first();
 
-        if ($order && $order->orderItems()->count() > 0) {
+        if (!$order) {
+            return redirect()->back()->with('error', 'No pending orders found.');
+        }
+
+        // Ensure the order has items
+        if ($order->orderItems()->count() > 0) {
+            // Generate a unique custom order ID
             $customOrderId = $this->generateUniqueOrderId();
+
+            // Update or create the custom order ID in Orderdetails
             Orderdetails::updateOrCreate(
                 ['order_id' => $order->id],
                 ['order_id_custom' => $customOrderId]
             );
             Log::info('Generated and saved custom order ID: ' . $customOrderId);
-            // Prepare line items and total amount
+
+            // Prepare line items for the payment gateway
             $lineItems = [];
             foreach ($order->orderItems as $orderItem) {
                 $lineItems[] = [
                     'currency' => 'PHP',
-                    'amount' => $orderItem->price * 100, // Multiply by 100 for cents
+                    'amount' => $orderItem->price * 100, // Multiply by 100 to convert to cents
                     'name' => $orderItem->product->product_name,
                     'quantity' => $orderItem->quantity,
                 ];
             }
 
+            // Prepare the request data for PayMongo
             $data = [
                 'data' => [
                     'attributes' => [
                         'line_items' => $lineItems,
                         'payment_method_types' => ['gcash', 'paymaya'],
-                        'success_url' => route('payment.success'),
+                        'success_url' => route('payment.success'),  // Success page route
                     ],
-                ]
+                ],
             ];
 
-            // Make the API request to PayMongo
-            $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions')
-                ->withHeader('Content-Type: application/json')
-                ->withHeader('accept: application/json')
-                ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))
-                ->withOption('SSL_VERIFYPEER', false) // Disable SSL verification
-                ->withData($data)
-                ->asJson()
-                ->post();
+            // Send the API request to PayMongo
+            try {
+                $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions')
+                    ->withHeader('Content-Type: application/json')
+                    ->withHeader('accept: application/json')
+                    ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))  // PayMongo Authorization Key
+                    ->withOption('SSL_VERIFYPEER', false) // Disable SSL verification (you can enable it in production)
+                    ->withData($data)
+                    ->asJson()
+                    ->post();
 
-            if (isset($response->data)) {
-                // Store session and order data
-                Session::put('session_id', $response->data->id);
-                Session::put('order_id', $order->id);
+                // If the API response contains the data
+                if (isset($response->data)) {
+                    // Store session and order data in the session
+                    Session::put('session_id', $response->data->id);
+                    Session::put('order_id', $order->id);
 
-                // Redirect to checkout
-                return redirect()->to($response->data->attributes->checkout_url);
-            } else {
-                Log::error('PayMongo API response', (array)$response);
-                return redirect()->back()->with('error', 'Payment initiation failed. Please try again.');
+                    // Redirect to the PayMongo checkout page
+                    return redirect()->to($response->data->attributes->checkout_url);
+                } else {
+                    Log::error('PayMongo API response error', (array)$response);
+                    return redirect()->back()->with('error', 'Payment initiation failed. Please try again.');
+                }
+            } catch (\Exception $e) {
+                Log::error('PayMongo API request failed', ['exception' => $e->getMessage()]);
+                return redirect()->back()->with('error', 'An error occurred while initiating payment. Please try again.');
             }
         } else {
-            return redirect()->back()->with('error', 'No pending orders found.');
+            return redirect()->back()->with('error', 'Your order has no items.');
         }
     }
+
 
     public function postSuccess()
     {
