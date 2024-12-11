@@ -61,8 +61,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         // Payment Routes
         Route::prefix('payment')->group(function () {
             Route::match(['get', 'post','delete'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
-            Route::get('/create/{orderId}', [PaymentController::class, 'createPaymentTest'])->name('cart.pay');
+            Route::get('/create/{orderId}', [PaymentController::class, 'createPayment'])->name('cart.pay');
             Route::match(['get', 'post'], '/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+            Route::get('/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
         });
 
         // My Orders

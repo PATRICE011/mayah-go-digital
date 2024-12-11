@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Orderdetails;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -23,7 +24,7 @@ class PaymentController extends Controller
         $orderId = Session::get('order_id');
 
         if (!$sessionId || !$orderId) {
-            return redirect()->route('/home')->with('error', 'Session or Order not found.');
+            return redirect()->route('/cart')->with('error', 'Session or Order not found.');
         }
 
         // Fetch session details from PayMongo API
@@ -95,12 +96,20 @@ class PaymentController extends Controller
                     return redirect()->back()->with('error', 'Unable to save order details.');
                 }
 
+                // Delete cart items after successful payment
+                $cart = Cart::where('user_id', $order->user_id)->first();
+                if ($cart) {
+                    $cart->items()->delete(); // Delete all items in the cart
+                    $cart->delete(); // Delete the cart itself
+                    Log::info('Cart and its items deleted successfully.');
+                }
+
                 // Clear session data
                 Session::forget('session_id');
                 Session::forget('order_id');
 
                 // Redirect the user to the orders page
-                return redirect('/home')->with('message', 'Order placed successfully.');
+                return redirect('/cart')->with('message', 'Order placed successfully.');
             } else {
                 return redirect('/post-error')->with('error', 'No matching pending order found.');
             }
@@ -111,26 +120,26 @@ class PaymentController extends Controller
     }
 
 
+
     // Create payment for testing purposes
-    public function createPaymentTest($orderId)
+    public function createPayment($orderId)
     {
-        
         // Get the authenticated user
         $user = Auth::user();
 
-        // Find the specified order by order ID
+        // Find the specified order by order ID and ensure it's 'pending'
         $order = Order::where('id', $orderId)
             ->where('user_id', $user->id)
-            ->where('status', 'pending') // Only pending orders
+            ->where('status', 'pending') // Only process orders that are still pending
             ->first();
 
         if (!$order) {
-            return redirect()->back()->with('error', 'No pending orders found.');
+            return redirect()->back()->with('error', 'No matching pending orders found.');
         }
 
         // Ensure the order has items
         if ($order->orderItems()->count() > 0) {
-            // Generate a unique custom order ID
+            // Generate a unique custom order ID for the order
             $customOrderId = $this->generateUniqueOrderId();
 
             // Update or create the custom order ID in Orderdetails
@@ -138,9 +147,10 @@ class PaymentController extends Controller
                 ['order_id' => $order->id],
                 ['order_id_custom' => $customOrderId]
             );
+
             Log::info('Generated and saved custom order ID: ' . $customOrderId);
 
-            // Prepare line items for the payment gateway
+            // Prepare line items for the payment gateway (PayMongo)
             $lineItems = [];
             foreach ($order->orderItems as $orderItem) {
                 $lineItems[] = [
@@ -157,7 +167,8 @@ class PaymentController extends Controller
                     'attributes' => [
                         'line_items' => $lineItems,
                         'payment_method_types' => ['gcash', 'paymaya'],
-                        'success_url' => route('payment.success'),  // Success page route
+                        'success_url' => route('payment.success'),  
+                        'cancel_url' => route('payment.cancel'),  
                     ],
                 ],
             ];
@@ -194,7 +205,6 @@ class PaymentController extends Controller
         }
     }
 
-
     public function postSuccess()
     {
         return view("home.postsuccess");
@@ -213,5 +223,14 @@ class PaymentController extends Controller
         } while (Orderdetails::where('order_id_custom', $orderIdCustom)->exists()); // Ensure it's unique
 
         return $orderIdCustom;
+    }
+    public function paymentCancel(Request $request)
+    {
+        Log::info('Payment Cancel method hit');
+
+        // You can log or process any actions needed when payment is canceled
+        // For now, we just redirect the user back to the cart or homepage
+
+        return redirect('/cart')->with('message', 'Payment was canceled.');
     }
 }

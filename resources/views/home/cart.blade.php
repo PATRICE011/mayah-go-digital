@@ -120,6 +120,11 @@
    </div>
    @else
    <!-- Start of Cart Form -->
+   @foreach ($cartItems as $cartItem)
+   <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
+      @csrf
+      @method('DELETE')
+   </form>
    <form action="{{ route('goCheckout') }}" method="POST">
       @csrf
       <div class="table__container">
@@ -133,7 +138,7 @@
                <th>Remove</th>
             </tr>
 
-            @foreach ($cartItems as $cartItem)
+
             <tr class="cart-item-row">
                <td>
                   <img src="{{ asset('assets/img/'.$cartItem->product->product_image) }}" alt="{{ $cartItem->product->product_name }}" class="table__img">
@@ -147,18 +152,14 @@
                </td>
                <td>
                   <!-- Quantity input with data-stock for available stock -->
-                  <input type="number" name="quantities[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}" class="quantity" min="1" max="{{ $cartItem->product->stock }}"
+                  <input type="number" name="quantities[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}" class="quantity" min="1" max="{{ $cartItem->product->product_stocks }}"
                      data-stock="{{ $cartItem->product->product_stocks }}">
-                  <span class="stock-info">Available: {{ $cartItem->product->product_stocks }}</span>
+                  <!-- <span class="stock-info">Available: {{ $cartItem->product->product_stocks }}</span> -->
                </td>
                <td>
                   <span class="table__subtotal">₱ {{ number_format($cartItem->product->product_price * $cartItem->quantity, 2) }}</span>
                </td>
                <td>
-                  <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
-                     @csrf
-                     @method('DELETE')
-                  </form>
                   <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button-{{ $cartItem->id }}').submit();"></i>
                </td>
             </tr>
@@ -252,4 +253,3 @@
 @include('home.footer')
 
 @endsection
-

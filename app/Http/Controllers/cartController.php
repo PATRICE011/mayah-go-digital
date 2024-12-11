@@ -103,52 +103,43 @@ class cartController extends Controller
 
 
     public function processCheckout(Request $request)
-    {
-        // Get the authenticated user
-        $user = Auth::user();
+{
+    // Get the authenticated user
+    $user = Auth::user();
     
-        // Find the user's cart
-        $cart = Cart::where('user_id', $user->id)->first();
-    
-        // If the cart exists and has items
-        if ($cart && $cart->items()->count() > 0) {
-    
-            // Create a new order for the user
-            $order = Order::create([
-                'user_id' => $user->id,
-                'status' => 'pending', // Initial status before payment
+    // Find the user's cart
+    $cart = Cart::where('user_id', $user->id)->first();
+
+    // If the cart exists and has items
+    if ($cart && $cart->items()->count() > 0) {
+
+        // Create a new order for the user
+        $order = Order::create([
+            'user_id' => $user->id,
+            'status' => 'pending', // Initial status before payment
+        ]);
+
+        // Loop through cart items and create order items
+        foreach ($cart->items as $cartItem) {
+            $updatedQuantity = isset($request->quantities[$cartItem->id]) ? $request->quantities[$cartItem->id] : $cartItem->quantity;
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product_id,
+                'quantity' =>  $updatedQuantity,
+                'price' => $cartItem->price,
             ]);
-    
-            // Loop through the cart items and create order items
-            foreach ($cart->items as $cartItem) {
-                // Check if the quantity is updated in the request
-                $updatedQuantity = isset($request->quantities[$cartItem->id]) ? $request->quantities[$cartItem->id] : $cartItem->quantity;
-    
-                // Create order item with the updated quantity
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $cartItem->product_id,
-                    'quantity' => $updatedQuantity,
-                    'price' => $cartItem->price,
-                ]);
-    
-                // Update the cart item quantity (if needed)
-                $cartItem->update(['quantity' => $updatedQuantity]);
-            }
-    
-            // Delete the cart and its items after transferring to orders
-            $cart->items()->delete(); // Delete cart items
-            $cart->delete(); // Delete cart
-    
-            // Redirect to PayMongo or other payment gateway (assuming route exists)
-            return redirect(route("cart.pay", ['orderId' => $order->id]))->with('message', 'Order placed successfully!');
-        } else {
-            return redirect()->back()->with('error', 'Your cart is empty.');
         }
+
+        // Don't delete the cart items here, we'll handle it later in the payment process
+
+        // Redirect to payment page where the cart data will be transferred to the order_items table
+        return redirect(route("cart.pay", ['orderId' => $order->id]))->with('message', 'Order placed successfully!');
+    } else {
+        return redirect()->back()->with('error', 'Your cart is empty.');
     }
+}
+
     
-
-
     // delete 
     public function destroy($id)
     {
