@@ -109,6 +109,16 @@
 
 <!--==================== WISHLIST ====================-->
 <section class="wishlist section--lg container">
+   @if($wishlistItems->isEmpty())
+   <div class="empty__wishlist-message">
+      <h2>Your Wishlist is empty!</h2>
+      <p>Looks like you haven't added anything to your wishlist yet. Start shopping now.</p>
+      <a href="{{ url('/shop') }}" class="btn flex btn--md">
+         <i class='bx bx-shopping-bag'></i> Continue Shopping
+      </a>
+   </div>
+
+   @else
    <div class="table__container">
       <table class="table">
          <thead>
@@ -162,13 +172,12 @@
                   <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button').submit();"></i>
                </td>
             </tr>
-            @empty
-            <tr>
-               <td colspan="6" class="text-center">Your wishlist is empty.</td>
-            </tr>
-            @endforelse
+            @endforeach
          </tbody>
       </table>
    </div>
+   @endif
 </section>
 @include('home.footer')
+
+@endsection

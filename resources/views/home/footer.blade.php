@@ -44,10 +44,6 @@
                 </li>
 
                 <li>
-                    <a href="" class="footer__link">Support Center</a>
-                </li>
-
-                <li>
                     <a href="" class="footer__link">Contact Us</a>
                 </li>
             </ul>
@@ -60,19 +56,15 @@
             
             <ul class="footer__links">
                 <li>
-                    <a href="" class="footer__link">Sign In</a>
+                    <a href="{{url('user/login')}}" class="footer__link">Sign In</a>
                 </li>
 
                 <li>
-                    <a href="" class="footer__link">View Cart</a>
+                    <a href="{{ url('cart') }}" class="footer__link">View Cart</a>
                 </li>
 
                 <li>
-                    <a href="" class="footer__link">My Wishlist</a>
-                </li>
-
-                <li>
-                    <a href="" class="footer__link">Track My Order</a>
+                    <a href="{{ url('wishlist') }}" class="footer__link">My Wishlist</a>
                 </li>
 
                 <li>
