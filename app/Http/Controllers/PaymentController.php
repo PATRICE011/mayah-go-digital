@@ -114,6 +114,7 @@ class PaymentController extends Controller
     // Create payment for testing purposes
     public function createPaymentTest($orderId)
     {
+        
         // Get the authenticated user
         $user = Auth::user();
 

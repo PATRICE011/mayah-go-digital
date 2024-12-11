@@ -22,6 +22,7 @@ document.querySelectorAll('.brand-filter').forEach(filter => {
   });
 });
 
+
 /*=============== IMAGE GALLERY ===============*/
 function imgGallery(){
   const mainImg = document.querySelector('.details__img'),
