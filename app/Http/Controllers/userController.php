@@ -97,6 +97,11 @@ class userController extends Controller
         return view('home.checkout');
     }
 
+    public function invoice()
+    {
+        return view('home.invoice');
+    }
+
 
     public function orderDetails($orderId)
     {

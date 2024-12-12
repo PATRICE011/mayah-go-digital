@@ -118,14 +118,8 @@
          <i class='bx bx-shopping-bag'></i> Continue Shopping
       </a>
    </div>
-
    @else
-   <!-- Start of Cart Form -->
-   @foreach ($cartItems as $cartItem)
-   <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
-      @csrf
-      @method('DELETE')
-   </form>
+   <!-- Start of Single Cart Form -->
    <form action="{{ route('goCheckout') }}" method="POST">
       @csrf
       <div class="table__container">
@@ -138,8 +132,11 @@
                <th>Subtotal</th>
                <th>Remove</th>
             </tr>
-
-
+            @foreach ($cartItems as $cartItem)
+            <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
+               @csrf
+               @method('DELETE')
+            </form>
             <tr class="cart-item-row">
                <td>
                   <img src="{{ asset('assets/img/'.$cartItem->product->product_image) }}" alt="{{ $cartItem->product->product_name }}" class="table__img">
@@ -153,19 +150,28 @@
                </td>
                <td>
                   <!-- Quantity input with data-stock for available stock -->
-                  <input type="number" name="quantities[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}" class="quantity" min="1" max="{{ $cartItem->product->product_stocks }}"
+                  <input type="number"
+                     name="quantities[{{ $cartItem->id }}]"
+                     value="{{ $cartItem->quantity }}"
+                     class="quantity"
+                     min="1"
+                     max="{{ $cartItem->product->product_stocks }}"
                      data-stock="{{ $cartItem->product->product_stocks }}">
-                  <!-- <span class="stock-info">Available: {{ $cartItem->product->product_stocks }}</span> -->
                </td>
                <td>
                   <span class="table__subtotal">₱ {{ number_format($cartItem->product->product_price * $cartItem->quantity, 2) }}</span>
                </td>
                <td>
+                  <!-- Remove button -->
                   <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button-{{ $cartItem->id }}').submit();"></i>
                </td>
             </tr>
+            <!-- Separate form for delete functionality -->
+            <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST" style="display: none;">
+               @csrf
+               @method('DELETE')
+            </form>
             @endforeach
-
          </table>
       </div>
 
@@ -200,42 +206,16 @@
             <h3 class="section__title">Cart Total</h3>
             <table class="cart__total-table">
                <tr>
-                  <td>
-                     <span class="cart__total-title">
-                        Subtotal
-                     </span>
-                  </td>
-                  <td>
-                     <span class="cart__total-price" id="subtotal">
-                        ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
-                     </span>
-                  </td>
+                  <td><span class="cart__total-title">Subtotal</span></td>
+                  <td><span class="cart__total-price" id="subtotal">₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}</span></td>
                </tr>
-
                <tr>
-                  <td>
-                     <span class="cart__total-title">
-                        Discount
-                     </span>
-                  </td>
-                  <td>
-                     <span class="cart__total-price">
-                        ₱ 0.00
-                     </span>
-                  </td>
+                  <td><span class="cart__total-title">Discount</span></td>
+                  <td><span class="cart__total-price">₱ 0.00</span></td>
                </tr>
-
                <tr>
-                  <td>
-                     <span class="cart__total-title">
-                        Total
-                     </span>
-                  </td>
-                  <td>
-                     <span class="cart__total-price" id="total">
-                        ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
-                     </span>
-                  </td>
+                  <td><span class="cart__total-title">Total</span></td>
+                  <td><span class="cart__total-price" id="total">₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}</span></td>
                </tr>
             </table>
 
@@ -247,9 +227,10 @@
          </div>
       </div>
    </form>
-   <!-- End of Cart Form -->
+   <!-- End of Single Cart Form -->
    @endif
 </section>
+
 
 @include('home.footer')
 

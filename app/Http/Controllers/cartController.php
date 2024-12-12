@@ -10,6 +10,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\Request;
 
 class cartController extends Controller
@@ -19,26 +21,26 @@ class cartController extends Controller
     {
         $productId = $request->input('id');
         $product = Product::find($productId);
-    
+
         // Check if the product exists
         if (!$product) {
             return redirect()->back()->with('error', 'Product not found');
         }
-    
+
         $user = Auth::user();
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-    
+
         // Check if the product is already in the cart
         $cartItem = CartItem::where('cart_id', $cart->id)
             ->where('product_id', $productId)
             ->first();
-    
+
         // If the product is already in the cart, display a toastr message
         if ($cartItem) {
             // Instead of adding more items, we show a toastr message
             return redirect()->back()->with('error', 'This product is already in your cart.');
         }
-    
+
         // If the product is not in the cart, add it
         CartItem::create([
             'cart_id' => $cart->id,
@@ -46,11 +48,11 @@ class cartController extends Controller
             'quantity' => 1,
             'price' => $product->product_price,  // Store the price when adding a new item
         ]);
-    
+
         // Redirect back with a success message
         return redirect()->back()->with('message', 'Product added to cart.');
     }
-    
+
 
 
     public function cart()
@@ -108,43 +110,70 @@ class cartController extends Controller
 
 
     public function processCheckout(Request $request)
-{
-    // Get the authenticated user
-    $user = Auth::user();
+    {
+        // Get the authenticated user
+        $user = Auth::user();
     
-    // Find the user's cart
-    $cart = Cart::where('user_id', $user->id)->first();
-
-    // If the cart exists and has items
-    if ($cart && $cart->items()->count() > 0) {
-
+        // Find the user's cart
+        $cart = Cart::where('user_id', $user->id)->first();
+    
+        // Validate cart existence and items
+        if (!$cart || $cart->items()->count() === 0) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+    
+        // Validate quantities input
+        if (!$request->has('quantities') || !is_array($request->quantities)) {
+            Log::error('Quantities input is missing or invalid.', ['quantities' => $request->quantities]);
+            return redirect()->back()->with('error', 'Invalid quantities provided.');
+        }
+    
         // Create a new order for the user
         $order = Order::create([
             'user_id' => $user->id,
             'status' => 'pending', // Initial status before payment
         ]);
-
+    
+        if (!$order) {
+            Log::error('Order creation failed for user ID: ' . $user->id);
+            return redirect()->back()->with('error', 'Failed to create order.');
+        }
+    
+        // Debug quantities
+        Log::info('Quantities received:', $request->quantities);
+    
         // Loop through cart items and create order items
         foreach ($cart->items as $cartItem) {
-            $updatedQuantity = isset($request->quantities[$cartItem->id]) ? $request->quantities[$cartItem->id] : $cartItem->quantity;
+            $updatedQuantity = array_key_exists($cartItem->id, $request->quantities)
+                ? $request->quantities[$cartItem->id]
+                : $cartItem->quantity;
+    
+            // Ensure the quantity is within allowable range
+            $updatedQuantity = max(1, min($updatedQuantity, $cartItem->product->product_stocks));
+    
+            // Debug order item data
+            Log::info('Creating OrderItem:', [
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product_id,
+                'quantity' => $updatedQuantity,
+                'price' => $cartItem->product->product_price,
+            ]);
+    
+            // Create the order item
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $cartItem->product_id,
-                'quantity' =>  $updatedQuantity,
-                'price' => $cartItem->price,
+                'quantity' => $updatedQuantity,
+                'price' => $cartItem->product->product_price,
             ]);
         }
-
-        // Don't delete the cart items here, we'll handle it later in the payment process
-
+    
         // Redirect to payment page where the cart data will be transferred to the order_items table
         return redirect(route("cart.pay", ['orderId' => $order->id]))->with('message', 'Order placed successfully!');
-    } else {
-        return redirect()->back()->with('error', 'Your cart is empty.');
     }
-}
-
     
+
+
     // delete 
     public function destroy($id)
     {

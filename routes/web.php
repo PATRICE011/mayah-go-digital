@@ -123,6 +123,7 @@ Route::get('/cart', [cartController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
 Route::get('/about', [UserController::class, 'about'])->name('home.about');
 Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
+Route::get('/invoice', [UserController::class, 'invoice']);
 
 // Routes for checkout and my account
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');

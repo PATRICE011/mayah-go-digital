@@ -157,28 +157,28 @@
                     <div class="order-progress-bar">
                         <!-- Step: Pending -->
                         <div class="order-progress-step 
-        {{ in_array($order->status, ['pending', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
-        {{ $order->status == 'pending' ? 'active' : '' }}">
+                            {{ in_array($order->status, ['pending', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
+                            {{ $order->status == 'pending' ? 'active' : '' }}">
                             <span>Pending</span>
                         </div>
 
                         <!-- Step: Confirmed -->
                         <div class="order-progress-step 
-        {{ in_array($order->status, ['confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
-        {{ $order->status == 'confirmed' ? 'active' : '' }}">
+                            {{ $order->status == 'confirmed' ? 'active' : '' }}">
+                            {{ in_array($order->status, ['confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
                             <span>Confirmed</span>
                         </div>
 
                         <!-- Step: Ready for Pickup -->
                         <div class="order-progress-step 
-        {{ in_array($order->status, ['ready-for-pickup', 'completed']) ? 'completed' : '' }} 
-        {{ $order->status == 'ready-for-pickup' ? 'active' : '' }}">
+                            {{ in_array($order->status, ['ready-for-pickup', 'completed']) ? 'completed' : '' }} 
+                            {{ $order->status == 'ready-for-pickup' ? 'active' : '' }}">
                             <span>Ready for Pickup</span>
                         </div>
 
                         <!-- Step: Completed -->
                         <div class="order-progress-step 
-        {{ $order->status == 'completed' ? 'completed active' : '' }}">
+                            {{ $order->status == 'completed' ? 'completed active' : '' }}">
                             <span>Completed</span>
                         </div>
                     </div>
@@ -227,8 +227,15 @@
                             </tr>
                         </table>
                     </div>
-                </div>
 
+                    <div class="form__btn">
+                        <a href="{{url('/invoice')}}">
+                            <button class="btn btn--md">
+                                Invoice
+                            </button>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="tab__content" content id="update-profile">
