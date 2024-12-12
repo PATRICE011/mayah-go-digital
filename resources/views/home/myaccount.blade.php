@@ -254,7 +254,7 @@
                                 @if ($order->status == 'pending')
                                 <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
                                 @else
-                                <a href="{{ url('/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
+                                <a href="{{ url('/user/order-status/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
                                 @endif
                             </td>
                         </tr>

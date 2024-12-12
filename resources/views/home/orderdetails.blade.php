@@ -229,7 +229,7 @@
                     </div>
 
                     <div class="form__btn">
-                        <a href="{{url('/invoice')}}">
+                        <a href="{{ route('order.invoice', ['orderId' => $order->order_id]) }}">
                             <button class="btn btn--md">
                                 Invoice
                             </button>

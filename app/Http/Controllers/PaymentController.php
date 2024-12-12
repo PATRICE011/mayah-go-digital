@@ -87,7 +87,7 @@ class PaymentController extends Controller
                         [
                             'order_id_custom' => $existingOrderDetails->order_id_custom ?? $customOrderId,
                             'payment_method' => $paymentMethod,
-                            // 'total_amount' => $totalAmount,
+                            'total_amount' => $totalAmount,
                         ]
                     );
                     Log::info('Orderdetails saved successfully.');
@@ -143,16 +143,6 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'Cart not found.');
         }
 
-        // Calculate total amount from the cart
-        $totalAmount = DB::table('cart_items')
-            ->where('cart_id', $cartId)
-            ->select(DB::raw('SUM(price * quantity) as total_amount'))
-            ->value('total_amount');
-
-        if (!$totalAmount || $totalAmount <= 0) {
-            return redirect()->back()->with('error', 'Your cart is empty.');
-        }
-
         // Ensure the order has items
         if ($order->orderItems()->count() > 0) {
             // Generate a unique custom order ID
@@ -162,8 +152,7 @@ class PaymentController extends Controller
             Orderdetails::updateOrCreate(
                 ['order_id' => $order->id],
                 [
-                    'order_id_custom' => $customOrderId,
-                    'total_amount' => $totalAmount,
+                    'order_id_custom' => $customOrderId
                 ]
             );
 

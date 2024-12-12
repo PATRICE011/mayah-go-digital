@@ -97,10 +97,34 @@ class userController extends Controller
         return view('home.checkout');
     }
 
-    public function invoice()
-    {
-        return view('home.invoice');
-    }
+    public function invoice($orderId)
+{
+    $order = DB::table('orders')
+        ->where('orders.id', $orderId)
+        ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        ->join('products', 'order_items.product_id', '=', 'products.id')
+        ->join('categories', 'products.category_id', '=', 'categories.id') // Join categories
+        ->select(
+            'orders.id as order_id',
+            'orderdetails.order_id_custom as invoice_number',
+            'orderdetails.total_amount',
+            'orders.created_at as order_date',
+            'products.product_name',
+            'categories.category_name as category_name', // Fetch the category name
+            'order_items.quantity',
+            'order_items.price',
+            DB::raw('order_items.quantity * order_items.price as amount')
+        )
+        ->get();
+
+    $customer = Auth::user();
+
+    return view('home.invoice', [
+        'order' => $order,
+        'customer' => $customer,
+    ]);
+}
 
 
     public function orderDetails($orderId)
@@ -110,7 +134,7 @@ class userController extends Controller
             ->where('orders.id', $orderId)
             ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
             ->select(
-                'orders.id as order_id',
+                'orders.id as order_id', // Alias as order_id
                 'orderdetails.order_id_custom',
                 'orders.status',
                 'orderdetails.payment_method',
@@ -125,17 +149,16 @@ class userController extends Controller
         }
     
         // Enforce payment-first logic:
-        // If the order is paid, ensure the status is always 'pending'
         if ($order->status === 'paid') {
             $order->status = 'pending';
         }
     
-        // Dynamically set the payment status (assume 'Paid' for all orders)
+        // Dynamically set the payment status
         $order->payment_status = 'Paid';
     
         // Fetch all items in the order
         $orderItems = DB::table('order_items')
-            ->where('order_id', $orderId)
+            ->where('order_id', $order->order_id) // Use order_id instead of id
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->select(
                 'products.product_name',
@@ -260,7 +283,7 @@ class userController extends Controller
         'activeSection' => 'dashboard',
         'cartCount' => $cartCount,
         'wishlistCount' => $wishlistCount,
-        'orders' => $orders, // Pass the orders to the Blade view
+        'orders' => $orders, 
     ]);
 }
 
