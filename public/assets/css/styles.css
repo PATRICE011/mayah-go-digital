@@ -1680,5 +1680,12 @@ input[type="number"] {
 
 
 
+/* UPDATE PROFILE ACTIVE TAB DEC 12, 2024 */
 
+.tab__content {
+  display: none;
+}
 
+.tab__content.active-tab {
+  display: block;
+}

@@ -109,19 +109,19 @@
 <section class="accounts section--lg">
     <div class="accounts__container container grid">
         <div class="account__tabs">
-            <p class="account__tab active-tab" data-target="#dashboard">
+            <p class="account__tab {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" data-target="#dashboard">
                 <i class='bx bx-box'></i> Dashboard
             </p>
 
-            <p class="account__tab" data-target="#orders">
+            <p class="account__tab {{ session('active_tab') == 'orders' ? 'active-tab' : '' }}" data-target="#orders">
                 <i class='bx bx-cart-download'></i> Orders
             </p>
 
-            <p class="account__tab" data-target="#update-profile">
+            <p class="account__tab {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" data-target="#update-profile">
                 <i class='bx bxs-hand-up'></i> Update Profile
             </p>
 
-            <p class="account__tab" data-target="#change-password">
+            <p class="account__tab {{ session('active_tab') == 'change-password' ? 'active-tab' : '' }}" data-target="#change-password">
                 <i class='bx bx-cog'></i> Change Password
             </p>
 
@@ -138,7 +138,7 @@
 
         <div class="tabs__content">
             @if ($activeSection == 'dashboard')
-            <div class="tab__content active-tab" content id="dashboard">
+            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" content id="dashboard">
                 <h3 class="tab__header">Hello "Name Here"</h3>
 
                 <div class="tab__body">
@@ -267,57 +267,138 @@
                 </div>
             </div>
 
-
-            <div class="tab__content" content id="update-profile">
+            <div class="tab__content {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" content id="update-profile">
                 <h3 class="tab__header">Update Profile</h3>
                 <div class="tab__body">
-                    <!-- Profile Update Form -->
                     <form id="profile-update-form" action="{{ route('user.update-profile') }}" method="POST" class="form grid">
                         @csrf
-                        <input type="text" name="name" value="{{ old('name', auth()->user()->name) }}" placeholder="Name" class="form__input @error('name') is-invalid @enderror">
-                        <input type="tel" name="mobile" value="{{ old('mobile', auth()->user()->mobile) }}" placeholder="Phone Number" class="form__input @error('mobile') is-invalid @enderror">
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name', auth()->user()->name) }}"
+                            placeholder="Name"
+                            class="form__input @error('name') is-invalid @enderror">
+                        @error('name')
+                        <div class="error">{{ $message }}</div>
+                        @enderror
+
+                        <input
+                            type="tel"
+                            name="mobile"
+                            value="{{ old('mobile', auth()->user()->mobile) }}"
+                            placeholder="Phone Number"
+                            class="form__input @error('mobile') is-invalid @enderror">
+                        @error('mobile')
+                        <div class="error">{{ $message }}</div>
+                        @enderror
 
                         <div>
-                            <input type="tel" name="mobile" placeholder="Enter OTP" class="form__input">
-                            <button class="btn btn--md">Get OTP</button>
-                        </div>
+                            <input
+                                type="tel"
+                                name="otp"
+                                placeholder="Enter OTP"
+                                class="form__input @error('otp') is-invalid @enderror">
 
-                        <div class="form__btn">
-                            <a href="{{url('')}}">
-                                <button class="btn btn--md">
-                                    Update Profile
-                                </button>
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="tab__content" content id="change-password">
-                <h3 class="tab__header">Change Password</h3>
-
-                <div class="tab__body">
-                    <form action="" class="form grid">
-                        <input type="password" placeholder="Old Password" class="form__input">
-                        <input type="password" placeholder="New Password" class="form__input">
-                        <input type="password" placeholder="Confirm Password" class="form__input">
-
-                        <div>
-                            <input type="tel" name="mobile" placeholder="Enter OTP" class="form__input">
-                            <button class="btn btn--md">Get OTP</button>
-                        </div>
-
-                        <div class="form__btn">
-                            <button class="btn btn--md">
-                                Change Password
+                                <button
+                                type="button"
+                                id="get-otp-button"
+                                class="btn btn--md"
+                                data-url="{{ route('sendCode') }}"
+                                data-action="change-password"
+                                data-csrf="{{ csrf_token() }}">
+                                Get OTP
                             </button>
+                            @error('otp')
+                            <div class="error">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form__btn">
+                            <button type="submit" class="btn btn--md">Update Profile</button>
                         </div>
                     </form>
                 </div>
             </div>
+
+
+            <div class="tab__content {{ session('active_tab') == 'change-password' ? 'active-tab' : '' }}" content id="change-password">
+                <h3 class="tab__header">Change Password</h3>
+                <div class="tab__body">
+                    <form action="{{ route('changePassword') }}" method="POST" class="form grid">
+                        @csrf
+                        <!-- Old Password -->
+                        <input
+                            type="password"
+                            name="old_password"
+                            value="{{ old('old_password') }}"
+                            placeholder="Old Password"
+                            class="form__input @error('old_password') is-invalid @enderror">
+                        @error('old_password')
+                        <div class="error">{{ $message }}</div>
+                        @enderror
+
+                        <!-- New Password -->
+                        <input
+                            type="password"
+                            name="new_password"
+                            value="{{ old('new_password') }}"
+                            placeholder="New Password"
+                            class="form__input @error('new_password') is-invalid @enderror">
+                        @error('new_password')
+                        <div class="error">{{ $message }}</div>
+                        @enderror
+
+                        <!-- Confirm New Password -->
+                        <input
+                            type="password"
+                            name="new_password_confirmation"
+                            value="{{ old('new_password_confirmation') }}"
+                            placeholder="Confirm Password"
+                            class="form__input">
+
+                        <!-- OTP -->
+                        <div>
+                            <input
+                                type="tel"
+                                name="otp"
+                                value="{{ old('otp') }}"
+                                placeholder="Enter OTP"
+                                class="form__input @error('otp') is-invalid @enderror">
+                            <button
+                                type="button"
+                                id="get-otp-button"
+                                class="btn btn--md"
+                                data-url="{{ route('sendCode') }}"
+                                data-action="change-password"
+                                data-csrf="{{ csrf_token() }}">
+                                Get OTP
+                            </button>
+                            @error('otp')
+                            <div class="error">{{ $message }}</div>
+                            @enderror
+                            @error('otp')
+                            <div class="error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form__btn">
+                            <button type="submit" class="btn btn--md">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
 </section>
 
 @include('home.footer')
+@endsection
+@section('scripts')
+<script>
+    const activeTab = @json(session('active_tab', 'dashboard'));
+</script>
+
 @endsection

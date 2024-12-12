@@ -11,7 +11,9 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UpdateProfileController;
+
+
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
 
@@ -66,25 +68,15 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::get('/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
         });
 
-        // My Orders
-        // Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
-
-        // User Dashboard
+        // User 
         Route::get('/myaccount', [UserController::class, 'dashboard'])->name('myaccount.dashboard');
 
-
-        // My Orders
-        // Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
-
-        // Show the update profile form
-        Route::get('/update-profile', [userController::class, 'updateProfileForm'])->name('user.update-profile.form');
-
-        // Handle the profile update form submission (with OTP generation)
-        Route::post('/update-profile', [userController::class, 'updateProfile'])->name('user.update-profile');
-
-        // Verify OTP and allow profile update
-        Route::post('/verify-otp', [userController::class, 'verifyOtp'])->name('user.verify-otp');
+        Route::prefix('update-profile')->group(function () {
+            Route::post('/send-code', [UpdateProfileController::class, 'sendCode'])->name('sendCode'); 
+            Route::post('/update-profile', [UpdateProfileController::class, 'updateProfile'])->name('user.update-profile'); 
+            Route::post('/change-password', [UpdateProfileController::class, 'changePassword'])->name('changePassword');
+        });
     });
 });
 

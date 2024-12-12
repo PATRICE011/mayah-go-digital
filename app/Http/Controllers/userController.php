@@ -216,6 +216,7 @@ class userController extends Controller
         ]);          
     }
 
+    // MYACCOUNT
     public function dashboard()
     {
         $user = Auth::user(); // Assuming `Auth::user()` is retrieving from the `users_area` table

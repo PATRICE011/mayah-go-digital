@@ -1,3 +1,66 @@
+// UPDATE PROFILE
+$(document).ready(function () {
+  // Handle tab clicks
+  $('.account__tab').on('click', function () {
+      // Remove active class from all tabs and contents
+      $('.account__tab').removeClass('active-tab');
+      $('.tab__content').removeClass('active-tab');
+
+      // Add active class to the clicked tab and corresponding content
+      $(this).addClass('active-tab');
+      const target = $(this).data('target'); // Get target content's ID
+      $(target).addClass('active-tab');
+  });
+
+  // Use the activeTab variable from the Blade script
+  if (typeof activeTab !== 'undefined' && activeTab) {
+      // Remove active class from all tabs and contents
+      $('.account__tab').removeClass('active-tab');
+      $('.tab__content').removeClass('active-tab');
+
+      // Set the active tab and content based on session
+      const targetTab = $(`[data-target="#${activeTab}"]`);
+      const targetContent = $(`#${activeTab}`);
+      if (targetTab.length && targetContent.length) {
+          targetTab.addClass('active-tab');
+          targetContent.addClass('active-tab');
+      } else {
+          // Default to Dashboard
+          $('[data-target="#dashboard"]').addClass('active-tab');
+          $('#dashboard').addClass('active-tab');
+      }
+  }
+
+  // Handle Get OTP button click
+  $('#get-otp-button').on('click', function () {
+      // Fetch data attributes for configuration
+      const url = $(this).data('url');
+      const action = $(this).data('action');
+      const csrfToken = $(this).data('csrf');
+
+      // Send AJAX POST request to the server
+      $.ajax({
+          url: url,
+          method: 'POST',
+          data: {
+              action: action,
+              _token: csrfToken // CSRF token for security
+          },
+          success: function (response) {
+              // Handle success
+              if (response.message) {
+                  toastr.success(response.message);
+              }
+          },
+          error: function (xhr) {
+              // Handle error
+              const errorMessage = xhr.responseJSON?.error || 'An unexpected error occurred.';
+              toastr.error(errorMessage);
+          }
+      });
+  });
+});
+
 // DYNAMIC STOCK TRACKING IN CART PAGE
 document.addEventListener('DOMContentLoaded', function () {
   const quantityInputs = document.querySelectorAll('.quantity');
