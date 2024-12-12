@@ -72,7 +72,7 @@
                 </li>
 
                 <li>
-                    <a href="" class="footer__link">Order</a>
+                    <a href="{{ url('shop') }}" class="footer__link">Order</a>
                 </li>
             </ul>
         </div>
