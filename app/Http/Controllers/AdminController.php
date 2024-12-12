@@ -52,12 +52,13 @@ class AdminController extends Controller
     // log out
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::guard('web')->logout(); // Use the 'web' guard here
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect('/');
+    
+        return redirect('/'); // Redirect to the desired location
     }
+    
     public function showView($id)
     {
         // Fetch the order with related user, order details, and order items

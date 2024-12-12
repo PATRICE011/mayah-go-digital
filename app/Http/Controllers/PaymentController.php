@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
-
+use Illuminate\Support\Facades\DB;
 class PaymentController extends Controller
 {
     // Handle successful payment
@@ -55,7 +55,7 @@ class PaymentController extends Controller
 
                 // Extract payment details
                 $paymentMethod = $response->data->attributes->payments[0]->attributes->source->type ?? null;
-                $totalAmount = $response->data->attributes->payments[0]->attributes->amount / 100 ?? null; // Convert cents to PHP
+                $totalAmount = $response->data->attributes->payments[0]->attributes->amount / 100 ?? null; 
 
                 Log::info('Payment Method: ' . $paymentMethod);
                 Log::info('Total Amount: ' . $totalAmount);
@@ -87,7 +87,7 @@ class PaymentController extends Controller
                         [
                             'order_id_custom' => $existingOrderDetails->order_id_custom ?? $customOrderId,
                             'payment_method' => $paymentMethod,
-                            'total_amount' => $totalAmount,
+                            // 'total_amount' => $totalAmount,
                         ]
                     );
                     Log::info('Orderdetails saved successfully.');
@@ -137,15 +137,34 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'No matching pending orders found.');
         }
 
+        // Fetch the cart ID
+        $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
+        if (!$cartId) {
+            return redirect()->back()->with('error', 'Cart not found.');
+        }
+
+        // Calculate total amount from the cart
+        $totalAmount = DB::table('cart_items')
+            ->where('cart_id', $cartId)
+            ->select(DB::raw('SUM(price * quantity) as total_amount'))
+            ->value('total_amount');
+
+        if (!$totalAmount || $totalAmount <= 0) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
         // Ensure the order has items
         if ($order->orderItems()->count() > 0) {
-            // Generate a unique custom order ID for the order
+            // Generate a unique custom order ID
             $customOrderId = $this->generateUniqueOrderId();
 
-            // Update or create the custom order ID in Orderdetails
+            // Update or create the custom order ID and total amount in Orderdetails
             Orderdetails::updateOrCreate(
                 ['order_id' => $order->id],
-                ['order_id_custom' => $customOrderId]
+                [
+                    'order_id_custom' => $customOrderId,
+                    'total_amount' => $totalAmount,
+                ]
             );
 
             Log::info('Generated and saved custom order ID: ' . $customOrderId);
@@ -155,7 +174,7 @@ class PaymentController extends Controller
             foreach ($order->orderItems as $orderItem) {
                 $lineItems[] = [
                     'currency' => 'PHP',
-                    'amount' => $orderItem->price * 100, // Multiply by 100 to convert to cents
+                    'amount' => $orderItem->price * 100, // Convert to cents
                     'name' => $orderItem->product->product_name,
                     'quantity' => $orderItem->quantity,
                 ];
@@ -167,8 +186,8 @@ class PaymentController extends Controller
                     'attributes' => [
                         'line_items' => $lineItems,
                         'payment_method_types' => ['gcash', 'paymaya'],
-                        'success_url' => route('payment.success'),  
-                        'cancel_url' => route('payment.cancel'),  
+                        'success_url' => route('payment.success'),
+                        'cancel_url' => route('payment.cancel'),
                     ],
                 ],
             ];
@@ -178,19 +197,16 @@ class PaymentController extends Controller
                 $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions')
                     ->withHeader('Content-Type: application/json')
                     ->withHeader('accept: application/json')
-                    ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))  // PayMongo Authorization Key
-                    ->withOption('SSL_VERIFYPEER', false) // Disable SSL verification (you can enable it in production)
+                    ->withHeader('Authorization: Basic ' . env('AUTH_PAY'))
+                    ->withOption('SSL_VERIFYPEER', false)
                     ->withData($data)
                     ->asJson()
                     ->post();
 
-                // If the API response contains the data
                 if (isset($response->data)) {
-                    // Store session and order data in the session
                     Session::put('session_id', $response->data->id);
                     Session::put('order_id', $order->id);
 
-                    // Redirect to the PayMongo checkout page
                     return redirect()->to($response->data->attributes->checkout_url);
                 } else {
                     Log::error('PayMongo API response error', (array)$response);
@@ -204,6 +220,7 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', 'Your order has no items.');
         }
     }
+
 
     public function postSuccess()
     {

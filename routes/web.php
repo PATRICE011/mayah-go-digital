@@ -67,7 +67,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         });
 
         // My Orders
-        Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
+        // Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
 
         // User Dashboard
@@ -75,7 +75,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 
 
         // My Orders
-        Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
+        // Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
         // Show the update profile form
         Route::get('/update-profile', [userController::class, 'updateProfileForm'])->name('user.update-profile.form');
@@ -132,6 +132,6 @@ Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wis
 
 // Routes for checkout and my account
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
-Route::get('/orderdetails', [UserController::class, 'orderDetails']);
+Route::get('/orderdetails/{orderId}', [UserController::class, 'orderDetails']);
 
 Route::post('/filter-products', [UserController::class, 'filterProducts']);

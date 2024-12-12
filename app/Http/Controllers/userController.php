@@ -87,7 +87,7 @@ class userController extends Controller
 
 
         // Pass the product to the view
-        return view('home.details', compact('product','cartCount','wishlistCount'));
+        return view('home.details', compact('product', 'cartCount', 'wishlistCount'));
     }
 
 
@@ -97,45 +97,95 @@ class userController extends Controller
     }
 
 
-    public function orderDetails()
+    public function orderDetails($orderId)
     {
-        return view('home.orderdetails');
+        // Fetch the main order and its details
+        $order = DB::table('orders')
+            ->where('orders.id', $orderId)
+            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+            ->select(
+                'orders.id as order_id',
+                'orderdetails.order_id_custom',
+                'orders.status',
+                'orderdetails.payment_method',
+                'orderdetails.total_amount',
+                'orders.created_at'
+            )
+            ->first();
+    
+        // Check if the order exists
+        if (!$order) {
+            abort(404, 'Order not found.');
+        }
+    
+        // Enforce payment-first logic:
+        // If the order is paid, ensure the status is always 'pending'
+        if ($order->status === 'paid') {
+            $order->status = 'pending';
+        }
+    
+        // Dynamically set the payment status (assume 'Paid' for all orders)
+        $order->payment_status = 'Paid';
+    
+        // Fetch all items in the order
+        $orderItems = DB::table('order_items')
+            ->where('order_id', $orderId)
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->select(
+                'products.product_name',
+                'order_items.quantity',
+                'order_items.price'
+            )
+            ->get();
+    
+        return view('home.orderdetails', [
+            'order' => $order,
+            'orderItems' => $orderItems,
+        ]);
     }
+    
 
     public function dashboard()
     {
-        // Default cart count and wishlist count to 0
-        $user = Auth::user();
+        $user = Auth::user(); // Assuming `Auth::user()` is retrieving from the `users_area` table
         $cartCount = 0;
         $wishlistCount = 0;
+        $orders = [];
 
-        // If the user is logged in, fetch the cart item count and wishlist count
         if ($user) {
-            // Fetch the cart's ID for the authenticated user
-            $cartId = DB::table('carts')
-                ->where('user_id', $user->id)
-                ->value('id'); // Get the cart ID for the current user
-
-            // If the cart exists, get the count of items
+            // Fetch cart item count
+            $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
             if ($cartId) {
-                $cartCount = DB::table('cart_items')
-                    ->where('cart_id', $cartId)
-                    ->sum('quantity'); // Sum the quantity of items in the cart
+                $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
             }
 
-            // Get the count of products in the user's wishlist
-            $wishlistCount = DB::table('wishlists')
+            // Fetch wishlist count
+            $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
+
+            // Fetch orders for the user
+            $orders = DB::table('orders')
                 ->where('user_id', $user->id)
-                ->count(); // Count the number of products in the wishlist
+                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
+                ->select(
+                    'orders.id as order_id',
+                    'orders.status',
+                    'orderdetails.order_id_custom',
+                    'orderdetails.total_amount',
+                    'orders.created_at'
+                )
+                ->orderBy('orders.created_at', 'desc')
+                ->get();
         }
 
-        // Pass cartCount and wishlistCount to the view
         return view('home.myaccount', [
             'activeSection' => 'dashboard',
             'cartCount' => $cartCount,
-            'wishlistCount' => $wishlistCount
+            'wishlistCount' => $wishlistCount,
+            'orders' => $orders, // Pass the orders to the Blade view
         ]);
     }
+
+
     public function filterProducts(Request $request)
     {
         $categories = $request->input('categories', []);

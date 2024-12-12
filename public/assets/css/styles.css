@@ -1385,13 +1385,13 @@ input[type="number"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* margin: 20px 0; */
 }
 
 .order-progress-step {
   text-align: center;
   flex: 1;
   position: relative;
+  color: #777; /* Default text color */
 }
 
 .order-progress-step::before {
@@ -1410,10 +1410,14 @@ input[type="number"] {
   background-color: #4caf50;
 }
 
+.order-progress-step.active::before {
+  background-color: #ffc107; /* Highlight active step */
+}
+
 .order-progress-step::after {
   content: "";
   position: absolute;
-  top: 25%;
+  top: 50%;
   left: 0%;
   transform: translateX(-50%);
   width: 100%;
@@ -1429,6 +1433,12 @@ input[type="number"] {
 .order-progress-step.completed::after {
   background-color: #4caf50;
 }
+
+.order-progress-step.active {
+  font-weight: bold;
+  color: #000; /* Highlight active step text */
+}
+/* hehe */
 
 .order-details {
   display: grid;

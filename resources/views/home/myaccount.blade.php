@@ -231,45 +231,42 @@
                 <div class="tab__body">
                     <table class="placed__order-table">
                         <tr>
-                            <th>Orders</th>
+                            <th>Order #</th>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
 
+                        @forelse ($orders as $order)
                         <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
+                            <td>{{ $order->order_id_custom }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>
-                                <a href="{{url('/orderdetails')}}" class="view__order">View</a>
+                                @if ($order->status == 'pending')
+                                Not Paid
+                                @else
+                                {{ ucfirst($order->status) }}
+                                @endif
+                            </td>
+                            <td>₱ {{ number_format($order->total_amount, 2) }}</td>
+                            <td>
+                                @if ($order->status == 'pending')
+                                <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
+                                @else
+                                <a href="{{ url('/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
+                                @endif
                             </td>
                         </tr>
-
+                        @empty
                         <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
-                            <td>
-                                <a href="#" class="view__order">View</a>
-                            </td>
+                            <td colspan="6" style="text-align: center;">No orders found.</td>
                         </tr>
-
-                        <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
-                            <td>
-                                <a href="#" class="view__order">View</a>
-                            </td>
-                        </tr>
+                        @endforelse
                     </table>
                 </div>
             </div>
+
 
             <div class="tab__content" content id="update-profile">
                 <h3 class="tab__header">Update Profile</h3>
