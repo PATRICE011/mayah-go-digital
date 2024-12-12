@@ -111,13 +111,14 @@
 
 <section class="cart section--lg container">
    @if($cartItems->isEmpty())
-   <div class="empty-cart-message">
+   <div class="empty__cart-message">
       <h2>Your cart is empty!</h2>
       <p>Looks like you haven't added anything to your cart yet. Start shopping now.</p>
       <a href="{{ url('/shop') }}" class="btn flex btn--md">
          <i class='bx bx-shopping-bag'></i> Continue Shopping
       </a>
    </div>
+
    @else
    <!-- Start of Cart Form -->
    @foreach ($cartItems as $cartItem)

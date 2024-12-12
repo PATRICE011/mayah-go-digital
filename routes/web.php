@@ -129,6 +129,8 @@ Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
 Route::get('/details/{id}', [UserController::class, 'details'])->name('home.details');
 Route::get('/cart', [cartController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
+Route::get('/about', [UserController::class, 'about'])->name('home.about');
+Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
 
 // Routes for checkout and my account
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');

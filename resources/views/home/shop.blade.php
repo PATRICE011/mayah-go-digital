@@ -154,12 +154,9 @@
                             <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
                                 @csrf
                             </form>
+
                             <a href="#" class="action__btn" aria-label="Add To Wishlist" onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
                                 <i class='bx bx-heart'></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle'></i>
                             </a>
                         </div>
 

@@ -1030,6 +1030,16 @@ input[type="number"] {
 }
 
 /*=============== CART ===============*/
+.empty__cart-message h2,
+.empty__wishlist-message h2{
+  margin-bottom: 0.5rem;
+}
+
+.empty__cart-message p,
+.empty__wishlist-message p{
+  margin-bottom: 0.5rem;
+}
+
 .table__container{
   overflow-x: auto;
 }
@@ -1184,9 +1194,87 @@ input[type="number"] {
   display: inline-flex;
 }
 
-/*=============== CART OTHERS ===============*/
+/*=============== ABOUT ===============*/
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers content horizontally */
+  justify-content: center; /* Centers content vertically */
+  text-align: center; /* Centers the text */
+}
 
-/*=============== WISHLIST ===============*/
+.about__container {
+  display: flex;
+  flex-direction: column; /* Ensures content stacks vertically */
+  align-items: center; /* Centers all content horizontally */
+  justify-content: center; /* Centers content vertically */
+  max-width: 700px;
+}
+
+.about__title{
+  margin-bottom: 0.5rem;
+}
+
+.about__title,
+.about__description {
+  /* text-align: center; Centers the text */
+  text-align: justify;
+}
+
+.about__description span{
+  color: var(--first-color);
+  font-weight: var(--weight-700);
+}
+
+/*=============== PRIVACY POLICY ===============*/
+.policy{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: justify;
+}
+
+.policy__title{
+  margin-bottom: 1rem;
+}
+
+.policy__container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 700px;
+}
+
+.policy__item{
+  margin-bottom: 1rem;
+}
+
+.policy__item-title{
+  font-size: var(--large-font-size);
+  margin-bottom: 0.5rem;
+}
+
+.policy__item-description{
+  text-align: justify;
+}
+
+.policy__item-description span{
+  color: var(--title-color);
+  font-weight: var(--weight-600);
+}
+
+.policy__item-list{
+  list-style-type: disc;
+  padding-left: 30px;
+  margin-bottom: 10px;
+}
+
+.policy__item-list span{
+  color: var(--title-color);
+  font-weight: var(--weight-600);
+}
 
 /*=============== CHECKOUT ===============*/
 
