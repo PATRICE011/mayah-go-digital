@@ -223,44 +223,46 @@ class userController extends Controller
 
     // MYACCOUNT
     public function dashboard()
-    {
-        $user = Auth::user(); // Assuming `Auth::user()` is retrieving from the `users_area` table
-        $cartCount = 0;
-        $wishlistCount = 0;
-        $orders = [];
+{
+    $user = Auth::user(); // Assuming `Auth::user()` is retrieving from the `users_area` table
+    $cartCount = 0;
+    $wishlistCount = 0;
+    $orders = [];
 
-        if ($user) {
-            // Fetch cart item count
-            $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
-            if ($cartId) {
-                $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
-            }
-
-            // Fetch wishlist count
-            $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
-
-            // Fetch orders for the user
-            $orders = DB::table('orders')
-                ->where('user_id', $user->id)
-                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
-                ->select(
-                    'orders.id as order_id',
-                    'orders.status',
-                    'orderdetails.order_id_custom',
-                    'orderdetails.total_amount',
-                    'orders.created_at'
-                )
-                ->orderBy('orders.created_at', 'desc')
-                ->get();
+    if ($user) {
+        // Fetch cart item count
+        $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
+        if ($cartId) {
+            $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
         }
 
-        return view('home.myaccount', [
-            'activeSection' => 'dashboard',
-            'cartCount' => $cartCount,
-            'wishlistCount' => $wishlistCount,
-            'orders' => $orders, // Pass the orders to the Blade view
-        ]);
+        // Fetch wishlist count
+        $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
+
+        // Fetch orders for the user
+        $orders = DB::table('orders')
+            ->where('orders.user_id', $user->id)
+            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id') // Join with order_items
+            ->select(
+                'orders.id as order_id',
+                'orders.status',
+                'orderdetails.order_id_custom',
+                'orders.created_at',
+                DB::raw('SUM(order_items.quantity * order_items.price) as subtotal') // Compute subtotal
+            )
+            ->groupBy('orders.id', 'orders.status', 'orderdetails.order_id_custom', 'orders.created_at') // Group by order fields
+            ->orderBy('orders.created_at', 'desc')
+            ->get();
     }
+
+    return view('home.myaccount', [
+        'activeSection' => 'dashboard',
+        'cartCount' => $cartCount,
+        'wishlistCount' => $wishlistCount,
+        'orders' => $orders, // Pass the orders to the Blade view
+    ]);
+}
 
 
     public function filterProducts(Request $request)

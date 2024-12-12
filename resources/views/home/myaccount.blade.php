@@ -55,7 +55,7 @@
 
                 @auth
                 <li class="nav__item">
-                    <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+                    <a href="{{url('user/myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -249,7 +249,7 @@
                                 {{ ucfirst($order->status) }}
                                 @endif
                             </td>
-                            <td>₱ {{ number_format($order->total_amount, 2) }}</td>
+                            <td>₱ {{ number_format($order->subtotal, 2) }}</td>
                             <td>
                                 @if ($order->status == 'pending')
                                 <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
