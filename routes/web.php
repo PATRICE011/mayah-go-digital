@@ -41,7 +41,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/home', [HomeController::class, 'home']);
     // User Profile & Settings
     Route::prefix('user')->group(function () {
-        
+
         Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
 
         // Product Search
@@ -52,7 +52,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             // Route::get('/show', [CartController::class, 'showCart'])->name('home.cartinside');
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
-            Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
+            Route::post('/update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
         });
         Route::prefix('wishlist')->group(function () {
             Route::post('/add/{productId}', [WishlistController::class, 'addToWishlist'])->name('addtowish');
@@ -60,9 +60,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         });
         // Payment Routes
         Route::prefix('payment')->group(function () {
-            Route::match(['get', 'post'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
-            Route::get('/create/{orderId}', [PaymentController::class, 'createPaymentTest'])->name('cart.pay');
+            Route::match(['get', 'post','delete'], '/checkout', [CartController::class, 'processCheckout'])->name('goCheckout');
+            Route::get('/create/{orderId}', [PaymentController::class, 'createPayment'])->name('cart.pay');
             Route::match(['get', 'post'], '/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+            Route::get('/cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
         });
 
         // My Orders
@@ -71,19 +72,19 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 
         // User Dashboard
         Route::get('/myaccount', [UserController::class, 'dashboard'])->name('myaccount.dashboard');
-        
 
-       // My Orders
-       Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
-       // Show the update profile form
-       Route::get('/update-profile', [userController::class, 'updateProfileForm'])->name('user.update-profile.form');
+        // My Orders
+        Route::get('/myorders/view{section?}', [SettingsController::class, 'viewMyorders'])->name('home.viewmyorders');
 
-       // Handle the profile update form submission (with OTP generation)
-       Route::post('/update-profile', [userController::class, 'updateProfile'])->name('user.update-profile');
+        // Show the update profile form
+        Route::get('/update-profile', [userController::class, 'updateProfileForm'])->name('user.update-profile.form');
 
-       // Verify OTP and allow profile update
-       Route::post('/verify-otp', [userController::class, 'verifyOtp'])->name('user.verify-otp');
+        // Handle the profile update form submission (with OTP generation)
+        Route::post('/update-profile', [userController::class, 'updateProfile'])->name('user.update-profile');
+
+        // Verify OTP and allow profile update
+        Route::post('/verify-otp', [userController::class, 'verifyOtp'])->name('user.verify-otp');
     });
 });
 
@@ -125,7 +126,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->group(function () {
 
 // Public User Routes (No authentication required)
 Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
-Route::get('/details', [UserController::class, 'details'])->name('home.details');
+Route::get('/details/{id}', [UserController::class, 'details'])->name('home.details');
 Route::get('/cart', [cartController::class, 'cart'])->name('home.cart');
 Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
 Route::get('/about', [UserController::class, 'about'])->name('home.about');

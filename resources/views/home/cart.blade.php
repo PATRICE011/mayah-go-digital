@@ -1,5 +1,5 @@
 @extends('home.layout')
-@section('title','Mayah Store - Cart')
+@section('title', 'Mayah Store - Cart')
 
 <header class="header" id="header">
    <div class="header__top">
@@ -16,20 +16,16 @@
 
          <div>
             @guest
-            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
             @else
-            <!-- For authenticated users -->
-            <!-- For authenticated users -->
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                @csrf
                <button type="submit" class="header__top-action-btn">Logout</button>
             </form>
             @endauth
-
             <span> / </span>
             <span class="header__top-action">
                Welcome, <span>{{ Auth::user()->name }}</span>!
@@ -63,7 +59,6 @@
 
          <div class="header__search">
             <input type="text" placeholder="Search Item" class="form__input">
-
             <button class="search__btn">
                <i class='bx bx-search search'></i>
             </button>
@@ -86,7 +81,6 @@
 
 @section('content')
 
-<!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
    <ul class="breadcrumb__list flex container">
       <li>
@@ -96,9 +90,7 @@
       </li>
 
       <li>
-         <span class="breadcrumb__link">
-            >
-         </span>
+         <span class="breadcrumb__link"> > </span>
       </li>
 
       <li>
@@ -108,15 +100,11 @@
       </li>
 
       <li>
-         <span class="breadcrumb__link">
-            >
-         </span>
+         <span class="breadcrumb__link"> > </span>
       </li>
 
       <li>
-         <span class="breadcrumb__link">
-            Cart
-         </span>
+         <span class="breadcrumb__link"> Cart </span>
       </li>
    </ul>
 </section>
@@ -132,147 +120,136 @@
    </div>
 
    @else
-   <div class="table__container">
-      <table class="table">
-         <tr class="table__row">
-            <th>Image</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-            <th>Remove</th>
-         </tr>
+   <!-- Start of Cart Form -->
+   @foreach ($cartItems as $cartItem)
+   <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
+      @csrf
+      @method('DELETE')
+   </form>
+   <form action="{{ route('goCheckout') }}" method="POST">
+      @csrf
+      <div class="table__container">
+         <table class="table">
+            <tr class="table__row">
+               <th>Image</th>
+               <th>Name</th>
+               <th>Price</th>
+               <th>Quantity</th>
+               <th>Subtotal</th>
+               <th>Remove</th>
+            </tr>
 
-         @foreach ($cartItems as $cartItem)
-         <tr>
-            <td>
-               <img src="{{ asset('assets/img/'.$cartItem->product->product_image) }}" alt="{{ $cartItem->product->name }}" class="table__img">
-            </td>
 
-            <td>
-               <h2 class="table__title">{{ $cartItem->product->product_name }}</h2>
-               <p class="table__description">{{ $cartItem->product->product_description }}</p>
-            </td>
+            <tr class="cart-item-row">
+               <td>
+                  <img src="{{ asset('assets/img/'.$cartItem->product->product_image) }}" alt="{{ $cartItem->product->product_name }}" class="table__img">
+               </td>
+               <td>
+                  <h2 class="table__title">{{ $cartItem->product->product_name }}</h2>
+                  <p class="table__description">{{ $cartItem->product->product_description }}</p>
+               </td>
+               <td>
+                  <span class="table__price" data-price="{{ $cartItem->product->product_price }}">₱ {{ number_format($cartItem->product->product_price, 2) }}</span>
+               </td>
+               <td>
+                  <!-- Quantity input with data-stock for available stock -->
+                  <input type="number" name="quantities[{{ $cartItem->id }}]" value="{{ $cartItem->quantity }}" class="quantity" min="1" max="{{ $cartItem->product->product_stocks }}"
+                     data-stock="{{ $cartItem->product->product_stocks }}">
+                  <!-- <span class="stock-info">Available: {{ $cartItem->product->product_stocks }}</span> -->
+               </td>
+               <td>
+                  <span class="table__subtotal">₱ {{ number_format($cartItem->product->product_price * $cartItem->quantity, 2) }}</span>
+               </td>
+               <td>
+                  <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button-{{ $cartItem->id }}').submit();"></i>
+               </td>
+            </tr>
+            @endforeach
 
-            <td>
-               <span class="table__price">₱ {{ number_format($cartItem->product->product_price, 2) }}</span>
-            </td>
-
-            <td>
-               <input type="number" value="{{ $cartItem->quantity }}" class="quantity" data-id="{{ $cartItem->id }}">
-            </td>
-
-            <td>
-               <span class="table__subtotal">₱ {{ number_format($cartItem->product->product_price * $cartItem->quantity, 2) }}</span>
-            </td>
-
-            <td>
-               <form id="destroy-button-{{ $cartItem->id }}" action="{{ route('cartDestroy', $cartItem->id) }}" method="POST">
-                  @csrf
-                  @method('DELETE')
-               </form>
-               <i class='bx bx-trash table__trash' onclick="document.getElementById('destroy-button-{{ $cartItem->id }}').submit();"></i>
-            </td>
-
-         </tr>
-         @endforeach
-      </table>
-   </div>
-
-   <div class="cart__actions">
-      <a href="{{ url('/shop') }}" class="btn flex btn--md">
-         <i class='bx bx-shopping-bag'></i> Continue Shopping
-      </a>
-   </div>
-
-   <div class="divider">
-      <i class='bx bx-smile'></i>
-   </div>
-
-   <div class="cart__group grid">
-      <div>
-         <div class="cart__coupon">
-            <h3 class="section__title">Apply Coupon</h3>
-
-            <form action="" class="coupon__form form grid">
-               <div class="form__group grid">
-                  <input type="text" placeholder="Enter your coupon" class="form__input">
-
-                  <div class="form__btn">
-                     <button class="btn flex btn--sm">
-                        <i class='bx bx-shuffle'></i> Apply
-                     </button>
-                  </div>
-               </div>
-            </form>
-         </div>
+         </table>
       </div>
 
-      <div class="cart__total">
-         <h3 class="section__title">Cart Total</h3>
+      <div class="cart__actions">
+         <a href="{{ url('/shop') }}" class="btn flex btn--md">
+            <i class='bx bx-shopping-bag'></i> Continue Shopping
+         </a>
+      </div>
 
-         <table class="cart__total-table">
-            <tr>
-               <td>
-                  <span class="cart__total-title">
-                     Subtotal
-                  </span>
-               </td>
+      <div class="divider">
+         <i class='bx bx-smile'></i>
+      </div>
 
-               <td>
-                  <span class="cart__total-price">
-                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
-                  </span>
-               </td>
-            </tr>
+      <div class="cart__group grid">
+         <div>
+            <div class="cart__coupon">
+               <h3 class="section__title">Apply Coupon</h3>
+               <form action="" class="coupon__form form grid">
+                  <div class="form__group grid">
+                     <input type="text" placeholder="Enter your coupon" class="form__input">
+                     <div class="form__btn">
+                        <button class="btn flex btn--sm">
+                           <i class='bx bx-shuffle'></i> Apply
+                        </button>
+                     </div>
+                  </div>
+               </form>
+            </div>
+         </div>
 
-            <tr>
-               <td>
-                  <span class="cart__total-title">
-                     Discount
-                  </span>
-               </td>
+         <div class="cart__total">
+            <h3 class="section__title">Cart Total</h3>
+            <table class="cart__total-table">
+               <tr>
+                  <td>
+                     <span class="cart__total-title">
+                        Subtotal
+                     </span>
+                  </td>
+                  <td>
+                     <span class="cart__total-price" id="subtotal">
+                        ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
+                     </span>
+                  </td>
+               </tr>
 
-               <td>
-                  <span class="cart__total-price">
-                     ₱ 0.00
-                  </span>
-               </td>
-            </tr>
+               <tr>
+                  <td>
+                     <span class="cart__total-title">
+                        Discount
+                     </span>
+                  </td>
+                  <td>
+                     <span class="cart__total-price">
+                        ₱ 0.00
+                     </span>
+                  </td>
+               </tr>
 
-            <tr>
-               <td>
-                  <span class="cart__total-title">
-                     Total
-                  </span>
-               </td>
+               <tr>
+                  <td>
+                     <span class="cart__total-title">
+                        Total
+                     </span>
+                  </td>
+                  <td>
+                     <span class="cart__total-price" id="total">
+                        ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
+                     </span>
+                  </td>
+               </tr>
+            </table>
 
-               <td>
-                  <span class="cart__total-price">
-                     ₱ {{ number_format($cartItems->sum(function ($item) { return $item->quantity * $item->product->product_price; }), 2) }}
-                  </span>
-               </td>
-            </tr>
-         </table>
-
-         @auth
-         <!-- Hidden form to submit to checkout route -->
-         <form id="checkout-button" action="{{ route('goCheckout') }}" method="POST" style="display: inline;">
-            @csrf
-            <!-- Use a button for submission -->
+            @auth
             <button type="submit" class="btn flex btn--md">
                <i class='bx bx-package'></i> Proceed to Checkout
             </button>
-         </form>
-         @endauth
-
-
+            @endauth
+         </div>
       </div>
-   </div>
+   </form>
+   <!-- End of Cart Form -->
    @endif
 </section>
-
-
 
 @include('home.footer')
 

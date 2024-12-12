@@ -1,3 +1,57 @@
+// DYNAMIC STOCK TRACKING IN CART PAGE
+document.addEventListener('DOMContentLoaded', function () {
+  const quantityInputs = document.querySelectorAll('.quantity');
+  const subtotalElement = document.getElementById('subtotal');
+  const totalElement = document.getElementById('total');
+
+  // Function to update totals dynamically
+  function updateCartTotals() {
+      let total = 0;
+
+      // Loop through each cart item row
+      document.querySelectorAll('.cart-item-row').forEach(row => {
+          const quantityInput = row.querySelector('.quantity');
+          const priceElement = row.querySelector('.table__price');
+          const subtotalElement = row.querySelector('.table__subtotal');
+          const price = parseFloat(priceElement.dataset.price) || 0; // Default to 0 if invalid price
+          const quantity = parseInt(quantityInput.value) || 0; // Default to 0 if invalid quantity
+
+          // Calculate the subtotal for this row
+          const rowSubtotal = price * quantity;
+          subtotalElement.textContent = `₱ ${rowSubtotal.toFixed(2)}`;
+
+          total += rowSubtotal;
+      });
+
+      // Update the grand total
+      document.getElementById('subtotal').textContent = `₱ ${total.toFixed(2)}`;
+      document.getElementById('total').textContent = `₱ ${total.toFixed(2)}`;
+  }
+
+  // Add event listeners for quantity changes
+  quantityInputs.forEach(input => {
+      input.addEventListener('input', function (event) {
+          const maxStock = parseInt(input.dataset.stock); // Get max stock
+          let quantity = parseInt(input.value); // Get the entered quantity
+
+          // Ensure quantity does not exceed the available stock
+          if (quantity > maxStock) {
+              toastr.warning(`You cannot add more than ${maxStock} items in stock!`, 'Quantity Limit Exceeded', {
+                  positionClass: "toast-top-right", // Toast position
+                  timeOut: 5000, // Duration of the toast message
+              });
+
+              input.value = maxStock; // Set the quantity to the max stock
+          }
+
+          // Call the update totals function after quantity change
+          updateCartTotals();
+      });
+  });
+
+  // Initial total calculation
+  updateCartTotals();
+});
 document.querySelectorAll('.brand-filter').forEach(filter => {
   filter.addEventListener('change', function () {
       const selectedCategories = Array.from(document.querySelectorAll('.brand-filter:checked')).map(input => input.value);
@@ -21,6 +75,7 @@ document.querySelectorAll('.brand-filter').forEach(filter => {
       .catch(error => console.error('Error:', error));
   });
 });
+
 
 /*=============== IMAGE GALLERY ===============*/
 function imgGallery(){
