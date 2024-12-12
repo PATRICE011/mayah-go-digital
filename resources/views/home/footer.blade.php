@@ -28,7 +28,7 @@
             
             <ul class="footer__links">
                 <li>
-                    <a href="" class="footer__link">About Us</a>
+                    <a href="{{url('/about')}}" class="footer__link">About Us</a>
                 </li>
 
                 <li>
@@ -36,7 +36,7 @@
                 </li>
 
                 <li>
-                    <a href="" class="footer__link">Privacy Policy</a>
+                    <a href="{{url('/privacypolicy')}}" class="footer__link">Privacy Policy</a>
                 </li>
 
                 <li>

@@ -14,22 +14,20 @@
          <div>
             @guest
             <!-- For guest (non-authenticated users) -->
-            <!-- For guest (non-authenticated users) -->
             <a href="{{url('user/login')}}" class="header__top-action">Login</a>
             <span> / </span>
             <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
             @else
-            <!-- For authenticated users -->
-            <!-- For authenticated users -->
 
+            <!-- For authenticated users -->
             @auth
             <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
-               @csrf
-               <button type="submit" class="header__top-action-btn">Logout</button>
+               <!-- @csrf
+               <button type="submit" class="header__top-action-btn">Logout</button> -->
             </form>
             @endauth
 
-            <span> / </span>
+            <!-- <span> / </span> -->
             <span class="header__top-action">
                Welcome, <span>{{ Auth::user()->name }}</span>!
             </span>

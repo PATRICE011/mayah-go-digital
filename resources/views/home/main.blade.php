@@ -48,9 +48,9 @@
                 </a>
 
                 <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
+                    <img src="{{ asset('assets/img/CHEESE_WIZ.png') }}" alt="Biscuits">
 
-                    <h3 class="category__title">Biscuits</h3>
+                    <h3 class="category__title">Dairy</h3>
                 </a>
 
                 <a href="{{url('/shop')}}" class="category__item swiper-slide">
@@ -109,10 +109,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-pink">Hot</div>
@@ -151,10 +147,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-green">Hot</div>
@@ -192,10 +184,6 @@
 
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
                                 </a>
                             </div>
 
@@ -239,10 +227,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-pink">Hot</div>
@@ -280,10 +264,6 @@
 
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
                                 </a>
                             </div>
 
@@ -323,10 +303,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-orange">Hot</div>
@@ -364,10 +340,6 @@
 
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
                                 </a>
                             </div>
 
@@ -411,10 +383,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-pink">Hot</div>
@@ -452,10 +420,6 @@
 
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
                                 </a>
                             </div>
 
@@ -495,10 +459,6 @@
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
                                 </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
-                                </a>
                             </div>
 
                             <div class="product__badge light-orange">Hot</div>
@@ -536,10 +496,6 @@
 
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Compare">
-                                    <i class='bx bx-shuffle' ></i>
                                 </a>
                             </div>
 
@@ -674,10 +630,6 @@
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
                             </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
-                            </a>
                         </div>
 
                         <div class="product__badge light-pink">Hot</div>
@@ -716,10 +668,6 @@
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
                             </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
-                            </a>
                         </div>
 
                         <div class="product__badge light-green">Hot</div>
@@ -757,10 +705,6 @@
 
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
                             </a>
                         </div>
 
@@ -800,10 +744,6 @@
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
                             </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
-                            </a>
                         </div>
 
                         <div class="product__badge light-pink">Hot</div>
@@ -842,10 +782,6 @@
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
                             </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
-                            </a>
                         </div>
 
                         <div class="product__badge light-green">Hot</div>
@@ -883,11 +819,7 @@
 
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Compare">
-                                <i class='bx bx-shuffle' ></i>
-                            </a>
+                            </a>    
                         </div>
 
                         <div class="product__badge light-orange">Hot</div>
