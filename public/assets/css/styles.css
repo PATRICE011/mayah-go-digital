@@ -1675,6 +1675,15 @@ input[type="number"] {
 .cart__btn.low-stock-btn {
   cursor: pointer;
 }
+/* UPDATE PROFILE ACTIVE TAB DEC 12, 2024 */
+
+.tab__content {
+  display: none;
+}
+
+.tab__content.active-tab {
+  display: block;
+}
 
 /* INVOICE CSS */
 .text-dark{
@@ -1722,17 +1731,6 @@ input[type="number"] {
   min-height: 920px;
 }
 
-<<<<<<< HEAD
-/* UPDATE PROFILE ACTIVE TAB DEC 12, 2024 */
-
-.tab__content {
-  display: none;
-}
-
-.tab__content.active-tab {
-  display: block;
-}
-=======
 .invoice-head-top-left img{
   width: 100px;
   border-radius: 10px;
@@ -1822,4 +1820,3 @@ input[type="number"] {
       display: none;
   }
 }
->>>>>>> 5d3a879755d6b77e29e8590a4506f1bdf9fb2229

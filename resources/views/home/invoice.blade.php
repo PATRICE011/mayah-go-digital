@@ -1,6 +1,8 @@
 @extends('home.layout')
-@section('title','Mayah Store - Invoice')
 
+@section('title', 'Mayah Store - Invoice')
+
+@section('content')
 <div class="invoice-wrapper" id="print-area">
     <div class="invoice">
         <div class="invoice-container">
@@ -36,7 +38,6 @@
                         </ul>
                     </div>
 
-                    <!-- Static Pay To Section -->
                     <div class="invoice-head-bottom-right">
                         <ul class="text-end">
                             <li class="text-bold">Pay To:</li>
@@ -63,13 +64,13 @@
 
                         <tbody>
                             @foreach ($order as $item)
-                                <tr>
-                                    <td>{{ $item->product_name }}</td>
-                                    <td>{{ $item->category_name }}</td> 
-                                    <td>₱{{ number_format($item->price, 2) }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td class="text-end">₱{{ number_format($item->amount, 2) }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ $item->product_name }}</td>
+                                <td>{{ $item->category_name }}</td>
+                                <td>₱{{ number_format($item->price, 2) }}</td>
+                                <td>{{ $item->quantity }}</td>
+                                <td class="text-end">₱{{ number_format($item->amount, 2) }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -91,3 +92,22 @@
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
+<script>
+    window.addEventListener('load', () => {
+        document.querySelectorAll('p').forEach(p => adjustTextSize(p));
+
+        function adjustTextSize(element) {
+            let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
+            while (element.scrollWidth > element.offsetWidth && fontSize > 8) {
+                fontSize -= 0.5;
+                element.style.fontSize = `${fontSize}px`;
+            }
+        }
+    });
+
+    window.print();
+    setTimeout(() => window.close(), 500);
+</script>
+@endsection
