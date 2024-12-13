@@ -1,3 +1,4 @@
+// FILTER 
 // UPDATE PROFILE
 $(document).ready(function () {
   // Handle tab clicks

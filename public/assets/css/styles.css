@@ -1619,8 +1619,9 @@ input[type="number"] {
 /* product state according to stocks  DEC 12, 2O24*/
 
 .out-of-stock {
-  opacity: 0.5;
+  border: 3px solid black;
   pointer-events: none;
+  background-color: #999999;
 }
 
 .out-of-stock .cart__btn {
@@ -1632,7 +1633,9 @@ input[type="number"] {
   pointer-events: auto;
   opacity: 1;
 }
-
+.out-of-stock  .product__price .new__price {
+  color: black;
+}
 .low-stock {
   border: 2px solid red;
   background-color: #fff5f5;
