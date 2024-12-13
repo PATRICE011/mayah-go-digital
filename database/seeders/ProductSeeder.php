@@ -29,6 +29,7 @@ class ProductSeeder extends Seeder
                 'product_stocks' => 20,
                 'category_id' => 1, 
                 'product_description' => 'Crunchy and baked breadsticks, perfect as a savory snack. A popular choice for snack lovers.',
+                'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
             [
                 'product_name' => 'Fita',
@@ -37,6 +38,7 @@ class ProductSeeder extends Seeder
                 'product_stocks' => 20,
                 'category_id' => 1, 
                 'product_description' => 'Deliciously crunchy biscuits with a delightful taste. Fita is a classic Filipino snack.',
+                'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
             [
                 'product_name' => 'C2 Green',
@@ -45,6 +47,7 @@ class ProductSeeder extends Seeder
                 'product_stocks' => 20,
                 'category_id' => 2, 
                 'product_description' => 'C2 Green Tea is a refreshing drink made from real tea leaves, perfect for quenching your thirst.',
+                'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
             [
                 'product_name' => 'C2 Yellow',
@@ -53,6 +56,8 @@ class ProductSeeder extends Seeder
                 'product_stocks' => 20,
                 'category_id' => 2,
                 'product_description' => 'C2 Yellow is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
+                'cart_product_description' => 'Crunchy and baked breadsticks.',
+           
             ],
         ];
 

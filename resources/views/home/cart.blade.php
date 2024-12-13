@@ -143,7 +143,7 @@
                </td>
                <td>
                   <h2 class="table__title">{{ $cartItem->product->product_name }}</h2>
-                  <p class="table__description">{{ $cartItem->product->product_description }}</p>
+                  <p class="table__description">{{ $cartItem->product->cart_product_description }}</p>
                </td>
                <td>
                   <span class="table__price" data-price="{{ $cartItem->product->product_price }}">₱ {{ number_format($cartItem->product->product_price, 2) }}</span>

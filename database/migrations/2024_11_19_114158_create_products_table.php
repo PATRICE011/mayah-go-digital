@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->string('product_image', 300);
             $table->text('product_description')->nullable(); 
+            $table->text('cart_product_description')->nullable(); 
             $table->integer('product_price');
             $table->integer('product_old_price')->nullable(); 
             $table->integer('product_stocks')->default(0)->nullable();
