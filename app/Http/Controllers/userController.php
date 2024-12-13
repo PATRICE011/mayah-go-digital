@@ -16,49 +16,50 @@ class userController extends Controller
 {
 
     public function shop(Request $request)
-    {
-        $categories = DB::table('categories')->get();
-        $query = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name');
+{
+    $categories = DB::table('categories')->get();
+    $query = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->select('products.*', 'categories.category_name');
 
-        if ($request->has('categories')) {
-            $selectedCategories = $request->categories;
-            $query->whereIn('categories.category_name', $selectedCategories);
-        }
-
-        $products = $query->get();
-        $totalProducts = $query->count();
-
-        // User-related data
-        $user = Auth::user();
-        $cartCount = 0;
-        $wishlistCount = 0;
-
-        if ($user) {
-            $cartId = DB::table('carts')
-                ->where('user_id', $user->id)
-                ->value('id');
-
-            if ($cartId) {
-                $cartCount = DB::table('cart_items')
-                    ->where('cart_id', $cartId)
-                    ->sum('quantity');
-            }
-
-            $wishlistCount = DB::table('wishlists')
-                ->where('user_id', $user->id)
-                ->count();
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'products' => view('home.partials.product_grid', compact('products'))->render(),
-            ]);
-        }
-
-        return view('home.shop', compact('products', 'categories', 'totalProducts', 'cartCount', 'wishlistCount'));
+    if ($request->has('categories')) {
+        $selectedCategories = $request->categories;
+        $query->whereIn('categories.category_name', $selectedCategories);
     }
+
+    $products = $query->get();
+    $totalProducts = $query->count();
+
+    // User-related data
+    $user = Auth::user();
+    $cartCount = 0;
+    $wishlistCount = 0;
+
+    if ($user) {
+        $cartId = DB::table('carts')
+            ->where('user_id', $user->id)
+            ->value('id');
+
+        if ($cartId) {
+            $cartCount = DB::table('cart_items')
+                ->where('cart_id', $cartId)
+                ->sum('quantity');
+        }
+
+        $wishlistCount = DB::table('wishlists')
+            ->where('user_id', $user->id)
+            ->count();
+    }
+
+    if ($request->ajax()) {
+        return response()->json([
+            'products' => view('home.partials.product_grid', compact('products'))->render(),
+        ]);
+    }
+
+    return view('home.shop', compact('products', 'categories', 'totalProducts', 'cartCount', 'wishlistCount'));
+}
+
     // DETAILS START
     public function details($id)
     {
@@ -285,79 +286,79 @@ class userController extends Controller
             'cartCount' => $cartCount,
             'wishlistCount' => $wishlistCount,
             'orders' => $orders,
+            'user' => $user,
         ]);
     }
 
 
     public function filterProducts(Request $request)
-    {
-        $categories = $request->input('categories', []);
+{
+    $categories = $request->input('categories', []);
 
-        $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name')
-            ->when(!empty($categories), function ($query) use ($categories) {
-                $query->whereIn('categories.category_name', $categories);
-            })
-            ->get();
+    $products = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->select('products.*', 'categories.category_name')
+        ->when(!empty($categories), function ($query) use ($categories) {
+            $query->whereIn('categories.category_name', $categories);
+        })
+        ->get();
 
-        // Count total products in the database
-        $totalProducts = DB::table('products')->count();
+    $totalProducts = DB::table('products')->count();
 
-        // Generate the HTML for filtered products
-        $html = '';
-        foreach ($products as $product) {
-            $stockClass = $product->product_stocks == 0
-                ? 'out-of-stock'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
-            $stockMessage = $product->product_stocks == 0
-                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10
-                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
-                    : '');
+    $html = '';
+    foreach ($products as $product) {
+        $stockClass = $product->product_stocks == 0
+            ? 'out-of-stock'
+            : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
+        $stockMessage = $product->product_stocks == 0
+            ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
+            : ($product->product_stocks > 0 && $product->product_stocks < 10
+                ? '<div class="stock-status low-stock-message">Low Stock</div>'
+                : '');
 
-            $html .= '
-            <div class="product__item ' . $stockClass . '">
-                <div class="product__banner">
-                    <a href="#" class="product__images">
-                        <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img default">
-                        <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img hover">
+        // Use the same form structure as in the partial
+        $html .= '
+        <div class="product__item ' . $stockClass . '">
+            <div class="product__banner">
+                <a href="#" class="product__images">
+                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img default">
+                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img hover">
+                </a>
+                ' . $stockMessage . '
+                <div class="product__actions">
+                    <a href="' . url('/details') . '" class="action__btn" aria-label="Quick View">
+                        <i class="bx bx-expand-horizontal"></i>
                     </a>
-                    ' . $stockMessage . '
-                    <div class="product__actions">
-                        <a href="' . url('/details') . '" class="action__btn" aria-label="Quick View">
-                            <i class="bx bx-expand-horizontal"></i>
-                        </a>
-                        <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                            <i class="bx bx-heart"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product__content">
-                    <span class="product__category">' . $product->category_name . '</span>
-                    <a href="details.html">
-                        <h3 class="product__title">' . $product->product_name . '</h3>
+                    <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                        <i class="bx bx-heart"></i>
                     </a>
-                    <div class="product__price flex">
-                        <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
-                        <span class="old__price">₱ 9.00</span>
-                    </div>
-                    <form action="' . route('home.inserttocart') . '" method="POST" class="d-inline">
-                        ' . csrf_field() . '
-                        <input type="hidden" name="id" value="' . $product->id . '">
-                        <button type="submit" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class="bx bx-cart-alt"></i>
-                        </button>
-                    </form>
                 </div>
             </div>
-        ';
-        }
-
-        return response()->json([
-            'html' => $html,
-            'count' => $products->count(),
-            'total' => $totalProducts,
-        ]);
+            <div class="product__content">
+                <span class="product__category">' . $product->category_name . '</span>
+                <a href="details.html">
+                    <h3 class="product__title">' . $product->product_name . '</h3>
+                </a>
+                <div class="product__price flex">
+                    <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
+                    <span class="old__price">₱ 9.00</span>
+                </div>
+                <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="/user/cart/add">
+                    ' . csrf_field() . '
+                    <input type="hidden" name="id" value="' . $product->id . '">
+                    <button type="button" class="action__btn cart__btn ' . ($product->product_stocks == 0 ? 'disabled' : '') . '" ' . ($product->product_stocks == 0 ? 'disabled' : '') . '>
+                        <i class="bx bx-cart-alt"></i>
+                    </button>
+                </form>
+            </div>
+        </div>';
     }
+
+    return response()->json([
+        'html' => $html,
+        'count' => $products->count(),
+        'total' => $totalProducts,
+    ]);
+}
+
 }

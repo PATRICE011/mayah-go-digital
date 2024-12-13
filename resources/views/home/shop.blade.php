@@ -9,106 +9,63 @@
                     <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
                 </span>
             </div>
-
             <p class="header__alert-news">
                 Super Value Deals - Save More!
             </p>
-
             <div>
                 @guest
                 <a href="{{url('user/login')}}" class="header__top-action">Login</a>
                 <span> / </span>
                 <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
                 @else
-
                 @auth
                 <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
                 </form>
                 @endauth
-
                 <span> / </span>
                 <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
                 @endguest
             </div>
         </div>
     </div>
-
     <nav class="nav container">
         <a href="{{url('/')}}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
-
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="{{url('/')}}" class="nav__link">HOME</a>
-                </li>
-
-                <li class="nav__item">
-                    <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
-                </li>
-
+                <li class="nav__item"><a href="{{url('/')}}" class="nav__link">HOME</a></li>
+                <li class="nav__item"><a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a></li>
                 @auth
-                <li class="nav__item">
-                    <a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a>
-                </li>
+                <li class="nav__item"><a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a></li>
                 @endauth
             </ul>
-
             <div class="header__search">
                 <input type="text" placeholder="Search Item" class="form__input">
-
-                <button class="search__btn">
-                    <i class='bx bx-search search'></i>
-                </button>
+                <button class="search__btn"><i class='bx bx-search search'></i></button>
             </div>
         </div>
-
         <div class="header__user-actions">
-            <a href="{{url('/wishlist')}}" class="header__action-btn">
-                <i class='bx bx-heart'></i>
-                <span class="count">{{$wishlistCount}}</span>
-            </a>
-
-            <a href="{{url('/cart')}}" class="header__action-btn">
-                <i class='bx bx-cart-alt'></i>
-                <span class="count">{{$cartCount}}</span>
-            </a>
+            <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
+            <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
         </div>
     </nav>
 </header>
 
 @section('content')
 
-<!--==================== BREADCRUMB ====================-->
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
-        <li>
-            <a href="{{url('/')}}" class="breadcrumb__link">
-                Home
-            </a>
-        </li>
-
-        <li>
-            <span class="breadcrumb__link">
-                >
-            </span>
-        </li>
-
-        <li>
-            <span class="breadcrumb__link">
-                Shop
-            </span>
-        </li>
+        <li><a href="{{url('/')}}" class="breadcrumb__link">Home</a></li>
+        <li><span class="breadcrumb__link">></span></li>
+        <li><span class="breadcrumb__link">Shop</span></li>
     </ul>
 </section>
 
-<!--==================== PRODUCTS ====================-->
 <section class="products section--lg container">
     <p class="total__products">We found <span>{{ $totalProducts }}</span> items for you!</p>
-
     <div class="products__layout">
         <div class="product__categories-sidebar">
             <div class="product__category-section">
@@ -123,109 +80,14 @@
                 </ul>
             </div>
         </div>
-
         <div class="products__grid">
             <div class="products__container grid">
-                @foreach($products as $product)
-                <div class="product__item
-                    {{ $product->product_stocks == 0 ? 'out-of-stock' : '' }}
-                    {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '' }}">
-                    
-                    <div class="product__banner">
-                        <a href="{{ route('home.details', $product->id) }}" class="product__images">
-                            <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="product__img default">
-                            <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="product__img hover">
-                        </a>
-
-                        <!-- Display stock message if out of stock or low stock -->
-                        @if($product->product_stocks == 0)
-                            <div class="out-of-stock-message">Out of Stock</div>
-                        @elseif($product->product_stocks > 0 && $product->product_stocks < 10)
-                            <div class="low-stock-message">Low Stock</div>
-                        @endif
-
-                        <div class="product__actions">
-                            <!-- Quick View Button -->
-                            <a href="{{ route('home.details', $product->id) }}" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal'></i>
-                            </a>
-
-                            <!-- Wishlist Button -->
-                            <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist" onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
-                                <i class='bx bx-heart'></i>
-                            </a>
-                        </div>
-
-                        <div class="product__badge light-pink">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">{{ $product->category_name }}</span>
-
-                        <a href="{{ route('home.details', $product->id) }}">
-                            <h3 class="product__title">{{ $product->product_name }}</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
-                            @if($product->product_old_price)
-                            <span class="old__price">₱ {{ number_format($product->product_old_price, 2) }}</span>
-                            @endif
-                        </div>
-
-                        <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $product->id }}">
-
-                            <!-- Disable 'Add to Cart' button for out-of-stock products -->
-                            <button type="submit" class="action__btn cart__btn 
-                                {{ $product->product_stocks == 0 ? 'disabled' : '' }} 
-                                {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock-btn' : '' }}" 
-                                aria-label="Add To Cart" 
-                                {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
-                                <i class='bx bx-cart-alt'></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                @endforeach
+                @include('home.partials.product_grid')
             </div>
         </div>
+
     </div>
-
-    <ul class="pagination">
-        <li>
-            <a href="#" class="pagination__link active">01</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">02</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">03</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">...</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">10</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link icon">
-                <i class="ri-arrow-right-s-line"></i>
-            </a>
-        </li>
-    </ul>
 </section>
 
-
-
 @include('home.footer')
+@endsection

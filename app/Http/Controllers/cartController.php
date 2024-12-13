@@ -25,7 +25,7 @@ class cartController extends Controller
 
     // Check if the product exists
     if (!$product) {
-        return redirect()->back()->with('error', 'Product not found');
+        return response()->json(['error' => 'Product not found'], 404);
     }
 
     $user = Auth::user();
@@ -36,21 +36,27 @@ class cartController extends Controller
         ->where('product_id', $productId)
         ->first();
 
-    // If the product is already in the cart, display a toastr message
     if ($cartItem) {
-        return redirect()->back()->with('error', 'This product is already in your cart.');
+        return response()->json(['error' => 'This product is already in your cart.'], 400);
     }
 
-    // If the product is not in the cart, add it
+    // Add the product to the cart
     CartItem::create([
         'cart_id' => $cart->id,
         'product_id' => $productId,
         'quantity' => $quantity,
-        'price' => $product->product_price, // Store the price when adding a new item
+        'price' => $product->product_price,
     ]);
 
-    return redirect()->back()->with('message', 'Product added to cart.');
+    // Get updated cart count
+    $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
+
+    return response()->json([
+        'message' => 'Product added to cart.',
+        'cartCount' => $cartCount,
+    ], 200);
 }
+
 
     public function cart()
     {
@@ -110,44 +116,44 @@ class cartController extends Controller
     {
         // Get the authenticated user
         $user = Auth::user();
-    
+
         // Find the user's cart
         $cart = Cart::where('user_id', $user->id)->first();
-    
+
         // Validate cart existence and items
         if (!$cart || $cart->items()->count() === 0) {
             return redirect()->back()->with('error', 'Your cart is empty.');
         }
-    
+
         // Validate quantities input
         if (!$request->has('quantities') || !is_array($request->quantities)) {
             Log::error('Quantities input is missing or invalid.', ['quantities' => $request->quantities]);
             return redirect()->back()->with('error', 'Invalid quantities provided.');
         }
-    
+
         // Create a new order for the user
         $order = Order::create([
             'user_id' => $user->id,
             'status' => 'pending', // Initial status before payment
         ]);
-    
+
         if (!$order) {
             Log::error('Order creation failed for user ID: ' . $user->id);
             return redirect()->back()->with('error', 'Failed to create order.');
         }
-    
+
         // Debug quantities
         Log::info('Quantities received:', $request->quantities);
-    
+
         // Loop through cart items and create order items
         foreach ($cart->items as $cartItem) {
             $updatedQuantity = array_key_exists($cartItem->id, $request->quantities)
                 ? $request->quantities[$cartItem->id]
                 : $cartItem->quantity;
-    
+
             // Ensure the quantity is within allowable range
             $updatedQuantity = max(1, min($updatedQuantity, $cartItem->product->product_stocks));
-    
+
             // Debug order item data
             Log::info('Creating OrderItem:', [
                 'order_id' => $order->id,
@@ -155,7 +161,7 @@ class cartController extends Controller
                 'quantity' => $updatedQuantity,
                 'price' => $cartItem->product->product_price,
             ]);
-    
+
             // Create the order item
             OrderItem::create([
                 'order_id' => $order->id,
@@ -164,11 +170,11 @@ class cartController extends Controller
                 'price' => $cartItem->product->product_price,
             ]);
         }
-    
+
         // Redirect to payment page where the cart data will be transferred to the order_items table
         return redirect(route("cart.pay", ['orderId' => $order->id]))->with('message', 'Order placed successfully!');
     }
-    
+
 
 
     // delete 
@@ -185,29 +191,25 @@ class cartController extends Controller
     }
 
     public function updateQuantity(Request $request)
-{
-    // Validate the input
-    $validated = $request->validate([
-        'cart_item_id' => 'required|exists:cart_items,id', 
-        'quantity' => 'required|integer|min:1',            
-    ]);
+    {
+        // Validate the input
+        $validated = $request->validate([
+            'cart_item_id' => 'required|exists:cart_items,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-    $cartItem = CartItem::find($validated['cart_item_id']);
+        $cartItem = CartItem::find($validated['cart_item_id']);
 
-    // Check if the product exists and has enough stock
-    $product = $cartItem->product; // Assuming a `product` relationship in CartItem
-    if ($validated['quantity'] > $product->product_stocks) {
-        return response()->json(['success' => false, 'message' => 'Quantity exceeds available stock'], 400);
+        // Check if the product exists and has enough stock
+        $product = $cartItem->product; // Assuming a `product` relationship in CartItem
+        if ($validated['quantity'] > $product->product_stocks) {
+            return response()->json(['success' => false, 'message' => 'Quantity exceeds available stock'], 400);
+        }
+
+        // Update the quantity
+        $cartItem->quantity = $validated['quantity'];
+        $cartItem->save();
+
+        return response()->json(['success' => true, 'message' => 'Quantity updated successfully']);
     }
-
-    // Update the quantity
-    $cartItem->quantity = $validated['quantity'];
-    $cartItem->save();
-
-    return response()->json(['success' => true, 'message' => 'Quantity updated successfully']);
-}
-
-
-
-
 }

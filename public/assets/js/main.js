@@ -1,3 +1,86 @@
+// PRODUCT FILTER AND ADD TO CART
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle product filtering
+    document.querySelectorAll('.brand-filter').forEach(filter => {
+        filter.addEventListener('change', function () {
+            const selectedCategories = Array.from(document.querySelectorAll('.brand-filter:checked')).map(input => input.value);
+
+            fetch('/filter-products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ categories: selectedCategories })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Replace product grid with filtered products
+                    document.querySelector('.products__container').innerHTML = data.html;
+
+                    // Update total products count
+                    document.querySelector('.total__products span').innerText = data.count;
+
+                    // Reattach Add to Cart event listeners for newly loaded products
+                    attachAddToCartListeners();
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+
+    // Function to attach Add to Cart event listeners
+    function attachAddToCartListeners() {
+        document.querySelectorAll('.action__btn.cart__btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const form = button.closest('form');
+                const url = form.getAttribute('data-url');
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: new URLSearchParams(new FormData(form))
+                })
+                    .then(response => {
+                        // If the response is successful, parse JSON
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            // Handle errors (like product already in cart)
+                            return response.json().then(err => {
+                                throw err;
+                            });
+                        }
+                    })
+                    .then(data => {
+                        // Update cart count dynamically
+                        if (data.cartCount !== undefined) {
+                            document.getElementById('cart-count').innerText = data.cartCount;
+                        }
+
+                        // Show success notification
+                        toastr.success(data.message || 'Product added to cart!');
+                    })
+                    .catch(error => {
+                        // Specific handling for "already in cart" error
+                        if (error.error === 'This product is already in your cart.') {
+                            toastr.warning(error.error);
+                        } else {
+                            // Generic error notification
+                            toastr.error(error.error || 'An error occurred while adding the product to the cart.');
+                        }
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    }
+
+    // Attach event listeners for initially loaded products
+    attachAddToCartListeners();
+});
 // PRODUCT DETAILS REALTIME QUANTITY UPDATE
 document.addEventListener('DOMContentLoaded', function () {
   // Attach event listeners to all quantity inputs
@@ -164,30 +247,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Initial total calculation
   updateCartTotals();
-});
-
-document.querySelectorAll('.brand-filter').forEach(filter => {
-  filter.addEventListener('change', function () {
-      const selectedCategories = Array.from(document.querySelectorAll('.brand-filter:checked')).map(input => input.value);
-
-      console.log('Selected Categories:', selectedCategories); // Debug: Log selected categories
-
-      fetch('/filter-products', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          },
-          body: JSON.stringify({ categories: selectedCategories })
-      })
-      .then(response => response.json())
-      .then(data => {
-          console.log('Response:', data); // Debug: Log server response
-          document.querySelector('.products__container').innerHTML = data.html;
-          document.querySelector('.total__products span').innerText = data.count;
-      })
-      .catch(error => console.error('Error:', error));
-  });
 });
 
 

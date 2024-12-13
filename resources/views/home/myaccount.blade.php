@@ -138,8 +138,8 @@
 
         <div class="tabs__content">
             @if ($activeSection == 'dashboard')
-            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" content id="dashboard">
-                <h3 class="tab__header">Hello "Name Here"</h3>
+            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" id="dashboard">
+                <h3 class="tab__header">Hello {{ Auth::user()->name }}</h3>
 
                 <div class="tab__body">
                     <div class="stat__container">
@@ -147,17 +147,20 @@
                             <div class="icon icon-total-orders">
                                 <i class="ri-building-fill"></i>
                             </div>
-
-                            <h4 class="total-orders__quantity">3</h4>
+                            <h4 class="total-orders__quantity">
+                                {{ $orders->where('status', '!=', 'pending')->count() }}
+                            </h4>
                             <p class="total-orders__title">Total Orders</p>
                         </div>
+
 
                         <div class="stat-box">
                             <div class="icon icon-total-completed">
                                 <i class="ri-archive-fill"></i>
                             </div>
-
-                            <h4 class="total-completed__quantity">2</h4>
+                            <h4 class="total-completed__quantity">
+                                {{ $orders->where('status', 'completed')->count() }}
+                            </h4>
                             <p class="total-completed__title">Total Completed</p>
                         </div>
 
@@ -165,8 +168,9 @@
                             <div class="icon icon-total-returned">
                                 <i class="ri-corner-up-left-fill"></i>
                             </div>
-
-                            <h4 class="total-returned__quantity">1</h4>
+                            <h4 class="total-returned__quantity">
+                                {{ $orders->where('status', 'returned')->count() }}
+                            </h4>
                             <p class="total-returned__title">Total Returned</p>
                         </div>
 
@@ -174,8 +178,7 @@
                             <div class="icon icon-wallet-balance">
                                 <i class="ri-wallet-fill"></i>
                             </div>
-
-                            <h4 class="wallet-balance__quantity">₱0.00</h4>
+                            <h4 class="wallet-balance__quantity">₱{{ number_format($user->wallet_balance, 2) }}</h4>
                             <p class="wallet-balance__title">Wallet Balance</p>
                         </div>
                     </div>
@@ -191,39 +194,27 @@
                             <th>Action</th>
                         </tr>
 
+                        @forelse ($orders->filter(fn($order) => $order->status !== 'pending') as $order)
                         <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
+                            <td>#{{ $order->order_id_custom }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
+                            <td>{{ ucfirst($order->status) }}</td>
+                            <td>₱{{ number_format($order->subtotal, 2) }}</td>
                             <td>
-                                <a href="#" class="view__order">View</a>
+                                <a href="{{ url('/user/order-status/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
                             </td>
                         </tr>
-
+                        @empty
                         <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
-                            <td>
-                                <a href="#" class="view__order">View</a>
-                            </td>
+                            <td colspan="5" class="no-orders">No orders found</td>
                         </tr>
-
-                        <tr>
-                            <td>#1</td>
-                            <td>December 3, 2024</td>
-                            <td>Ready for Pickup</td>
-                            <td>₱ 7.00</td>
-                            <td>
-                                <a href="#" class="view__order">View</a>
-                            </td>
-                        </tr>
+                        @endforelse
                     </table>
+
                 </div>
             </div>
             @endif
+
 
             <div class="tab__content" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
@@ -243,7 +234,9 @@
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>
-                                @if ($order->status == 'pending')
+                                @if ($order->status == 'paid')
+                                Pending
+                                @elseif ($order->status == 'pending')
                                 Not Paid
                                 @else
                                 {{ ucfirst($order->status) }}
@@ -299,7 +292,7 @@
                                 placeholder="Enter OTP"
                                 class="form__input @error('otp') is-invalid @enderror">
 
-                                <button
+                            <button
                                 type="button"
                                 id="get-otp-button"
                                 class="btn btn--md"
