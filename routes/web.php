@@ -44,6 +44,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
             Route::post('/update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
+            Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdateQuantity');
+
         });
 
         Route::prefix('wishlist')->group(function () {
@@ -70,7 +72,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::get('/invoice/{orderId}', [UserController::class, 'invoice'])->name('order.invoice');
             Route::get('/orderdetails/{orderId}', [UserController::class, 'orderDetails']);
         });
+        
+
     });
+    
 });
 
 // Admin Routes (Roles 1 & 2)

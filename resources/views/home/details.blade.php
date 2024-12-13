@@ -67,16 +67,16 @@
         </div>
 
         <div class="header__user-actions">
-         <a href="{{ url('wishlist') }}" class="header__action-btn">
-            <i class='bx bx-heart'></i>
-            <span class="count">{{ $wishlistCount ?? 0 }}</span> <!-- If $wishlistCount is not set, it will default to 0 -->
-         </a>
+            <a href="{{ url('wishlist') }}" class="header__action-btn">
+                <i class='bx bx-heart'></i>
+                <span class="count">{{ $wishlistCount ?? 0 }}</span> <!-- If $wishlistCount is not set, it will default to 0 -->
+            </a>
 
-         <a href="{{ url('cart') }}" class="header__action-btn">
-            <i class='bx bx-cart-alt'></i>
-            <span class="count">{{ $cartCount ?? 0 }}</span> <!-- If $cartCount is not set, it will default to 0 -->
-         </a>
-      </div>
+            <a href="{{ url('cart') }}" class="header__action-btn">
+                <i class='bx bx-cart-alt'></i>
+                <span class="count">{{ $cartCount ?? 0 }}</span> <!-- If $cartCount is not set, it will default to 0 -->
+            </a>
+        </div>
     </nav>
 </header>
 
@@ -118,7 +118,7 @@
 </section>
 
 <!--==================== DETAILS ====================-->
-<section class="details section--lg">
+<section id="details-page" class="details section--lg">
     <div class="details__container container grid">
         <div class="details__group">
             <img src="{{ asset('assets/img/' . $product->product_image) }}" alt="{{ $product->product_name }}" class="details__img">
@@ -157,13 +157,22 @@
 
             <div class="details__action">
                 <!-- Quantity input with min = 1 and max = available stock -->
-                <input type="number" name="quantities[{{ $product->id }}]" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}"
-                    data-stock="{{ $product->product_stocks }}" oninput="validateQuantity(this)">
 
                 <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                     @csrf
                     <input type="hidden" name="id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" value="1" id="quantity-{{ $product->id }}">
+
+                    <!-- The quantity input is now directly part of the form -->
+                    <input type="number"
+                        name="quantity"
+                        value="1"
+                        class="quantity"
+                        id="quantity-{{ $product->id }}"
+                        min="1"
+                        max="{{ $product->product_stocks }}"
+                        data-stock="{{ $product->product_stocks }}"
+                        data-product-id="{{ $product->id }}">
+
                     <button type="submit" class="btn btn--sm">Add to Cart</button>
                 </form>
 

@@ -149,7 +149,6 @@
                   <span class="table__price" data-price="{{ $cartItem->product->product_price }}">₱ {{ number_format($cartItem->product->product_price, 2) }}</span>
                </td>
                <td>
-                  <!-- Quantity input with data-stock for available stock -->
                   <input type="number"
                      name="quantities[{{ $cartItem->id }}]"
                      value="{{ $cartItem->quantity }}"

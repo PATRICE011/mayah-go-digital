@@ -18,42 +18,39 @@ class cartController extends Controller
 {
     //
     public function addtocart(Request $request)
-    {
-        $productId = $request->input('id');
-        $product = Product::find($productId);
+{
+    $productId = $request->input('id');
+    $quantity = $request->input('quantity', 1); // Default to 1 if not provided
+    $product = Product::find($productId);
 
-        // Check if the product exists
-        if (!$product) {
-            return redirect()->back()->with('error', 'Product not found');
-        }
-
-        $user = Auth::user();
-        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
-        // Check if the product is already in the cart
-        $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('product_id', $productId)
-            ->first();
-
-        // If the product is already in the cart, display a toastr message
-        if ($cartItem) {
-            // Instead of adding more items, we show a toastr message
-            return redirect()->back()->with('error', 'This product is already in your cart.');
-        }
-
-        // If the product is not in the cart, add it
-        CartItem::create([
-            'cart_id' => $cart->id,
-            'product_id' => $productId,
-            'quantity' => 1,
-            'price' => $product->product_price,  // Store the price when adding a new item
-        ]);
-
-        // Redirect back with a success message
-        return redirect()->back()->with('message', 'Product added to cart.');
+    // Check if the product exists
+    if (!$product) {
+        return redirect()->back()->with('error', 'Product not found');
     }
 
+    $user = Auth::user();
+    $cart = Cart::firstOrCreate(['user_id' => $user->id]);
 
+    // Check if the product is already in the cart
+    $cartItem = CartItem::where('cart_id', $cart->id)
+        ->where('product_id', $productId)
+        ->first();
+
+    // If the product is already in the cart, display a toastr message
+    if ($cartItem) {
+        return redirect()->back()->with('error', 'This product is already in your cart.');
+    }
+
+    // If the product is not in the cart, add it
+    CartItem::create([
+        'cart_id' => $cart->id,
+        'product_id' => $productId,
+        'quantity' => $quantity,
+        'price' => $product->product_price, // Store the price when adding a new item
+    ]);
+
+    return redirect()->back()->with('message', 'Product added to cart.');
+}
 
     public function cart()
     {
@@ -187,7 +184,29 @@ class cartController extends Controller
         return back()->with('message', 'Item removed from cart.');
     }
 
-    // my orders
+    public function updateQuantity(Request $request)
+{
+    // Validate the input
+    $validated = $request->validate([
+        'cart_item_id' => 'required|exists:cart_items,id', 
+        'quantity' => 'required|integer|min:1',            
+    ]);
+
+    $cartItem = CartItem::find($validated['cart_item_id']);
+
+    // Check if the product exists and has enough stock
+    $product = $cartItem->product; // Assuming a `product` relationship in CartItem
+    if ($validated['quantity'] > $product->product_stocks) {
+        return response()->json(['success' => false, 'message' => 'Quantity exceeds available stock'], 400);
+    }
+
+    // Update the quantity
+    $cartItem->quantity = $validated['quantity'];
+    $cartItem->save();
+
+    return response()->json(['success' => true, 'message' => 'Quantity updated successfully']);
+}
+
 
 
 

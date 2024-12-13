@@ -1,4 +1,15 @@
-// FILTER 
+// PRODUCT DETAILS REALTIME QUANTITY UPDATE
+document.addEventListener('DOMContentLoaded', function () {
+  // Attach event listeners to all quantity inputs
+  document.querySelectorAll('.quantity').forEach(input => {
+      input.addEventListener('input', function () {
+          const productId = this.dataset.productId;
+          const hiddenInput = document.getElementById(`quantity-${productId}`);
+          hiddenInput.value = this.value; // Sync hidden input value
+      });
+  });
+});
+
 // UPDATE PROFILE
 $(document).ready(function () {
   // Handle tab clicks
@@ -61,6 +72,44 @@ $(document).ready(function () {
       });
   });
 });
+// UPDATE CART QUANTITY
+document.addEventListener('DOMContentLoaded', () => {
+  const quantityInputs = document.querySelectorAll('.quantity');
+
+  quantityInputs.forEach(input => {
+      input.addEventListener('input', function () { // Use 'input' event for real-time updates
+          const cartItemId = this.name.match(/\d+/)[0]; // Extract cart_item_id from input name
+          const quantity = parseInt(this.value);
+
+          if (isNaN(quantity) || quantity < 1) {
+              console.warn('Invalid quantity entered!');
+              return;
+          }
+
+          // Send AJAX request to update quantity
+          fetch('user/cart/update-quantity', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // CSRF token for Laravel
+              },
+              body: JSON.stringify({
+                  cart_item_id: cartItemId,
+                  quantity: quantity
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  console.log('Quantity updated successfully!');
+              } else {
+                  console.error('Failed to update quantity:', data.message);
+              }
+          })
+          .catch(error => console.error('Error:', error));
+      });
+  });
+});
 
 // DYNAMIC STOCK TRACKING IN CART PAGE
 document.addEventListener('DOMContentLoaded', function () {
@@ -116,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initial total calculation
   updateCartTotals();
 });
+
 document.querySelectorAll('.brand-filter').forEach(filter => {
   filter.addEventListener('change', function () {
       const selectedCategories = Array.from(document.querySelectorAll('.brand-filter:checked')).map(input => input.value);
