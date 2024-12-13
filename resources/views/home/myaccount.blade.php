@@ -147,12 +147,9 @@
                             <div class="icon icon-total-orders">
                                 <i class="ri-building-fill"></i>
                             </div>
-                            <h4 class="total-orders__quantity">
-                                {{ $orders->where('status', '!=', 'pending')->count() }}
-                            </h4>
+                            <h4 class="total-orders__quantity">{{ $orders->count() }}</h4>
                             <p class="total-orders__title">Total Orders</p>
                         </div>
-
 
                         <div class="stat-box">
                             <div class="icon icon-total-completed">
@@ -194,7 +191,7 @@
                             <th>Action</th>
                         </tr>
 
-                        @forelse ($orders->filter(fn($order) => $order->status !== 'pending') as $order)
+                        @forelse ($orders as $order)
                         <tr>
                             <td>#{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
@@ -210,7 +207,6 @@
                         </tr>
                         @endforelse
                     </table>
-
                 </div>
             </div>
             @endif
@@ -219,7 +215,8 @@
             <div class="tab__content" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
 
-                <div class="tab__body">
+                <!-- Orders List -->
+                <div class="tab__body" id="orders-list-container">
                     <table class="placed__order-table">
                         <tr>
                             <th>Order #</th>
@@ -234,9 +231,7 @@
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
                             <td>
-                                @if ($order->status == 'paid')
-                                Pending
-                                @elseif ($order->status == 'pending')
+                                @if ($order->status == 'pending')
                                 Not Paid
                                 @else
                                 {{ ucfirst($order->status) }}
@@ -247,18 +242,22 @@
                                 @if ($order->status == 'pending')
                                 <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
                                 @else
-                                <a href="{{ url('/user/order-status/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
+                                <a href="#" class="view__order" data-order-id="{{ $order->order_id }}" onclick="showOrderDetails(event, '{{ $order->order_id }}')">View</a>
                                 @endif
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" style="text-align: center;">No orders found.</td>
+                            <td colspan="5" style="text-align: center;">No orders found.</td>
                         </tr>
                         @endforelse
                     </table>
                 </div>
+
+                
             </div>
+
+
 
             <div class="tab__content {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" content id="update-profile">
                 <h3 class="tab__header">Update Profile</h3>

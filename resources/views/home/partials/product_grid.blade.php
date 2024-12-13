@@ -1,3 +1,4 @@
+
 @foreach($products as $product)
         <div class="product__item
             {{ $product->product_stocks == 0 ? 'out-of-stock' : '' }}

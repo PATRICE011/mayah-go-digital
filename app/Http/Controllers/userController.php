@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
@@ -16,49 +17,49 @@ class userController extends Controller
 {
 
     public function shop(Request $request)
-{
-    $categories = DB::table('categories')->get();
-    $query = DB::table('products')
-        ->join('categories', 'products.category_id', '=', 'categories.id')
-        ->select('products.*', 'categories.category_name');
+    {
+        $categories = DB::table('categories')->get();
+        $query = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name');
 
-    if ($request->has('categories')) {
-        $selectedCategories = $request->categories;
-        $query->whereIn('categories.category_name', $selectedCategories);
-    }
-
-    $products = $query->get();
-    $totalProducts = $query->count();
-
-    // User-related data
-    $user = Auth::user();
-    $cartCount = 0;
-    $wishlistCount = 0;
-
-    if ($user) {
-        $cartId = DB::table('carts')
-            ->where('user_id', $user->id)
-            ->value('id');
-
-        if ($cartId) {
-            $cartCount = DB::table('cart_items')
-                ->where('cart_id', $cartId)
-                ->sum('quantity');
+        if ($request->has('categories')) {
+            $selectedCategories = $request->categories;
+            $query->whereIn('categories.category_name', $selectedCategories);
         }
 
-        $wishlistCount = DB::table('wishlists')
-            ->where('user_id', $user->id)
-            ->count();
-    }
+        $products = $query->get();
+        $totalProducts = $query->count();
 
-    if ($request->ajax()) {
-        return response()->json([
-            'products' => view('home.partials.product_grid', compact('products'))->render(),
-        ]);
-    }
+        // User-related data
+        $user = Auth::user();
+        $cartCount = 0;
+        $wishlistCount = 0;
 
-    return view('home.shop', compact('products', 'categories', 'totalProducts', 'cartCount', 'wishlistCount'));
-}
+        if ($user) {
+            $cartId = DB::table('carts')
+                ->where('user_id', $user->id)
+                ->value('id');
+
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')
+                    ->where('cart_id', $cartId)
+                    ->sum('quantity');
+            }
+
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count();
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'products' => view('home.partials.product_grid', compact('products'))->render(),
+            ]);
+        }
+
+        return view('home.shop', compact('products', 'categories', 'totalProducts', 'cartCount', 'wishlistCount'));
+    }
 
     // DETAILS START
     public function details($id)
@@ -130,50 +131,45 @@ class userController extends Controller
 
 
     public function orderDetails($orderId)
-    {
-        // Fetch the main order and its details
-        $order = DB::table('orders')
-            ->where('orders.id', $orderId)
-            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
-            ->select(
-                'orders.id as order_id', // Alias as order_id
-                'orderdetails.order_id_custom',
-                'orders.status',
-                'orderdetails.payment_method',
-                'orderdetails.total_amount',
-                'orders.created_at'
-            )
-            ->first();
+{
+    // Fetch the order details from the database
+    $order = DB::table('orders')
+        ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+        ->where('orders.id', $orderId)
+        ->select(
+            'orders.id as order_id',
+            'orderdetails.order_id_custom',
+            'orders.status',
+            'orderdetails.payment_method',
+            'orderdetails.total_amount',
+            'orders.created_at'
+        )
+        ->first();
 
-        // Check if the order exists
-        if (!$order) {
-            abort(404, 'Order not found.');
-        }
-
-        // Enforce payment-first logic:
-        if ($order->status === 'paid') {
-            $order->status = 'pending';
-        }
-
-        // Dynamically set the payment status
-        $order->payment_status = 'Paid';
-
-        // Fetch all items in the order
-        $orderItems = DB::table('order_items')
-            ->where('order_id', $order->order_id) // Use order_id instead of id
-            ->join('products', 'order_items.product_id', '=', 'products.id')
-            ->select(
-                'products.product_name',
-                'order_items.quantity',
-                'order_items.price'
-            )
-            ->get();
-
-        return view('home.orderdetails', [
-            'order' => $order,
-            'orderItems' => $orderItems,
-        ]);
+    // Check if the order exists
+    if (!$order) {
+        abort(404, 'Order not found.');
     }
+
+    // Dynamically set the payment status
+    $order->payment_status = $order->status === 'paid' ? 'Paid' : 'Unpaid';
+
+    // Fetch all items in the order
+    $orderItems = DB::table('order_items')
+        ->where('order_id', $order->order_id)
+        ->join('products', 'order_items.product_id', '=', 'products.id')
+        ->select(
+            'products.product_name',
+            'order_items.quantity',
+            'order_items.price'
+        )
+        ->get();
+
+    return view('home.orderdetails', [
+        'order' => $order,
+        'orderItems' => $orderItems,
+    ]);
+}
 
 
     public function about()
@@ -247,77 +243,104 @@ class userController extends Controller
     }
 
     // MYACCOUNT
-    public function dashboard()
-    {
-        $user = Auth::user(); // Assuming `Auth::user()` is retrieving from the `users_area` table
-        $cartCount = 0;
-        $wishlistCount = 0;
-        $orders = [];
+    public function dashboard(Request $request)
+{
+    $user = Auth::user();
+    $cartCount = 0;
+    $wishlistCount = 0;
+    $orders = [];
+    $orderDetails = null;
+    $orderItems = [];
 
-        if ($user) {
-            // Fetch cart item count
-            $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
-            if ($cartId) {
-                $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
-            }
-
-            // Fetch wishlist count
-            $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
-
-            // Fetch orders for the user
-            $orders = DB::table('orders')
-                ->where('orders.user_id', $user->id)
-                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
-                ->join('order_items', 'orders.id', '=', 'order_items.order_id') // Join with order_items
-                ->select(
-                    'orders.id as order_id',
-                    'orders.status',
-                    'orderdetails.order_id_custom',
-                    'orders.created_at',
-                    DB::raw('SUM(order_items.quantity * order_items.price) as subtotal') // Compute subtotal
-                )
-                ->groupBy('orders.id', 'orders.status', 'orderdetails.order_id_custom', 'orders.created_at') // Group by order fields
-                ->orderBy('orders.created_at', 'desc')
-                ->get();
+    if ($user) {
+        // Fetch cart item count
+        $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
+        if ($cartId) {
+            $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
         }
 
-        return view('home.myaccount', [
-            'activeSection' => 'dashboard',
-            'cartCount' => $cartCount,
-            'wishlistCount' => $wishlistCount,
-            'orders' => $orders,
-            'user' => $user,
-        ]);
+        // Fetch wishlist count
+        $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
+
+        // Fetch orders for the user
+        $orders = DB::table('orders')
+            ->where('orders.user_id', $user->id)
+            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id') // Join with order_items
+            ->select(
+                'orders.id as order_id',
+                'orders.status',
+                'orderdetails.order_id_custom',
+                'orders.created_at',
+                DB::raw('SUM(order_items.quantity * order_items.price) as subtotal') // Compute subtotal
+            )
+            ->groupBy('orders.id', 'orders.status', 'orderdetails.order_id_custom', 'orders.created_at') // Group by order fields
+            ->orderBy('orders.created_at', 'desc')
+            ->get();
+
+        // Check if the request is for a specific order's details
+        if ($request->has('order_id')) {
+            $orderDetails = DB::table('orders')
+                ->where('orders.id', $request->order_id)
+                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+                ->select(
+                    'orders.id as order_id',
+                    'orderdetails.order_id_custom',
+                    'orders.status',
+                    'orderdetails.payment_method',
+                    'orderdetails.total_amount',
+                    'orders.created_at'
+                )
+                ->first();
+
+            $orderItems = DB::table('order_items')
+                ->where('order_id', $request->order_id)
+                ->join('products', 'order_items.product_id', '=', 'products.id')
+                ->select('products.product_name', 'order_items.quantity', 'order_items.price')
+                ->get();
+        }
     }
+
+    return view('home.myaccount', [
+        'activeSection' => $request->has('order_id') ? 'orders' : 'dashboard',
+        'cartCount' => $cartCount,
+        'wishlistCount' => $wishlistCount,
+        'orders' => $orders,
+        'orderDetails' => $orderDetails,
+        'orderItems' => $orderItems,
+        'user' => $user,
+    ]);
+}
+
 
 
     public function filterProducts(Request $request)
-{
-    $categories = $request->input('categories', []);
+    {
+        $categories = $request->input('categories', []);
 
-    $products = DB::table('products')
-        ->join('categories', 'products.category_id', '=', 'categories.id')
-        ->select('products.*', 'categories.category_name')
-        ->when(!empty($categories), function ($query) use ($categories) {
-            $query->whereIn('categories.category_name', $categories);
-        })
-        ->get();
+        $products = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name')
+            ->when(!empty($categories), function ($query) use ($categories) {
+                $query->whereIn('categories.category_name', $categories);
+            })
+            ->get();
 
-    $totalProducts = DB::table('products')->count();
+        $totalProducts = DB::table('products')->count();
 
-    $html = '';
-    foreach ($products as $product) {
-        $stockClass = $product->product_stocks == 0
-            ? 'out-of-stock'
-            : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
-        $stockMessage = $product->product_stocks == 0
-            ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
-            : ($product->product_stocks > 0 && $product->product_stocks < 10
-                ? '<div class="stock-status low-stock-message">Low Stock</div>'
-                : '');
+        $html = '';
+        foreach ($products as $product) {
+            $stockClass = $product->product_stocks == 0
+                ? 'out-of-stock'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
+            $stockMessage = $product->product_stocks == 0
+                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10
+                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
+                    : '');
 
-        // Use the same form structure as in the partial
-        $html .= '
+            // Use the same form structure as in the partial
+            $html .= '
         <div class="product__item ' . $stockClass . '">
             <div class="product__banner">
                 <a href="#" class="product__images">
@@ -352,13 +375,12 @@ class userController extends Controller
                 </form>
             </div>
         </div>';
+        }
+
+        return response()->json([
+            'html' => $html,
+            'count' => $products->count(),
+            'total' => $totalProducts,
+        ]);
     }
-
-    return response()->json([
-        'html' => $html,
-        'count' => $products->count(),
-        'total' => $totalProducts,
-    ]);
-}
-
 }
