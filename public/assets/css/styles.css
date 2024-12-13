@@ -1823,3 +1823,30 @@ input[type="number"] {
       display: none;
   }
 }
+/* GO BACK BUTTON DEC 12 */
+/* Go Back Button Styles */
+.go-back-btn {
+  margin-bottom: 20px;
+}
+
+.go-back-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  /* background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px; */
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.go-back-btn__icon i {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+/* .go-back-btn__icon:hover {
+  background-color: #e0e0e0;
+} */

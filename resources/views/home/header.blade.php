@@ -1,40 +1,38 @@
 <header class="header" id="header">
-   <div class="header__top">
-      <div class="header__container container">
-         <div class="header__contact">
-            <span>
-               <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
-            </span>
-         </div>
+<div class="header__top">
+        <div class="header__container container">
+            <div class="header__contact">
+                <span>
+                    <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
+                </span>
+            </div>
 
-         <p class="header__alert-news">
-            Super Value Deals - Save More!
-         </p>
+            <p class="header__alert-news">
+                Super Value Deals - Save More!
+            </p>
 
-         <div>
-            @guest
-            <!-- For guest (non-authenticated users) -->
-            <a href="{{url('user/login')}}" class="header__top-action">Login</a>
-            <span> / </span>
-            <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
-            @else
+            <div>
+                @guest
+                <!-- For guest (non-authenticated users) -->
+                <a href="{{url('user/login')}}" class="header__top-action">Login</a>
+                <span> / </span>
+                <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
+                @else
 
-            <!-- For authenticated users -->
-            @auth
-            <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
-               <!-- @csrf
-               <button type="submit" class="header__top-action-btn">Logout</button> -->
-            </form>
-            @endauth
+                <!-- For authenticated users -->
+                @auth
+                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
+                </form>
+                @endauth
 
-            <!-- <span> / </span> -->
-            <span class="header__top-action">
-               Welcome, <span>{{ Auth::user()->name }}</span>!
-            </span>
-            @endguest
-         </div>
-      </div>
-   </div>
+                <span> / </span>
+                <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
+                @endguest
+            </div>
+        </div>
+    </div>
 
    <nav class="nav container">
       <a href="{{url('/')}}" class="nav__logo">

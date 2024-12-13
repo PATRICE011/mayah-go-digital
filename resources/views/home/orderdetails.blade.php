@@ -1,4 +1,12 @@
 <div class="order-container">
+    <!-- Go Back Button -->
+    <div class="go-back-btn">
+        <button onclick="window.history.back()" class="go-back-btn__icon">
+            <!-- Remix Icon for Go Back -->
+            <i class="ri-arrow-left-line"></i> Go Back
+        </button>
+    </div>
+
     <!-- Order Header -->
     <div class="order-header">
         <h1>Thank You</h1>

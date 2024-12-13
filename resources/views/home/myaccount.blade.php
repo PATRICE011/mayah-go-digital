@@ -55,7 +55,7 @@
 
                 @auth
                 <li class="nav__item">
-                    <a href="{{url('user/myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+                    <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -138,7 +138,7 @@
 
         <div class="tabs__content">
             @if ($activeSection == 'dashboard')
-            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" id="dashboard">
+            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" content id="dashboard">
                 <h3 class="tab__header">Hello {{ Auth::user()->name }}</h3>
 
                 <div class="tab__body">
@@ -147,9 +147,12 @@
                             <div class="icon icon-total-orders">
                                 <i class="ri-building-fill"></i>
                             </div>
-                            <h4 class="total-orders__quantity">{{ $orders->count() }}</h4>
+                            <h4 class="total-orders__quantity">
+                                {{ $orders->where('status', '!=', 'pending')->count() }}
+                            </h4>
                             <p class="total-orders__title">Total Orders</p>
                         </div>
+
 
                         <div class="stat-box">
                             <div class="icon icon-total-completed">
@@ -191,7 +194,7 @@
                             <th>Action</th>
                         </tr>
 
-                        @forelse ($orders as $order)
+                        @forelse ($orders->filter(fn($order) => $order->status !== 'pending') as $order)
                         <tr>
                             <td>#{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
@@ -207,10 +210,10 @@
                         </tr>
                         @endforelse
                     </table>
+
                 </div>
             </div>
             @endif
-
 
             <div class="tab__content" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
@@ -253,11 +256,7 @@
                         @endforelse
                     </table>
                 </div>
-
-                
             </div>
-
-
 
             <div class="tab__content {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" content id="update-profile">
                 <h3 class="tab__header">Update Profile</h3>
@@ -293,10 +292,10 @@
 
                             <button
                                 type="button"
-                                id="get-otp-button"
+                                id="get-otp-button-update-profile"
                                 class="btn btn--md"
                                 data-url="{{ route('sendCode') }}"
-                                data-action="change-password"
+                                data-action="update-profile"
                                 data-csrf="{{ csrf_token() }}">
                                 Get OTP
                             </button>
@@ -357,7 +356,7 @@
                                 class="form__input @error('otp') is-invalid @enderror">
                             <button
                                 type="button"
-                                id="get-otp-button"
+                                id="get-otp-button-change-password"
                                 class="btn btn--md"
                                 data-url="{{ route('sendCode') }}"
                                 data-action="change-password"
