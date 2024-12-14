@@ -1,6 +1,6 @@
 <div class="order-container">
     <!-- Go Back Button -->
-    <button class="back-to-orders-btn" onclick="goToOrdersTab()">
+    <button class="back-to-orders-btn" onclick="goToActiveTab()">
         <i class="ri-arrow-left-line"></i> Back to Orders
     </button>
 

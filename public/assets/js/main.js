@@ -48,6 +48,57 @@ function showOrderDetails(event, orderId) {
             toastr.error("Failed to load order details. Please try again.");
         });
 }
+// Function to handle "View" button clicks in the Dashboard tab
+function showDashboardOrderDetails(event, orderId) {
+    event.preventDefault();
+
+    const dashboardContent = document.querySelector("#dashboard");
+    if (!dashboardContent) {
+        console.error("Dashboard content container not found.");
+        return;
+    }
+
+    // Fetch order details via AJAX
+    fetch(`/user/order-status/orderdetails/${orderId}`, {
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch order details.");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.html) {
+                throw new Error("Invalid response: Missing 'html' key.");
+            }
+
+            // Replace the content inside the "Dashboard" tab
+            dashboardContent.innerHTML = data.html;
+
+            // Attach "Back to Dashboard" event listener dynamically for the new content
+            attachBackToDashboardListener();
+        })
+        .catch((error) => {
+            console.error("Error loading order details:", error);
+            toastr.error("Failed to load order details. Please try again.");
+        });
+}
+
+// Attach the "Back to Dashboard" button listener
+function attachBackToDashboardListener() {
+    const backToDashboardButton = document.querySelector(".back-to-dashboard-btn");
+    if (backToDashboardButton) {
+        backToDashboardButton.addEventListener("click", () => {
+            console.log("Back to Dashboard clicked!");
+
+            // Reload the page or dynamically reload the dashboard content
+            window.location.reload(); // For simplicity, reload the page
+        });
+    } else {
+        console.warn("Back to Dashboard button not found. It may not exist yet.");
+    }
+}
 
 // Attach the "Back to Orders" button listener
 function attachBackToOrdersListener() {
@@ -91,11 +142,15 @@ function switchTab(tabId) {
 }
 
 // Define the goToOrdersTab function globally
-window.goToOrdersTab = function () {
-    console.log("Navigating to Orders tab.");
-    localStorage.setItem("activeTab", "orders");
+// Define a universal "Go to Active Tab" function globally
+window.goToActiveTab = function () {
+    const activeTab = localStorage.getItem("activeTab") || "dashboard"; // Default to "dashboard" if no tab is saved
+    console.log(`Navigating to the active tab: ${activeTab}`);
+
+    // Reload the page to reflect the currently active tab
     window.location.reload();
 };
+
 
 // Save active tab to localStorage when clicking a tab
 document.querySelectorAll(".account__tab").forEach((tab) => {
