@@ -1,97 +1,113 @@
 // ORDERS TABS SWITCHING
-document.addEventListener("DOMContentLoaded", function () {
-    // Function to show order details
-    window.showOrderDetails = function (event, orderId) {
-        event.preventDefault(); // Prevent default link behavior
 
-        // Activate the "Orders" tab
-        const tabs = document.querySelectorAll(".account__tab");
-        const contents = document.querySelectorAll(".tab__content");
-        const ordersContent = document.querySelector("#orders");
+// Restore the active tab on page load
+document.addEventListener("DOMContentLoaded", () => {
+    // Retrieve the active tab from localStorage or default to "dashboard"
+    const savedTab = localStorage.getItem("activeTab") || "dashboard";
 
-        // Remove active class from all tabs and contents
-        tabs.forEach((tab) => tab.classList.remove("active-tab"));
-        contents.forEach((content) => content.classList.remove("active-tab"));
+    // Activate the saved tab
+    switchTab(savedTab);
 
-        // Add active class to the Orders tab
-        const ordersTab = document.querySelector('[data-target="#orders"]');
-        ordersTab?.classList.add("active-tab");
-        ordersContent?.classList.add("active-tab");
-
-        // Fetch and display order details
-        fetch(`/user/order-status/orderdetails/${orderId}?active_tab=orders`)
-            .then((response) => {
-                if (!response.ok)
-                    throw new Error("Failed to fetch order details.");
-                return response.text(); // Expect an HTML response
-            })
-            .then((html) => {
-                // Replace the content inside the "Orders" tab
-                ordersContent.innerHTML = html;
-
-                // Attach "Back to Orders" event listener
-                attachBackToOrdersListener();
-            })
-            .catch((error) => {
-                console.error("Error loading order details:", error);
-                toastr.error("Failed to load order details. Please try again.");
-            });
-    };
-
-    // Function to go back to the orders list
-    window.backToOrders = function () {
-        // Activate the "Orders" tab
-        const tabs = document.querySelectorAll(".account__tab");
-        const contents = document.querySelectorAll(".tab__content");
-        const ordersContent = document.querySelector("#orders");
-
-        tabs.forEach((tab) => tab.classList.remove("active-tab"));
-        contents.forEach((content) => content.classList.remove("active-tab"));
-
-        const ordersTab = document.querySelector('[data-target="#orders"]');
-        ordersTab?.classList.add("active-tab");
-        ordersContent?.classList.add("active-tab");
-
-        // Fetch and display the orders list
-        fetch("/user/myaccount?active_tab=orders")
-            .then((response) => {
-                if (!response.ok)
-                    throw new Error("Failed to load orders list.");
-                return response.text();
-            })
-            .then((html) => {
-                ordersContent.innerHTML = html;
-
-                // Reattach event listeners for "View Order" buttons
-                attachOrderDetailsListeners();
-            })
-            .catch((error) => {
-                console.error("Error loading orders list:", error);
-                toastr.error("Failed to load orders list. Please try again.");
-            });
-    };
-
-    // Attach "Back to Orders" event listener
-    function attachBackToOrdersListener() {
-        const backToOrdersButton = document.querySelector(".back-to-orders");
-        if (backToOrdersButton) {
-            backToOrdersButton.addEventListener("click", backToOrders);
-        }
-    }
-
-    // Attach "View Order" event listeners
-    function attachOrderDetailsListeners() {
-        document.querySelectorAll(".view__order").forEach((button) => {
-            button.addEventListener("click", function (e) {
-                const orderId = this.getAttribute("data-order-id");
-                showOrderDetails(e, orderId);
-            });
-        });
-    }
-
-    // Initial attach of order details listeners
-    attachOrderDetailsListeners();
+    // Attach "Back to Orders" listener globally
+    attachBackToOrdersListener();
 });
+
+// Function to fetch and display order details dynamically
+function showOrderDetails(event, orderId) {
+    event.preventDefault();
+
+    const ordersContent = document.querySelector("#orders");
+    if (!ordersContent) {
+        console.error("Orders content container not found.");
+        return;
+    }
+
+    // Fetch order details from the server
+    fetch(`/user/order-status/orderdetails/${orderId}`, {
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch order details.");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.html) {
+                throw new Error("Invalid response: Missing 'html' key.");
+            }
+
+            // Replace the content inside the "Orders" tab
+            ordersContent.innerHTML = data.html;
+
+            // Attach "Back to Orders" event listener dynamically for the new content
+            attachBackToOrdersListener();
+        })
+        .catch((error) => {
+            console.error("Error loading order details:", error);
+            toastr.error("Failed to load order details. Please try again.");
+        });
+}
+
+// Attach the "Back to Orders" button listener
+function attachBackToOrdersListener() {
+    const backToOrdersButton = document.querySelector(".back-to-orders-btn");
+    if (backToOrdersButton) {
+        console.log("Attaching 'Back to Orders' listener.");
+        backToOrdersButton.addEventListener("click", () => {
+            console.log("Back to Orders clicked!");
+
+            // Save the active tab state as "orders"
+            localStorage.setItem("activeTab", "orders");
+
+            // Reload the page to reflect the Orders tab
+            window.location.reload();
+        });
+    } else {
+        console.warn("Back to Orders button not found. It may not exist yet.");
+    }
+}
+
+// Function to switch tabs dynamically
+function switchTab(tabId) {
+    // Remove active-tab class from all tabs and contents
+    document.querySelectorAll(".account__tab").forEach((tab) => tab.classList.remove("active-tab"));
+    document.querySelectorAll(".tab__content").forEach((content) => content.classList.remove("active-tab"));
+
+    // Find and activate the target tab and content
+    const targetTab = document.querySelector(`[data-target="#${tabId}"]`);
+    const targetContent = document.querySelector(`#${tabId}`);
+
+    if (targetTab && targetContent) {
+        targetTab.classList.add("active-tab");
+        targetContent.classList.add("active-tab");
+
+        // Save the active tab to localStorage
+        localStorage.setItem("activeTab", tabId);
+        console.log(`Switched to tab: ${tabId}`);
+    } else {
+        console.error(`Tab or content not found for ID: ${tabId}`);
+    }
+}
+
+// Define the goToOrdersTab function globally
+window.goToOrdersTab = function () {
+    console.log("Navigating to Orders tab.");
+    localStorage.setItem("activeTab", "orders");
+    window.location.reload();
+};
+
+// Save active tab to localStorage when clicking a tab
+document.querySelectorAll(".account__tab").forEach((tab) => {
+    tab.addEventListener("click", (event) => {
+        const targetTabId = tab.getAttribute("data-target").replace("#", "");
+        localStorage.setItem("activeTab", targetTabId);
+        console.log(`Tab clicked: ${targetTabId}`);
+    });
+});
+
+
+
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {

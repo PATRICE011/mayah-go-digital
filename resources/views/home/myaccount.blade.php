@@ -55,7 +55,7 @@
 
                 @auth
                 <li class="nav__item">
-                    <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+                    <a href="{{url('user/myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -109,19 +109,16 @@
 <section class="accounts section--lg">
     <div class="accounts__container container grid">
         <div class="account__tabs">
-            <p class="account__tab {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" data-target="#dashboard">
+            <p class="account__tab {{ session('active_tab') == 'dashboard' ? 'active-tab' : '' }}" data-target="#dashboard">
                 <i class='bx bx-box'></i> Dashboard
             </p>
-
             <p class="account__tab {{ session('active_tab') == 'orders' ? 'active-tab' : '' }}" data-target="#orders">
                 <i class='bx bx-cart-download'></i> Orders
             </p>
-
-            <p class="account__tab {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" data-target="#update-profile">
+            <p class="account__tab {{session('active_tab')  == 'update-profile' ? 'active-tab' : '' }}" data-target="#update-profile">
                 <i class='bx bxs-hand-up'></i> Update Profile
             </p>
-
-            <p class="account__tab {{ session('active_tab') == 'change-password' ? 'active-tab' : '' }}" data-target="#change-password">
+            <p class="account__tab {{ session('active_tab')  == 'change-password' ? 'active-tab' : '' }}" data-target="#change-password">
                 <i class='bx bx-cog'></i> Change Password
             </p>
 
@@ -137,7 +134,7 @@
         </div>
 
         <div class="tabs__content">
-            @if ($activeSection == 'dashboard')
+            @if (session('active_tab') == 'dashboard')
             <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" content id="dashboard">
                 <h3 class="tab__header">Hello {{ Auth::user()->name }}</h3>
 
@@ -215,10 +212,8 @@
             </div>
             @endif
 
-            <div class="tab__content" content id="orders">
+            <div class="tab__content {{ session('active_tab')  == 'orders' ? 'active-tab' : '' }}" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
-
-                <!-- Orders List -->
                 <div class="tab__body" id="orders-list-container">
                     <table class="placed__order-table">
                         <tr>
@@ -228,25 +223,14 @@
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
-
                         @forelse ($orders as $order)
                         <tr>
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>
-                                @if ($order->status == 'pending')
-                                Not Paid
-                                @else
-                                {{ ucfirst($order->status) }}
-                                @endif
-                            </td>
+                            <td>{{ ucfirst($order->status) }}</td>
                             <td>₱ {{ number_format($order->subtotal, 2) }}</td>
                             <td>
-                                @if ($order->status == 'pending')
-                                <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
-                                @else
-                                <a href="#" class="view__order" data-order-id="{{ $order->order_id }}" onclick="showOrderDetails(event, '{{ $order->order_id }}')">View</a>
-                                @endif
+                                <a href="javascript:void(0);" class="view__order" data-order-id="{{ $order->order_id }}" onclick="showOrderDetails(event, '{{ $order->order_id }}')">View</a>
                             </td>
                         </tr>
                         @empty
@@ -387,9 +371,9 @@
 
 @include('home.footer')
 @endsection
-@section('scripts')
 <script>
-    const activeTab = @json(session('active_tab', 'dashboard'));
+    window.appConfig = {
+        activeTab: @json(session('active_tab', 'dashboard'))
+    };
 </script>
 
-@endsection
