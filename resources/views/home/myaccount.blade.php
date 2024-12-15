@@ -55,7 +55,7 @@
 
                 @auth
                 <li class="nav__item">
-                    <a href="{{url('myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
+                    <a href="{{url('user/myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
@@ -109,19 +109,16 @@
 <section class="accounts section--lg">
     <div class="accounts__container container grid">
         <div class="account__tabs">
-            <p class="account__tab {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" data-target="#dashboard">
+            <p class="account__tab {{ session('active_tab') == 'dashboard' ? 'active-tab' : '' }}" data-target="#dashboard">
                 <i class='bx bx-box'></i> Dashboard
             </p>
-
             <p class="account__tab {{ session('active_tab') == 'orders' ? 'active-tab' : '' }}" data-target="#orders">
                 <i class='bx bx-cart-download'></i> Orders
             </p>
-
-            <p class="account__tab {{ session('active_tab') == 'update-profile' ? 'active-tab' : '' }}" data-target="#update-profile">
+            <p class="account__tab {{session('active_tab')  == 'update-profile' ? 'active-tab' : '' }}" data-target="#update-profile">
                 <i class='bx bxs-hand-up'></i> Update Profile
             </p>
-
-            <p class="account__tab {{ session('active_tab') == 'change-password' ? 'active-tab' : '' }}" data-target="#change-password">
+            <p class="account__tab {{ session('active_tab')  == 'change-password' ? 'active-tab' : '' }}" data-target="#change-password">
                 <i class='bx bx-cog'></i> Change Password
             </p>
 
@@ -137,88 +134,94 @@
         </div>
 
         <div class="tabs__content">
-            @if ($activeSection == 'dashboard')
-            <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" content id="dashboard">
-                <h3 class="tab__header">Hello {{ Auth::user()->name }}</h3>
+            <div class="tabs__content">
+                <!-- Dashboard Tab Content -->
+                <div class="tab__content {{ session('active_tab', 'dashboard') == 'dashboard' ? 'active-tab' : '' }}" id="dashboard">
+                    <h3 class="tab__header">Hello {{ Auth::user()->name }}</h3>
 
-                <div class="tab__body">
-                    <div class="stat__container">
-                        <div class="stat-box">
-                            <div class="icon icon-total-orders">
-                                <i class="ri-building-fill"></i>
+                    <div class="tab__body">
+                        <div class="stat__container">
+                            <div class="stat-box">
+                                <div class="icon icon-total-orders">
+                                    <i class="ri-building-fill"></i>
+                                </div>
+                                <h4 class="total-orders__quantity">
+                                    {{ $orders->where('status', '!=', 'pending')->count() }}
+                                </h4>
+                                <p class="total-orders__title">Total Orders</p>
                             </div>
-                            <h4 class="total-orders__quantity">
-                                {{ $orders->where('status', '!=', 'pending')->count() }}
-                            </h4>
-                            <p class="total-orders__title">Total Orders</p>
+
+                            <div class="stat-box">
+                                <div class="icon icon-total-completed">
+                                    <i class="ri-archive-fill"></i>
+                                </div>
+                                <h4 class="total-completed__quantity">
+                                    {{ $orders->where('status', 'completed')->count() }}
+                                </h4>
+                                <p class="total-completed__title">Total Completed</p>
+                            </div>
+
+                            <div class="stat-box">
+                                <div class="icon icon-total-returned">
+                                    <i class="ri-corner-up-left-fill"></i>
+                                </div>
+                                <h4 class="total-returned__quantity">
+                                    {{ $orders->where('status', 'returned')->count() }}
+                                </h4>
+                                <p class="total-returned__title">Total Returned</p>
+                            </div>
+
+                            <div class="stat-box">
+                                <div class="icon icon-wallet-balance">
+                                    <i class="ri-wallet-fill"></i>
+                                </div>
+                                <h4 class="wallet-balance__quantity">₱{{ number_format($user->wallet_balance, 2) }}</h4>
+                                <p class="wallet-balance__title">Wallet Balance</p>
+                            </div>
                         </div>
 
+                        <h3 class="tab__header-title">Recent Orders</h3>
 
-                        <div class="stat-box">
-                            <div class="icon icon-total-completed">
-                                <i class="ri-archive-fill"></i>
-                            </div>
-                            <h4 class="total-completed__quantity">
-                                {{ $orders->where('status', 'completed')->count() }}
-                            </h4>
-                            <p class="total-completed__title">Total Completed</p>
-                        </div>
+                        <table class="placed__order-table">
+                            <tr>
+                                <th>Orders</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
 
-                        <div class="stat-box">
-                            <div class="icon icon-total-returned">
-                                <i class="ri-corner-up-left-fill"></i>
-                            </div>
-                            <h4 class="total-returned__quantity">
-                                {{ $orders->where('status', 'returned')->count() }}
-                            </h4>
-                            <p class="total-returned__title">Total Returned</p>
-                        </div>
+                            @forelse ($orders->filter(fn($order) => $order->status !== 'pending') as $order)
+                            <tr>
+                                <td>#{{ $order->order_id_custom }}</td>
+                                <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
+                                <td>{{ ucfirst($order->status) }}</td>
+                                <td>₱{{ number_format($order->subtotal, 2) }}</td>
+                                <td>
+                                    <a href="javascript:void(0);"
+                                        class="view__order"
+                                        data-order-id="{{ $order->order_id }}"
+                                        onclick="showDashboardOrderDetails(event, '{{ $order->order_id }}')">
+                                        View
+                                    </a>
+                                </td>
 
-                        <div class="stat-box">
-                            <div class="icon icon-wallet-balance">
-                                <i class="ri-wallet-fill"></i>
-                            </div>
-                            <h4 class="wallet-balance__quantity">₱{{ number_format($user->wallet_balance, 2) }}</h4>
-                            <p class="wallet-balance__title">Wallet Balance</p>
-                        </div>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="no-orders">No orders found</td>
+                            </tr>
+                            @endforelse
+                        </table>
                     </div>
-
-                    <h3 class="tab__header-title">Recent Orders</h3>
-
-                    <table class="placed__order-table">
-                        <tr>
-                            <th>Orders</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-
-                        @forelse ($orders->filter(fn($order) => $order->status !== 'pending') as $order)
-                        <tr>
-                            <td>#{{ $order->order_id_custom }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ ucfirst($order->status) }}</td>
-                            <td>₱{{ number_format($order->subtotal, 2) }}</td>
-                            <td>
-                                <a href="{{ url('/user/order-status/orderdetails/' . $order->order_id) }}" class="view__order">View</a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="no-orders">No orders found</td>
-                        </tr>
-                        @endforelse
-                    </table>
-
                 </div>
+
+                <!-- Add other tabs here with their respective content -->
             </div>
-            @endif
 
-            <div class="tab__content" content id="orders">
+
+            <div class="tab__content {{ session('active_tab')  == 'orders' ? 'active-tab' : '' }}" content id="orders">
                 <h3 class="tab__header">Your Orders</h3>
-
-                <!-- Orders List -->
                 <div class="tab__body" id="orders-list-container">
                     <table class="placed__order-table">
                         <tr>
@@ -228,24 +231,18 @@
                             <th>Total</th>
                             <th>Action</th>
                         </tr>
-
                         @forelse ($orders as $order)
                         <tr>
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>
-                                @if ($order->status == 'pending')
-                                Not Paid
-                                @else
-                                {{ ucfirst($order->status) }}
-                                @endif
-                            </td>
+                            <td>{{ ucfirst($order->status) }}</td>
                             <td>₱ {{ number_format($order->subtotal, 2) }}</td>
                             <td>
+
                                 @if ($order->status == 'pending')
                                 <a href="{{ route('cart.pay', ['orderId' => $order->order_id]) }}" class="view__order">Pay</a>
                                 @else
-                                <a href="#" class="view__order" data-order-id="{{ $order->order_id }}" onclick="showOrderDetails(event, '{{ $order->order_id }}')">View</a>
+                                <a href="javascript:void(0);" class="view__order" data-order-id="{{ $order->order_id }}" onclick="showOrderDetails(event, '{{ $order->order_id }}')">View</a>
                                 @endif
                             </td>
                         </tr>
@@ -387,9 +384,8 @@
 
 @include('home.footer')
 @endsection
-@section('scripts')
 <script>
-    const activeTab = @json(session('active_tab', 'dashboard'));
+    window.appConfig = {
+        activeTab: @json(session('active_tab', 'dashboard'))
+    };
 </script>
-
-@endsection

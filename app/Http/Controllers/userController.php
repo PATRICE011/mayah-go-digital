@@ -129,49 +129,6 @@ class userController extends Controller
         ]);
     }
 
-
-    public function orderDetails($orderId)
-{
-    // Fetch the order details from the database
-    $order = DB::table('orders')
-        ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
-        ->where('orders.id', $orderId)
-        ->select(
-            'orders.id as order_id',
-            'orderdetails.order_id_custom',
-            'orders.status',
-            'orderdetails.payment_method',
-            'orderdetails.total_amount',
-            'orders.created_at'
-        )
-        ->first();
-
-    // Check if the order exists
-    if (!$order) {
-        abort(404, 'Order not found.');
-    }
-
-    // Dynamically set the payment status
-    $order->payment_status = $order->status === 'paid' ? 'Paid' : 'Unpaid';
-
-    // Fetch all items in the order
-    $orderItems = DB::table('order_items')
-        ->where('order_id', $order->order_id)
-        ->join('products', 'order_items.product_id', '=', 'products.id')
-        ->select(
-            'products.product_name',
-            'order_items.quantity',
-            'order_items.price'
-        )
-        ->get();
-
-    return view('home.orderdetails', [
-        'order' => $order,
-        'orderItems' => $orderItems,
-    ]);
-}
-
-
     public function about()
     {
         // Get the authenticated user
@@ -301,14 +258,62 @@ class userController extends Controller
         }
     }
 
+         // Set the active_tab session if not already set
+    if (!$request->session()->has('active_tab')) {
+        $request->session()->put('active_tab', 'dashboard'); 
+    }
+
     return view('home.myaccount', [
-        'activeSection' => $request->has('order_id') ? 'orders' : 'dashboard',
         'cartCount' => $cartCount,
         'wishlistCount' => $wishlistCount,
         'orders' => $orders,
         'orderDetails' => $orderDetails,
         'orderItems' => $orderItems,
         'user' => $user,
+    ]);
+}
+
+public function orderDetails($orderId)
+{
+    // Fetch the order details from the database
+    $order = DB::table('orders')
+        ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+        ->where('orders.id', $orderId)
+        ->select(
+            'orders.id as order_id',
+            'orderdetails.order_id_custom',
+            'orders.status',
+            'orderdetails.payment_method',
+            'orderdetails.total_amount',
+            'orders.created_at'
+        )
+        ->first();
+
+    // Check if the order exists
+    if (!$order) {
+        return response()->json(['message' => 'Order not found.'], 404);
+    }
+
+    // Dynamically set the payment status
+    $order->payment_status = $order->status === 'paid' ? 'Paid' : 'Unpaid';
+
+    // Fetch all items in the order
+    $orderItems = DB::table('order_items')
+        ->where('order_id', $order->order_id)
+        ->join('products', 'order_items.product_id', '=', 'products.id')
+        ->select(
+            'products.product_name',
+            'order_items.quantity',
+            'order_items.price'
+        )
+        ->get();
+
+    // Return the rendered HTML partial for order details
+    return response()->json([
+        'html' => view('home.partials.orderdetails', [
+            'order' => $order,
+            'orderItems' => $orderItems,
+        ])->render(),
     ]);
 }
 
