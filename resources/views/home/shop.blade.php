@@ -9,9 +9,11 @@
                     <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
                 </span>
             </div>
+                
             <p class="header__alert-news">
                 Super Value Deals - Save More!
             </p>
+
             <div>
                 @guest
                 <a href="{{url('user/login')}}" class="header__top-action">Login</a>
@@ -34,6 +36,7 @@
         <a href="{{url('/')}}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
+
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
                 <li class="nav__item"><a href="{{url('/')}}" class="nav__link">HOME</a></li>
@@ -42,11 +45,13 @@
                 <li class="nav__item"><a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a></li>
                 @endauth
             </ul>
+
             <div class="header__search">
                 <input type="text" placeholder="Search Item" class="form__input">
                 <button class="search__btn"><i class='bx bx-search search'></i></button>
             </div>
         </div>
+
         <div class="header__user-actions">
             <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
             <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
@@ -80,13 +85,41 @@
                 </ul>
             </div>
         </div>
+
         <div class="products__grid">
             <div class="products__container grid">
                 @include('home.partials.product_grid')
             </div>
         </div>
-
     </div>
+
+    <ul class="pagination">
+        <li>
+            <a href="#" class="pagination__link active">01</a>
+        </li>
+
+        <li>
+            <a href="#" class="pagination__link">02</a>
+        </li>
+
+        <li>
+            <a href="#" class="pagination__link">03</a>
+        </li>
+
+        <li>
+            <a href="#" class="pagination__link">...</a>
+        </li>
+
+        <li>
+            <a href="#" class="pagination__link">10</a>
+        </li>
+
+        <li>
+            <a href="#" class="pagination__link icon">
+                <i class="ri-arrow-right-s-line"></i>
+            </a>
+        </li>
+    </ul>
 </section>
 
 @include('home.footer')
