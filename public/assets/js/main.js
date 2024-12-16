@@ -92,8 +92,8 @@ function attachBackToDashboardListener() {
         backToDashboardButton.addEventListener("click", () => {
             console.log("Back to Dashboard clicked!");
 
-            // Reload the page or dynamically reload the dashboard content
-            window.location.reload(); // For simplicity, reload the page
+            
+            window.location.reload(); 
         });
     } else {
         console.warn("Back to Dashboard button not found. It may not exist yet.");
