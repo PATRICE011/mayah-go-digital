@@ -1,3 +1,5 @@
+// WISHLIST TAB ADD TO CART
+
 // ORDERS TABS SWITCHING
 
 // Restore the active tab on page load
@@ -87,16 +89,19 @@ function showDashboardOrderDetails(event, orderId) {
 
 // Attach the "Back to Dashboard" button listener
 function attachBackToDashboardListener() {
-    const backToDashboardButton = document.querySelector(".back-to-dashboard-btn");
+    const backToDashboardButton = document.querySelector(
+        ".back-to-dashboard-btn"
+    );
     if (backToDashboardButton) {
         backToDashboardButton.addEventListener("click", () => {
             console.log("Back to Dashboard clicked!");
 
-            // Reload the page or dynamically reload the dashboard content
-            window.location.reload(); // For simplicity, reload the page
+            window.location.reload();
         });
     } else {
-        console.warn("Back to Dashboard button not found. It may not exist yet.");
+        console.warn(
+            "Back to Dashboard button not found. It may not exist yet."
+        );
     }
 }
 
@@ -122,8 +127,12 @@ function attachBackToOrdersListener() {
 // Function to switch tabs dynamically
 function switchTab(tabId) {
     // Remove active-tab class from all tabs and contents
-    document.querySelectorAll(".account__tab").forEach((tab) => tab.classList.remove("active-tab"));
-    document.querySelectorAll(".tab__content").forEach((content) => content.classList.remove("active-tab"));
+    document
+        .querySelectorAll(".account__tab")
+        .forEach((tab) => tab.classList.remove("active-tab"));
+    document
+        .querySelectorAll(".tab__content")
+        .forEach((content) => content.classList.remove("active-tab"));
 
     // Find and activate the target tab and content
     const targetTab = document.querySelector(`[data-target="#${tabId}"]`);
@@ -151,7 +160,6 @@ window.goToActiveTab = function () {
     window.location.reload();
 };
 
-
 // Save active tab to localStorage when clicking a tab
 document.querySelectorAll(".account__tab").forEach((tab) => {
     tab.addEventListener("click", (event) => {
@@ -160,9 +168,53 @@ document.querySelectorAll(".account__tab").forEach((tab) => {
         console.log(`Tab clicked: ${targetTabId}`);
     });
 });
+// ADD TO WISHLIST
+function addToWishlist(productId) {
+    const form = document.getElementById(`wish-button-${productId}`);
+    const url = form.getAttribute("action"); // Use the 'action' attribute here
+    const token = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content");
 
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRF-TOKEN": token,
+        },
+        body: new URLSearchParams(new FormData(form)),
+    })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return response.json().then((err) => {
+                    throw err;
+                });
+            }
+        })
+        .then((data) => {
+            // Update wishlist count dynamically
+            if (data.wishlistCount !== undefined) {
+                document.querySelector(".header__action-btn .count").innerText =
+                    data.wishlistCount;
+            }
 
-
+            // Show success notification
+            toastr.success(data.message || "Product added to wishlist!");
+        })
+        .catch((error) => {
+            if (error.error === "This product is already in your wishlist.") {
+                toastr.warning(error.error);
+            } else {
+                toastr.error(
+                    error.error ||
+                        "An error occurred while adding to the wishlist."
+                );
+            }
+            console.error("Error:", error);
+        });
+}
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {
@@ -209,7 +261,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     e.preventDefault();
 
                     const form = button.closest("form");
-                    const url = form.getAttribute("data-url");
+                    const url = form.getAttribute("action"); // Use the 'action' attribute
+                    const formData = new URLSearchParams(new FormData(form));
+
                     fetch(url, {
                         method: "POST",
                         headers: {
@@ -218,14 +272,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 .querySelector('meta[name="csrf-token"]')
                                 .getAttribute("content"),
                         },
-                        body: new URLSearchParams(new FormData(form)),
+                        body: formData,
                     })
                         .then((response) => {
-                            // If the response is successful, parse JSON
                             if (response.ok) {
                                 return response.json();
                             } else {
-                                // Handle errors (like product already in cart)
                                 return response.json().then((err) => {
                                     throw err;
                                 });
@@ -238,24 +290,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                     "cart-count"
                                 ).innerText = data.cartCount;
                             }
-
-                            // Show success notification
                             toastr.success(
                                 data.message || "Product added to cart!"
                             );
                         })
                         .catch((error) => {
-                            // Specific handling for "already in cart" error
                             if (
                                 error.error ===
                                 "This product is already in your cart."
                             ) {
                                 toastr.warning(error.error);
                             } else {
-                                // Generic error notification
                                 toastr.error(
                                     error.error ||
-                                        "An error occurred while adding the product to the cart."
+                                        "An unexpected error occurred."
                                 );
                             }
                             console.error("Error:", error);

@@ -4,8 +4,6 @@
         <i class="ri-arrow-left-line"></i> Back to Orders
     </button>
 
-
-
     <!-- Order Header -->
     <div class="order-header">
         <h1>Thank You</h1>
@@ -18,7 +16,7 @@
         <!-- Step: Pending -->
         <div class="order-progress-step 
             {{ in_array($order->status, ['pending', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
-            {{ $order->status == 'pending' ? 'active' : '' }}">
+            {{ $order->status == 'paid' ? 'active' : '' }}">
             <span>Pending</span>
         </div>
 
