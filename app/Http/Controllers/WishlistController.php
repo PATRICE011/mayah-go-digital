@@ -51,33 +51,50 @@ class WishlistController extends Controller
         return view('home.wishlist', compact('wishlistItems', 'cartCount', 'wishlistCount'));
     }
     
-    public function addToWishlist($productId)
+    public function addToWishlist(Request $request, $productId)
     {
         $user = Auth::user();
-
+    
         // Ensure the user is logged in
         if (!$user) {
-            return redirect()->route('login')->with('message', 'Please log in to add items to your wishlist.');
+            return response()->json(['error' => 'User not authenticated.'], 401);
         }
-
+    
+        // Check if the product exists
+        $product = DB::table('products')->where('id', $productId)->first();
+        if (!$product) {
+            return response()->json(['error' => 'Product not found.'], 404);
+        }
+    
         // Check if the product is already in the user's wishlist
-        $existingWishlist = Wishlist::where('user_id', $user->id)
+        $existingWishlist = DB::table('wishlists')
+            ->where('user_id', $user->id)
             ->where('product_id', $productId)
             ->first();
-
+    
         if ($existingWishlist) {
-            return redirect()->back()->with('message', 'This product is already in your wishlist.');
+            return response()->json(['error' => 'This product is already in your wishlist.'], 400);
         }
-
+    
         // Add to the wishlist
-        Wishlist::create([
+        DB::table('wishlists')->insert([
             'user_id' => $user->id,
             'product_id' => $productId,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
-
-        return back()->with('message', 'Product added to wishlist!');
+    
+        // Get updated wishlist count
+        $wishlistCount = DB::table('wishlists')
+            ->where('user_id', $user->id)
+            ->count();
+    
+        return response()->json([
+            'message' => 'Product added to wishlist!',
+            'wishlistCount' => $wishlistCount,
+        ], 200);
     }
-
+    
 
 
     public function removeFromWishlist($wishlistId)

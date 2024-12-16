@@ -160,9 +160,47 @@ document.querySelectorAll(".account__tab").forEach((tab) => {
         console.log(`Tab clicked: ${targetTabId}`);
     });
 });
+// ADD TO WISHLIST
+function addToWishlist(productId) {
+    const form = document.getElementById(`wish-button-${productId}`);
+    const url = form.getAttribute("data-url");
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-CSRF-TOKEN": token,
+        },
+        body: new URLSearchParams(new FormData(form)),
+    })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return response.json().then((err) => {
+                    throw err;
+                });
+            }
+        })
+        .then((data) => {
+            // Update wishlist count dynamically
+            if (data.wishlistCount !== undefined) {
+                document.querySelector(".header__action-btn .count").innerText = data.wishlistCount;
+            }
 
-
+            // Show success notification
+            toastr.success(data.message || "Product added to wishlist!");
+        })
+        .catch((error) => {
+            if (error.error === "This product is already in your wishlist.") {
+                toastr.warning(error.error);
+            } else {
+                toastr.error(error.error || "An error occurred while adding to the wishlist.");
+            }
+            console.error("Error:", error);
+        });
+}
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {
