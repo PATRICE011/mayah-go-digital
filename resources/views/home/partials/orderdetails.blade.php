@@ -15,7 +15,7 @@
     <div class="order-progress-bar">
         <!-- Step: Pending -->
         <div class="order-progress-step 
-            {{ in_array($order->status, ['pending', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
+            {{ in_array($order->status, ['paid', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
             {{ $order->status == 'paid' ? 'active' : '' }}">
             <span>Pending</span>
         </div>
@@ -47,8 +47,13 @@
             <h4>Order Details</h4>
             <p>Order ID: <span class="order-highlight">#{{ $order->order_id_custom }}</span></p>
             <p>Order Date: <span class="order-highlight">{{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y') }}</span></p>
-            <p>Order Status: <span class="order-highlight">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></p>
-            <p>Payment Status: <span class="order-highlight">{{ ucfirst($order->payment_status ?? 'Unpaid') }}</span></p>
+            <p>Order Status: <span class="order-highlight">
+                    @if($order->status === 'paid')
+                    Pending
+                    @else
+                    {{ ucfirst(str_replace('_', ' ', $order->status)) }}</span></p>
+                    @endif        
+            <p>Payment Status: <span class="order-highlight">paid</span></p>
             <p>Payment Method: <span class="order-highlight">{{ ucfirst($order->payment_method ?? 'N/A') }}</span></p>
         </div>
     </div>

@@ -235,7 +235,12 @@
                         <tr>
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ ucfirst($order->status) }}</td>
+                            <td> @if ($order->status == 'paid')
+                                Pending
+                                @else
+                                {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                @endif
+                            </td>
                             <td>₱ {{ number_format($order->subtotal, 2) }}</td>
                             <td>
 
