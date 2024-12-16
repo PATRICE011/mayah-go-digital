@@ -161,20 +161,10 @@
                 <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                     @csrf
                     <input type="hidden" name="id" value="{{ $product->id }}">
-
-                    <!-- The quantity input is now directly part of the form -->
-                    <input type="number"
-                        name="quantity"
-                        value="1"
-                        class="quantity"
-                        id="quantity-{{ $product->id }}"
-                        min="1"
-                        max="{{ $product->product_stocks }}"
-                        data-stock="{{ $product->product_stocks }}"
-                        data-product-id="{{ $product->id }}">
-
-                    <button type="submit" class="btn btn--sm">Add to Cart</button>
+                    <input type="number" name="quantity" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}">
+                    <button type="button" class="btn btn--sm">Add to Cart</button>
                 </form>
+
 
                 <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
                     @csrf

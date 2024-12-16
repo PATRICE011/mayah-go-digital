@@ -62,35 +62,50 @@ class userController extends Controller
     }
 
     // DETAILS START
-    public function details($id)
-    {
-        // Retrieve the product
-        $product = DB::table('products')->where('id', $id)->first();
+    public function details($id, Request $request)
+{
+    // Retrieve the product
+    $product = DB::table('products')->where('id', $id)->first();
 
-        $user = Auth::user();
-        $cartCount = 0;
-        $wishlistCount = 0;
+    if (!$product) {
+        return response()->json(['error' => 'Product not found'], 404);
+    }
 
-        if ($user) {
-            // Get the total cart count
-            $cartId = DB::table('carts')
-                ->where('user_id', $user->id)
-                ->value('id');
+    $user = Auth::user();
+    $cartCount = 0;
+    $wishlistCount = 0;
 
-            if ($cartId) {
-                $cartCount = DB::table('cart_items')
-                    ->where('cart_id', $cartId)
-                    ->sum('quantity');
-            }
+    if ($user) {
+        // Get the total cart count
+        $cartId = DB::table('carts')
+            ->where('user_id', $user->id)
+            ->value('id');
 
-            // Wishlist count
-            $wishlistCount = DB::table('wishlists')
-                ->where('user_id', $user->id)
-                ->count();
+        if ($cartId) {
+            $cartCount = DB::table('cart_items')
+                ->where('cart_id', $cartId)
+                ->sum('quantity');
         }
 
-        return view('home.details', compact('product', 'cartCount', 'wishlistCount'));
+        // Get the wishlist count
+        $wishlistCount = DB::table('wishlists')
+            ->where('user_id', $user->id)
+            ->count();
     }
+
+    // Check if the request expects JSON (e.g., AJAX)
+    if ($request->expectsJson() || $request->ajax()) {
+        return response()->json([
+            'product' => $product,
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
+        ]);
+    }
+
+    // Default to returning the view if it's a regular GET request
+    return view('home.details', compact('product', 'cartCount', 'wishlistCount'));
+}
+
 
 
     // DETAILS END

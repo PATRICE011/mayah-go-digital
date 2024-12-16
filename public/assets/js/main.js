@@ -1,4 +1,4 @@
-// WISHLIST TAB ADD TO CART
+// WISHLIST TAB ADD TO CARTy
 
 // ORDERS TABS SWITCHING
 
@@ -218,103 +218,108 @@ function addToWishlist(productId) {
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {
-    // Handle product filtering
-    document.querySelectorAll(".brand-filter").forEach((filter) => {
-        filter.addEventListener("change", function () {
-            const selectedCategories = Array.from(
-                document.querySelectorAll(".brand-filter:checked")
-            ).map((input) => input.value);
+    // Function to handle product filtering
+    function handleProductFiltering() {
+        document.querySelectorAll(".brand-filter").forEach((filter) => {
+            filter.addEventListener("change", function () {
+                const selectedCategories = Array.from(
+                    document.querySelectorAll(".brand-filter:checked")
+                ).map((input) => input.value);
 
-            fetch("/filter-products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        .getAttribute("content"),
-                },
-                body: JSON.stringify({ categories: selectedCategories }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    // Replace product grid with filtered products
-                    document.querySelector(".products__container").innerHTML =
-                        data.html;
-
-                    // Update total products count
-                    document.querySelector(".total__products span").innerText =
-                        data.count;
-
-                    // Reattach Add to Cart event listeners for newly loaded products
-                    attachAddToCartListeners();
+                fetch("/filter-products", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                    body: JSON.stringify({ categories: selectedCategories }),
                 })
-                .catch((error) => console.error("Error:", error));
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Replace product grid with filtered products
+                        document.querySelector(".products__container").innerHTML = data.html;
+
+                        // Update total products count
+                        document.querySelector(".total__products span").innerText = data.count;
+
+                        // Reattach Add to Cart event listeners for newly loaded products
+                        attachAddToCartListeners();
+                    })
+                    .catch((error) => console.error("Error:", error));
+            });
         });
-    });
+    }
 
     // Function to attach Add to Cart event listeners
     function attachAddToCartListeners() {
-        document
-            .querySelectorAll(".action__btn.cart__btn")
-            .forEach((button) => {
-                button.addEventListener("click", function (e) {
-                    e.preventDefault();
+        document.querySelectorAll("form.d-inline").forEach((form) => {
+            const button = form.querySelector("button[type='button'], button[type='submit']");
+            if (!button) return;
 
-                    const form = button.closest("form");
-                    const url = form.getAttribute("action"); // Use the 'action' attribute
-                    const formData = new URLSearchParams(new FormData(form));
+            // Remove any previously attached event listeners to avoid duplication
+            button.replaceWith(button.cloneNode(true));
+            const clonedButton = form.querySelector("button[type='button'], button[type='submit']");
 
-                    fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "X-CSRF-TOKEN": document
-                                .querySelector('meta[name="csrf-token"]')
-                                .getAttribute("content"),
-                        },
-                        body: formData,
+            // Add event listener to the cloned button
+            clonedButton.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const url = form.getAttribute("action");
+                const formData = new URLSearchParams(new FormData(form));
+
+                // Show loading state on the button
+                clonedButton.disabled = true;
+                const originalText = clonedButton.innerHTML;
+                clonedButton.innerHTML = '<i class="bx bx-loader bx-spin"></i>';
+
+                // Send AJAX request
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    },
+                    body: formData,
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            return response.json().then((err) => Promise.reject(err));
+                        }
+                        return response.json();
                     })
-                        .then((response) => {
-                            if (response.ok) {
-                                return response.json();
-                            } else {
-                                return response.json().then((err) => {
-                                    throw err;
-                                });
-                            }
-                        })
-                        .then((data) => {
-                            // Update cart count dynamically
-                            if (data.cartCount !== undefined) {
-                                document.getElementById(
-                                    "cart-count"
-                                ).innerText = data.cartCount;
-                            }
-                            toastr.success(
-                                data.message || "Product added to cart!"
-                            );
-                        })
-                        .catch((error) => {
-                            if (
-                                error.error ===
-                                "This product is already in your cart."
-                            ) {
-                                toastr.warning(error.error);
-                            } else {
-                                toastr.error(
-                                    error.error ||
-                                        "An unexpected error occurred."
-                                );
-                            }
-                            console.error("Error:", error);
-                        });
-                });
+                    .then((data) => {
+                        // Update the cart count dynamically
+                        const cartCountElement = document.getElementById("cart-count");
+                        if (cartCountElement) {
+                            cartCountElement.innerText = data.cartCount;
+                        }
+
+                        // Display success message and update button
+                        toastr.success(data.message || "Product added to cart!");
+                        clonedButton.innerHTML = '<i class="bx bx-check"></i>';
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        toastr.error(error.error || "An unexpected error occurred.");
+                        clonedButton.innerHTML = originalText; // Reset button text
+                    })
+                    .finally(() => {
+                        clonedButton.disabled = false; // Re-enable button
+                    });
             });
+        });
     }
 
-    // Attach event listeners for initially loaded products
+    // Initial attachment of listeners
+    handleProductFiltering();
     attachAddToCartListeners();
+
+    // Reattach listeners if the DOM is updated dynamically
+    document.addEventListener("productsUpdated", attachAddToCartListeners);
 });
+
 // PRODUCT DETAILS REALTIME QUANTITY UPDATE
 document.addEventListener("DOMContentLoaded", function () {
     // Attach event listeners to all quantity inputs
