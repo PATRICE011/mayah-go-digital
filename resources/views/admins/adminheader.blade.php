@@ -88,7 +88,7 @@
     <div class="nav-left-sidebar sidebar-dark">
         <div class="menu-list">
             <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+                <a class="d-xl-none d-lg-none" href="{{ route('admins.dashboard') }}">Dashboard</a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -97,7 +97,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav flex-column">
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ isset($activePage) && $activePage === 'dashboard' ? 'active' : '' }}">
+                            <a href="{{ route('admins.dashboard') }}" class="nav-link {{ isset($activePage) && $activePage === 'dashboard' ? 'active' : '' }}">
                                 <i class="fa fa-fw fa-user-circle"></i>Dashboard
                             </a>
                         </li>
@@ -120,7 +120,7 @@
                             </a>
                         </li>
                 
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-10" aria-controls="submenu-10">
                                 <i class="fas fa-f fa-folder"></i>Menu Level
                             </a>
@@ -151,7 +151,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li> -->
                     
                         <li class="nav-divider">
                             POS & Orders
@@ -162,15 +162,15 @@
                                 <i class="fas fa-fw fa-file"></i> POS
                             </a>
 
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> POS Orders
                             </a>
 
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Online Orders
                             </a>
 
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Return & Refunds
                             </a>
                         </li>
@@ -180,15 +180,15 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Administrator
                             </a>
 
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.admincustomers') }}" class="nav-link {{ isset($activePage) && $activePage === 'customers' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Customers
                             </a>
 
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('admins.adminemployee') }}" class="nav-link {{ isset($activePage) && $activePage === 'employee' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Employees
                             </a>
                         </li>
@@ -198,6 +198,10 @@
                         </li>
 
                         <li class="nav-item">
+                            <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Audit Trail
+                            </a>
+                        
                             <a href="#" class="nav-link">
                                 <i class="fas fa-fw fa-file"></i> Sales Report
                             </a>
