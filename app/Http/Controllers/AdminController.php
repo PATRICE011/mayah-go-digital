@@ -101,4 +101,19 @@ class AdminController extends Controller
 
         return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
     }
+
+    public function adminproducts()
+    {
+        return view("admins.adminproducts");
+    }
+
+    public function admincategories()
+    {
+        return view("admins.admincategories");
+    }
+
+    public function adminstocks()
+    {
+        return view("admins.adminstocks");
+    }
 }

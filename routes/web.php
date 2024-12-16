@@ -124,3 +124,8 @@ Route::get('/about', [UserController::class, 'about'])->name('home.about');
 Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
 Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::post('/filter-products', [UserController::class, 'filterProducts']);
+
+// ADMIN
+Route::get('admin/admin-products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
+Route::get('admin/admin-categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
+Route::get('admin/admin-stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');

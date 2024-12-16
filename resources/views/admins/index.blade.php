@@ -1,9 +1,8 @@
 @extends('admins.layout')
 @section('title')
 @section('content')
+    <!-- ==================== HEADER ==================== -->
+    @include('admins.adminheader')
 
-<main class="container section">
-    <!-- <h1>Dashboard</h1> -->
-</main>
 @endsection
 
