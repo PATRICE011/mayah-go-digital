@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class WishlistController extends Controller
 {
     //
-    public function wishlist()
+    public function wishlist(Request $request)
     {
         $user = Auth::user();
     
@@ -95,8 +95,6 @@ class WishlistController extends Controller
         ], 200);
     }
     
-
-
     public function removeFromWishlist($wishlistId)
     {
         $wishlist = Wishlist::find($wishlistId);
