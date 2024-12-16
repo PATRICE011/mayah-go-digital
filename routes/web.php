@@ -126,6 +126,15 @@ Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::post('/filter-products', [UserController::class, 'filterProducts']);
 
 // ADMIN
-Route::get('admin/admin-products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
-Route::get('admin/admin-categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
-Route::get('admin/admin-stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
+Route::get('admin/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
+Route::get('admin/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
+Route::get('admin/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
+Route::get('admin/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
+Route::get('admin/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
+Route::get('admin/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
+Route::get('admin/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
+Route::get('admin/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
+Route::get('admin/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
+Route::get('admin/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
+
+Route::get('admin/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');

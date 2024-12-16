@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    //
     public function index()
     {
         $products = Product::with('category')->paginate(5);
@@ -70,6 +69,7 @@ class AdminController extends Controller
 
         return view('admins.view', compact('order'));
     }
+
     public function onlineOrders()
     {
         // Eager load the related user and order details
@@ -89,6 +89,7 @@ class AdminController extends Controller
     {
         return view("admins.viewposOrders");
     }
+
     public function viewPOS(Request $request)
     {
         $categories = Category::all(); // Fetch all categories
@@ -100,6 +101,11 @@ class AdminController extends Controller
             : Product::all(); // Otherwise, show all products
 
         return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
+    }
+
+    public function admindashboard()
+    {
+        return view("admins.dashboard");
     }
 
     public function adminproducts()
@@ -115,5 +121,40 @@ class AdminController extends Controller
     public function adminstocks()
     {
         return view("admins.adminstocks");
+    }
+
+    public function adminposorders()
+    {
+        return view("admins.adminposorders");
+    }
+
+    public function adminonlineorders()
+    {
+        return view("admins.adminonlineorders");
+    }
+
+    public function adminrefund()
+    {
+        return view("admins.adminrefund");
+    }
+
+    public function adminadministrators()
+    {
+        return view("admins.adminadministrators");
+    }
+
+    public function admincustomers()
+    {
+        return view("admins.admincustomers");
+    }
+
+    public function adminemployee()
+    {
+        return view("admins.adminemployee");
+    }
+
+    public function adminaudit()
+    {
+        return view("admins.adminaudit");
     }
 }

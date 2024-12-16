@@ -34,7 +34,6 @@
 </head>
 
 <body>
-    
     @yield('content')
 
     <script src="{{ asset('assets/bootstrap/bootstrap/js/bootstrap.bundle.js') }}"></script>
