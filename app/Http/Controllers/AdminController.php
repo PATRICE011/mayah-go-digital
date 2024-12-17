@@ -105,7 +105,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view("admins.index"); // Replace 'admins.index' with the correct Blade view name.
+        return view("admins.index"); 
     }
 
     public function admindashboard()
@@ -183,11 +183,16 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Log out the current user (admin) from the 'web' guard
+        Auth::guard('web')->logout();
+    
+        // Invalidate the session
         $request->session()->invalidate();
+    
+        // Regenerate the CSRF token
         $request->session()->regenerateToken();
-        $request->session()->forget('name');
-
-        return redirect('/')->with('message', 'Logout Successful');
+    
+        // Redirect to the login page with a success message
+        return redirect('/')->with('message', 'Admin Logout Successful');
     }
 }

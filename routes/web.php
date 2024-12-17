@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', [HomeController::class, 'index']);
     Route::get('/products', [ProductController::class, 'search']);
 
     Route::prefix('user')->group(function () {
@@ -76,13 +75,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 
 // Admin Routes (Roles 1 & 2)
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
-    ->group(function () {
-       
-        Route::prefix('admin')->group(function () {
-            Route::get('/', [AdminController::class, 'index'])->name('admins.index');
-            Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
-            Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
-        });
+    ->prefix('admin')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('admins.index');
+        Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
+        Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
     });
 
 
@@ -95,3 +91,4 @@ Route::get('/about', [UserController::class, 'about'])->name('home.about');
 Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
 // Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::post('/filter-products', [UserController::class, 'filterProducts']);
+Route::get('/', [HomeController::class, 'index']);
