@@ -126,6 +126,8 @@ Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::post('/filter-products', [UserController::class, 'filterProducts']);
 
 // ADMIN
+Route::get('admin/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
+
 Route::get('admin/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
 Route::get('admin/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
 Route::get('admin/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
@@ -136,5 +138,3 @@ Route::get('admin/users/administrators', [AdminController::class, 'adminadminist
 Route::get('admin/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
 Route::get('admin/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
 Route::get('admin/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
-
-Route::get('admin/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');

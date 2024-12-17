@@ -33,75 +33,75 @@ class AdminController extends Controller
         return view("admins.dashboard");
     }
 
-    public function edit($id)
-    {
-        $product = Product::findOrFail($id);
-        return view('admins.editv', compact('product'));
-    }
+    // public function edit($id)
+    // {
+    //     $product = Product::findOrFail($id);
+    //     return view('admins.editv', compact('product'));
+    // }
 
-    // 
-    public function showCategories()
-    {
+    // // 
+    // public function showCategories()
+    // {
 
-        // fetch category
-        $categories = Category::all();
-        return view('admins.category', compact('categories'));
-    }
+    //     // fetch category
+    //     $categories = Category::all();
+    //     return view('admins.category', compact('categories'));
+    // }
 
-    // log out
-    public function logout(Request $request)
-    {
-        Auth::guard('web')->logout(); // Use the 'web' guard here
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    // // log out
+    // public function logout(Request $request)
+    // {
+    //     Auth::guard('web')->logout(); // Use the 'web' guard here
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
     
-        return redirect('/'); // Redirect to the desired location
-    }
+    //     return redirect('/'); // Redirect to the desired location
+    // }
     
-    public function showView($id)
-    {
-        // Fetch the order with related user, order details, and order items
-        $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
-            ->whereHas('orderDetail', function ($query) use ($id) {
-                $query->where('order_id_custom', $id);
-            })
-            ->firstOrFail();
+    // public function showView($id)
+    // {
+    //     // Fetch the order with related user, order details, and order items
+    //     $order = Order::with(['user', 'orderDetail', 'orderItems.product'])
+    //         ->whereHas('orderDetail', function ($query) use ($id) {
+    //             $query->where('order_id_custom', $id);
+    //         })
+    //         ->firstOrFail();
 
-        return view('admins.view', compact('order'));
-    }
+    //     return view('admins.view', compact('order'));
+    // }
 
-    public function onlineOrders()
-    {
-        // Eager load the related user and order details
-        $orders = Order::with(['user', 'orderDetail'])
-            ->get();
+    // public function onlineOrders()
+    // {
+    //     // Eager load the related user and order details
+    //     $orders = Order::with(['user', 'orderDetail'])
+    //         ->get();
 
-        return view('admins.orders', compact('orders'));
-    }
+    //     return view('admins.orders', compact('orders'));
+    // }
 
 
-    public function viewPOSorders()
-    {
-        return view("admins.posOrders");
-    }
+    // public function viewPOSorders()
+    // {
+    //     return view("admins.posOrders");
+    // }
 
-    public function showPOSorders()
-    {
-        return view("admins.viewposOrders");
-    }
+    // public function showPOSorders()
+    // {
+    //     return view("admins.viewposOrders");
+    // }
 
-    public function viewPOS(Request $request)
-    {
-        $categories = Category::all(); // Fetch all categories
-        $selectedCategoryId = $request->get('category_id'); // Get the selected category ID from the request
+    // public function viewPOS(Request $request)
+    // {
+    //     $categories = Category::all(); // Fetch all categories
+    //     $selectedCategoryId = $request->get('category_id'); // Get the selected category ID from the request
 
-        // Filter products by the selected category if it exists
-        $products = $selectedCategoryId
-            ? Product::where('category_id', $selectedCategoryId)->get()
-            : Product::all(); // Otherwise, show all products
+    //     // Filter products by the selected category if it exists
+    //     $products = $selectedCategoryId
+    //         ? Product::where('category_id', $selectedCategoryId)->get()
+    //         : Product::all(); // Otherwise, show all products
 
-        return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
-    }
+    //     return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
+    // }
 
     public function admindashboard()
     {

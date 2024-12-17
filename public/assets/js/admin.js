@@ -1,3 +1,21 @@
+    // JavaScript to display the selected image
+    const addImageInput = document.getElementById('addImage');
+    const imagePreview = document.getElementById('imagePreview');
+
+    addImageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0]; // Get the selected file
+        if (file) {
+            const reader = new FileReader(); // Create a FileReader to read the file
+            reader.onload = function(e) {
+                // Set the image source to the file content
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block'; // Show the image
+            };
+            reader.readAsDataURL(file); // Read the file as a data URL
+        } else {
+            imagePreview.style.display = 'none'; // Hide the image if no file is selected
+        }
+    });
 
 jQuery(document).ready(function($) {
     'use strict';

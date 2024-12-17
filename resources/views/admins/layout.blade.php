@@ -24,18 +24,20 @@
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
 
-     <!-- ====== toastr ========-->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+    <!-- ====== toastr ========-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <title>@yield('title', 'Mayah Store Official - ADMIN')</title>
-    @yield('styles')
+    @stack('styles')
 </head>
 
 <body>
+    @include('admins.adminheader', ['activePage' => 'dashboard'])
+    @include('admins.dashboard')
     @yield('content')
-
+    
     <script src="{{ asset('assets/bootstrap/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/slimscroll/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/charts/charts-bundle/Chart.bundle.js') }}"></script>
@@ -50,4 +52,5 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 </body>
+
 </html>
