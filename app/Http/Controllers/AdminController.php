@@ -11,27 +11,27 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function index()
-    {
-        $products = Product::with('category')->paginate(5);
-        return view("admins.index", ['products' => $products]);
-    }
-    public function showInventory()
-    {
-        $categories = Category::all(); // Fetch all categories
-        // Fetch products with pagination (5 products per page)
-        $products = Product::with('category')->paginate(5);
+    // public function index()
+    // {
+    //     $products = Product::with('category')->paginate(5);
+    //     return view("admins.index", ['products' => $products]);
+    // }
+    // public function showInventory()
+    // {
+    //     $categories = Category::all(); // Fetch all categories
+    //     // Fetch products with pagination (5 products per page)
+    //     $products = Product::with('category')->paginate(5);
 
-        return view('admins.inventory', [
-            'products' => $products,
-            'categories' => $categories
-        ]);
-    }
+    //     return view('admins.inventory', [
+    //         'products' => $products,
+    //         'categories' => $categories
+    //     ]);
+    // }
 
-    public function showDashboard()
-    {
-        return view("admins.dashboard");
-    }
+    // public function showDashboard()
+    // {
+    //     return view("admins.dashboard");
+    // }
 
     // public function edit($id)
     // {
@@ -48,16 +48,16 @@ class AdminController extends Controller
     //     return view('admins.category', compact('categories'));
     // }
 
-    // // log out
+    // log out
     // public function logout(Request $request)
     // {
     //     Auth::guard('web')->logout(); // Use the 'web' guard here
     //     $request->session()->invalidate();
     //     $request->session()->regenerateToken();
-    
+
     //     return redirect('/'); // Redirect to the desired location
     // }
-    
+
     // public function showView($id)
     // {
     //     // Fetch the order with related user, order details, and order items
@@ -103,58 +103,91 @@ class AdminController extends Controller
     //     return view('admins.pos', compact('products', 'categories', 'selectedCategoryId'));
     // }
 
+    public function index()
+    {
+        return view("admins.index"); // Replace 'admins.index' with the correct Blade view name.
+    }
+
     public function admindashboard()
     {
         return view("admins.dashboard");
     }
 
-    public function adminproducts()
-    {
-        return view("admins.adminproducts");
+    public function postLogin(Request $request)
+{
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+
+        if ($user->role_id == 1 || $user->role_id == 2) {
+            return redirect()->route('admins.dashboard'); // Redirect admins
+        } else {
+            return redirect('/home'); // Redirect normal users
+        }
     }
 
-    public function admincategories()
-    {
-        return view("admins.admincategories");
-    }
+    return back()->withErrors(['email' => 'Invalid credentials']);
+}
 
-    public function adminstocks()
-    {
-        return view("admins.adminstocks");
-    }
 
-    public function adminposorders()
-    {
-        return view("admins.adminposorders");
-    }
+    // public function adminproducts()
+    // {
+    //     return view("admins.adminproducts");
+    // }
 
-    public function adminonlineorders()
-    {
-        return view("admins.adminonlineorders");
-    }
+    // public function admincategories()
+    // {
+    //     return view("admins.admincategories");
+    // }
 
-    public function adminrefund()
-    {
-        return view("admins.adminrefund");
-    }
+    // public function adminstocks()
+    // {
+    //     return view("admins.adminstocks");
+    // }
 
-    public function adminadministrators()
-    {
-        return view("admins.adminadministrators");
-    }
+    // public function adminposorders()
+    // {
+    //     return view("admins.adminposorders");
+    // }
 
-    public function admincustomers()
-    {
-        return view("admins.admincustomers");
-    }
+    // public function adminonlineorders()
+    // {
+    //     return view("admins.adminonlineorders");
+    // }
 
-    public function adminemployee()
-    {
-        return view("admins.adminemployee");
-    }
+    // public function adminrefund()
+    // {
+    //     return view("admins.adminrefund");
+    // }
 
-    public function adminaudit()
+    // public function adminadministrators()
+    // {
+    //     return view("admins.adminadministrators");
+    // }
+
+    // public function admincustomers()
+    // {
+    //     return view("admins.admincustomers");
+    // }
+
+    // public function adminemployee()
+    // {
+    //     return view("admins.adminemployee");
+    // }
+
+    // public function adminaudit()
+    // {
+    //     return view("admins.adminaudit");
+    // }
+
+    public function logout(Request $request)
     {
-        return view("admins.adminaudit");
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        $request->session()->forget('name');
+
+        return redirect('/')->with('message', 'Logout Successful');
     }
 }

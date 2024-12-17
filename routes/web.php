@@ -45,7 +45,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
             Route::post('/update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
             Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdateQuantity');
-
         });
 
         Route::prefix('wishlist')->group(function () {
@@ -72,48 +71,20 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::get('/invoice/{orderId}', [UserController::class, 'invoice'])->name('order.invoice');
             Route::get('/orderdetails/{orderId}', [UserController::class, 'orderDetails']);
         });
-        
-
     });
-    
 });
 
 // Admin Routes (Roles 1 & 2)
-Route::middleware(['auth', RoleMiddleware::class . ':1,2'])->prefix('admin')->group(function () {
-    Route::get('/index', [AdminController::class, 'index'])->name('admins.index');
-    Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
-    Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admins.dashboard');
-
-    Route::prefix('orders')->group(function () {
-        Route::get('/', [AdminController::class, 'onlineOrders'])->name('admins.orders');
-        Route::get('/view/{id}', [AdminController::class, 'showView'])->name('admins.view');
-        Route::post('/{order}/confirm', [SmsStatusController::class, 'confirmOrder'])->name('orders.confirm');
-        Route::post('/{order}/reject', [SmsStatusController::class, 'rejectOrder'])->name('orders.reject');
-        Route::post('/{order}/ready-for-pickup', [SmsStatusController::class, 'readyOrder'])->name('orders.ready');
-        Route::post('/{order}/completed', [SmsStatusController::class, 'completeOrder'])->name('orders.complete');
-        Route::post('/{order}/refund', [SmsStatusController::class, 'refundOrder'])->name('orders.refund');
+Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
+    ->group(function () {
+       
+        Route::prefix('admin')->group(function () {
+            Route::get('/', [AdminController::class, 'index'])->name('admins.index');
+            Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
+            Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
+        });
     });
 
-    Route::prefix('pos')->group(function () {
-        Route::get('/', [AdminController::class, 'viewPOS'])->name('admins.pos');
-        Route::get('/posorders', [AdminController::class, 'viewPOSorders'])->name('admins.posOrders');
-        Route::get('/viewposorders', [AdminController::class, 'showPOSorders'])->name('admins.viewposOrders');
-    });
-
-    Route::prefix('inventory')->group(function () {
-        Route::get('/', [AdminController::class, 'showInventory'])->name('admins.inventory');
-        Route::post('/', [ProductController::class, 'getProduct'])->name('admins.insertProduct');
-        Route::put('/{id}', [ProductController::class, 'update'])->name('admins.inventory.update');
-        Route::delete('/{id}', [ProductController::class, 'destroy'])->name('admins.inventory.destroy');
-    });
-
-    Route::prefix('categories')->group(function () {
-        Route::get('/', [AdminController::class, 'showCategories'])->name('admins.category');
-        Route::post('/', [CategoryController::class, 'getCategory'])->name('admins.insertCategory');
-        Route::put('/{id}', [CategoryController::class, 'update'])->name('admins.category.update');
-        Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('admins.category.destroy');
-    });
-});
 
 // Public Routes
 Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
@@ -124,17 +95,3 @@ Route::get('/about', [UserController::class, 'about'])->name('home.about');
 Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
 // Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
 Route::post('/filter-products', [UserController::class, 'filterProducts']);
-
-// ADMIN
-Route::get('admin/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
-
-Route::get('admin/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
-Route::get('admin/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
-Route::get('admin/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
-Route::get('admin/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
-Route::get('admin/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
-Route::get('admin/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
-Route::get('admin/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
-Route::get('admin/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
-Route::get('admin/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
-Route::get('admin/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
