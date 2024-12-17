@@ -69,15 +69,8 @@
         </div>
 
         <div class="header__user-actions">
-            <a href="{{ url('wishlist') }}" class="header__action-btn">
-                <i class='bx bx-heart'></i>
-                <span class="count">{{$wishlistCount}}</span>
-            </a>
-
-            <a href="{{ url('cart') }}" class="header__action-btn">
-                <i class='bx bx-cart-alt'></i>
-                <span class="count">{{$cartCount}}</span>
-            </a>
+            <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
+            <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
         </div>
     </nav>
 </header>
@@ -235,7 +228,12 @@
                         <tr>
                             <td>{{ $order->order_id_custom }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F j, Y') }}</td>
-                            <td>{{ ucfirst($order->status) }}</td>
+                            <td> @if ($order->status == 'paid')
+                                Pending
+                                @else
+                                {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                @endif
+                            </td>
                             <td>₱ {{ number_format($order->subtotal, 2) }}</td>
                             <td>
 
@@ -260,35 +258,19 @@
                 <div class="tab__body">
                     <form id="profile-update-form" action="{{ route('user.update-profile') }}" method="POST" class="form grid">
                         @csrf
-                        <input
-                            type="text"
-                            name="name"
-                            value="{{ old('name', auth()->user()->name) }}"
-                            placeholder="Name"
-                            class="form__input @error('name') is-invalid @enderror">
+                        <input type="text" name="name" value="{{ old('name', auth()->user()->name) }}" placeholder="Name" class="form__input @error('name') is-invalid @enderror">
                         @error('name')
                         <div class="error">{{ $message }}</div>
                         @enderror
 
-                        <input
-                            type="tel"
-                            name="mobile"
-                            value="{{ old('mobile', auth()->user()->mobile) }}"
-                            placeholder="Phone Number"
-                            class="form__input @error('mobile') is-invalid @enderror">
+                        <input type="tel" name="mobile" value="{{ old('mobile', auth()->user()->mobile) }}" placeholder="Phone Number" class="form__input @error('mobile') is-invalid @enderror">
                         @error('mobile')
                         <div class="error">{{ $message }}</div>
                         @enderror
 
                         <div>
-                            <input
-                                type="tel"
-                                name="otp"
-                                placeholder="Enter OTP"
-                                class="form__input @error('otp') is-invalid @enderror">
-
-                            <button
-                                type="button"
+                            <input type="tel" name="otp" placeholder="Enter OTP" class="form__input @error('otp') is-invalid @enderror">
+                            <button type="button"
                                 id="get-otp-button-update-profile"
                                 class="btn btn--md"
                                 data-url="{{ route('sendCode') }}"
@@ -296,16 +278,19 @@
                                 data-csrf="{{ csrf_token() }}">
                                 Get OTP
                             </button>
+
                             @error('otp')
                             <div class="error">{{ $message }}</div>
                             @enderror
                         </div>
+
                         <div class="form__btn">
                             <button type="submit" class="btn btn--md">Update Profile</button>
                         </div>
                     </form>
                 </div>
             </div>
+
 
 
             <div class="tab__content {{ session('active_tab') == 'change-password' ? 'active-tab' : '' }}" content id="change-password">

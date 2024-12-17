@@ -23,10 +23,28 @@ class UpdateProfileController extends Controller
         return response()->json(['error' => 'User not authenticated.'], 401);
     }
 
+    // Fetch the last OTP request time from the users_area table
+    $userArea = DB::table('users_area')->where('id', $userId)->first();
+
+    // Check for last OTP request time
+    if ($userArea && $userArea->otp_created_at) {
+        $lastOtpRequestTime = Carbon::parse($userArea->otp_created_at);
+
+        // Check if 1 minute restriction applies
+        if ($lastOtpRequestTime->addMinute() > Carbon::now()) {
+            $remainingTime = Carbon::now()->diffInSeconds($lastOtpRequestTime->addMinute());
+
+            return response()->json([
+                'error' => 'You can request OTP only after 1 minute.',
+                'remaining_time' => $remainingTime,
+            ], 400);
+        }
+    }
+
     // Generate a random 6-digit OTP
     $otp = rand(100000, 999999);
 
-    // Update the OTP and related fields directly in the database
+    // Update the OTP and related fields in the database
     DB::table('users_area')->where('id', $userId)->update([
         'otp' => $otp,
         'otp_created_at' => Carbon::now(),
@@ -42,13 +60,14 @@ class UpdateProfileController extends Controller
             'sendername' => env('SEMAPHORE_SENDER_NAME'),
         ]);
 
-    // Return JSON response based on the result
+    // Return response based on Semaphore API result
     if ($response->successful()) {
         return response()->json(['message' => 'OTP sent successfully!']);
     } else {
         return response()->json(['error' => 'Failed to send OTP. Please try again later.'], 500);
     }
 }
+
 
 public function updateProfile(Request $request)
 {

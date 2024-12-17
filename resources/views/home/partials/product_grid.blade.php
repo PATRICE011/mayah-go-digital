@@ -49,22 +49,17 @@
         <span class="old__price">₱ {{ number_format($product->product_old_price, 2) }}</span>
         @endif
     </div>
-    <form id="add-to-cart-form-{{ $product->id }}"
-        action="{{ route('home.inserttocart') }}"
-        method="POST"
-        class="d-inline">
+    <form id="add-to-cart-form-{{ $product->id }}" action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
         @csrf
         <input type="hidden" name="id" value="{{ $product->id }}">
         <button type="button"
-            class="action__btn cart__btn 
-                   {{ $product->product_stocks == 0 ? 'disabled' : '' }} 
-                   {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock-btn' : '' }}"
-            aria-label="Add To Cart"
+            class="action__btn cart__btn {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
             aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
             {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
-            <i class='bx bx-cart-alt'></i>
+            <i class="bx bx-cart-alt"></i>
         </button>
     </form>
+
 
 </div>
 </div>

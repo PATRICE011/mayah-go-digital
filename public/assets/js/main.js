@@ -1,4 +1,4 @@
-// WISHLIST TAB ADD TO CART
+// WISHLIST TAB ADD TO CARTy
 
 // ORDERS TABS SWITCHING
 
@@ -218,52 +218,77 @@ function addToWishlist(productId) {
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {
-    // Handle product filtering
-    document.querySelectorAll(".brand-filter").forEach((filter) => {
-        filter.addEventListener("change", function () {
-            const selectedCategories = Array.from(
-                document.querySelectorAll(".brand-filter:checked")
-            ).map((input) => input.value);
+    // Function to handle product filtering
+    function handleProductFiltering() {
+        document.querySelectorAll(".brand-filter").forEach((filter) => {
+            filter.addEventListener("change", function () {
+                const selectedCategories = Array.from(
+                    document.querySelectorAll(".brand-filter:checked")
+                ).map((input) => input.value);
 
-            fetch("/filter-products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        .getAttribute("content"),
-                },
-                body: JSON.stringify({ categories: selectedCategories }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    // Replace product grid with filtered products
-                    document.querySelector(".products__container").innerHTML =
-                        data.html;
-
-                    // Update total products count
-                    document.querySelector(".total__products span").innerText =
-                        data.count;
-
-                    // Reattach Add to Cart event listeners for newly loaded products
-                    attachAddToCartListeners();
+                fetch("/filter-products", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                    body: JSON.stringify({ categories: selectedCategories }),
                 })
-                .catch((error) => console.error("Error:", error));
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Replace product grid with filtered products
+                        document.querySelector(
+                            ".products__container"
+                        ).innerHTML = data.html;
+
+                        // Update total products count
+                        document.querySelector(
+                            ".total__products span"
+                        ).innerText = data.count;
+
+                        // Reattach Add to Cart event listeners for newly loaded products
+                        attachAddToCartListeners();
+                    })
+                    .catch((error) => console.error("Error:", error));
+            });
         });
-    });
+    }
 
     // Function to attach Add to Cart event listeners
     function attachAddToCartListeners() {
         document
-            .querySelectorAll(".action__btn.cart__btn")
-            .forEach((button) => {
-                button.addEventListener("click", function (e) {
+            .querySelectorAll("form.d-inline, form.add-to-cart-form")
+            .forEach((form) => {
+                const button = form.querySelector(
+                    "button[type='button'], button[type='submit']"
+                );
+                if (!button) return;
+
+                // Remove any previously attached event listeners to avoid duplication
+                button.replaceWith(button.cloneNode(true));
+                const clonedButton = form.querySelector(
+                    "button[type='button'], button[type='submit']"
+                );
+
+                // Add event listener to the cloned button
+                clonedButton.addEventListener("click", function (e) {
                     e.preventDefault();
 
-                    const form = button.closest("form");
-                    const url = form.getAttribute("action"); // Use the 'action' attribute
+                    // Get the URL either from 'action' or 'data-url' depending on the form
+                    const url =
+                        form.getAttribute("action") ||
+                        form.getAttribute("data-url");
                     const formData = new URLSearchParams(new FormData(form));
 
+                    // Show loading state on the button
+                    clonedButton.disabled = true;
+                    const originalText = clonedButton.innerHTML;
+                    clonedButton.innerHTML =
+                        '<i class="bx bx-loader bx-spin"></i>';
+
+                    // Send AJAX request
                     fetch(url, {
                         method: "POST",
                         headers: {
@@ -275,46 +300,50 @@ document.addEventListener("DOMContentLoaded", function () {
                         body: formData,
                     })
                         .then((response) => {
-                            if (response.ok) {
-                                return response.json();
-                            } else {
-                                return response.json().then((err) => {
-                                    throw err;
-                                });
+                            if (!response.ok) {
+                                return response
+                                    .json()
+                                    .then((err) => Promise.reject(err));
                             }
+                            return response.json();
                         })
                         .then((data) => {
-                            // Update cart count dynamically
-                            if (data.cartCount !== undefined) {
-                                document.getElementById(
-                                    "cart-count"
-                                ).innerText = data.cartCount;
+                            // Update the cart count dynamically
+                            const cartCountElement =
+                                document.getElementById("cart-count");
+                            if (cartCountElement) {
+                                cartCountElement.innerText = data.cartCount;
                             }
+
+                            // Display success message and update button
                             toastr.success(
                                 data.message || "Product added to cart!"
                             );
+                            clonedButton.innerHTML =
+                                '<i class="bx bx-check"></i>';
                         })
                         .catch((error) => {
-                            if (
-                                error.error ===
-                                "This product is already in your cart."
-                            ) {
-                                toastr.warning(error.error);
-                            } else {
-                                toastr.error(
-                                    error.error ||
-                                        "An unexpected error occurred."
-                                );
-                            }
                             console.error("Error:", error);
+                            toastr.error(
+                                error.error || "An unexpected error occurred."
+                            );
+                            clonedButton.innerHTML = originalText; // Reset button text
+                        })
+                        .finally(() => {
+                            clonedButton.disabled = false; // Re-enable button
                         });
                 });
             });
     }
 
-    // Attach event listeners for initially loaded products
+    // Initial attachment of listeners
+    handleProductFiltering();
     attachAddToCartListeners();
+
+    // Reattach listeners if the DOM is updated dynamically
+    document.addEventListener("productsUpdated", attachAddToCartListeners);
 });
+
 // PRODUCT DETAILS REALTIME QUANTITY UPDATE
 document.addEventListener("DOMContentLoaded", function () {
     // Attach event listeners to all quantity inputs
@@ -362,65 +391,148 @@ $(document).ready(function () {
         }
     }
 
-    // Handle Get OTP button click for the Update Profile section
-    $("#get-otp-button-update-profile").on("click", function () {
-        // Fetch data attributes for configuration
-        const url = $(this).data("url");
-        const action = $(this).data("action");
-        const csrfToken = $(this).data("csrf");
-
-        // Send AJAX POST request to the server
-        $.ajax({
-            url: url,
-            method: "POST",
-            data: {
-                action: action,
-                _token: csrfToken, // CSRF token for security
-            },
-            success: function (response) {
-                // Handle success
-                if (response.message) {
-                    toastr.success(response.message);
+    $(document).ready(function () {
+        let countdownTimers = {}; // Object to store individual timers for buttons/links
+    
+        // Reusable Countdown Function
+        function startCountdown(time, element, timerKey) {
+            let countdown = time;
+    
+            // Clear any existing countdown for this element
+            if (countdownTimers[timerKey]) {
+                clearInterval(countdownTimers[timerKey]);
+            }
+    
+            // Check if the element is a button or link
+            const isButton = element.is("button");
+    
+            // Disable the element and update text
+            if (isButton) {
+                element.prop("disabled", true).text(`Wait ${countdown}s`);
+            } else {
+                element
+                    .css({ "pointer-events": "none", opacity: "0.5" })
+                    .text(`Wait ${countdown}s`);
+            }
+    
+            // Start the countdown
+            countdownTimers[timerKey] = setInterval(function () {
+                countdown--;
+                if (isButton) {
+                    element.text(`Wait ${countdown}s`);
+                } else {
+                    element.text(`Wait ${countdown}s`);
                 }
-            },
-            error: function (xhr) {
-                // Handle error
-                const errorMessage =
-                    xhr.responseJSON?.error || "An unexpected error occurred.";
-                toastr.error(errorMessage);
-            },
+    
+                if (countdown <= 0) {
+                    clearInterval(countdownTimers[timerKey]);
+                    delete countdownTimers[timerKey]; // Remove the timer reference
+    
+                    // Re-enable the element
+                    if (isButton) {
+                        element.prop("disabled", false).text("Get OTP");
+                    } else {
+                        element
+                            .css({ "pointer-events": "auto", opacity: "1" })
+                            .text("Resend Code");
+                    }
+                }
+            }, 1000);
+        }
+    
+        // Handle Get OTP for Update Profile Section
+        $("#get-otp-button-update-profile").on("click", function () {
+            const url = $(this).data("url");
+            const csrfToken = $(this).data("csrf");
+            const button = $(this);
+    
+            button.prop("disabled", true).text("Sending OTP...");
+    
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: { action: "update-profile", _token: csrfToken },
+                success: function (response) {
+                    toastr.success(response.message);
+                    startCountdown(60, button, "updateProfile");
+                },
+                error: function (xhr) {
+                    const remainingTime =
+                        xhr.responseJSON?.remaining_time || 60;
+                    toastr.error(
+                        xhr.responseJSON?.error ||
+                            "An unexpected error occurred."
+                    );
+                    startCountdown(remainingTime, button, "updateProfile");
+                },
+            });
+        });
+    
+        // Handle Get OTP for Change Password Section
+        $("#get-otp-button-change-password").on("click", function () {
+            const url = $(this).data("url");
+            const csrfToken = $(this).data("csrf");
+            const button = $(this);
+    
+            button.prop("disabled", true).text("Sending OTP...");
+    
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: { action: "change-password", _token: csrfToken },
+                success: function (response) {
+                    toastr.success(response.message);
+                    startCountdown(60, button, "changePassword");
+                },
+                error: function (xhr) {
+                    const remainingTime =
+                        xhr.responseJSON?.remaining_time || 60;
+                    toastr.error(
+                        xhr.responseJSON?.error ||
+                            "An unexpected error occurred."
+                    );
+                    startCountdown(remainingTime, button, "changePassword");
+                },
+            });
+        });
+    
+        // Handle Resend OTP for Registration Section
+        const resendOtpLink = $("#resend-otp-link");
+    
+        resendOtpLink.on("click", function (e) {
+            e.preventDefault();
+    
+            const url = $(this).data("url");
+            const csrfToken = $(this).data("csrf");
+    
+            resendOtpLink
+                .css({ "pointer-events": "none", opacity: "0.5" })
+                .text("Sending...");
+    
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: { _token: csrfToken },
+                success: function (response) {
+                    toastr.success(response.message);
+                    startCountdown(60, resendOtpLink, "registrationResend");
+                },
+                error: function (xhr) {
+                    const remainingTime =
+                        xhr.responseJSON?.remaining_time || 60;
+                    toastr.error(
+                        xhr.responseJSON?.error || "An error occurred."
+                    );
+                    startCountdown(
+                        remainingTime,
+                        resendOtpLink,
+                        "registrationResend"
+                    );
+                },
+            });
         });
     });
-
-    // Handle Get OTP button click for the Change Password section
-    $("#get-otp-button-change-password").on("click", function () {
-        // Fetch data attributes for configuration
-        const url = $(this).data("url");
-        const action = $(this).data("action");
-        const csrfToken = $(this).data("csrf");
-
-        // Send AJAX POST request to the server
-        $.ajax({
-            url: url,
-            method: "POST",
-            data: {
-                action: action,
-                _token: csrfToken, // CSRF token for security
-            },
-            success: function (response) {
-                // Handle success
-                if (response.message) {
-                    toastr.success(response.message);
-                }
-            },
-            error: function (xhr) {
-                // Handle error
-                const errorMessage =
-                    xhr.responseJSON?.error || "An unexpected error occurred.";
-                toastr.error(errorMessage);
-            },
-        });
-    });
+    
 });
 
 // UPDATE CART QUANTITY

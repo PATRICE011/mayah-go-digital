@@ -69,16 +69,9 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart'></i>
-            <span class="count">{{$wishlistCount}}</span>
-         </a>
-
-         <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt'></i>
-            <span class="count">{{$cartCount}}</span>
-         </a>
-      </div>
+            <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
+            <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
+        </div>
    </nav>
 </header>
 
@@ -158,11 +151,19 @@
 
                <td>
                   @if ($wishlistItem->product->product_stocks > 0)
-                  <a href="{{ route('home.inserttocart', $wishlistItem->product->id) }}" class="btn btn--sm">Add to Cart</a>
+                  <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
+                     @csrf
+                     <input type="hidden" name="id" value="{{ $wishlistItem->product->id }}">
+                     <input type="hidden" name="quantity" value="1">
+                     <button type="button" class="btn btn--sm action__btn cart__btn">
+                        Add to Cart
+                     </button>
+                  </form>
                   @else
                   <button class="btn btn--sm" disabled>Out of Stock</button>
                   @endif
                </td>
+
 
                <td>
                   <form id="destroy-button" action="{{ route('wishlist.remove',$wishlistItem->id) }}" method="POST">

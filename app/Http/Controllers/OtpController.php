@@ -151,25 +151,50 @@ class OtpController extends Controller
     }
 
     public function resendOtp(Request $request)
-    {
-        $userData = $request->session()->get('user_data');
+{
+    $userData = $request->session()->get('user_data');
 
-        if (!$userData || !isset($userData['mobile'])) {
-            return redirect()->back()->with('error', 'Session data not found or mobile number missing.');
-        }
+    // Check if user data exists in the session
+    if (!$userData || !isset($userData['mobile'])) {
+        return response()->json(['error' => 'Session data not found or mobile number missing.'], 400);
+    }
 
-        $otp = rand(100000, 999999);
+    // Check for the last OTP creation time
+    $otpCreatedAt = isset($userData['otp_created_at']) 
+        ? new \DateTime($userData['otp_created_at']) 
+        : null;
 
-        $request->session()->put('user_data', array_merge($userData, [
-            'otp' => $otp,
-            'otp_created_at' => now()->toDateTimeString(),
-        ]));
+    // Enforce 1-minute restriction
+    if ($otpCreatedAt) {
+        $currentTime = new \DateTime();
+        $timeDiff = $currentTime->getTimestamp() - $otpCreatedAt->getTimestamp();
 
-        try {
-            $this->sendOtp($userData['mobile'], $otp);
-            return redirect()->back()->with('message', 'A new OTP has been sent to your mobile number.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
+        if ($timeDiff < 60) {
+            $remainingTime = 60 - $timeDiff;
+            return response()->json([
+                'error' => 'Please wait before resending OTP.',
+                'remaining_time' => $remainingTime
+            ], 429);
         }
     }
+
+    // Generate a new OTP
+    $otp = rand(100000, 999999);
+
+    // Update OTP and timestamp in session
+    $request->session()->put('user_data', array_merge($userData, [
+        'otp' => $otp,
+        'otp_created_at' => now()->toDateTimeString(),
+    ]));
+
+    // Attempt to send the new OTP
+    try {
+        $this->sendOtp($userData['mobile'], $otp);
+        return response()->json(['message' => 'A new OTP has been sent to your mobile number.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to send OTP. Please try again.'], 500);
+    }
+}
+
+    
 }
