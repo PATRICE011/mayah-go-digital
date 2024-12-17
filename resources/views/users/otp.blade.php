@@ -101,8 +101,14 @@
 
             <div>
                <p class="login__signup">
-                  Didn't receive a code? <a href="{{ url('user/resend-otp') }}">Resend Code</a>
+                  Didn't receive a code?
+                  <a href="#" id="resend-otp-link"
+                     data-url="{{ url('user/resend-otp') }}"
+                     data-csrf="{{ csrf_token() }}">
+                     Resend Code
+                  </a>
                </p>
+               <span id="otp-timer" style="color: red; display: none;"></span>
             </div>
 
             <div class="form__btn">
@@ -110,28 +116,29 @@
             </div>
          </form>
       </div>
+
    </div>
 </section>
 
 @include('home.footer')
 
 <script>
-    toastr.options = {
+   toastr.options = {
       "closeButton": true,
       "progressBar": true,
       "positionClass": "toast-top-right",
       "timeOut": "5000",
-    };
+   };
 
-    // Display success message if available
-    @if (session('message'))
-      toastr.success("{{ session('message') }}");
-    @endif
+   // Display success message if available
+   @if(session('message'))
+   toastr.success("{{ session('message') }}");
+   @endif
 
-    // Display error message if available
-    @if (session('error'))
-      toastr.error("{{ session('error') }}");
-    @endif
-  </script>
+   // Display error message if available
+   @if(session('error'))
+   toastr.error("{{ session('error') }}");
+   @endif
+</script>
 
 @endsection

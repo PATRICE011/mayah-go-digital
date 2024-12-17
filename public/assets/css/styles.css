@@ -1850,3 +1850,9 @@ input[type="number"] {
 /* .go-back-btn__icon:hover {
   background-color: #e0e0e0;
 } */
+/* RESEND OTP DEC 17 */
+resendOtpLink.css({
+  "pointer-events": "none",
+  "opacity": "0.5",
+  "text-decoration": "none",
+});
