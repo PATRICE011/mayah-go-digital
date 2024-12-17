@@ -1,7 +1,6 @@
 <?php
 
 // app/Http/Middleware/RoleMiddleware.php
-// app/Http/Middleware/RoleMiddleware.php
 
 namespace App\Http\Middleware;
 
@@ -21,14 +20,16 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        // Check if the user is authenticated and has one of the required roles
-        if(Auth::check()&& in_array(Auth::user()->role_id, $roles)){
-            return $next($request);
+        // Ensure user is authenticated
+        if (Auth::check()) {
+            // Check if the user's role_id matches any of the passed roles
+            if (in_array(Auth::user()->role_id, $roles)) {
+                return $next($request); // Proceed to the next request
+            }
         }
 
-        return redirect('/')->with('error','Unauthorized Acess');
-        
+        // Redirect if the user doesn't have the required role
+        return redirect('/')->with('error', 'Unauthorized Access');
     }
 }
-// MAHSHOSHOW DAPAT TOHHHH
 

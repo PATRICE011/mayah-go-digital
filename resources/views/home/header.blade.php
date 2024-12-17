@@ -21,7 +21,7 @@
 
                 <!-- For authenticated users -->
                 @auth
-                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                <form action="{{ route('users.logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
                 </form>
