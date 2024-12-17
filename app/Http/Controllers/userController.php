@@ -386,7 +386,7 @@ public function orderDetails($orderId)
                     <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
                     <span class="old__price">₱ 9.00</span>
                 </div>
-                <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="/user/cart/add">
+                <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="' . route('home.inserttocart') . '">
                     ' . csrf_field() . '
                     <input type="hidden" name="id" value="' . $product->id . '">
                     <button type="button" class="action__btn cart__btn ' . ($product->product_stocks == 0 ? 'disabled' : '') . '" ' . ($product->product_stocks == 0 ? 'disabled' : '') . '>

@@ -69,16 +69,9 @@
       </div>
 
       <div class="header__user-actions">
-         <a href="{{route('home.wishlist')}}" class="header__action-btn">
-            <i class='bx bx-heart'></i>
-            <span class="count">{{$wishlistCount}}</span>
-         </a>
-
-         <a href="{{route('home.cart')}}" class="header__action-btn">
-            <i class='bx bx-cart-alt'></i>
-            <span class="count">{{$cartCount}}</span>
-         </a>
-      </div>
+            <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
+            <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
+        </div>
    </nav>
 </header>
 

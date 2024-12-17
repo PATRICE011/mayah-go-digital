@@ -254,26 +254,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to attach Add to Cart event listeners
     function attachAddToCartListeners() {
-        document.querySelectorAll("form.d-inline").forEach((form) => {
+        document.querySelectorAll("form.d-inline, form.add-to-cart-form").forEach((form) => {
             const button = form.querySelector("button[type='button'], button[type='submit']");
             if (!button) return;
-
+    
             // Remove any previously attached event listeners to avoid duplication
             button.replaceWith(button.cloneNode(true));
             const clonedButton = form.querySelector("button[type='button'], button[type='submit']");
-
+    
             // Add event listener to the cloned button
             clonedButton.addEventListener("click", function (e) {
                 e.preventDefault();
-
-                const url = form.getAttribute("action");
+    
+                // Get the URL either from 'action' or 'data-url' depending on the form
+                const url = form.getAttribute("action") || form.getAttribute("data-url");
                 const formData = new URLSearchParams(new FormData(form));
-
+    
                 // Show loading state on the button
                 clonedButton.disabled = true;
                 const originalText = clonedButton.innerHTML;
                 clonedButton.innerHTML = '<i class="bx bx-loader bx-spin"></i>';
-
+    
                 // Send AJAX request
                 fetch(url, {
                     method: "POST",
@@ -295,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (cartCountElement) {
                             cartCountElement.innerText = data.cartCount;
                         }
-
+    
                         // Display success message and update button
                         toastr.success(data.message || "Product added to cart!");
                         clonedButton.innerHTML = '<i class="bx bx-check"></i>';
@@ -311,6 +312,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+    
 
     // Initial attachment of listeners
     handleProductFiltering();
