@@ -532,7 +532,7 @@ $(document).ready(function () {
             });
         });
     });
-    
+
 });
 
 // UPDATE CART QUANTITY
