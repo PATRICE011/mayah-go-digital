@@ -1,10 +1,7 @@
-<!-- @extends('admins.layout')
-@include('admins.adminheader', ['activePage' => 'dashboard'])
-@include('admins.dashboard')
+@extends('admins.layout')
+
 @section('content')
 
-<form action="{{route('admins.logout')}} " method="POST">
-    @csrf
-    <button type="submit" class="btn btn-danger">Logout</button>
-</form>
-@endsection -->
+    <!-- @include('admins.adminheader') -->
+    <!-- @include('admins.dashboard') -->
+@endsection

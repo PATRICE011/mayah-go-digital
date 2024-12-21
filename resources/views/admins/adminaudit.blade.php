@@ -1,8 +1,4 @@
-@extends('admins.layout')
-@section('title', 'Mayah Store - Admin Audit Trail')
 
-@include('admins.adminheader', ['activePage' => 'audit'])
-@section('content')
 
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
