@@ -40,9 +40,51 @@
                             <input type="text" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-warning mr-2">
+                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+
+                        <!-- Filter Modal -->
+                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="filterModalLabel">Filter Audit</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Add Filter Fields Here -->
+                                        <form id="filterForm">
+                                            <div class="form-group">
+                                                <label for="filteCategory">Name</label>
+                                                <input type="text" class="form-control" id="filterName" placeholder="Enter name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filterRole">Role</label>
+                                                <select class="form-control" id="filterRole">
+                                                    <option value="">All</option>
+                                                    <option value="">POS Operator</option>
+                                                    <option value="">Manager</option>
+                                                    <option value="">Staff</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filteCategory">Date</label>
+                                                <input type="date" class="form-control" id="filterDate">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <button class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export

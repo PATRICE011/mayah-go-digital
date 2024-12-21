@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
-    Route::get('/products', [ProductController::class, 'search']);
 
     Route::prefix('user')->group(function () {
         Route::get('/register', [AuthController::class, 'getRegister']);
@@ -31,14 +30,12 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 
-// Authenticated User Routes (Role 3)
+// Authenticated User Routes (Role 3 - Resident)
 Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
-    Route::get('/home', [HomeController::class, 'home']);
-
     Route::prefix('user')->group(function () {
+        Route::get('/', [HomeController::class, 'home']);
+        Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
         Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
-
         Route::prefix('cart')->group(function () {
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
@@ -73,24 +70,39 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     });
 });
 
-// Admin Routes (Roles 1 & 2)
+// Admin & Staff Routes (Roles 1 & 2 - Admin, Staff)
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
-    ->group(function () {
-        Route::prefix('admin')->group(function () {
-            Route::get('/', [AdminController::class, 'index'])->name('admins.index');
-            Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
-            Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
-        });
+    ->prefix('admin')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('admins.index');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('admins.logout');
+        Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
+
+        // Add any more admin/staff specific routes here
+        // Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('admins.manageProducts');
+        // Route::get('/manage-users', [UserController::class, 'manageUsers'])->name('admins.manageUsers');
+        // Add other admin routes as needed
+
+        Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
+        Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
+        Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
+        Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
+        Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
+        Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
+        Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
+        Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
+        Route::get('/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
+        Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
     });
 
-
-// Public Routes
-Route::get('/shop', [UserController::class, 'shop'])->name('home.shop');
-Route::get('/details/{id}', [UserController::class, 'details'])->name('home.details');
-Route::get('/cart', [CartController::class, 'cart'])->name('home.cart');
-Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist');
-Route::get('/about', [UserController::class, 'about'])->name('home.about');
-Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy');
-// Route::get('/checkout', [UserController::class, 'otp'])->name('home.checkout');
-Route::post('/filter-products', [UserController::class, 'filterProducts']);
+// Public Routes (accessible by all)
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/products', [ProductController::class, 'search']); // Product search
+
+Route::get('/shop', [UserController::class, 'shop'])->name('home.shop'); // Shop page
+Route::get('/details/{id}', [UserController::class, 'details'])->name('home.details'); // Product details page
+Route::get('/cart', [CartController::class, 'cart'])->name('home.cart'); // View cart page
+Route::get('/wishlist', [WishlistController::class, 'wishlist'])->name('home.wishlist'); // View wishlist page
+Route::get('/about', [UserController::class, 'about'])->name('home.about'); // About page
+Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('home.privacypolicy'); // Privacy Policy page
+
+Route::post('/filter-products', [UserController::class, 'filterProducts']); // Filter products via POST

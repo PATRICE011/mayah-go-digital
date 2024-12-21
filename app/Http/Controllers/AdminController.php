@@ -131,55 +131,55 @@ class AdminController extends Controller
 }
 
 
-    // public function adminproducts()
-    // {
-    //     return view("admins.adminproducts");
-    // }
+    public function adminproducts()
+    {
+        return view("admins.adminproducts");
+    }
 
-    // public function admincategories()
-    // {
-    //     return view("admins.admincategories");
-    // }
+    public function admincategories()
+    {
+        return view("admins.admincategories");
+    }
 
-    // public function adminstocks()
-    // {
-    //     return view("admins.adminstocks");
-    // }
+    public function adminstocks()
+    {
+        return view("admins.adminstocks");
+    }
 
-    // public function adminposorders()
-    // {
-    //     return view("admins.adminposorders");
-    // }
+    public function adminposorders()
+    {
+        return view("admins.adminposorders");
+    }
 
-    // public function adminonlineorders()
-    // {
-    //     return view("admins.adminonlineorders");
-    // }
+    public function adminonlineorders()
+    {
+        return view("admins.adminonlineorders");
+    }
 
-    // public function adminrefund()
-    // {
-    //     return view("admins.adminrefund");
-    // }
+    public function adminrefund()
+    {
+        return view("admins.adminrefund");
+    }
 
-    // public function adminadministrators()
-    // {
-    //     return view("admins.adminadministrators");
-    // }
+    public function adminadministrators()
+    {
+        return view("admins.adminadministrators");
+    }
 
-    // public function admincustomers()
-    // {
-    //     return view("admins.admincustomers");
-    // }
+    public function admincustomers()
+    {
+        return view("admins.admincustomers");
+    }
 
-    // public function adminemployee()
-    // {
-    //     return view("admins.adminemployee");
-    // }
+    public function adminemployee()
+    {
+        return view("admins.adminemployee");
+    }
 
-    // public function adminaudit()
-    // {
-    //     return view("admins.adminaudit");
-    // }
+    public function adminaudit()
+    {
+        return view("admins.adminaudit");
+    }
 
     public function logout(Request $request)
     {

@@ -93,9 +93,97 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav flex-column">
+                        <li class="nav-item">
+                            <a href="{{ route('admins.dashboard') }}" class="nav-link {{ isset($activePage) && $activePage === 'dashboard' ? 'active' : '' }}">
+                                <i class="fa fa-fw fa-user-circle"></i>Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-divider">
+                            Product & Stocks
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admins.adminproducts') }}" class="nav-link {{ isset($activePage) && $activePage === 'products' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Products
+                            </a>
+
+                            <a href="{{ route('admins.adminstocks') }}" class="nav-link {{ isset($activePage) && $activePage === 'stocks' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Stocks
+                            </a>
+
+                            <a href="{{ route('admins.admincategories') }}" class="nav-link {{ isset($activePage) && $activePage === 'categories' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Category
+                            </a>
+                        </li>
+                    
+                        <li class="nav-divider">
+                            POS & Orders
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-fw fa-file"></i> POS
+                            </a>
+
+                            <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> POS Orders
+                            </a>
+
+                            <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Online Orders
+                            </a>
+
+                            <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Return & Refunds
+                            </a>
+                        </li>
+
+                        <li class="nav-divider">
+                            Users
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Administrator
+                            </a>
+
+                            <a href="{{ route('admins.admincustomers') }}" class="nav-link {{ isset($activePage) && $activePage === 'customers' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Customers
+                            </a>
+
+                            <a href="{{ route('admins.adminemployee') }}" class="nav-link {{ isset($activePage) && $activePage === 'employee' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Employees
+                            </a>
+                        </li>
+
+                        <li class="nav-divider">
+                            Reports
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
+                                <i class="fas fa-fw fa-file"></i> Audit Trail
+                            </a>
+                        
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-fw fa-file"></i> Sales Report
+                            </a>
+
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-fw fa-file"></i> Products Report
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
         </div>
     </div>
 
-   
+    @section('content')
 </div>
+
+@endsection

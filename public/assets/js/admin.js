@@ -1,23 +1,23 @@
-    // JavaScript to display the selected image
-    const addImageInput = document.getElementById('addImage');
-    const imagePreview = document.getElementById('imagePreview');
+// JavaScript to display the selected image
+const addImageInput = document.getElementById('addImage');
+const imagePreview = document.getElementById('imagePreview');
 
-    addImageInput.addEventListener('change', function(event) {
-        const file = event.target.files[0]; // Get the selected file
-        if (file) {
-            const reader = new FileReader(); // Create a FileReader to read the file
-            reader.onload = function(e) {
-                // Set the image source to the file content
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block'; // Show the image
-            };
-            reader.readAsDataURL(file); // Read the file as a data URL
-        } else {
-            imagePreview.style.display = 'none'; // Hide the image if no file is selected
-        }
-    });
+addImageInput.addEventListener('change', function (event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+        const reader = new FileReader(); // Create a FileReader to read the file
+        reader.onload = function (e) {
+            // Set the image source to the file content
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block'; // Show the image
+        };
+        reader.readAsDataURL(file); // Read the file as a data URL
+    } else {
+        imagePreview.style.display = 'none'; // Hide the image if no file is selected
+    }
+});
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
     'use strict';
 
     // ============================================================== 
@@ -50,7 +50,7 @@ jQuery(document).ready(function($) {
         $('.sidebar-nav-fixed a')
             // Remove links that don't actually link to anything
 
-            .click(function(event) {
+            .click(function (event) {
                 // On-page links
                 if (
                     location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
                         event.preventDefault();
                         $('html, body').animate({
                             scrollTop: target.offset().top - 90
-                        }, 1000, function() {
+                        }, 1000, function () {
                             // Callback after animation
                             // Must change focus!
                             var $target = $(target);
@@ -79,7 +79,7 @@ jQuery(document).ready(function($) {
                         });
                     }
                 };
-                $('.sidebar-nav-fixed a').each(function() {
+                $('.sidebar-nav-fixed a').each(function () {
                     $(this).removeClass('active');
                 })
                 $(this).addClass('active');
@@ -91,25 +91,25 @@ jQuery(document).ready(function($) {
     // tooltip
     // ============================================================== 
     if ($('[data-toggle="tooltip"]').length) {
-            
-            $('[data-toggle="tooltip"]').tooltip()
 
-        }
-
-     // ============================================================== 
-    // popover
-    // ============================================================== 
-       if ($('[data-toggle="popover"]').length) {
-            $('[data-toggle="popover"]').popover()
+        $('[data-toggle="tooltip"]').tooltip()
 
     }
-     // ============================================================== 
+
+    // ============================================================== 
+    // popover
+    // ============================================================== 
+    if ($('[data-toggle="popover"]').length) {
+        $('[data-toggle="popover"]').popover()
+
+    }
+    // ============================================================== 
     // Chat List Slim Scroll
     // ============================================================== 
-        
 
-        if ($('.chat-list').length) {
-            $('.chat-list').slimScroll({
+
+    if ($('.chat-list').length) {
+        $('.chat-list').slimScroll({
             color: 'false',
             width: '100%'
 
@@ -120,9 +120,9 @@ jQuery(document).ready(function($) {
     // dropzone script
     // ============================================================== 
 
- //     if ($('.dz-clickable').length) {
- //            $(".dz-clickable").dropzone({ url: "/file/post" });
- // }
+    //     if ($('.dz-clickable').length) {
+    //            $(".dz-clickable").dropzone({ url: "/file/post" });
+    // }
 
 }); // AND OF JQUERY
 
@@ -131,187 +131,187 @@ jQuery(document).ready(function($) {
 //     "use strict";
 
 
-    
-
-   // var monkeyList = new List('test-list', {
-    //    valueNames: ['name']
-
-     // });
-  // var monkeyList = new List('test-list-2', {
-    //    valueNames: ['name']
-
-   // });
 
 
+// var monkeyList = new List('test-list', {
+//    valueNames: ['name']
 
-   
-   
+// });
+// var monkeyList = new List('test-list-2', {
+//    valueNames: ['name']
 
 // });
 
 
-$(function() {
+
+
+
+
+// });
+
+
+$(function () {
     "use strict";
     // ============================================================== 
     // Revenue
     // ============================================================== 
- var ctx = document.getElementById('revenue').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'line',
+    var ctx = document.getElementById('revenue').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
 
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Current Week',
-                        data: [12, 19, 3, 17, 6, 3, 7],
-                      backgroundColor: "rgba(89, 105, 255,0.5)",
-                                    borderColor: "rgba(89, 105, 255,0.7)",
-                                    borderWidth: 2
-                        
-                    }, {
-                        label: 'Previous Week',
-                        data: [2, 29, 5, 5, 2, 3, 10],
-                          backgroundColor: "rgba(255, 64, 123,0.5)",
-                                    borderColor: "rgba(255, 64, 123,0.7)",
-                                    borderWidth: 2
-                    }]
-                },
-                options: {
-                        
-                             legend: {
-                        display: true,
-                        position: 'bottom',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Current Week',
+                data: [12, 19, 3, 17, 6, 3, 7],
+                backgroundColor: "rgba(89, 105, 255,0.5)",
+                borderColor: "rgba(89, 105, 255,0.7)",
+                borderWidth: 2
 
-                        labels: {
-                            fontColor: '#71748d',
-                            fontFamily: 'Circular Std Book',
-                            fontSize: 14,
-                        }
-                    },
-                    scales: {
-            yAxes: [{
-                ticks: {
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
-                        return '$' + value;
-                    }
-                }
+            }, {
+                label: 'Previous Week',
+                data: [2, 29, 5, 5, 2, 3, 10],
+                backgroundColor: "rgba(255, 64, 123,0.5)",
+                borderColor: "rgba(255, 64, 123,0.7)",
+                borderWidth: 2
             }]
         },
+        options: {
 
+            legend: {
+                display: true,
+                position: 'bottom',
 
-         scales: {
-                                    xAxes: [{
-                                        ticks: {
-                                            fontSize: 14,
-                                            fontFamily: 'Circular Std Book',
-                                            fontColor: '#71748d',
-                                        }
-                                    }],
-                                    yAxes: [{
-                                        ticks: {
-                                            fontSize: 14,
-                                            fontFamily: 'Circular Std Book',
-                                            fontColor: '#71748d',
-                                        }
-                                    }]
-                                }
-        
+                labels: {
+                    fontColor: '#71748d',
+                    fontFamily: 'Circular Std Book',
+                    fontSize: 14,
                 }
-            });
-   
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        // Include a dollar sign in the ticks
+                        callback: function (value, index, values) {
+                            return '$' + value;
+                        }
+                    }
+                }]
+            },
+
+
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                        fontFamily: 'Circular Std Book',
+                        fontColor: '#71748d',
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        fontSize: 14,
+                        fontFamily: 'Circular Std Book',
+                        fontColor: '#71748d',
+                    }
+                }]
+            }
+
+        }
+    });
+
     // ============================================================== 
     // Total Sale
     // ============================================================== 
- var ctx = document.getElementById("total-sale").getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                
-                data: {
-                    labels: ["Direct", " Affilliate", "Sponsored", " E-mail"],
-                    datasets: [{
-                        backgroundColor: [
-                            "#5969ff",
-                            "#ff407b",
-                            "#25d5f2",
-                            "#ffc750"
-                        ],
-                        data: [350.56, 135.18, 48.96, 154.02]
-                    }]
-                },
-                options: {
-                    legend: {
-                        display: false
+    var ctx = document.getElementById("total-sale").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
 
-                    }
-                }
+        data: {
+            labels: ["Direct", " Affilliate", "Sponsored", " E-mail"],
+            datasets: [{
+                backgroundColor: [
+                    "#5969ff",
+                    "#ff407b",
+                    "#25d5f2",
+                    "#ffc750"
+                ],
+                data: [350.56, 135.18, 48.96, 154.02]
+            }]
+        },
+        options: {
+            legend: {
+                display: false
 
-            });
-     
-   
+            }
+        }
+
+    });
+
+
     // ============================================================== 
     // Location Map
     // ============================================================== 
-     jQuery('#locationmap').vectorMap({
-        
-                map: 'world_mill_en',
-                backgroundColor: 'transparent',
-                borderColor: '#000',
-                borderOpacity: 0,
-                borderWidth: 0,
-                zoomOnScroll: false,
-                color: '#25d5f2',
-                regionStyle: {
-                    initial: {
-                        fill: "#e3eaef"
-                    }
-                },
-                markerStyle: {
-                    initial: {
-                        r: 9,
-                        fill: "#25d5f2",
-                        "fill-opacity": .9,
-                        stroke: "#fff",
-                        "stroke-width": 7,
-                        "stroke-opacity": .4
-                    },
-                    hover: {
-                        stroke: "#fff",
-                        "fill-opacity": 1,
-                        "stroke-width": 1.5
-                    }
-                },
+    jQuery('#locationmap').vectorMap({
 
-                markers: [{
-                    latLng: [40.71, -74],
-                    name: "New York"
-                }, {
-                    latLng: [37.77, -122.41],
-                    name: "San Francisco"
-                }, {
-                    latLng: [-33.86, 151.2],
-                    name: "Sydney"
-                }, {
-                    latLng: [1.3, 103.8],
-                    name: "Singapore"
-                }],
+        map: 'world_mill_en',
+        backgroundColor: 'transparent',
+        borderColor: '#000',
+        borderOpacity: 0,
+        borderWidth: 0,
+        zoomOnScroll: false,
+        color: '#25d5f2',
+        regionStyle: {
+            initial: {
+                fill: "#e3eaef"
+            }
+        },
+        markerStyle: {
+            initial: {
+                r: 9,
+                fill: "#25d5f2",
+                "fill-opacity": .9,
+                stroke: "#fff",
+                "stroke-width": 7,
+                "stroke-opacity": .4
+            },
+            hover: {
+                stroke: "#fff",
+                "fill-opacity": 1,
+                "stroke-width": 1.5
+            }
+        },
 
-
-                hoverOpacity: null,
-                normalizeFunction: 'linear',
-                scaleColors: ['#25d5f2', '#25d5f2'],
-                selectedColor: '#c9dfaf',
-                selectedRegions: [],
-                showTooltip: true,
-                onRegionClick: function(element, code, region) {
-                    var message = 'You clicked "' + region + '" which has the code: ' + code.toUpperCase();
-                    alert(message);
-                }
-
-            });
+        markers: [{
+            latLng: [40.71, -74],
+            name: "New York"
+        }, {
+            latLng: [37.77, -122.41],
+            name: "San Francisco"
+        }, {
+            latLng: [-33.86, 151.2],
+            name: "Sydney"
+        }, {
+            latLng: [1.3, 103.8],
+            name: "Singapore"
+        }],
 
 
- // ============================================================== 
+        hoverOpacity: null,
+        normalizeFunction: 'linear',
+        scaleColors: ['#25d5f2', '#25d5f2'],
+        selectedColor: '#c9dfaf',
+        selectedRegions: [],
+        showTooltip: true,
+        onRegionClick: function (element, code, region) {
+            var message = 'You clicked "' + region + '" which has the code: ' + code.toUpperCase();
+            alert(message);
+        }
+
+    });
+
+
+    // ============================================================== 
     // Revenue Cards
     // ============================================================== 
     $("#sparkline-1").sparkline([5, 5, 7, 7, 9, 5, 3, 5, 2, 4, 6, 7], {
@@ -326,7 +326,7 @@ $(function() {
         maxSpotColor: undefined,
         highlightSpotColor: undefined,
         highlightLineColor: undefined,
-        resize:true
+        resize: true
     });
 
 
@@ -343,7 +343,7 @@ $(function() {
         maxSpotColor: undefined,
         highlightSpotColor: undefined,
         highlightLineColor: undefined,
-        resize:true
+        resize: true
     });
 
 
@@ -360,7 +360,7 @@ $(function() {
         maxSpotColor: undefined,
         highlightSpotColor: undefined,
         highlightLineColor: undefined,
-        resize:true
+        resize: true
     });
 
 
@@ -377,12 +377,12 @@ $(function() {
         maxSpotColor: undefined,
         highlightSpotColor: undefined,
         highlightLineColor: undefined,
-        resize:true,
+        resize: true,
     });
- 
-    
-   
-    
+
+
+
+
 
 
 });

@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        Auth::logout(); // Log out the user
+
+        // Clear the session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
          // Default cart count and wishlist count to 0
          $user = Auth::user();
          $cartCount = 0;

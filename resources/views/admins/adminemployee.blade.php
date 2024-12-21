@@ -40,17 +40,119 @@
                             <input type="text" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-warning mr-2">
+                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+
+                        <!-- Filter Modal -->
+                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="filterModalLabel">Filter Employees</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <!-- Add Filter Fields Here -->
+                                        <form id="filterForm">
+                                            <div class="form-group">
+                                                <label for="filteAdminName">Employee Name</label>
+                                                <input type="text" class="form-control" id="filterName" placeholder="Enter Employee name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filteCategory">Phone Number</label>
+                                                <input type="tel" class="form-control" id="filterPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filterRole">Role</label>
+                                                <select class="form-control" id="filterRole">
+                                                    <option value="">All</option>
+                                                    <option value="">POS Operator</option>
+                                                    <option value="">Manager</option>
+                                                    <option value="">Staff</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filterStatus">Status</label>
+                                                <select class="form-control" id="filterStatus">
+                                                    <option value="">All</option>
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <button class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
                         </button>
 
-                        <a href="#" class="btn btn-sm btn-warning text-white">
-                            <i class="fa fa-plus-circle"></i> Add Employee
-                        </a>
+                        <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
+                            <i class="fa fa-plus-circle"></i> Add Administrator
+                        </button>
+
+                        <!-- ADD MODAL -->
+                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addModalLabel">Add Employee</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <form id="addForm">
+                                            <div class="form-group">
+                                                <label for="addName">Employee Name</label>
+                                                <input type="text" class="form-control" id="addAdminName" placeholder="Enter Employee name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="addPhoneNumber">Phone Number</label>
+                                                <input type="tel" class="form-control" id="addPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="addRole">Role</label>
+                                                <select class="form-control" id="addRole">
+                                                    <option value="active">All</option>
+                                                    <option value="">POS Operator</option>
+                                                    <option value="">Manager</option>
+                                                    <option value="">Staff</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="addStatus">Status</label>
+                                                <select class="form-control" id="addStatus">
+                                                    <option value="active">Active</option>
+                                                    <option value="inactive">Inactive</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Add Employee</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-body p-0">
