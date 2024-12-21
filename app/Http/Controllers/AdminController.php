@@ -105,31 +105,13 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view("admins.index"); 
+        return view("admins.index");
     }
 
     public function admindashboard()
     {
         return view("admins.dashboard");
     }
-
-    public function postLogin(Request $request)
-{
-    $credentials = $request->only('email', 'password');
-
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-
-        if ($user->role_id == 1 || $user->role_id == 2) {
-            return redirect()->route('admins.dashboard'); // Redirect admins
-        } else {
-            return redirect('/home'); // Redirect normal users
-        }
-    }
-
-    return back()->withErrors(['email' => 'Invalid credentials']);
-}
-
 
     public function adminproducts()
     {
@@ -181,12 +163,29 @@ class AdminController extends Controller
         return view("admins.adminaudit");
     }
 
+    public function postLogin(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->role_id == 1 || $user->role_id == 2) {
+                return redirect()->route('admins.dashboard'); // Redirect admins
+            } else {
+                return redirect('/home'); // Redirect normal users
+            }
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials']);
+    }
+
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
 
         return redirect('/')->with('message', 'Logout Successful');
     }

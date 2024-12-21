@@ -46,7 +46,7 @@
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="{{url('/')}}" class="nav__link">HOME</a>
+                    <a href="{{url('/user')}}" class="nav__link">HOME</a>
                 </li>
 
                 <li class="nav__item">
@@ -87,7 +87,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{url('/')}}" class="breadcrumb__link">
+            <a href="{{url('/user')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>

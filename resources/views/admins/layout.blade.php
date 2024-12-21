@@ -39,7 +39,10 @@
 
 <body>
     <!-- Header and Dashboard -->
-    @yield('content')
+    @include('admins.adminheader')
+    <main>
+        @yield('content')
+    </main>
 
     <script src="{{ asset('assets/bootstrap/bootstrap/js/bootstrap.bundle.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/slimscroll/jquery.slimscroll.js') }}"></script>
