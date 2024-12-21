@@ -44,15 +44,15 @@ class AuthController extends Controller
             switch ($roleId) {
                 case 1:
                     // Admin role
-                    return redirect('/admin')->with('message', 'Login Successful, Welcome Admin!');
+                    return redirect()->to(url('/admin'))->with('message', 'Login Successful, Welcome Admin!');
                 case 2:
                     // Staff role
-                    return redirect('/admin')->with('message', 'Login Successful, Welcome Admin!');
+                    return redirect()->to(url('/admin'))->with('message', 'Login Successful, Welcome Staff!');
                 case 3:
                     // User role
-                    return redirect('/home')->with('message', 'Login Successful, Welcome User!');
+                    return redirect()->to(url('/home'))->with('message', 'Login Successful, Welcome User!');
                 default:
-                    // Invalid role
+                    // Invalid roles
                     Auth::logout();
                     return redirect(url('/'))->withErrors(['error' => 'Unauthorized access']);
             }
@@ -110,10 +110,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         $request->session()->forget('name');
+
         return redirect('/')->with('message', 'Logout Successful');
     }
 }

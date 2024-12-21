@@ -183,16 +183,11 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
-        // Log out the current user (admin) from the 'web' guard
         Auth::guard('web')->logout();
-    
-        // Invalidate the session
         $request->session()->invalidate();
-    
-        // Regenerate the CSRF token
         $request->session()->regenerateToken();
-    
-        // Redirect to the login page with a success message
-        return redirect('/')->with('message', 'Admin Logout Successful');
+        
+
+        return redirect('/')->with('message', 'Logout Successful');
     }
 }

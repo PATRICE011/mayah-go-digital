@@ -1,7 +1,7 @@
 @extends('admins.layout')
 @section('content')
-
-<h1>HELLO POOOO</h1>
+@include('admins.adminheader', ['activePage' => 'dashboard'])
+<h1>STOWPEDD NI ANTHONYYYYYY</h1>
 
 <form action="{{route('admins.logout')}} " method="POST">
     @csrf

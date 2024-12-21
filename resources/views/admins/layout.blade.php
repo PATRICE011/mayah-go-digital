@@ -31,7 +31,7 @@
     <!-- Header and Dashboard -->
    
     @yield('content')
-
+    
     <!--=============== SCRIPTS ===============-->
 
     <!-- Single jQuery -->

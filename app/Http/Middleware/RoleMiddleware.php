@@ -22,7 +22,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles)
     {
         // Check if the user is authenticated and has one of the required roles
-        if(Auth::check()&& in_array(Auth::user()->role_id, $roles)){
+        if(Auth::check() && in_array(Auth::user()->role_id, $roles)){
             return $next($request);
         }
 
