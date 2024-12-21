@@ -3,7 +3,6 @@
 
 @include('admins.adminheader', ['activePage' => 'categories'])
 @section('content')
-
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
         <div class="row">
@@ -191,3 +190,4 @@
         </div>
     </div>
 </div>
+@endsection
