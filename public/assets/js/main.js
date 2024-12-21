@@ -1,5 +1,3 @@
-// WISHLIST TAB ADD TO CARTy
-
 // ORDERS TABS SWITCHING
 
 // Restore the active tab on page load
@@ -280,6 +278,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     const url =
                         form.getAttribute("action") ||
                         form.getAttribute("data-url");
+
+                    // Convert form data to a URL-encoded string
                     const formData = new URLSearchParams(new FormData(form));
 
                     // Show loading state on the button
@@ -300,14 +300,27 @@ document.addEventListener("DOMContentLoaded", function () {
                         body: formData,
                     })
                         .then((response) => {
+                            // 1) If the controller returned a redirect (302),
+                            //    it means user is not logged in (per your controller code).
+                            if (response.redirected) {
+                                // Follow the redirect to the login page
+                                window.location.href = response.url;
+                                return;
+                            }
+
+                            // 2) If it's not redirected but also not OK (e.g., 400, 401, 500)
                             if (!response.ok) {
                                 return response
                                     .json()
                                     .then((err) => Promise.reject(err));
                             }
+
+                            // 3) Otherwise (status 2xx), parse JSON
                             return response.json();
                         })
                         .then((data) => {
+                            // If we get here, it's a successful JSON response
+
                             // Update the cart count dynamically
                             const cartCountElement =
                                 document.getElementById("cart-count");
@@ -323,6 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 '<i class="bx bx-check"></i>';
                         })
                         .catch((error) => {
+                            // For errors returned from the server (e.g., out of stock or other issues)
                             console.error("Error:", error);
                             toastr.error(
                                 error.error || "An unexpected error occurred."
@@ -330,7 +344,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             clonedButton.innerHTML = originalText; // Reset button text
                         })
                         .finally(() => {
-                            clonedButton.disabled = false; // Re-enable button
+                            // Re-enable button (unless we redirected)
+                            clonedButton.disabled = false;
                         });
                 });
             });
@@ -393,19 +408,19 @@ $(document).ready(function () {
 
     $(document).ready(function () {
         let countdownTimers = {}; // Object to store individual timers for buttons/links
-    
+
         // Reusable Countdown Function
         function startCountdown(time, element, timerKey) {
             let countdown = time;
-    
+
             // Clear any existing countdown for this element
             if (countdownTimers[timerKey]) {
                 clearInterval(countdownTimers[timerKey]);
             }
-    
+
             // Check if the element is a button or link
             const isButton = element.is("button");
-    
+
             // Disable the element and update text
             if (isButton) {
                 element.prop("disabled", true).text(`Wait ${countdown}s`);
@@ -414,7 +429,7 @@ $(document).ready(function () {
                     .css({ "pointer-events": "none", opacity: "0.5" })
                     .text(`Wait ${countdown}s`);
             }
-    
+
             // Start the countdown
             countdownTimers[timerKey] = setInterval(function () {
                 countdown--;
@@ -423,11 +438,11 @@ $(document).ready(function () {
                 } else {
                     element.text(`Wait ${countdown}s`);
                 }
-    
+
                 if (countdown <= 0) {
                     clearInterval(countdownTimers[timerKey]);
                     delete countdownTimers[timerKey]; // Remove the timer reference
-    
+
                     // Re-enable the element
                     if (isButton) {
                         element.prop("disabled", false).text("Get OTP");
@@ -439,15 +454,15 @@ $(document).ready(function () {
                 }
             }, 1000);
         }
-    
+
         // Handle Get OTP for Update Profile Section
         $("#get-otp-button-update-profile").on("click", function () {
             const url = $(this).data("url");
             const csrfToken = $(this).data("csrf");
             const button = $(this);
-    
+
             button.prop("disabled", true).text("Sending OTP...");
-    
+
             $.ajax({
                 url: url,
                 method: "POST",
@@ -467,15 +482,15 @@ $(document).ready(function () {
                 },
             });
         });
-    
+
         // Handle Get OTP for Change Password Section
         $("#get-otp-button-change-password").on("click", function () {
             const url = $(this).data("url");
             const csrfToken = $(this).data("csrf");
             const button = $(this);
-    
+
             button.prop("disabled", true).text("Sending OTP...");
-    
+
             $.ajax({
                 url: url,
                 method: "POST",
@@ -495,20 +510,20 @@ $(document).ready(function () {
                 },
             });
         });
-    
+
         // Handle Resend OTP for Registration Section
         const resendOtpLink = $("#resend-otp-link");
-    
+
         resendOtpLink.on("click", function (e) {
             e.preventDefault();
-    
+
             const url = $(this).data("url");
             const csrfToken = $(this).data("csrf");
-    
+
             resendOtpLink
                 .css({ "pointer-events": "none", opacity: "0.5" })
                 .text("Sending...");
-    
+
             $.ajax({
                 url: url,
                 method: "POST",
@@ -532,7 +547,6 @@ $(document).ready(function () {
             });
         });
     });
-
 });
 
 // UPDATE CART QUANTITY
@@ -654,40 +668,22 @@ function imgGallery() {
 }
 
 /*=============== SWIPER CATEGORIES ===============*/
-var swiperCategories = new Swiper(".categories__container", {
-    spaceBetween: 24,
-    loop: true,
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
-
-    breakpoints: {
-        350: {
-            slidesPerView: 2,
-            spaceBetween: 24,
+document.addEventListener("DOMContentLoaded", function () {
+    var swiperCategories = new Swiper(".categories__container", {
+        spaceBetween: 16, // Adjust spacing between slides
+        loop: true, // Infinite loop
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
         },
-
-        768: {
-            slidesPerView: 3,
-            spaceBetween: 24,
+        breakpoints: {
+            350: { slidesPerView: 2, spaceBetween: 16 },
+            768: { slidesPerView: 3, spaceBetween: 16 },
+            992: { slidesPerView: 4, spaceBetween: 20 },
+            1200: { slidesPerView: 5, spaceBetween: 24 },
+            1400: { slidesPerView: 6, spaceBetween: 24 },
         },
-
-        992: {
-            slidesPerView: 2,
-            spaceBetween: 24,
-        },
-
-        1200: {
-            slidesPerView: 5,
-            spaceBetween: 24,
-        },
-
-        1400: {
-            slidesPerView: 6,
-            spaceBetween: 24,
-        },
-    },
+    });
 });
 
 /*=============== SWIPER PRODUCTS ===============*/

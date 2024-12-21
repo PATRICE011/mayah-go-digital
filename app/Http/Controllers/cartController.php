@@ -18,64 +18,71 @@ class cartController extends Controller
 {
     //
     public function addtocart(Request $request)
-{
-    try {
-        // Validate the request
-        $request->validate([
-            'id' => 'required|integer|exists:products,id',
-            'quantity' => 'integer|min:1',
-        ]);
-
-        $productId = $request->input('id');
-        $quantity = $request->input('quantity', 1);
-        $product = Product::find($productId);
-
-        // Check product availability
-        if (!$product || $product->product_stocks < $quantity) {
-            return response()->json(['error' => 'Product is out of stock.'], 400);
-        }
-
-        // Authenticate the user
+    {
         $user = Auth::user();
+
+
         if (!$user) {
-            return response()->json(['error' => 'You must be logged in to add items to the cart.'], 401);
+            return redirect()->route('login')->with('error', 'You need to log in to view your wishlist.');
         }
 
-        // Get or create the cart
-        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
-        // Check if the product already exists in the cart
-        $cartItem = CartItem::where('cart_id', $cart->id)
-            ->where('product_id', $productId)
-            ->first();
-
-        if ($cartItem) {
-            $cartItem->quantity += $quantity;
-            $cartItem->save();
-        } else {
-            CartItem::create([
-                'cart_id' => $cart->id,
-                'product_id' => $productId,
-                'quantity' => $quantity,
-                'price' => $product->product_price,
+        try {
+            // Validate the request
+            $request->validate([
+                'id' => 'required|integer|exists:products,id',
+                'quantity' => 'integer|min:1',
             ]);
+
+            $productId = $request->input('id');
+            $quantity = $request->input('quantity', 1);
+            $product = Product::find($productId);
+
+            // Check product availability
+            if (!$product || $product->product_stocks < $quantity) {
+                return response()->json(['error' => 'Product is out of stock.'], 400);
+            }
+
+
+            // Authenticate the user
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'You must be logged in to add items to the cart.'], 401);
+            }
+
+            // Get or create the cart
+            $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
+            // Check if the product already exists in the cart
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_id', $productId)
+                ->first();
+
+            if ($cartItem) {
+                $cartItem->quantity += $quantity;
+                $cartItem->save();
+            } else {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $productId,
+                    'quantity' => $quantity,
+                    'price' => $product->product_price,
+                ]);
+            }
+
+            // Get updated cart count
+            $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
+
+            return response()->json([
+                'message' => 'Product added to cart successfully!',
+                'cartCount' => $cartCount,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Add to Cart Error: ' . $e->getMessage()); // Log the error for debugging
+            return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
         }
-
-        // Get updated cart count
-        $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
-
-        return response()->json([
-            'message' => 'Product added to cart successfully!',
-            'cartCount' => $cartCount,
-        ], 200);
-
-    } catch (\Exception $e) {
-        Log::error('Add to Cart Error: ' . $e->getMessage()); // Log the error for debugging
-        return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
     }
-}
 
-    
+
 
     public function cart()
     {

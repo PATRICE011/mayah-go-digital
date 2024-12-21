@@ -29,49 +29,16 @@
 
         <div class="categories__container swiper">
             <div class="swiper-wrapper">
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
-
-                    <h3 class="category__title">Biscuits</h3>
+                @foreach ($categories as $category)
+                <a href="{{ url('/shop?category=' . $category->slug) }}" class="category__item swiper-slide">
+                    <img src="{{ asset('assets/img/' . $category->category_image) }}"
+                        alt="{{ $category->category_name }}">
+                    <h3 class="category__title">{{ $category->category_name }}</h3>
                 </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
-
-                    <h3 class="category__title">Drinks</h3>
-                </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
-
-                    <h3 class="category__title">School Supplies</h3>
-                </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/CHEESE_WIZ.png') }}" alt="Biscuits">
-
-                    <h3 class="category__title">Dairy</h3>
-                </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks">
-
-                    <h3 class="category__title">Drinks</h3>
-                </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/SCHOOL-SUPPLIES-1.png') }}" alt="School Supplies">
-
-                    <h3 class="category__title">School Supplies</h3>
-                </a>
-
-                <a href="{{url('/shop')}}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuits">
-
-                    <h3 class="category__title">Biscuits</h3>
-                </a>
+                @endforeach
             </div>
 
+            <!-- Navigation Buttons -->
             <div class="swiper-button-next">
                 <i class="ri-arrow-right-s-line"></i>
             </div>
@@ -93,431 +60,157 @@
         <div class="tab__items">
             <div class="tab__item active-tab" content id="featured">
                 <div class="products__container grid">
+                    @foreach ($products as $product)
                     <div class="product__item">
+                        <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
+                            <!-- Product Actions -->
                             <div class="product__actions">
                                 <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
+                                    <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
+                                    <i class='bx bx-heart'></i>
                                 </a>
                             </div>
-
-                            <div class="product__badge light-pink">Hot</div>
                         </div>
 
+                        <!-- Product Content -->
                         <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            <!-- Category Name -->
+                            <span class="product__category">{{ $product->category_name }}</span>
+
+                            <!-- Product Title -->
+                            <a href="{{ url('/product/' . $product->id) }}">
+                                <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
+                            <!-- Product Price -->
                             <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
+                                <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
                             </div>
 
+                            <!-- Add to Cart -->
                             <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
+                                <i class='bx bx-cart-alt'></i>
                             </a>
                         </div>
                     </div>
+                    @endforeach
 
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-green">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
-
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-orange">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="tab__item" content id="popular">
                 <div class="products__container grid">
+                    @foreach ($products as $product)
                     <div class="product__item">
+                        <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
+                            <!-- Product Actions -->
                             <div class="product__actions">
                                 <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
+                                    <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
+                                    <i class='bx bx-heart'></i>
                                 </a>
                             </div>
-
-                            <div class="product__badge light-pink">Hot</div>
                         </div>
 
+                        <!-- Product Content -->
                         <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            <!-- Category Name -->
+                            <span class="product__category">{{ $product->category_name }}</span>
+
+                            <!-- Product Title -->
+                            <a href="{{ url('/product/' . $product->id) }}">
+                                <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
+                            <!-- Product Price -->
                             <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
+                                <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
                             </div>
 
+                            <!-- Add to Cart -->
                             <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
+                                <i class='bx bx-cart-alt'></i>
                             </a>
                         </div>
                     </div>
+                    @endforeach
 
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-green">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
-
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-orange">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img default">
-
-                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-blue">-22%</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="tab__item" content id="new-added">
                 <div class="products__container grid">
+                    @foreach ($products as $product)
                     <div class="product__item">
+                        <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                                <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                    alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
+                            <!-- Product Actions -->
                             <div class="product__actions">
                                 <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
+                                    <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
                                 <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
+                                    <i class='bx bx-heart'></i>
                                 </a>
                             </div>
-
-                            <div class="product__badge light-pink">Hot</div>
                         </div>
 
+                        <!-- Product Content -->
                         <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
+                            <!-- Category Name -->
+                            <span class="product__category">{{ $product->category_name }}</span>
+
+                            <!-- Product Title -->
+                            <a href="{{ url('/product/' . $product->id) }}">
+                                <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
+                            <!-- Product Price -->
                             <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
+                                <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
                             </div>
 
+                            <!-- Add to Cart -->
                             <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
+                                <i class='bx bx-cart-alt'></i>
                             </a>
                         </div>
                     </div>
+                    @endforeach
 
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
 
-                                <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-green">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
-
-                                <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-orange">Hot</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product__item">
-                        <div class="product__banner">
-                            <a href="detail.html" class="product__images">
-                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img default">
-
-                                <img src="{{ asset('assets/img/DRINKS-1.png') }}" alt="Drinks-1" class="product__img hover">
-                            </a>
-
-                            <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
-                                    <i class='bx bx-expand-horizontal' ></i>
-                                </a>
-
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart' ></i>
-                                </a>
-                            </div>
-
-                            <div class="product__badge light-blue">-22%</div>
-                        </div>
-
-                        <div class="product__content">
-                            <span class="product__category">Biscuits</span>
-                            <a href="details.html">
-                                <h3 class="product__title">Bread Stix - Blue</h3>
-                            </a>
-
-                            <div class="product__price flex">
-                                <span class="new__price">₱ 7.00</span>
-                                <span class="old__price">₱ 9.00</span>
-                            </div>
-
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt' ></i>
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -614,233 +307,54 @@
 
         <div class="new__container swiper">
             <div class="swiper-wrapper">
+                @foreach ($products as $product)
                 <div class="product__item swiper-slide">
+                    <!-- Product Banner -->
                     <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
+                        <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                            <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                alt="{{ $product->product_name }}" class="product__img default">
 
-                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
+                            <img src="{{ asset('assets/img/' . $product->product_image) }}"
+                                alt="{{ $product->product_name }}" class="product__img hover">
                         </a>
 
+                        <!-- Product Actions -->
                         <div class="product__actions">
                             <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
+                                <i class='bx bx-expand-horizontal'></i>
                             </a>
-
                             <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
+                                <i class='bx bx-heart'></i>
                             </a>
                         </div>
-
-                        <div class="product__badge light-pink">Hot</div>
                     </div>
 
+                    <!-- Product Content -->
                     <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
+                        <!-- Product Category -->
+                        <span class="product__category">{{ $product->category_name }}</span>
+
+                        <!-- Product Title -->
+                        <a href="{{ url('/product/' . $product->id) }}">
+                            <h3 class="product__title">{{ $product->product_name }}</h3>
                         </a>
 
+                        <!-- Product Price -->
                         <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
+                            <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
+                            
                         </div>
 
+                        <!-- Add To Cart -->
                         <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
+                            <i class='bx bx-cart-alt'></i>
                         </a>
                     </div>
                 </div>
+                @endforeach
 
-                <div class="product__item swiper-slide">
-                    <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
 
-                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
-                        </a>
-
-                        <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
-                            </a>
-                        </div>
-
-                        <div class="product__badge light-green">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
-                        </div>
-
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product__item swiper-slide">
-                    <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
-
-                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
-                        </a>
-
-                        <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
-                            </a>
-                        </div>
-
-                        <div class="product__badge light-orange">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
-                        </div>
-
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product__item swiper-slide">
-                    <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img default">
-
-                            <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Biscuit-1" class="product__img hover">
-                        </a>
-
-                        <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
-                            </a>
-                        </div>
-
-                        <div class="product__badge light-pink">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
-                        </div>
-
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product__item swiper-slide">
-                    <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img default">
-
-                            <img src="{{ asset('assets/img/BISCUITS-2.png') }}" alt="Biscuit-2" class="product__img hover">
-                        </a>
-
-                        <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
-                            </a>
-                        </div>
-
-                        <div class="product__badge light-green">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
-                        </div>
-
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product__item swiper-slide">
-                    <div class="product__banner">
-                        <a href="detail.html" class="product__images">
-                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img default">
-
-                            <img src="{{ asset('assets/img/BISCUITS-3.png') }}" alt="Biscuit-3" class="product__img hover">
-                        </a>
-
-                        <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
-                                <i class='bx bx-expand-horizontal' ></i>
-                            </a>
-
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                                <i class='bx bx-heart' ></i>
-                            </a>    
-                        </div>
-
-                        <div class="product__badge light-orange">Hot</div>
-                    </div>
-
-                    <div class="product__content">
-                        <span class="product__category">Biscuits</span>
-                        <a href="details.html">
-                            <h3 class="product__title">Bread Stix - Blue</h3>
-                        </a>
-
-                        <div class="product__price flex">
-                            <span class="new__price">₱ 7.00</span>
-                            <span class="old__price">₱ 9.00</span>
-                        </div>
-
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt' ></i>
-                        </a>
-                    </div>
-                </div>
             </div>
 
             <div class="swiper-button-next">
@@ -857,7 +371,7 @@
     <section class="showcase section">
 
     </section>
-    
+
     <!--==================== QUESTIONS ====================-->
     <!-- <section class="questions section" id="faqs">
         <h2 class="section__title-center questions__title container">

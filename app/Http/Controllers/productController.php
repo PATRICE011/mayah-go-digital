@@ -72,41 +72,34 @@ class productController extends Controller
     // search product
     public function search(Request $request)
     {
-        // Fetch all categories with product counts
-        $categories = Category::withCount('products')->get();
-    
-        // Initialize the query for products
-        $products = Product::all();
+        // 1) Build the query
         $query = Product::query();
     
-        if ($request->has('search') && !empty($request->input('search'))) {
-            $keyword = e($request->input('search'));
-            $firstLetter = substr($keyword, 0, 1);  // Get the first letter of the keyword
-            $query->where('product_name', 'LIKE', "$firstLetter%");
+        // 2) Apply filters if `search` is present
+        if ($request->has('search')) {
+            $keyword = $request->input('search');
+            $query->where('product_name', 'LIKE', "%{$keyword}%");
         }
     
-        // Get the filtered products
-        $results = $query->with('category')->get();
+        $results = $query->get();
     
-        // Check if the user is authenticated to fetch their cart items
-        if (Auth::check()) {
-            $cart = Cart::where('user_id', Auth::id())->first();
-            $cartItems = $cart ? $cart->items : collect();
-        } else {
-            $cartItems = collect();
+        // 3) If it's an AJAX request, return JSON with the partial
+        if ($request->ajax()) {
+            $html = view('home.partials.product_grid', [
+                'products' => $results // partial expects `$products`
+            ])->render();
+    
+            return response()->json([
+                'html' => $html,
+                'error' => $results->isEmpty() ? 'No products found.' : null
+            ]);
         }
     
-        // Define the error message if no products are found
-        $error = $results->isEmpty() ? 'No products found for "' . $request->input('search') . '"' : null;
-    
-        // Return the view with the necessary data
-        return view('home.index', compact(
-            'products', 
-            'results',
-            'categories',
-            'cartItems',
-            'error'
-        ));
+        // 4) Otherwise, return a full view for non-AJAX usage
+        return view('home.shop', [
+            'products' => $results
+        ]);
     }
+    
 
 }

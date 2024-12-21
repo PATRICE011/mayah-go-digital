@@ -18,48 +18,72 @@ class userController extends Controller
 
     public function shop(Request $request)
     {
+        // 1. Fetch all categories (for sidebar, etc.)
         $categories = DB::table('categories')->get();
+    
+        // 2. Build the initial query
         $query = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select('products.*', 'categories.category_name');
-
+    
+        // 3. Filter by categories if provided
         if ($request->has('categories')) {
-            $selectedCategories = $request->categories;
+            $selectedCategories = $request->categories;  // e.g., array of category names
             $query->whereIn('categories.category_name', $selectedCategories);
         }
-
+    
+        // 4. Filter by search if provided
+        if ($request->filled('search')) {
+            $keyword = $request->input('search');
+            $query->where('products.product_name', 'LIKE', "%{$keyword}%");
+        }
+    
+        // 5. Execute the query
         $products = $query->get();
-        $totalProducts = $query->count();
-
-        // User-related data
+        $totalProducts = $products->count();
+    
+        // 6. User-related data
         $user = Auth::user();
         $cartCount = 0;
         $wishlistCount = 0;
-
+    
         if ($user) {
             $cartId = DB::table('carts')
                 ->where('user_id', $user->id)
                 ->value('id');
-
+    
             if ($cartId) {
                 $cartCount = DB::table('cart_items')
                     ->where('cart_id', $cartId)
                     ->sum('quantity');
             }
-
+    
             $wishlistCount = DB::table('wishlists')
                 ->where('user_id', $user->id)
                 ->count();
         }
-
+    
+        // 7. If it's an AJAX request, return partial HTML
         if ($request->ajax()) {
+            // Render the partial `home.partials.product_grid` with the filtered $products
+            $html = view('home.partials.product_grid', compact('products'))->render();
+    
             return response()->json([
-                'products' => view('home.partials.product_grid', compact('products'))->render(),
+                'products' => $html,
+                'totalProducts' => $totalProducts,
             ]);
         }
-
-        return view('home.shop', compact('products', 'categories', 'totalProducts', 'cartCount', 'wishlistCount'));
+    
+        // 8. Otherwise, return the full view (shop page)
+        return view('home.shop', compact(
+            'products',
+            'categories',
+            'totalProducts',
+            'cartCount',
+            'wishlistCount'
+        ));
     }
+    
 
     // DETAILS START
     public function details($id, Request $request)

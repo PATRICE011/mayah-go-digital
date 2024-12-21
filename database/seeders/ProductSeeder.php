@@ -15,9 +15,50 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['id' => 1, 'category_name' => 'Snacks', 'slug' => Str::slug('Snacks')],
-            ['id' => 2, 'category_name' => 'Drinks', 'slug' => Str::slug('Drinks')],
+            [
+                'id' => 1,
+                'category_image' => 'BISCUITS-1.png',
+                'category_name' => 'Snacks',
+                'slug' => Str::slug('Snacks'),
+            ],
+            [
+                'id' => 2,
+                'category_image' => 'DRINKS-1.png',
+                'category_name' => 'Drinks',
+                'slug' => Str::slug('Drinks'),
+            ],
+            [
+                'id' => 3,
+                'category_image' => 'BISCUITS-1.png',
+                'category_name' => 'Confectionery',
+                'slug' => Str::slug('Confectionery'),
+            ],
+            [
+                'id' => 4,
+                'category_image' => 'DRINKS-1.png',
+                'category_name' => 'Soft Beverages',
+                'slug' => Str::slug('Soft Beverages'),
+            ],
+            [
+                'id' => 5,
+                'category_image' => 'BISCUITS-1.png',
+                'category_name' => 'Cookies',
+                'slug' => Str::slug('Cookies'),
+            ],
+            [
+                'id' => 6,
+                'category_image' => 'DRINKS-1.png',
+                'category_name' => 'Energy Drinks',
+                'slug' => Str::slug('Energy Drinks'),
+            ],
+            [
+                'id' => 7,
+                'category_image' => 'DRINKS-1.png',
+                'category_name' => 'Sample Drinks',
+                'slug' => Str::slug('Sample Drinks'),
+            ],
         ];
+        
 
         DB::table('categories')->insert($categories);
 
@@ -27,7 +68,7 @@ class ProductSeeder extends Seeder
                 'product_image' => 'BISCUITS-1.png',
                 'product_price' => 16,
                 'product_stocks' => 20,
-                'category_id' => 1, 
+                'category_id' => 1,
                 'product_description' => 'Crunchy and baked breadsticks, perfect as a savory snack. A popular choice for snack lovers.',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
@@ -36,7 +77,7 @@ class ProductSeeder extends Seeder
                 'product_image' => 'BISCUITS-2.png',
                 'product_price' => 10,
                 'product_stocks' => 20,
-                'category_id' => 1, 
+                'category_id' => 1,
                 'product_description' => 'Deliciously crunchy biscuits with a delightful taste. Fita is a classic Filipino snack.',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
@@ -45,7 +86,7 @@ class ProductSeeder extends Seeder
                 'product_image' => 'DRINKS-1.png',
                 'product_price' => 25,
                 'product_stocks' => 20,
-                'category_id' => 2, 
+                'category_id' => 2,
                 'product_description' => 'C2 Green Tea is a refreshing drink made from real tea leaves, perfect for quenching your thirst.',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
             ],
@@ -57,7 +98,17 @@ class ProductSeeder extends Seeder
                 'category_id' => 2,
                 'product_description' => 'C2 Yellow is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
-           
+
+            ],
+            [
+                'product_name' => 'C2 Red',
+                'product_image' => 'DRINKS-3.png',
+                'product_price' => 25,
+                'product_stocks' => 20,
+                'category_id' => 2,
+                'product_description' => 'C2 Red is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
+                'cart_product_description' => 'Crunchy and baked breadsticks.',
+
             ],
         ];
 

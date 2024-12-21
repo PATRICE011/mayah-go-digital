@@ -47,8 +47,8 @@
             </ul>
 
             <div class="header__search">
-                <input type="text" placeholder="Search Item" class="form__input">
-                <button class="search__btn"><i class='bx bx-search search'></i></button>
+                <input type="text" placeholder="Search Item" class="form__input" id="searchInput">
+                <button class="search__btn"><i class='bx bx-search search' id="searchButton"></i></button>
             </div>
         </div>
 
@@ -70,7 +70,12 @@
 </section>
 
 <section class="products section--lg container">
-    <p class="total__products">We found <span>{{ $totalProducts }}</span> items for you!</p>
+
+    {{-- Example: "We found X items for you!" --}}
+    <p class="total__products">
+        We found <span>{{ $totalProducts ?? 0 }}</span> items for you!
+    </p>
+
     <div class="products__layout">
         <div class="product__categories-sidebar">
             <div class="product__category-section">
@@ -87,33 +92,20 @@
         </div>
 
         <div class="products__grid">
-            <div class="products__container grid">
-                @include('home.partials.product_grid')
+            <!-- Container for the product items, which we’ll replace via AJAX -->
+            <div class="products__container grid" id="productsContainer">
+                {{-- Include the partial that shows product items --}}
+                @include('home.partials.product_grid', ['products' => $products ?? collect()])
             </div>
         </div>
     </div>
 
     <ul class="pagination">
-        <li>
-            <a href="#" class="pagination__link active">01</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">02</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">03</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">...</a>
-        </li>
-
-        <li>
-            <a href="#" class="pagination__link">10</a>
-        </li>
-
+        <li><a href="#" class="pagination__link active">01</a></li>
+        <li><a href="#" class="pagination__link">02</a></li>
+        <li><a href="#" class="pagination__link">03</a></li>
+        <li><a href="#" class="pagination__link">...</a></li>
+        <li><a href="#" class="pagination__link">10</a></li>
         <li>
             <a href="#" class="pagination__link icon">
                 <i class="ri-arrow-right-s-line"></i>
@@ -123,4 +115,44 @@
 </section>
 
 @include('home.footer')
+
+@section('scripts')
+<script>
+  $(function() {
+    // Handle search button click
+    $('#searchButton').on('click', function(e) {
+        e.preventDefault();
+        performSearch();
+    });
+
+    // Optional: handle Enter key
+    $('#searchInput').on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+
+    function performSearch() {
+        let query = $('#searchInput').val().trim();
+
+        $.ajax({
+            url: '/search-products', // or use a route helper in Blade
+            method: 'GET',
+            data: { search: query },
+            success: function(response) {
+                // Replace HTML in #productsContainer with the partial
+                if(response.html) {
+                    $('#productsContainer').html(response.html);
+                }
+                // Optionally handle response.error if you want to display an error message
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+});
+</script>
+@endsection
 @endsection
