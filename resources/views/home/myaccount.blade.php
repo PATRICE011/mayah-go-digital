@@ -25,7 +25,7 @@
 
                 <!-- For authenticated users -->
                 @auth
-                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                <form action="{{ route('users.logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
                 </form>
@@ -61,10 +61,18 @@
             </ul>
 
             <div class="header__search">
-                <input type="text" placeholder="Search Item" class="form__input">
-                <button class="search__btn">
-                    <i class='bx bx-search search'></i>
-                </button>
+                <form action="{{route('home.shop')}}" method="GET">
+                    @csrf
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search Item"
+                        class="form__input"
+                        id="searchInput">
+                    <button class="search__btn" id="searchButton">
+                        <i class='bx bx-search search'></i>
+                    </button>
+                </form>
             </div>
         </div>
 

@@ -23,7 +23,7 @@
                 @else
                 <!-- For authenticated users -->
                 @auth
-                <form action="{{ url('/logout') }}" method="POST" style="display: inline;">
+                <form action="{{ route('users.logout')}}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
                 </form>
@@ -37,14 +37,14 @@
     </div>
 
     <nav class="nav container">
-        <a href="{{url('/')}}" class="nav__logo">
+        <a href="{{url('/user')}}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
 
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="{{url('/')}}" class="nav__link active-link">HOME</a>
+                    <a href="{{url('/user')}}" class="nav__link active-link">HOME</a>
                 </li>
 
                 <li class="nav__item">

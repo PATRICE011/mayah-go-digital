@@ -35,7 +35,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [HomeController::class, 'home']);
         Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
-        Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
+        
         Route::prefix('cart')->group(function () {
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
@@ -96,3 +96,4 @@ Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('ho
 
 Route::post('/filter-products', [UserController::class, 'filterProducts']); // Filter products via POST
 
+Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
