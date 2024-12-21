@@ -1,4 +1,9 @@
+@extends('admins.layout')
+@section('title', 'Mayah Store - Admin Customers')
 
+
+@section('content')
+@include('admins.adminheader', ['activePage' => 'customers'])
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
         <div class="row">
@@ -146,3 +151,5 @@
         </div>
     </div>
 </div>
+
+@endsection
