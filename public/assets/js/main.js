@@ -319,22 +319,24 @@ document.addEventListener("DOMContentLoaded", function () {
                             return response.json();
                         })
                         .then((data) => {
-                            // If we get here, it's a successful JSON response
-
-                            // Update the cart count dynamically
                             const cartCountElement =
                                 document.getElementById("cart-count");
                             if (cartCountElement) {
                                 cartCountElement.innerText = data.cartCount;
                             }
 
-                            // Display success message and update button
-                            toastr.success(
-                                data.message || "Product added to cart!"
-                            );
+                            // Display the appropriate message
+                            if (data.message) {
+                                toastr.success(data.message); // Success message
+                            } else if (data.error) {
+                                toastr.error(data.error); // Error message
+                            }
+
+                            // Update button to show success state
                             clonedButton.innerHTML =
                                 '<i class="bx bx-check"></i>';
                         })
+
                         .catch((error) => {
                             // For errors returned from the server (e.g., out of stock or other issues)
                             console.error("Error:", error);

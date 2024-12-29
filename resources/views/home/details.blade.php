@@ -86,7 +86,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{url('/')}}" class="breadcrumb__link">
+            <a href="{{url('/user')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>
@@ -161,7 +161,7 @@
                 <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                     @csrf
                     <input type="hidden" name="id" value="{{ $product->id }}">
-                    <input type="number" name="quantity" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}">
+                    <!-- <input type="number" name="quantity" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}"> -->
                     <button type="button" class="btn btn--sm">Add to Cart</button>
                 </form>
 
