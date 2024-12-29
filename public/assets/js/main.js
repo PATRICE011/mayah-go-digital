@@ -169,50 +169,60 @@ document.querySelectorAll(".account__tab").forEach((tab) => {
 // ADD TO WISHLIST
 function addToWishlist(productId) {
     const form = document.getElementById(`wish-button-${productId}`);
-    const url = form.getAttribute("action"); // Use the 'action' attribute here
+    if (!form) {
+        console.error("Wishlist form not found for product ID:", productId);
+        return;
+    }
+
+    const url = form.getAttribute("action");
     const token = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
 
+    // Send AJAX request
     fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "X-CSRF-TOKEN": token,
         },
-        body: new URLSearchParams(new FormData(form)),
+        body: new URLSearchParams(new FormData(form)), // Serialize form data
     })
         .then((response) => {
             if (response.ok) {
-                return response.json();
+                return response.json(); // Parse JSON response
             } else {
                 return response.json().then((err) => {
-                    throw err;
+                    throw err; // Pass error to catch block
                 });
             }
         })
         .then((data) => {
+            // Show success message
+            if (data.message) {
+                toastr.success(data.message); // Success message
+            } else if (data.error) {
+                toastr.error(data.error); // Error message
+            }
             // Update wishlist count dynamically
             if (data.wishlistCount !== undefined) {
-                document.querySelector(".header__action-btn .count").innerText =
-                    data.wishlistCount;
+                const wishlistCountElement = document.querySelector(
+                    ".header__action-btn .count"
+                );
+                if (wishlistCountElement) {
+                    wishlistCountElement.innerText = data.wishlistCount;
+                }
             }
-
-            // Show success notification
-            toastr.success(data.message || "Product added to wishlist!");
         })
         .catch((error) => {
-            if (error.error === "This product is already in your wishlist.") {
-                toastr.warning(error.error);
-            } else {
-                toastr.error(
-                    error.error ||
-                        "An error occurred while adding to the wishlist."
-                );
-            }
-            console.error("Error:", error);
+            // Show error message
+            toastr.error(
+                error.error || "An unexpected error occurred while adding to the wishlist."
+            );
+            console.error("Error adding to wishlist:", error);
         });
 }
+
 
 // PRODUCT FILTER AND ADD TO CART
 document.addEventListener("DOMContentLoaded", function () {
@@ -319,24 +329,23 @@ document.addEventListener("DOMContentLoaded", function () {
                             return response.json();
                         })
                         .then((data) => {
-                            const cartCountElement =
-                                document.getElementById("cart-count");
+                            const cartCountElement = document.getElementById("cart-count");
                             if (cartCountElement) {
                                 cartCountElement.innerText = data.cartCount;
                             }
-
+                        
                             // Display the appropriate message
                             if (data.message) {
                                 toastr.success(data.message); // Success message
                             } else if (data.error) {
                                 toastr.error(data.error); // Error message
                             }
-
+                        
                             // Update button to show success state
-                            clonedButton.innerHTML =
-                                '<i class="bx bx-check"></i>';
+                            clonedButton.innerHTML = '<i class="bx bx-check"></i>';
                         })
-
+                        
+                        
                         .catch((error) => {
                             // For errors returned from the server (e.g., out of stock or other issues)
                             console.error("Error:", error);

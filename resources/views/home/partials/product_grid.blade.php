@@ -43,7 +43,7 @@
                 <a href="javascript:void(0);"
                     class="action__btn"
                     aria-label="Add To Wishlist"
-                    onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
+                    onclick="addToWishlist({{ $product->id }});">
                     <i class="bx bx-heart"></i>
                 </a>
             </div>
