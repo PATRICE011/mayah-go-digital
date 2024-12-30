@@ -119,33 +119,27 @@
 @section('scripts')
 <script>
   $(function() {
-    // Handle search button click
-    $('#searchButton').on('click', function(e) {
-        e.preventDefault();
-        performSearch();
-    });
+    // Handle input changes
+    $('#searchInput').on('keyup', function() {
+        let query = $(this).val().trim();
 
-    // Optional: handle Enter key
-    $('#searchInput').on('keypress', function(e) {
-        if (e.which === 13) {
-            e.preventDefault();
-            performSearch();
+        if (query.length > 0) { // Only trigger search if there is input
+            performSearch(query);
+        } else {
+            $('#productsContainer').html(''); // Clear results if input is empty
         }
     });
 
-    function performSearch() {
-        let query = $('#searchInput').val().trim();
-
+    function performSearch(query) {
         $.ajax({
-            url: '/search-products', // or use a route helper in Blade
+            url: '/search-products', // Update this to match your route
             method: 'GET',
             data: { search: query },
             success: function(response) {
                 // Replace HTML in #productsContainer with the partial
-                if(response.html) {
+                if (response.html) {
                     $('#productsContainer').html(response.html);
                 }
-                // Optionally handle response.error if you want to display an error message
             },
             error: function(xhr, status, error) {
                 console.error(error);
@@ -153,6 +147,7 @@
         });
     }
 });
+
 
 
 </script>
