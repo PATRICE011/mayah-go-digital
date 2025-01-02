@@ -3,7 +3,7 @@
     <div class="dashboard-header">
         <nav class="navbar navbar-expand-lg bg-white fixed-top">
             <a class="navbar-brand" href="">
-                 MAYAH STORE
+                MAYAH STORE
             </a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,11 +20,11 @@
 
                     <li class="nav-item dropdown notification">
                         <a class="nav-link nav-icons" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-bell"></i> <span class="indicator"></span></a>
-                        
+
                         <ul class="dropdown-menu dropdown-menu-right notification-dropdown">
                             <li>
                                 <div class="notification-title"> Notification</div>
-                                
+
                                 <div class="notification-list">
                                     <div class="list-group">
                                         <a href="#" class="list-group-item list-group-item-action active">
@@ -74,10 +74,16 @@
                                 <h5 class="mb-0 text-white nav-user-name">John Abraham </h5>
                                 <span class="status"></span><span class="ml-2">Available</span>
                             </div>
-                            
+
                             <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                            <form id="logout-form" action="{{ url('/admin/logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-power-off mr-2"></i> Logout
+                                </button>
+                            </form>
+
                         </div>
                     </li>
                 </ul>
@@ -93,7 +99,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
+
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav flex-column">
                         <li class="nav-item">
@@ -119,7 +125,7 @@
                                 <i class="fas fa-fw fa-file"></i> Category
                             </a>
                         </li>
-                    
+
                         <li class="nav-divider">
                             POS & Orders
                         </li>
@@ -168,7 +174,7 @@
                             <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Audit Trail
                             </a>
-                        
+
                             <a href="#" class="nav-link">
                                 <i class="fas fa-fw fa-file"></i> Sales Report
                             </a>
@@ -183,5 +189,5 @@
         </div>
     </div>
 
-   
+
 </div>

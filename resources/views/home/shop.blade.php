@@ -33,13 +33,13 @@
         </div>
     </div>
     <nav class="nav container">
-        <a href="{{url('/')}}" class="nav__logo">
+        <a href="{{url('/user')}}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
 
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
-                <li class="nav__item"><a href="{{url('/')}}" class="nav__link">HOME</a></li>
+                <li class="nav__item"><a href="{{url('/user')}}" class="nav__link">HOME</a></li>
                 <li class="nav__item"><a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a></li>
                 @auth
                 <li class="nav__item"><a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a></li>
@@ -63,7 +63,7 @@
 
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
-        <li><a href="{{url('/')}}" class="breadcrumb__link">Home</a></li>
+        <li><a href="{{url('/user')}}" class="breadcrumb__link">Home</a></li>
         <li><span class="breadcrumb__link">></span></li>
         <li><span class="breadcrumb__link">Shop</span></li>
     </ul>

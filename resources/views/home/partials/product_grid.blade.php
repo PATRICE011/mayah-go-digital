@@ -60,8 +60,7 @@
 
             <div class="product__price flex">
                 <span class="new__price" style="
-                    color: {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'red' : ($product->product_stocks == 0 ? 'black' : 'inherit') }};
-                ">
+                    color: {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'gold' : ($product->product_stocks == 0 ? 'red' : 'inherit') }};">
                     ₱ {{ number_format($product->product_price, 2) }}
                 </span>
                 @if($product->product_old_price)

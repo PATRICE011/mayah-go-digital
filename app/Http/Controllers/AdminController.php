@@ -105,30 +105,144 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view("admins.index"); 
+        // Metrics for the cards
+        $totalCustomers = DB::table('users_area')->count();
+        $totalOrders = DB::table('orders')->count();
+        $totalProducts = DB::table('products')->count();
+
+        // Growth rate calculation
+        $growthRate = $this->calculateGrowthRate($totalOrders);
+
+        // Top Selling Products
+        $topSellingProducts = $this->getTopSellingProducts(10);
+
+        // Revenue calculations
+        $todaysEarnings = $this->calculateRevenueForDate(now());
+        $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
+        $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
+
+        // Total sales by category
+        $salesByCategory = $this->getSalesByCategory();
+
+        $colors = [
+            'Biscuits' => '#007bff',
+            'Dairy' => '#dc3545',
+            'Drinks' => '#ffc107',
+            'School Supplies' => '#17a2b8',
+            // Add more categories and colors if needed
+        ];
+
+        return view("admins.index", compact(
+            'totalCustomers',
+            'totalOrders',
+            'totalProducts',
+            'growthRate',
+            'topSellingProducts',
+            'todaysEarnings',
+            'currentWeekEarnings',
+            'previousWeekEarnings',
+            'salesByCategory',
+            'colors'
+        ));
     }
+
+    /**
+     * Calculate month-over-month growth rate.
+     */
+    private function calculateGrowthRate($currentOrders)
+    {
+        $previousOrders = DB::table('orders')
+            ->whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])
+            ->count();
+
+        return $previousOrders > 0
+            ? (($currentOrders - $previousOrders) / $previousOrders) * 100
+            : 0;
+    }
+
+    /**
+     * Get top-selling products.
+     */
+    private function getTopSellingProducts($limit)
+    {
+        return DB::table('order_items')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('users_area', 'orders.user_id', '=', 'users_area.id')
+            ->select(
+                'products.id as product_id',
+                'products.product_name',
+                'products.product_image',
+                'order_items.quantity',
+                'order_items.price',
+                'orders.created_at as order_time',
+                'users_area.name as customer_name'
+            )
+            ->orderByDesc('order_items.quantity')
+            ->take($limit)
+            ->get();
+    }
+
+    /**
+     * Calculate revenue for a specific date.
+     */
+    private function calculateRevenueForDate($date)
+    {
+        return DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->whereDate('orders.created_at', $date)
+            ->sum(DB::raw('order_items.quantity * order_items.price'));
+    }
+
+    /**
+     * Calculate revenue for a specific date range.
+     */
+    private function calculateRevenueForDateRange($startDate, $endDate)
+    {
+        return DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->whereBetween('orders.created_at', [$startDate, $endDate])
+            ->sum(DB::raw('order_items.quantity * order_items.price'));
+    }
+
+    /**
+     * Get total sales by category.
+     */
+    private function getSalesByCategory()
+    {
+        return DB::table('order_items')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('categories.category_name as category_name', DB::raw('SUM(order_items.quantity * order_items.price) as total_sales'))
+            ->groupBy('categories.category_name') // Use the correct column name here
+            ->get();
+    }
+    
+
+
 
     public function admindashboard()
     {
-        return view("admins.dashboard");
-    }
 
+
+        return view('admins.dashboard');
+    }
     public function postLogin(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    {
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        if ($user->role_id == 1 || $user->role_id == 2) {
-            return redirect()->route('admins.dashboard'); // Redirect admins
-        } else {
-            return redirect('/home'); // Redirect normal users
+            if ($user->role_id == 1 || $user->role_id == 2) {
+                return redirect()->route('admins.dashboard'); // Redirect admins
+            } else {
+                return redirect('/home'); // Redirect normal users
+            }
         }
-    }
 
-    return back()->withErrors(['email' => 'Invalid credentials']);
-}
+        return back()->withErrors(['email' => 'Invalid credentials']);
+    }
 
 
     public function adminproducts()
@@ -186,7 +300,7 @@ class AdminController extends Controller
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
 
         return redirect('/')->with('message', 'Logout Successful');
     }

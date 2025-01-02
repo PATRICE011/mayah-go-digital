@@ -61,6 +61,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::post('/send-code', [UpdateProfileController::class, 'sendCode'])->name('sendCode');
             Route::post('/update-profile', [UpdateProfileController::class, 'updateProfile'])->name('user.update-profile');
             Route::post('/change-password', [UpdateProfileController::class, 'changePassword'])->name('changePassword');
+            Route::post('/validate-old-password', [UpdateProfileController::class, 'validateOldPassword']);
+
         });
 
         Route::prefix('order-status')->group(function () {

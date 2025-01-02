@@ -161,10 +161,8 @@
                   <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                      @csrf
                      <input type="hidden" name="id" value="{{ $wishlistItem->product->id }}">
-                     <input type="hidden" name="quantity" value="1">
-                     <button type="button" class="btn btn--sm action__btn cart__btn">
-                        Add to Cart
-                     </button>
+               
+                     <button type="button" class="btn btn--sm">Add to Cart</button>
                   </form>
                   @else
                   <button class="btn btn--sm" disabled>Out of Stock</button>

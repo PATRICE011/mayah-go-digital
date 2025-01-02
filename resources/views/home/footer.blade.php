@@ -60,11 +60,11 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('cart') }}" class="footer__link">View Cart</a>
+                    <a href="{{ url('/cart') }}" class="footer__link">View Cart</a>
                 </li>
 
                 <li>
-                    <a href="{{ url('wishlist') }}" class="footer__link">My Wishlist</a>
+                    <a href="{{ url('/wishlist') }}" class="footer__link">My Wishlist</a>
                 </li>
 
                 <li>
@@ -72,7 +72,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ url('shop') }}" class="footer__link">Order</a>
+                    <a href="{{ url('/shop') }}" class="footer__link">Order</a>
                 </li>
             </ul>
         </div>

@@ -109,9 +109,16 @@ public function changePassword(Request $request)
     // Validate the input
     $request->validate([
         'old_password' => 'required|string',
-        'new_password' => 'required|string|min:8|confirmed',
+        'new_password' => [
+            'required',
+            'string',
+            'min:5',
+            'regex:/^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{5,}$/',
+            'confirmed',
+        ],
         'otp' => 'required|numeric|digits:6',
     ]);
+    
 
     // Get the authenticated user
     $userId = Auth::id();
@@ -128,9 +135,9 @@ public function changePassword(Request $request)
     }
 
     // Verify old password
-    if (!Hash::check($request->old_password, $user->password)) {
-        return redirect()->back()->with('error', 'Old password is incorrect.')->with('active_tab', 'change-password');
-    }
+    // if (!Hash::check($request->old_password, $user->password)) {
+    //     return redirect()->back()->with('error', 'Old password is incorrect.')->with('active_tab', 'change-password');
+    // }
 
     // Update the password
     DB::table('users_area')->where('id', $userId)->update([
@@ -139,6 +146,22 @@ public function changePassword(Request $request)
     ]);
 
     return redirect()->back()->with('message', 'Password changed successfully!')->with('active_tab', 'change-password');
+}
+
+public function validateOldPassword(Request $request)
+{
+    $request->validate([
+        'old_password' => 'required|string',
+    ]);
+
+    $userId = Auth::id();
+    $user = DB::table('users_area')->where('id', $userId)->first();
+
+    if (!$user || !Hash::check($request->old_password, $user->password)) {
+        return response()->json(['valid' => false]);
+    }
+
+    return response()->json(['valid' => true]);
 }
 
 }

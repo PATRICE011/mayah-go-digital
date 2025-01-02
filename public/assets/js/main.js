@@ -559,6 +559,69 @@ $(document).ready(function () {
         });
     });
 });
+// VALIDATE CHANGE PASSWORD
+$(document).ready(function () {
+    const oldPasswordInput = $('input[name="old_password"]');
+    const newPasswordInput = $('input[name="new_password"]');
+    const confirmPasswordInput = $('input[name="new_password_confirmation"]');
+    const oldPasswordError = $('<div class="error"></div>');
+    const confirmPasswordError = $('<div class="error"></div>');
+
+    // Append error messages placeholders
+    oldPasswordInput.after(oldPasswordError);
+    confirmPasswordInput.after(confirmPasswordError);
+
+    // Validate old password dynamically
+    oldPasswordInput.on('input', function () {
+        const oldPassword = $(this).val().trim();
+        if (oldPassword.length > 0) {
+            $.ajax({
+                url: '/user/update-profile/validate-old-password', // Define the backend route
+                method: 'POST',
+                data: {
+                    old_password: oldPassword,
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (response) {
+                    if (response.valid) {
+                        oldPasswordError.text('');
+                    } else {
+                        oldPasswordError.text('Old password is incorrect.');
+                    }
+                },
+                error: function () {
+                    oldPasswordError.text('Error validating old password.');
+                },
+            });
+        } else {
+            oldPasswordError.text('');
+        }
+    });
+
+    // Validate new password confirmation dynamically
+    confirmPasswordInput.on('input', function () {
+        const newPassword = newPasswordInput.val().trim();
+        const confirmPassword = $(this).val().trim();
+
+        if (newPassword !== confirmPassword) {
+            confirmPasswordError.text('Passwords do not match.');
+        } else {
+            confirmPasswordError.text('');
+        }
+    });
+
+    // Validate new password requirements
+    newPasswordInput.on('input', function () {
+        const newPassword = $(this).val().trim();
+        const passwordRequirements = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{5,}$/;
+
+        if (!passwordRequirements.test(newPassword)) {
+            confirmPasswordError.text('Password must be at least 5 characters long and include at least one special character.');
+        } else {
+            confirmPasswordError.text('');
+        }
+    });
+});
 
 // UPDATE CART QUANTITY
 document.addEventListener("DOMContentLoaded", () => {
