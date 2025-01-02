@@ -25,11 +25,14 @@
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/jvectormap/jquery-jvectormap-2.0.2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/fonts/flag-icon-css/flag-icon.min.css') }}">
 
+
+    <!--=============== TOASTR ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
 
     <!--=============== PAGE-SPECIFIC STYLES ===============-->
-    @stack('styles')
+    @yield('styles')
 
     <title>@yield('title', 'Mayah Store Official - ADMIN')</title>
 </head>
@@ -48,6 +51,9 @@
 
     <!-- Include Chart.js -->
     <script src="{{ asset('assets/bootstrap/charts/charts-bundle/Chart.bundle.js') }}"></script>
+
+    <!--=============== TOASTER NOTIFICATION ===============-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
     <!-- Include Custom admin.js -->
     <script src="{{ asset('assets/js/admin.js') }}"></script>

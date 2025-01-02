@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -217,15 +218,52 @@ class AdminController extends Controller
             ->groupBy('categories.category_name') // Use the correct column name here
             ->get();
     }
-    
+
 
 
 
     public function admindashboard()
     {
+        // Metrics for the cards
+        $totalCustomers = DB::table('users_area')->count();
+        $totalOrders = DB::table('orders')->count();
+        $totalProducts = DB::table('products')->count();
+
+        // Growth rate calculation
+        $growthRate = $this->calculateGrowthRate($totalOrders);
+
+        // Top Selling Products
+        $topSellingProducts = $this->getTopSellingProducts(10);
+
+        // Revenue calculations
+        $todaysEarnings = $this->calculateRevenueForDate(now());
+        $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
+        $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
+
+        // Total sales by category
+        $salesByCategory = $this->getSalesByCategory();
+
+        $colors = [
+            'Biscuits' => '#007bff',
+            'Dairy' => '#dc3545',
+            'Drinks' => '#ffc107',
+            'School Supplies' => '#17a2b8',
+            // Add more categories and colors if needed
+        ];
 
 
-        return view('admins.dashboard');
+        return view('admins.dashboard', compact(
+            'totalCustomers',
+            'totalOrders',
+            'totalProducts',
+            'growthRate',
+            'topSellingProducts',
+            'todaysEarnings',
+            'currentWeekEarnings',
+            'previousWeekEarnings',
+            'salesByCategory',
+            'colors'
+        ));
     }
     public function postLogin(Request $request)
     {
@@ -246,12 +284,93 @@ class AdminController extends Controller
 
 
     public function adminproducts()
-    {
-        return view("admins.adminproducts");
+{
+    $categories = Category::all();
+
+    if (request()->ajax()) {
+        $query = request('query', ''); // Search term
+        $categorySlug = request('category', ''); // Selected category slug
+        $minPrice = request('minPrice', 0); // Minimum price filter
+        $maxPrice = request('maxPrice', null); // Maximum price filter
+        $status = request('status', ''); // Active/Inactive filter
+
+        $products = Product::with('category')
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('product_name', 'like', "%$query%");
+            })
+            ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
+                $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
+                    $categoryQuery->where('slug', $categorySlug); // Match category slug
+                });
+            })
+            ->when($minPrice, function ($queryBuilder) use ($minPrice) {
+                $queryBuilder->where('product_price', '>=', $minPrice);
+            })
+            ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
+                $queryBuilder->where('product_price', '<=', $maxPrice);
+            })
+            ->when($status, function ($queryBuilder) use ($status) {
+                $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
+            })
+            ->paginate(5);
+
+        return response()->json($products);
     }
+
+    return view('admins.adminproducts', compact('categories'));
+}
+
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'product_name' => 'required|string|max:255',
+            'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'product_description' => 'required|string',
+            'product_price' => 'required|numeric|min:0',
+            'product_stocks' => 'required|integer|min:0', // Validate stocks
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        // Handle the image logic
+        if ($request->hasFile('product_image')) {
+            $image = $request->file('product_image');
+
+            // Define the destination path in the public directory
+            $destinationPath = public_path('assets/img');
+
+            // Use the original file name
+            $imageName = $image->getClientOriginalName();
+
+            // Check if the file already exists
+            if (!file_exists($destinationPath . '/' . $imageName)) {
+                // Move the file to the destination path if it does not exist
+                $image->move($destinationPath, $imageName);
+            }
+
+            // Store the filename in the database
+            $validatedData['product_image'] = $imageName;
+        }
+        Log::info($validatedData);
+
+        // Create the product
+        $product = Product::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product added successfully!',
+            'product' => $product
+        ]);
+    }
+
+
 
     public function admincategories()
     {
+        if (request()->ajax()) {
+            $categories = Category::all();
+            return response()->json($categories);
+        }
         return view("admins.admincategories");
     }
 

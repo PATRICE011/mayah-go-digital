@@ -31,17 +31,17 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
                         <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <div class="mr-2">
+                        <!-- <div class="mr-2">
                             <select class="form-control form-control-sm" style="width: 70px;">
                                 <option>10</option>
                                 <option>20</option>
                                 <option>50</option>
                                 <option>100</option>
                             </select>
-                        </div>
+                        </div> -->
 
                         <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
                             <i class="fa fa-filter"></i> Filter
@@ -60,19 +60,21 @@
                                     <div class="modal-body">
                                         <!-- Add Filter Fields Here -->
                                         <form id="filterForm">
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="filterName">Product Name</label>
                                                 <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div>
+                                            </div> -->
 
                                             <div class="form-group">
-                                                <label for="filteCategory">Category</label>
+                                                <label for="filterCategory">Category</label>
                                                 <select class="form-control" id="filterCategory">
-                                                    <option value="">Biscuits</option>
-                                                    <option value="school-supplies">School Supplies</option>
-                                                    <option value="drinks">Drinks</option>
+                                                    <option value="">All Categories</option>
+                                                    @foreach($categories as $category)
+                                                    <option value="{{ $category->slug }}">{{ $category->category_name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
+
 
                                             <div class="form-group">
                                                 <label for="filterPrice">Price Range</label>
@@ -84,7 +86,7 @@
                                                             <input type="number" class="form-control" id="minPrice" placeholder="Min Price" min="0" step="0.01">
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <!-- Max Price -->
                                                     <div class="col-md-6">
                                                         <div class="input-group">
@@ -109,15 +111,16 @@
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                                        <button type="button" id="applyFiltersBtn" class="btn btn-primary">Apply Filters</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2">
+                        <button class="btn btn-sm btn-outline-danger mr-2" id="exportProductsBtn">
                             <i class="fa fa-file-export"></i> Export
                         </button>
+
 
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Product
@@ -136,6 +139,7 @@
 
                                     <div class="modal-body">
                                         <form id="addForm">
+                                            <!-- Product Image -->
                                             <div class="form-group">
                                                 <label for="addImage">Product Image</label>
                                                 <input type="file" class="form-control" id="addImage" accept="image/*">
@@ -146,25 +150,28 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Product Name -->
                                             <div class="form-group">
                                                 <label for="addName">Product Name</label>
                                                 <input type="text" class="form-control" id="addName" placeholder="Enter product name">
                                             </div>
 
+                                            <!-- Product Description -->
                                             <div class="form-group">
                                                 <label for="addDescription">Product Description</label>
-                                                <textarea class="form-control" id="addDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                <textarea class="form-control" id="addDescription" name="product_description" rows="5" placeholder="Enter product description"></textarea>
                                             </div>
 
+
+                                            <!-- Category -->
                                             <div class="form-group">
                                                 <label for="addCategory">Category</label>
                                                 <select class="form-control" id="addCategory">
-                                                    <option value="">Biscuits</option>
-                                                    <option value="">Drinks</option>
-                                                    <option value="">School Supplies</option>
+                                                    <!-- Dynamically populated categories -->
                                                 </select>
                                             </div>
 
+                                            <!-- Price -->
                                             <div class="form-group">
                                                 <label for="addPrice">Price</label>
                                                 <div class="input-group">
@@ -173,6 +180,13 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Stock -->
+                                            <div class="form-group">
+                                                <label for="addStocks">Stocks</label>
+                                                <input type="number" class="form-control" id="addStocks" placeholder="Enter stock quantity" min="0">
+                                            </div>
+
+                                            <!-- Status -->
                                             <div class="form-group">
                                                 <label for="addStatus">Status</label>
                                                 <select class="form-control" id="addStatus">
@@ -182,17 +196,20 @@
                                             </div>
                                         </form>
                                     </div>
+
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Add Product</button>
+                                        <button type="button" id="addProductBtn" class="btn btn-primary">Add Product</button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+                        <!-- end of add modal -->
                     </div>
 
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="productTable">
                                 <thead class="bg-light">
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
@@ -201,56 +218,17 @@
                                         <th class="border-0">Description</th>
                                         <th class="border-0">Category</th>
                                         <th class="border-0">Price</th>
+                                        <th class="border-0">Stocks</th>
                                         <th class="border-0">Status</th>
                                         <th class="border-0">Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <div class="m-r-10">
-                                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Bread Stix" class="rounded" width="45">
-                                            </div>
-                                        </td>
-                                        <td>Product #1 </td>
-                                        <td class="text-truncate" style="max-width: 200px;" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. In, eligendi!">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. In, eligendi!
-                                        </td>
-                                        <td>Biscuits </td>
-                                        <td>$80.00</td>
-                                        <td>Active</td>
-                                        <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
-                                        </td>
-                                    </tr>
+                                    <!-- DYNAMIC PRODUCT AJAX FETCH -->
 
-                                    <tr>
-                                        <td colspan="8" class="text-right">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination justify-content-end mb-0">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                            < </a>
-                                                    </li>
-
-                                                    <li class="page-item active">
-                                                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                                                    </li>
-
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#"> > </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </td>
-                                    </tr>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -259,4 +237,12 @@
         </div>
     </div>
 </div>
+@section('scripts')
+<script>
+    const baseURL = "{{ asset('assets/img/') }}";
+</script>
+<script>
+
+</script>
+@endsection
 @endsection

@@ -14,6 +14,7 @@ use App\Http\Controllers\UpdateProfileController;
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
+use App\Models\Product;
 
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
@@ -85,6 +86,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         // Add other admin routes as needed
 
         Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
+        Route::post('/store-products', [AdminController::class, 'store']);
         Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
@@ -94,6 +96,11 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
         Route::get('/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
         Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
+    
+        Route::get('/products/export', function () {
+            $products = Product::with('category')->get(); // Fetch all products with categories
+            return view('admins.export-products', compact('products'));
+        })->name('products.export');
     });
 
 // Public Routes (accessible by all)
