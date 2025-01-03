@@ -33,13 +33,13 @@
         </div>
     </div>
     <nav class="nav container">
-        <a href="{{url('/')}}" class="nav__logo">
+        <a href="{{url('/user')}}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
 
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
-                <li class="nav__item"><a href="{{url('/')}}" class="nav__link">HOME</a></li>
+                <li class="nav__item"><a href="{{url('/user')}}" class="nav__link">HOME</a></li>
                 <li class="nav__item"><a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a></li>
                 @auth
                 <li class="nav__item"><a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a></li>
@@ -63,7 +63,7 @@
 
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
-        <li><a href="{{url('/')}}" class="breadcrumb__link">Home</a></li>
+        <li><a href="{{url('/user')}}" class="breadcrumb__link">Home</a></li>
         <li><span class="breadcrumb__link">></span></li>
         <li><span class="breadcrumb__link">Shop</span></li>
     </ul>
@@ -119,33 +119,27 @@
 @section('scripts')
 <script>
   $(function() {
-    // Handle search button click
-    $('#searchButton').on('click', function(e) {
-        e.preventDefault();
-        performSearch();
-    });
+    // Handle input changes
+    $('#searchInput').on('keyup', function() {
+        let query = $(this).val().trim();
 
-    // Optional: handle Enter key
-    $('#searchInput').on('keypress', function(e) {
-        if (e.which === 13) {
-            e.preventDefault();
-            performSearch();
+        if (query.length > 0) { // Only trigger search if there is input
+            performSearch(query);
+        } else {
+            $('#productsContainer').html(''); // Clear results if input is empty
         }
     });
 
-    function performSearch() {
-        let query = $('#searchInput').val().trim();
-
+    function performSearch(query) {
         $.ajax({
-            url: '/search-products', // or use a route helper in Blade
+            url: '/search-products', // Update this to match your route
             method: 'GET',
             data: { search: query },
             success: function(response) {
                 // Replace HTML in #productsContainer with the partial
-                if(response.html) {
+                if (response.html) {
                     $('#productsContainer').html(response.html);
                 }
-                // Optionally handle response.error if you want to display an error message
             },
             error: function(xhr, status, error) {
                 console.error(error);
@@ -153,6 +147,9 @@
         });
     }
 });
+
+
+
 </script>
 @endsection
 @endsection

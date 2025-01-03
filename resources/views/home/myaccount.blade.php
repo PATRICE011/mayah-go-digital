@@ -312,18 +312,17 @@
                             name="old_password"
                             value="{{ old('old_password') }}"
                             placeholder="Old Password"
-                            class="form__input @error('old_password') is-invalid @enderror">
+                            class="form__input">
                         @error('old_password')
                         <div class="error">{{ $message }}</div>
                         @enderror
-
                         <!-- New Password -->
                         <input
                             type="password"
                             name="new_password"
                             value="{{ old('new_password') }}"
                             placeholder="New Password"
-                            class="form__input @error('new_password') is-invalid @enderror">
+                            class="form__input">
                         @error('new_password')
                         <div class="error">{{ $message }}</div>
                         @enderror
@@ -343,7 +342,7 @@
                                 name="otp"
                                 value="{{ old('otp') }}"
                                 placeholder="Enter OTP"
-                                class="form__input @error('otp') is-invalid @enderror">
+                                class="form__input">
                             <button
                                 type="button"
                                 id="get-otp-button-change-password"
@@ -353,9 +352,6 @@
                                 data-csrf="{{ csrf_token() }}">
                                 Get OTP
                             </button>
-                            @error('otp')
-                            <div class="error">{{ $message }}</div>
-                            @enderror
                             @error('otp')
                             <div class="error">{{ $message }}</div>
                             @enderror

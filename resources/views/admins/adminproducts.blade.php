@@ -31,17 +31,17 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
                         <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <div class="mr-2">
+                        <!-- <div class="mr-2">
                             <select class="form-control form-control-sm" style="width: 70px;">
                                 <option>10</option>
                                 <option>20</option>
                                 <option>50</option>
                                 <option>100</option>
                             </select>
-                        </div>
+                        </div> -->
 
                         <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
                             <i class="fa fa-filter"></i> Filter
@@ -60,19 +60,21 @@
                                     <div class="modal-body">
                                         <!-- Add Filter Fields Here -->
                                         <form id="filterForm">
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="filterName">Product Name</label>
                                                 <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div>
+                                            </div> -->
 
                                             <div class="form-group">
-                                                <label for="filteCategory">Category</label>
+                                                <label for="filterCategory">Category</label>
                                                 <select class="form-control" id="filterCategory">
-                                                    <option value="">Biscuits</option>
-                                                    <option value="school-supplies">School Supplies</option>
-                                                    <option value="drinks">Drinks</option>
+                                                    <option value="">All Categories</option>
+                                                    @foreach($categories as $category)
+                                                    <option value="{{ $category->slug }}">{{ $category->category_name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
+
 
                                             <div class="form-group">
                                                 <label for="filterPrice">Price Range</label>
@@ -84,6 +86,7 @@
                                                             <input type="number" class="form-control" id="minPrice" placeholder="Min Price" min="0" step="0.01">
                                                         </div>
                                                     </div>
+
 
                                                     <!-- Max Price -->
                                                     <div class="col-md-6">
@@ -109,15 +112,16 @@
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                                        <button type="button" id="applyFiltersBtn" class="btn btn-primary">Apply Filters</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2">
+                        <button class="btn btn-sm btn-outline-danger mr-2" id="exportProductsBtn">
                             <i class="fa fa-file-export"></i> Export
                         </button>
+
 
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Product
@@ -136,6 +140,7 @@
 
                                     <div class="modal-body">
                                         <form id="addForm">
+                                            <!-- Product Image -->
                                             <div class="form-group">
                                                 <label for="addImage">Product Image</label>
                                                 <input type="file" class="form-control" id="addImage" accept="image/*">
@@ -146,25 +151,28 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Product Name -->
                                             <div class="form-group">
                                                 <label for="addName">Product Name</label>
                                                 <input type="text" class="form-control" id="addName" placeholder="Enter product name">
                                             </div>
 
+                                            <!-- Product Description -->
                                             <div class="form-group">
                                                 <label for="addDescription">Product Description</label>
-                                                <textarea class="form-control" id="addDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                <textarea class="form-control" id="addDescription" name="product_description" rows="5" placeholder="Enter product description"></textarea>
                                             </div>
 
+
+                                            <!-- Category -->
                                             <div class="form-group">
                                                 <label for="addCategory">Category</label>
                                                 <select class="form-control" id="addCategory">
-                                                    <option value="">Biscuits</option>
-                                                    <option value="">Drinks</option>
-                                                    <option value="">School Supplies</option>
+                                                    <!-- Dynamically populated categories -->
                                                 </select>
                                             </div>
 
+                                            <!-- Price -->
                                             <div class="form-group">
                                                 <label for="addPrice">Price</label>
                                                 <div class="input-group">
@@ -173,6 +181,13 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Stock -->
+                                            <div class="form-group">
+                                                <label for="addStocks">Stocks</label>
+                                                <input type="number" class="form-control" id="addStocks" placeholder="Enter stock quantity" min="0">
+                                            </div>
+
+                                            <!-- Status -->
                                             <div class="form-group">
                                                 <label for="addStatus">Status</label>
                                                 <select class="form-control" id="addStatus">
@@ -182,17 +197,20 @@
                                             </div>
                                         </form>
                                     </div>
+
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Add Product</button>
+                                        <button type="button" id="addProductBtn" class="btn btn-primary">Add Product</button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+                        <!-- end of add modal -->
                     </div>
 
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" id="productTable">
                                 <thead class="bg-light">
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
@@ -201,6 +219,7 @@
                                         <th class="border-0">Product Description</th>
                                         <th class="border-0">Category</th>
                                         <th class="border-0">Price</th>
+                                        <th class="border-0">Stocks</th>
                                         <th class="border-0">Status</th>
                                         <th class="border-0">Action</th>
                                     </tr>
@@ -222,104 +241,8 @@
                                         <td>$80.00</td>
                                         <td>Active</td>
                                         <td>
-                                            <div class="action__btn">
-                                                <!-- EDIT BUTTON -->
-                                                <button class="edit" data-toggle="modal" data-target="#editModal">
-                                                    <i class="ri-mail-line"></i>
-                                                </button>
-
-                                                <!-- EDIT MODAL -->
-                                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-                                                                <form id="editForm">
-                                                                    <div class="form-group">
-                                                                        <label for="editImage">Product Image</label>
-                                                                        <input type="file" class="form-control" id="editImage" accept="image/*">
-                                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                                        <div class="mt-3">
-                                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editName">Product Name</label>
-                                                                        <input type="text" class="form-control" id="editName" placeholder="Enter product name">
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editDescription">Product Description</label>
-                                                                        <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editCategory">Category</label>
-                                                                        <select class="form-control" id="editCategory">
-                                                                            <option value="">Biscuits</option>
-                                                                            <option value="">Drinks</option>
-                                                                            <option value="">School Supplies</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editPrice">Price</label>
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-text">₱</span>
-                                                                            <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editStatus">Status</label>
-                                                                        <select class="form-control" id="editStatus">
-                                                                            <option value="active">Active</option>
-                                                                            <option value="inactive">Inactive</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- ARCHIVE BUTTON -->
-                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-
-                                                <!-- ARCHIVE MODAL -->
-                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
-                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Are you sure you want to archive this item? This action cannot be undone.
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" class="btn btn-danger">Archive</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
+                                            <i class="ri-delete-bin-line"></i>
                                         </td>
                                     </tr>
 
@@ -347,6 +270,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -355,4 +279,12 @@
         </div>
     </div>
 </div>
+@section('scripts')
+<script>
+    const baseURL = "{{ asset('assets/img/') }}";
+</script>
+<script>
+
+</script>
+@endsection
 @endsection

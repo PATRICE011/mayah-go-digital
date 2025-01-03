@@ -78,8 +78,9 @@ class productController extends Controller
         // 2) Apply filters if `search` is present
         if ($request->has('search')) {
             $keyword = $request->input('search');
-            $query->where('product_name', 'LIKE', "%{$keyword}%");
+            $query->whereRaw('LOWER(product_name) LIKE ?', [strtolower("{$keyword}%")]);
         }
+        
     
         $results = $query->get();
     

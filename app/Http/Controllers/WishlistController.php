@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class WishlistController extends Controller
 {
     //
@@ -52,48 +53,66 @@ class WishlistController extends Controller
     }
     
     public function addToWishlist(Request $request, $productId)
-    {
+{
+    try {
         $user = Auth::user();
-    
+
         // Ensure the user is logged in
         if (!$user) {
             return response()->json(['error' => 'User not authenticated.'], 401);
         }
-    
+
         // Check if the product exists
         $product = DB::table('products')->where('id', $productId)->first();
         if (!$product) {
             return response()->json(['error' => 'Product not found.'], 404);
         }
-    
+
         // Check if the product is already in the user's wishlist
         $existingWishlist = DB::table('wishlists')
             ->where('user_id', $user->id)
             ->where('product_id', $productId)
             ->first();
-    
+
         if ($existingWishlist) {
-            return response()->json(['error' => 'This product is already in your wishlist.'], 400);
+            // Return success message if already in wishlist
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count();
+
+            return response()->json([
+                'error' => 'This product is already in your wishlist.',
+                'wishlistCount' => $wishlistCount,
+            ], 200);
         }
-    
-        // Add to the wishlist
+        else{
+            // Add the product to the wishlist
         DB::table('wishlists')->insert([
             'user_id' => $user->id,
             'product_id' => $productId,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
+
         // Get updated wishlist count
         $wishlistCount = DB::table('wishlists')
             ->where('user_id', $user->id)
             ->count();
-    
+
         return response()->json([
             'message' => 'Product added to wishlist!',
             'wishlistCount' => $wishlistCount,
         ], 200);
+        }
+        
+    } catch (\Exception $e) {
+        Log::error('Wishlist Error: ' . $e->getMessage());
+        return response()->json(['error' => 'An unexpected error occurred.'], 500);
     }
+}
+
+    
+    
     
     public function removeFromWishlist($wishlistId)
     {

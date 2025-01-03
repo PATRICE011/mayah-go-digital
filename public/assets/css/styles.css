@@ -1619,9 +1619,9 @@ input[type="number"] {
 /* product state according to stocks  DEC 12, 2O24*/
 
 .out-of-stock {
-  border: 3px solid black;
+  border: 2px solid red;
   pointer-events: none;
-  background-color: #999999;
+  background-color: #fff5f5;
 }
 
 .out-of-stock .cart__btn {
@@ -1637,8 +1637,8 @@ input[type="number"] {
   color: black;
 }
 .low-stock {
-  border: 2px solid red;
-  background-color: #fff5f5;
+  border: 2px solid yellow;
+  background-color: white;
 }
 
 .low-stock .product__price .new__price {
@@ -1852,3 +1852,18 @@ input[type="number"] {
 } */
 /* RESEND OTP DEC 17 */
 
+/* .error-messages {
+  color: red;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.error-messages ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-messages li {
+  margin-bottom: 0.5rem;
+} */

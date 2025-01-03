@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--=============== FAVICON ===============-->
     <link rel="shortcut icon" href="{{ asset('assets/img/MAYAH-STORE-LOGO.jpg') }}" type="image/x-icon">
 
     <!--=============== BOXICONS ===============-->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
     <!--=============== REMIXICONS ===============-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css">
+
+    <!--=============== FONT AWESOME ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!--=============== BOOTSTRAP CSS ===============-->
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/bootstrap/css/bootstrap.min.css') }}">
@@ -21,21 +24,19 @@
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/vector-map/jqvmap.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/jvectormap/jquery-jvectormap-2.0.2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/bootstrap/fonts/flag-icon-css/flag-icon.min.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css">
 
+
+    <!--=============== TOASTR ===============-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
 
-    <!-- ====== toastr ========-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- Custom Styles -->
-    @stack('styles')
+    <!--=============== PAGE-SPECIFIC STYLES ===============-->
+    @yield('styles')
 
     <title>@yield('title', 'Mayah Store Official - ADMIN')</title>
 </head>
+
 
 <body>
     <!-- Header and Dashboard -->
@@ -44,22 +45,43 @@
         @yield('content')
     </div>
 
-    <script src="{{ asset('assets/bootstrap/bootstrap/js/bootstrap.bundle.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/slimscroll/jquery.slimscroll.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/charts/charts-bundle/Chart.bundle.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/charts/charts-bundle/chartjs.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/jvectormap/jquery-jvectormap-2.0.2.min.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/charts/sparkline/jquery.sparkline.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/charts/sparkline/spark-js.js') }}"></script>
-    <script src="{{ asset('assets/js/admin.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <!--=============== REQUIRED JS ===============-->
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Page-Specific Scripts -->
-    @stack('scripts')
+    <!-- Include Bootstrap Bundle -->
+    <script src="{{ asset('assets/bootstrap/bootstrap/js/bootstrap.bundle.js') }}"></script>
+
+    <!-- Include Chart.js -->
+    <script src="{{ asset('assets/bootstrap/charts/charts-bundle/Chart.bundle.js') }}"></script>
+
+    <!--=============== TOASTER NOTIFICATION ===============-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- Include Custom admin.js -->
+    <script src="{{ asset('assets/js/admin.js') }}"></script>
+
+    <!-- Toastr Options -->
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",
+        };
+
+        // Display success message if available
+        @if(session('message'))
+        toastr.success("{{ session('message') }}");
+        @endif
+
+        // Display error message if available
+        @if(session('error'))
+        toastr.error("{{ session('error') }}");
+        @endif
+    </script>
+    <!--=============== PAGE-SPECIFIC SCRIPTS ===============-->
+    @yield('scripts')
 </body>
 
 </html>

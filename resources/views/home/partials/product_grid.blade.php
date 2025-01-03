@@ -43,7 +43,7 @@
                 <a href="javascript:void(0);"
                     class="action__btn"
                     aria-label="Add To Wishlist"
-                    onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
+                    onclick="addToWishlist({{ $product->id }});">
                     <i class="bx bx-heart"></i>
                 </a>
             </div>
@@ -60,8 +60,7 @@
 
             <div class="product__price flex">
                 <span class="new__price" style="
-                    color: {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'red' : ($product->product_stocks == 0 ? 'black' : 'inherit') }};
-                ">
+                    color: {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'gold' : ($product->product_stocks == 0 ? 'red' : 'inherit') }};">
                     ₱ {{ number_format($product->product_price, 2) }}
                 </span>
                 @if($product->product_old_price)

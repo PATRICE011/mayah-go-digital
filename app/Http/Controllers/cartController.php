@@ -57,9 +57,13 @@ class cartController extends Controller
                 ->where('product_id', $productId)
                 ->first();
 
+             // Successful responses
             if ($cartItem) {
-                $cartItem->quantity += $quantity;
-                $cartItem->save();
+                $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
+                return response()->json([
+                    'error' => 'Product is already in your cart!',
+                    'cartCount' => $cartCount,
+                ], 200);
             } else {
                 CartItem::create([
                     'cart_id' => $cart->id,
@@ -67,20 +71,18 @@ class cartController extends Controller
                     'quantity' => $quantity,
                     'price' => $product->product_price,
                 ]);
+
+                $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
+                return response()->json([
+                    'message' => 'Product added to cart successfully!',
+                    'cartCount' => $cartCount,
+                ], 200);
             }
-
-            // Get updated cart count
-            $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
-
-            return response()->json([
-                'message' => 'Product added to cart successfully!',
-                'cartCount' => $cartCount,
-            ], 200);
         } catch (\Exception $e) {
-            Log::error('Add to Cart Error: ' . $e->getMessage()); // Log the error for debugging
+            Log::error('Add to Cart Error: ' . $e->getMessage()); // Log error for debugging
             return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
-        }
-    }
+            }
+}
 
 
 

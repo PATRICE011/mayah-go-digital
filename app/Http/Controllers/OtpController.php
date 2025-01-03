@@ -138,7 +138,7 @@ class OtpController extends Controller
                 if ($user) {
                     Auth::loginUsingId($user->id); // Log the user in
                     $request->session()->forget('user_data'); // Clear session data
-                    return redirect('/home')->with('message', 'OTP verified successfully and you are now logged in.');
+                    return redirect('/user')->with('message', 'OTP verified successfully and you are now logged in.');
                 } else {
                     return redirect()->back()->with('error', 'User creation failed. Please try again.');
                 }

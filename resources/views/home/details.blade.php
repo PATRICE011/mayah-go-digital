@@ -86,7 +86,7 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
-            <a href="{{url('/')}}" class="breadcrumb__link">
+            <a href="{{url('/user')}}" class="breadcrumb__link">
                 Home
             </a>
         </li>
@@ -161,7 +161,7 @@
                 <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                     @csrf
                     <input type="hidden" name="id" value="{{ $product->id }}">
-                    <input type="number" name="quantity" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}">
+                    <!-- <input type="number" name="quantity" value="1" class="quantity" min="1" max="{{ $product->product_stocks }}"> -->
                     <button type="button" class="btn btn--sm">Add to Cart</button>
                 </form>
 
@@ -169,7 +169,7 @@
                 <form id="wish-button-{{ $product->id }}" action="{{ route('addtowish', $product->id)}}" method="POST" style="display: none;">
                     @csrf
                 </form>
-                <a href="#" class="details__action-btn" aria-label="Add To Wishlist" onclick="document.getElementById('wish-button-{{ $product->id }}').submit();">
+                <a href="#" class="details__action-btn" aria-label="Add To Wishlist" onclick="addToWishlist({{ $product->id }});">
                     <i class='bx bx-heart'></i>
                 </a>
             </div>
