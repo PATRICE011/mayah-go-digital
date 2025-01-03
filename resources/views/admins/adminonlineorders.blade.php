@@ -1,8 +1,7 @@
 @extends('admins.layout')
 @section('title', 'Mayah Store - Admin Online Orders')
-
-@include('admins.adminheader', ['activePage' => 'onlineorders'])
 @section('content')
+@include('admins.adminheader', ['activePage' => 'onlineorders'])
 
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
@@ -67,7 +66,6 @@
                                                 <label for="filteCategory">Date</label>
                                                 <input type="date" class="form-control" id="filterDate">
                                             </div>
-
 
                                             <div class="form-group">
                                                 <label for="filterStatus">Status</label>

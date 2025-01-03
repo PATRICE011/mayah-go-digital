@@ -6977,8 +6977,21 @@ Media Query
     padding: 17px 29px;}
 }
 
-
-
-
 /* Custom, iPhone Retina */
 @media only screen and (max-width:320px) {}
+
+.action__btn{
+    display: flex;
+}
+
+.edit{
+    margin-right: 0.5rem;
+}
+
+.edit,
+.archive{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background-color: transparent;
+}

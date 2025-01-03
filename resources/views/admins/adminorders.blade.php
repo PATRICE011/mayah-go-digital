@@ -1,9 +1,7 @@
 @extends('admins.layout')
 @section('title', 'Mayah Store - Admin Products')
-
-@include('admins.adminheader', ['activePage' => 'stocks'])
 @section('content')
-
+@include('admins.adminheader', ['activePage' => 'stocks'])
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
         <div class="row">

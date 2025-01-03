@@ -1,8 +1,7 @@
 @extends('admins.layout')
 @section('title', 'Mayah Store - Admin Administrators')
-
-@include('admins.adminheader', ['activePage' => 'administrators'])
 @section('content')
+@include('admins.adminheader', ['activePage' => 'administrators'])
 
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
@@ -155,19 +154,77 @@
                                         <td>0912 345 6789</td>
                                         <td>Active</td>
                                         <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
-                                        </td>
-                                    </tr>
+                                            <div class="action__btn">
+                                                <!-- EDIT BUTTON -->
+                                                <button class="edit" data-toggle="modal" data-target="#editModal">
+                                                    <i class="ri-mail-line"></i>
+                                                </button>
 
-                                    <tr>
-                                        <td>2</td>
-                                        <td>John Doe</td>
-                                        <td>0912 345 6789</td>
-                                        <td>Inactive</td>
-                                        <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
+                                                <!-- EDIT MODAL -->
+                                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="editModalLabel">Edit Administrator Info</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                <form id="editForm">
+                                                                    <div class="form-group">
+                                                                        <label for="editAdminName">Administrator Name</label>
+                                                                        <input type="text" class="form-control" id="editAdminName" placeholder="Enter Administrator name">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editPhoneNumber">Phone Number</label>
+                                                                        <input type="tel" class="form-control" id="editPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editStatus">Status</label>
+                                                                        <select class="form-control" id="editStatus">
+                                                                            <option value="active">Active</option>
+                                                                            <option value="inactive">Inactive</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- ARCHIVE BUTTON -->
+                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+
+                                                <!-- ARCHIVE MODAL -->
+                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to archive this item? This action cannot be undone.
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn btn-danger">Archive</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
 
