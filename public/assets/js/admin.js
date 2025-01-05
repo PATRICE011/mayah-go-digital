@@ -345,16 +345,107 @@ $(document).ready(function () {
                                 ? "Active"
                                 : "Out of Stock"
                         }</td>
-                        <td>
-                            <a href="#" class="text-primary">
-                                <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                            </a>
-                            <button class="btn btn-link text-danger p-0 delete-product" data-id="${
-                                product.id
-                            }">
-                                <i class="ri-delete-bin-line"></i>
-                            </button>
-                        </td>
+ <td>
+                                            <div class="action__btn">
+                                                <!-- EDIT BUTTON -->
+                                                <button class="edit" data-toggle="modal" data-target="#editModal">
+                                                    <i class="ri-mail-line"></i>
+                                                </button>
+
+                                                <!-- EDIT MODAL -->
+                                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                <form id="editForm">
+                                                                    <div class="form-group">
+                                                                        <label for="editImage">Product Image</label>
+                                                                        <input type="file" class="form-control" id="editImage" accept="image/*">
+                                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
+
+                                                                        <div class="mt-3">
+                                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editName">Product Name</label>
+                                                                        <input type="text" class="form-control" id="editName" placeholder="Enter product name">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editDescription">Product Description</label>
+                                                                        <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editCategory">Category</label>
+                                                                        <select class="form-control" id="editCategory">
+                                                                            <option value="">Biscuits</option>
+                                                                            <option value="">Drinks</option>
+                                                                            <option value="">School Supplies</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editPrice">Price</label>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-text">₱</span>
+                                                                            <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="editStatus">Status</label>
+                                                                        <select class="form-control" id="editStatus">
+                                                                            <option value="active">Active</option>
+                                                                            <option value="inactive">Inactive</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- ARCHIVE BUTTON -->
+                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+
+                                                <!-- ARCHIVE MODAL -->
+                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to archive this item? This action cannot be undone.
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn btn-danger">Archive</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                        
                     </tr>
                 `
                     )
