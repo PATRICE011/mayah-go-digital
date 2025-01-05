@@ -60,10 +60,10 @@
                                     <div class="modal-body">
                                         <!-- Add Filter Fields Here -->
                                         <form id="filterForm">
-                                            <!-- <div class="form-group">
+                                            <div class="form-group">
                                                 <label for="filterName">Product Name</label>
                                                 <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div> -->
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="filterCategory">Category</label>
@@ -226,7 +226,7 @@
                                 </thead>
 
                                 <tbody>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>1</td>
                                         <td>
                                             <div class="m-r-10">
@@ -268,9 +268,8 @@
                                                 </ul>
                                             </nav>
                                         </td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
