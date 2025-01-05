@@ -101,34 +101,35 @@
                     </div>
                     <div class="card-body border-top">
                         <div class="row">
-                            <!-- Today's Earning -->
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 p-3">
                                 <h4>Today's Earning: ₱{{ number_format($todaysEarnings, 2) }}</h4>
                             </div>
-                            <!-- Current Week -->
+
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 p-3">
                                 <h2 class="font-weight-normal mb-3"><span>₱{{ number_format($currentWeekEarnings, 2) }}</span></h2>
                                 <div class="mb-0 mt-3 legend-item">
-                                    <span class="fa-xs text-primary mr-1 legend-title">
+                                    <span class="fa-xs legend-title" style="color: rgba(255, 99, 132, 1);">
                                         <i class="fa fa-fw fa-square-full"></i>
                                     </span>
                                     <span class="legend-text">Current Week</span>
                                 </div>
                             </div>
-                            <!-- Previous Week -->
+
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 p-3">
                                 <h2 class="font-weight-normal mb-3"><span>₱{{ number_format($previousWeekEarnings, 2) }}</span></h2>
                                 <div class="text-muted mb-0 mt-3 legend-item">
-                                    <span class="fa-xs text-secondary mr-1 legend-title">
+                                    <span class="fa-xs legend-title" style="color: rgba(54, 162, 235, 1);">
                                         <i class="fa fa-fw fa-square-full"></i>
                                     </span>
                                     <span class="legend-text">Previous Week</span>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
 
 
             @php

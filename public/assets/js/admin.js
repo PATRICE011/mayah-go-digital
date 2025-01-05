@@ -209,16 +209,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     {
                         label: "Current Week",
                         data: [7000, 6800, 6500, 7200, 7500, 8000, 7500],
-                        borderColor: "rgba(54, 162, 235, 1)",
-                        backgroundColor: "rgba(54, 162, 235, 0.2)",
+                        borderColor: "rgba(255, 99, 132, 1)", // Vibrant red-pink
+                        backgroundColor: "rgba(255, 99, 132, 0.2)", // Soft red fill
+                        pointBackgroundColor: "rgba(255, 99, 132, 1)", // Red dots
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
                         fill: true,
                         tension: 0.4,
                     },
                     {
                         label: "Previous Week",
                         data: [6900, 6400, 6100, 7000, 7200, 7700, 7400],
-                        borderColor: "rgba(201, 203, 207, 1)",
-                        backgroundColor: "rgba(201, 203, 207, 0.2)",
+                        borderColor: "rgba(54, 162, 235, 1)", // Strong blue
+                        backgroundColor: "rgba(54, 162, 235, 0.2)", // Light blue fill
+                        pointBackgroundColor: "rgba(54, 162, 235, 1)", // Blue dots
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(54, 162, 235, 1)",
                         fill: true,
                         tension: 0.4,
                     },
@@ -586,7 +594,6 @@ $(document).ready(function () {
             },
         });
     });
-
 
     // Initial product load
     loadProducts();
