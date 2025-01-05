@@ -130,6 +130,26 @@
                 </div>
             </div>
 
+
+            @php
+            // A diverse, high-contrast color palette
+            $colorPalette = [
+            '#FF5733', // Red-Orange
+            '#FFD700', // Gold/Yellow
+            '#4AB0E5', // Light Blue
+            '#FF8C00', // Orange
+            '#2E8B57', // Sea Green
+            '#6A5ACD', // Slate Blue
+            '#E76829', // Deep Orange
+            ];
+
+            $colors = [];
+            foreach ($salesByCategory as $index => $category) {
+            $colors[$category->category_name] = $colorPalette[$index % count($colorPalette)];
+            }
+            @endphp
+
+
             <!-- Total Sale Section -->
             <div class="col-xl-4 col-lg-12 col-md-4 col-sm-12 col-12">
                 <div class="card">
@@ -225,11 +245,11 @@
 @section('scripts')
 <script>
     window.salesData = {
-        labels: @json($salesByCategory->pluck('category_name')),
-        data: @json($salesByCategory->pluck('total_sales')),
-        colors: @json(array_map(function ($name) use ($colors) {
+        labels: @json($salesByCategory -> pluck('category_name')),
+        data: @json($salesByCategory -> pluck('total_sales')),
+        colors: @json(array_map(function($name) use($colors) {
             return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
-        }, $salesByCategory->pluck('category_name')->toArray()))
+        }, $salesByCategory -> pluck('category_name') -> toArray()))
     };
 </script>
 @endsection
