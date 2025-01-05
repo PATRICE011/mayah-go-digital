@@ -172,7 +172,10 @@ class AdminController extends Controller
         ));
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6dafaba3e8593245b1fbb2a9b54a09f47a7b28c6
     public function adminproducts()
 {
     $categories = Category::all();
