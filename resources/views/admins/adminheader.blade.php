@@ -122,25 +122,6 @@
                         Product & Stocks
                     </li>
 
-<<<<<<< HEAD
-                        <li class="nav-item">
-                            <a href="{{ route('admins.adminproducts') }}" class="nav-link {{ isset($activePage) && $activePage === 'products' ? 'active' : '' }}">
-                                <i class="fas fa-fw fa-file"></i> Products
-                            </a>
-
-                            <!-- <a href="{{ route('admins.adminstocks') }}" class="nav-link {{ isset($activePage) && $activePage === 'stocks' ? 'active' : '' }}">
-                                <i class="fas fa-fw fa-file"></i> Stocks
-                            </a> -->
-
-                            <a href="{{ route('admins.admincategories') }}" class="nav-link {{ isset($activePage) && $activePage === 'categories' ? 'active' : '' }}">
-                                <i class="fas fa-fw fa-file"></i> Category
-                            </a>
-                        </li>
-
-                        <li class="nav-divider">
-                            POS & Orders
-                        </li>
-=======
                     <li class="nav-item">
                         <a href="{{ route('admins.adminproducts') }}" class="nav-link {{ isset($activePage) && $activePage === 'products' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products
@@ -158,7 +139,6 @@
                     <li class="nav-divider">
                         POS & Orders
                     </li>
->>>>>>> 6dafaba3e8593245b1fbb2a9b54a09f47a7b28c6
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -200,21 +180,10 @@
                             Reports
                         </li>
 
-<<<<<<< HEAD
-                        <li class="nav-item">
-                            <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
-                                <i class="fas fa-fw fa-file"></i> Audit Trail
-                            </a>
-
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-fw fa-file"></i> Sales Report
-                            </a>
-=======
                     <li class="nav-item">
                         <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Audit Trail
                         </a>
->>>>>>> 6dafaba3e8593245b1fbb2a9b54a09f47a7b28c6
 
                         <a href="#" class="nav-link">
                             <i class="fas fa-fw fa-file"></i> Sales Report
@@ -228,9 +197,4 @@
             </div>
         </nav>
     </div>
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 6dafaba3e8593245b1fbb2a9b54a09f47a7b28c6
 </div>
