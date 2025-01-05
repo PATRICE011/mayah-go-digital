@@ -130,33 +130,26 @@
                 </div>
             </div>
 
-           <!-- Total Sale Section -->
-<div class="col-xl-4 col-lg-12 col-md-4 col-sm-12 col-12">
-    <div class="card">
-        <h5 class="card-header">Total Sale</h5>
-        <div class="card-body">
-            @if ($salesByCategory->isNotEmpty()) 
-                <!-- Show the chart if there's data -->
-                <canvas id="total-sale" width="220" height="155"></canvas>
-                <div class="chart-widget-list">
-                    @foreach ($salesByCategory as $index => $category)
-                        <p>
-                            <span class="fa-xs legend-title" style="color: {{ $colors[$category->category_name] ?? '#cccccc' }};">
-                                <i class="fa fa-fw fa-square-full"></i>
-                            </span>
-                            <span class="legend-text">{{ $category->category_name }}</span>
-                            <span class="float-right">₱{{ number_format($category->total_sales, 2) }}</span>
-                        </p>
-                    @endforeach
+            <!-- Total Sale Section -->
+            <div class="col-xl-4 col-lg-12 col-md-4 col-sm-12 col-12">
+                <div class="card">
+                    <h5 class="card-header">Total Sale</h5>
+                    <div class="card-body">
+                        <canvas id="total-sale" width="220" height="155"></canvas>
+                        <div class="chart-widget-list">
+                            @foreach ($salesByCategory as $index => $category)
+                            <p>
+                                <span class="fa-xs legend-title" style="color: {{ $colors[$category->category_name] ?? '#cccccc' }};">
+                                    <i class="fa fa-fw fa-square-full"></i>
+                                </span>
+                                <span class="legend-text">{{ $category->category_name }}</span>
+                                <span class="float-right">₱{{ number_format($category->total_sales, 2) }}</span>
+                            </p>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
-            @else
-                <!-- Show a message when there's no data -->
-                <p class="text-center text-muted">No sales data available.</p>
-            @endif
-        </div>
-    </div>
-</div>
-
+            </div>
         </div>
 
 
@@ -176,10 +169,8 @@
                                         <th class="border-0">Price</th>
                                         <th class="border-0">Order Time</th>
                                         <th class="border-0">Customer</th>
-                                        <th class="border-0">Actions</th> <!-- Added Actions Column -->
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     @forelse ($topSellingProducts as $index => $product)
                                     <tr>
@@ -190,26 +181,13 @@
                                         <td>₱{{ number_format($product->price, 2) }}</td>
                                         <td>{{ $product->order_time }}</td>
                                         <td>{{ $product->customer_name }}</td>
-                                        <td>
-                                            <a href="" class="text-primary">
-                                                <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            </a>
-                                            <form action="" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Are you sure you want to delete this product?');">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-                                            </form>
-                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No data available</td>
+                                        <td colspan="7" class="text-center">No data available</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
-
                                 <tfoot>
                                     <tr>
                                         <td colspan="7">
@@ -249,13 +227,10 @@
     window.salesData = {
         labels: @json($salesByCategory->pluck('category_name')),
         data: @json($salesByCategory->pluck('total_sales')),
-        colors: @json(
-            $salesByCategory->pluck('category_name')->map(function($name) use ($colors) {
-                return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
-            })->toArray()
-        )
+        colors: @json(array_map(function ($name) use ($colors) {
+            return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
+        }, $salesByCategory->pluck('category_name')->toArray()))
     };
 </script>
 @endsection
-
 @endsection
