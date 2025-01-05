@@ -266,24 +266,6 @@ class AdminController extends Controller
         ));
     }
 
-    public function postLogin(Request $request)
-{
-    $credentials = $request->only('email', 'password');
-
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-
-        if ($user->role_id == 1 || $user->role_id == 2) {
-            return redirect()->route('admins.dashboard'); // Redirect admins
-        } else {
-            return redirect('/home'); // Redirect normal users
-        }
-    }
-
-    return back()->withErrors(['email' => 'Invalid credentials']);
-}
-
-
     public function adminproducts()
 {
     $categories = Category::all();
