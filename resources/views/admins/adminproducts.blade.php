@@ -34,15 +34,6 @@
                             <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <!-- <div class="mr-2">
-                            <select class="form-control form-control-sm" style="width: 70px;">
-                                <option>10</option>
-                                <option>20</option>
-                                <option>50</option>
-                                <option>100</option>
-                            </select>
-                        </div> -->
-
                         <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
                             <i class="fa fa-filter"></i> Filter
                         </button>
@@ -60,10 +51,6 @@
                                     <div class="modal-body">
                                         <!-- Add Filter Fields Here -->
                                         <form id="filterForm">
-                                            <div class="form-group">
-                                                <label for="filterName">Product Name</label>
-                                                <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div>
 
                                             <div class="form-group">
                                                 <label for="filterCategory">Category</label>
@@ -127,8 +114,8 @@
                             <i class="fa fa-plus-circle"></i> Add Product
                         </button>
 
-                        <!-- ADD MODAL -->
-                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                         <!-- ADD MODAL -->
+                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -145,10 +132,7 @@
                                                 <label for="addImage">Product Image</label>
                                                 <input type="file" class="form-control" id="addImage" accept="image/*">
                                                 <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                <div class="mt-3">
-                                                    <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                </div>
+            
                                             </div>
 
                                             <!-- Product Name -->
@@ -226,9 +210,79 @@
                                 </thead>
 
                                 <tbody>
-                                   <!-- DYNAMIC CONTENT -->
+                                    <!-- DYNAMIC -->
                                 </tbody>
                             </table>
+                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <form id="editForm">
+                                                <input type="hidden" id="editId"> <!-- Store Product ID -->
+
+                                                <!-- Store Current Image Path -->
+                                                <input type="hidden" id="editCurrentImage" name="editCurrentImage">
+
+                                                <div class="form-group">
+                                                    <label for="editImage">Product Image</label>
+                                                    <input type="file" class="form-control" id="editImage" accept="image/*">
+                                                    <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
+
+                                                    <div class="mt-3">
+                                                    <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="editName">Product Name</label>
+                                                    <input type="text" class="form-control" id="editName" placeholder="Enter product name">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="editDescription">Product Description</label>
+                                                    <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="editCategory">Category</label>
+                                                    <select class="form-control" id="editCategory">
+                                                        <option value="1">Biscuits</option>
+                                                        <option value="2">Drinks</option>
+                                                        <option value="3">School Supplies</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="editPrice">Price</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">₱</span>
+                                                        <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="editStatus">Status</label>
+                                                    <select class="form-control" id="editStatus">
+                                                        <option value="active">Active</option>
+                                                        <option value="inactive">Inactive</option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" onclick="updateProduct()">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -239,9 +293,6 @@
 @section('scripts')
 <script>
     const baseURL = "{{ asset('assets/img/') }}";
-</script>
-<script>
-
 </script>
 @endsection
 @endsection

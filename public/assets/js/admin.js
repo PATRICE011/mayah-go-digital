@@ -302,7 +302,6 @@ function getImageUrl(imagePath) {
     }
 }
 
-// Function to load products
 $(document).ready(function () {
     /**
      * Load Products with Optional Filters
@@ -316,147 +315,47 @@ $(document).ready(function () {
             data: filters,
             dataType: "json",
             success: function (response) {
-                // Product rows
                 const tableBody = response.data
-                    .map(
-                        (product, index) => `
-                    <tr>
-                        <td>${
-                            (response.current_page - 1) * response.per_page +
-                            index +
-                            1
-                        }</td>
-                        <td>
-                            <div class="m-r-10">
-                                <img src="/assets/img/${
-                                    product.product_image
-                                }" alt="${
-                            product.product_name
-                        }" class="rounded" width="45">
-                            </div>
-                        </td>
-                        <td>${product.product_name}</td>
-                        <td class="text-truncate" style="max-width: 200px;" title="${
-                            product.product_description || "N/A"
-                        }">
-                            ${product.product_description || "N/A"}
-                        </td>
-                        <td>${
-                            product.category
-                                ? product.category.category_name
-                                : "N/A"
-                        }</td>
-                        <td>₱${product.product_price}</td>
-                        <td>${product.product_stocks}</td>
-                        <td>${
-                            product.product_stocks > 0
-                                ? "Active"
-                                : "Out of Stock"
-                        }</td>
- <td>
-                                            <div class="action__btn">
-                                                <!-- EDIT BUTTON -->
-                                                <button class="edit" data-toggle="modal" data-target="#editModal">
-                                                    <i class="ri-mail-line"></i>
-                                                </button>
+                    .map((product, index) => `
+                        <tr>
+                            <td>${(response.current_page - 1) * response.per_page + index + 1}</td>
+                            <td>
+                                <div class="m-r-10">
+                                    <img src="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}"
+                                         alt="${product.product_name}"
+                                         class="rounded product-image" width="45">
+                                </div>
+                            </td>
+                            <td>${product.product_name}</td>
+                            <td class="text-truncate" style="max-width: 200px;" title="${product.product_description || 'N/A'}">
+                                ${product.product_description || 'N/A'}
+                            </td>
+                            <td>${product.category ? product.category.category_name : 'N/A'}</td>
+                            <td>₱${product.product_price}</td>
+                            <td>${product.product_stocks}</td>
+                            <td>${product.product_stocks > 0 ? 'Active' : 'Out of Stock'}</td>
+                            <td>
+                                <div class="action__btn">
+                                    <!-- EDIT BUTTON -->
+                                    <button class="edit" data-toggle="modal" data-target="#editModal"
+                                            data-id="${product.id}"
+                                            data-name="${product.product_name}"
+                                            data-description="${product.product_description}"
+                                            data-category="${product.category ? product.category.id : ''}"
+                                            data-price="${product.product_price}"
+                                            data-status="${product.product_stocks > 0 ? 'active' : 'inactive'}"
+                                            data-image="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}">
+                                        <i class="ri-pencil-line"></i>
+                                    </button>
 
-                                                <!-- EDIT MODAL -->
-                                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-                                                                <form id="editForm">
-                                                                    <div class="form-group">
-                                                                        <label for="editImage">Product Image</label>
-                                                                        <input type="file" class="form-control" id="editImage" accept="image/*">
-                                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                                        <div class="mt-3">
-                                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editName">Product Name</label>
-                                                                        <input type="text" class="form-control" id="editName" placeholder="Enter product name">
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editDescription">Product Description</label>
-                                                                        <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editCategory">Category</label>
-                                                                        <select class="form-control" id="editCategory">
-                                                                            <option value="">Biscuits</option>
-                                                                            <option value="">Drinks</option>
-                                                                            <option value="">School Supplies</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editPrice">Price</label>
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-text">₱</span>
-                                                                            <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editStatus">Status</label>
-                                                                        <select class="form-control" id="editStatus">
-                                                                            <option value="active">Active</option>
-                                                                            <option value="inactive">Inactive</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- ARCHIVE BUTTON -->
-                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-
-                                                <!-- ARCHIVE MODAL -->
-                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
-                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Are you sure you want to archive this item? This action cannot be undone.
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" class="btn btn-danger">Archive</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                        
-                    </tr>
-                `
-                    )
+                                    <!-- ARCHIVE BUTTON -->
+                                    <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `)
                     .join("");
 
                 // Pagination controls
@@ -469,10 +368,7 @@ $(document).ready(function () {
                                         ${
                                             response.current_page > 1
                                                 ? `<li class="page-item">
-                                                    <a class="page-link" href="#" data-page="${
-                                                        response.current_page -
-                                                        1
-                                                    }">«</a>
+                                                    <a class="page-link" href="#" data-page="${response.current_page - 1}">«</a>
                                                 </li>`
                                                 : `<li class="page-item disabled"><a class="page-link" href="#">«</a></li>`
                                         }
@@ -481,24 +377,15 @@ $(document).ready(function () {
                                             (_, i) => {
                                                 const pageNum = i + 1;
                                                 return `
-                                                <li class="page-item ${
-                                                    response.current_page ===
-                                                    pageNum
-                                                        ? "active"
-                                                        : ""
-                                                }">
+                                                <li class="page-item ${response.current_page === pageNum ? 'active' : ''}">
                                                     <a class="page-link" href="#" data-page="${pageNum}">${pageNum}</a>
                                                 </li>`;
                                             }
                                         ).join("")}
                                         ${
-                                            response.current_page <
-                                            response.last_page
+                                            response.current_page < response.last_page
                                                 ? `<li class="page-item">
-                                                    <a class="page-link" href="#" data-page="${
-                                                        response.current_page +
-                                                        1
-                                                    }">»</a>
+                                                    <a class="page-link" href="#" data-page="${response.current_page + 1}">»</a>
                                                 </li>`
                                                 : `<li class="page-item disabled"><a class="page-link" href="#">»</a></li>`
                                         }
@@ -518,28 +405,64 @@ $(document).ready(function () {
         });
     }
 
-    // DELETE PRODUCT HANDLER
-    // $(document).on("click", ".delete-product", function () {
-    //     const productId = $(this).data("id");
-    //     if (confirm("Are you sure you want to delete this product?")) {
-    //         $.ajax({
-    //             url: `/admin/products/${productId}`,
-    //             type: "DELETE",
-    //             headers: {
-    //                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-    //                     "content"
-    //                 ),
-    //             },
-    //             success: function () {
-    //                 toastr.success("Product deleted successfully.");
-    //                 loadProducts(); // Reload the product list
-    //             },
-    //             error: function () {
-    //                 toastr.error("Failed to delete product. Please try again.");
-    //             },
-    //         });
-    //     }
-    // });
+    /**
+     * Handle Click on Edit Button & Populate Modal
+     */
+    $(document).on("click", ".edit", function () {
+        let productId = $(this).data("id");
+        let productName = $(this).data("name");
+        let productDescription = $(this).data("description");
+        let productCategory = $(this).data("category");
+        let productPrice = $(this).data("price");
+        let productStatus = $(this).data("status");
+        let productImage = $(this).data("image");
+
+        // Ensure a valid image is set, or use the default
+        if (!productImage || productImage === "/assets/img/") {
+            productImage = "/assets/img/default-placeholder.png";
+        }
+
+        // Populate modal fields with product data
+        $("#editId").val(productId);
+        $("#editName").val(productName);
+        $("#editDescription").val(productDescription);
+        $("#editCategory").val(productCategory);
+        $("#editPrice").val(productPrice);
+        $("#editStatus").val(productStatus);
+
+        // Update Image Preview
+        $("#imagePreview").attr("src", productImage).css({
+            "display": "block",
+            "border": "1px solid #ddd",
+            "padding": "5px",
+            "max-width": "150px"
+        });
+
+        // Show Modal
+        $("#editModal").modal("show");
+    });
+
+    /**
+     * Handle Image Upload Preview in Edit Modal
+     */
+    $("#editImage").on("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                $("#imagePreview").attr("src", e.target.result).show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    /**
+     * Export Products Button
+     */
+    $("#exportProductsBtn").on("click", function () {
+        // Open the export page in a new tab
+        window.open("/admin/products/export", "_blank");
+    });
 
     /**
      * Apply Filters
@@ -552,11 +475,11 @@ $(document).ready(function () {
             maxPrice: $("#maxPrice").val(),
             status: $("#filterStatus").val(),
         };
-        loadProducts(1, filters); // Load products with filters
+        loadProducts(1, filters);
     }
 
     /**
-     * Handle Form Submission for Adding Product
+     * Handle Adding Product
      */
     $("#addProductBtn").on("click", function () {
         const formData = new FormData();
@@ -579,7 +502,7 @@ $(document).ready(function () {
                 if (response.success) {
                     toastr.success(response.message);
                     $("#addModal").modal("hide");
-                    loadProducts(); // Reload products
+                    loadProducts();
                 }
             },
             error: function (xhr) {
@@ -599,38 +522,17 @@ $(document).ready(function () {
     loadProducts();
 
     // Event handlers
-    $("#searchInput").on("keyup", applyFilters); // Search input
+    $("#searchInput").on("keyup", applyFilters);
     $("#applyFiltersBtn").on("click", function () {
         applyFilters();
         $("#filterModal").modal("hide");
     });
+
     $(document).on("click", ".pagination .page-link", function (e) {
         e.preventDefault();
         const page = $(this).data("page");
-        if (page)
-            loadProducts(page, {
-                query: $("#searchInput").val(),
-                category: $("#filterCategory").val(),
-                minPrice: $("#minPrice").val(),
-                maxPrice: $("#maxPrice").val(),
-                status: $("#filterStatus").val(),
-            });
-    });
-
-    // Preview uploaded image
-    $("#addImage").on("change", function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) =>
-                $("#imagePreview").attr("src", e.target.result).show();
-            reader.readAsDataURL(file);
+        if (page) {
+            loadProducts(page);
         }
-    });
-});
-$(document).ready(function () {
-    $("#exportProductsBtn").on("click", function () {
-        // Open the export page in a new tab
-        window.open("/admin/products/export", "_blank");
     });
 });
