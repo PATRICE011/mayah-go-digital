@@ -9,7 +9,7 @@
                     <i class="ri-map-pin-fill"></i> Valenzuela, Philippines
                 </span>
             </div>
-                
+
             <p class="header__alert-news">
                 Super Value Deals - Save More!
             </p>
@@ -118,38 +118,36 @@
 
 @section('scripts')
 <script>
-  $(function() {
-    // Handle input changes
-    $('#searchInput').on('keyup', function() {
-        let query = $(this).val().trim();
+    $(function() {
+        // Handle input changes
+        $('#searchInput').on('keyup', function() {
+            let query = $(this).val().trim();
 
-        if (query.length > 0) { // Only trigger search if there is input
-            performSearch(query);
-        } else {
-            $('#productsContainer').html(''); // Clear results if input is empty
-        }
-    });
-
-    function performSearch(query) {
-        $.ajax({
-            url: '/search-products', // Update this to match your route
-            method: 'GET',
-            data: { search: query },
-            success: function(response) {
-                // Replace HTML in #productsContainer with the partial
-                if (response.html) {
-                    $('#productsContainer').html(response.html);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
+            performSearch(query); // Always call performSearch, even when input is empty
         });
-    }
-});
 
+        function performSearch(query) {
+            $.ajax({
+                url: '/search-products', // Update this to match your route
+                method: 'GET',
+                data: {
+                    search: query
+                },
+                success: function(response) {
+                    // Replace HTML in #productsContainer with the partial
+                    if (response.html) {
+                        $('#productsContainer').html(response.html);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
 
-
+        // Load all products on page load
+        performSearch('');
+    });
 </script>
 @endsection
 @endsection
