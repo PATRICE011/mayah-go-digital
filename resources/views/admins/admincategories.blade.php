@@ -273,4 +273,7 @@
         </div>
     </div>
 </div>
+@section('scripts')
+    <script src="category.js"></script>
+@endsection
 @endsection

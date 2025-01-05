@@ -345,6 +345,16 @@ $(document).ready(function () {
                                 ? "Active"
                                 : "Out of Stock"
                         }</td>
+                        <td>
+                            <a href="#" class="text-primary">
+                                <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
+                            </a>
+                            <button class="btn btn-link text-danger p-0 delete-product" data-id="${
+                                product.id
+                            }">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
+                        </td>
                     </tr>
                 `
                     )
@@ -353,7 +363,7 @@ $(document).ready(function () {
                 // Pagination controls
                 const pagination = `
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div id="paginationLinks">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-end mb-0">
@@ -408,6 +418,29 @@ $(document).ready(function () {
             },
         });
     }
+
+    // DELETE PRODUCT HANDLER
+    // $(document).on("click", ".delete-product", function () {
+    //     const productId = $(this).data("id");
+    //     if (confirm("Are you sure you want to delete this product?")) {
+    //         $.ajax({
+    //             url: `/admin/products/${productId}`,
+    //             type: "DELETE",
+    //             headers: {
+    //                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+    //                     "content"
+    //                 ),
+    //             },
+    //             success: function () {
+    //                 toastr.success("Product deleted successfully.");
+    //                 loadProducts(); // Reload the product list
+    //             },
+    //             error: function () {
+    //                 toastr.error("Failed to delete product. Please try again.");
+    //             },
+    //         });
+    //     }
+    // });
 
     /**
      * Apply Filters

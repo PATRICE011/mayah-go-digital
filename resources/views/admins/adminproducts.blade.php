@@ -244,6 +244,18 @@
                                             <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
                                             <i class="ri-delete-bin-line"></i>
                                         </td>
+                                        <td>
+                                            <a href="" class="text-primary">
+                                                <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
+                                            </a>
+                                            <form action="" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Are you sure you want to delete this product?');">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
 
                                     <tr>
