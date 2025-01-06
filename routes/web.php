@@ -87,7 +87,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
         Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
         Route::post('/store-products', [AdminController::class, 'store']);
+       
         Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
+        Route::post('/store-categories', [AdminController::class, 'storeCategory'])->name('categories.store');
+
+       
+       
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');

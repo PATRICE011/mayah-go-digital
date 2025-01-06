@@ -101,34 +101,55 @@
                     </div>
                     <div class="card-body border-top">
                         <div class="row">
-                            <!-- Today's Earning -->
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 p-3">
                                 <h4>Today's Earning: ₱{{ number_format($todaysEarnings, 2) }}</h4>
                             </div>
-                            <!-- Current Week -->
+
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 p-3">
                                 <h2 class="font-weight-normal mb-3"><span>₱{{ number_format($currentWeekEarnings, 2) }}</span></h2>
                                 <div class="mb-0 mt-3 legend-item">
-                                    <span class="fa-xs text-primary mr-1 legend-title">
+                                    <span class="fa-xs legend-title" style="color: rgba(255, 99, 132, 1);">
                                         <i class="fa fa-fw fa-square-full"></i>
                                     </span>
                                     <span class="legend-text">Current Week</span>
                                 </div>
                             </div>
-                            <!-- Previous Week -->
+
                             <div class="offset-xl-1 col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 p-3">
                                 <h2 class="font-weight-normal mb-3"><span>₱{{ number_format($previousWeekEarnings, 2) }}</span></h2>
                                 <div class="text-muted mb-0 mt-3 legend-item">
-                                    <span class="fa-xs text-secondary mr-1 legend-title">
+                                    <span class="fa-xs legend-title" style="color: rgba(54, 162, 235, 1);">
                                         <i class="fa fa-fw fa-square-full"></i>
                                     </span>
                                     <span class="legend-text">Previous Week</span>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
+
+
+            @php
+            // A diverse, high-contrast color palette
+            $colorPalette = [
+            '#FF5733', // Red-Orange
+            '#FFD700', // Gold/Yellow
+            '#4AB0E5', // Light Blue
+            '#FF8C00', // Orange
+            '#2E8B57', // Sea Green
+            '#6A5ACD', // Slate Blue
+            '#E76829', // Deep Orange
+            ];
+
+            $colors = [];
+            foreach ($salesByCategory as $index => $category) {
+            $colors[$category->category_name] = $colorPalette[$index % count($colorPalette)];
+            }
+            @endphp
+
 
             <!-- Total Sale Section -->
             <div class="col-xl-4 col-lg-12 col-md-4 col-sm-12 col-12">
@@ -225,11 +246,11 @@
 @section('scripts')
 <script>
     window.salesData = {
-        labels: @json($salesByCategory->pluck('category_name')),
-        data: @json($salesByCategory->pluck('total_sales')),
-        colors: @json(array_map(function ($name) use ($colors) {
+        labels: @json($salesByCategory -> pluck('category_name')),
+        data: @json($salesByCategory -> pluck('total_sales')),
+        colors: @json(array_map(function($name) use($colors) {
             return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
-        }, $salesByCategory->pluck('category_name')->toArray()))
+        }, $salesByCategory -> pluck('category_name') -> toArray()))
     };
 </script>
 @endsection

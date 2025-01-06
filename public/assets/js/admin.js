@@ -215,8 +215,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     {
                         label: "Current Week",
                         data: [7000, 6800, 6500, 7200, 7500, 8000, 7500],
-                        borderColor: "rgba(54, 162, 235, 1)",
-                        backgroundColor: "rgba(54, 162, 235, 0.2)",
+                        borderColor: "rgba(255, 99, 132, 1)", // Vibrant red-pink
+                        backgroundColor: "rgba(255, 99, 132, 0.2)", // Soft red fill
+                        pointBackgroundColor: "rgba(255, 99, 132, 1)", // Red dots
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
                         fill: true,
                         tension: 0.4,
                     },
@@ -224,8 +228,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     {
                         label: "Previous Week",
                         data: [6900, 6400, 6100, 7000, 7200, 7700, 7400],
-                        borderColor: "rgba(201, 203, 207, 1)",
-                        backgroundColor: "rgba(201, 203, 207, 0.2)",
+                        borderColor: "rgba(54, 162, 235, 1)", // Strong blue
+                        backgroundColor: "rgba(54, 162, 235, 0.2)", // Light blue fill
+                        pointBackgroundColor: "rgba(54, 162, 235, 1)", // Blue dots
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgba(54, 162, 235, 1)",
                         fill: true,
                         tension: 0.4,
                     },
@@ -305,7 +313,6 @@ function getImageUrl(imagePath) {
     }
 }
 
-// Function to load products
 $(document).ready(function () {
     /**
      * Load Products with Optional Filters
@@ -319,8 +326,8 @@ $(document).ready(function () {
             data: filters,
             dataType: "json",
             success: function (response) {
-                // Product rows
                 const tableBody = response.data
+<<<<<<< HEAD
                     .map(
                         (product, index) => `
                     <tr>
@@ -376,6 +383,48 @@ $(document).ready(function () {
                     </tr>
                 `
                     )
+=======
+                    .map((product, index) => `
+                        <tr>
+                            <td>${(response.current_page - 1) * response.per_page + index + 1}</td>
+                            <td>
+                                <div class="m-r-10">
+                                    <img src="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}"
+                                         alt="${product.product_name}"
+                                         class="rounded product-image" width="45">
+                                </div>
+                            </td>
+                            <td>${product.product_name}</td>
+                            <td class="text-truncate" style="max-width: 200px;" title="${product.product_description || 'N/A'}">
+                                ${product.product_description || 'N/A'}
+                            </td>
+                            <td>${product.category ? product.category.category_name : 'N/A'}</td>
+                            <td>₱${product.product_price}</td>
+                            <td>${product.product_stocks}</td>
+                            <td>${product.product_stocks > 0 ? 'Active' : 'Out of Stock'}</td>
+                            <td>
+                                <div class="action__btn">
+                                    <!-- EDIT BUTTON -->
+                                    <button class="edit" data-toggle="modal" data-target="#editModal"
+                                            data-id="${product.id}"
+                                            data-name="${product.product_name}"
+                                            data-description="${product.product_description}"
+                                            data-category="${product.category ? product.category.id : ''}"
+                                            data-price="${product.product_price}"
+                                            data-status="${product.product_stocks > 0 ? 'active' : 'inactive'}"
+                                            data-image="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}">
+                                        <i class="ri-pencil-line"></i>
+                                    </button>
+
+                                    <!-- ARCHIVE BUTTON -->
+                                    <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `)
+>>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
                     .join("");
 
                 // Pagination controls
@@ -388,10 +437,7 @@ $(document).ready(function () {
                                         ${
                                             response.current_page > 1
                                                 ? `<li class="page-item">
-                                                    <a class="page-link" href="#" data-page="${
-                                                        response.current_page -
-                                                        1
-                                                    }">«</a>
+                                                    <a class="page-link" href="#" data-page="${response.current_page - 1}">«</a>
                                                 </li>`
                                                 : `<li class="page-item disabled"><a class="page-link" href="#">«</a></li>`
                                         }
@@ -401,25 +447,16 @@ $(document).ready(function () {
                                                 (_, i) => {
                                                 const pageNum = i + 1;
                                                 return `
-                                                <li class="page-item ${
-                                                    response.current_page ===
-                                                    pageNum
-                                                        ? "active"
-                                                        : ""
-                                                }">
+                                                <li class="page-item ${response.current_page === pageNum ? 'active' : ''}">
                                                     <a class="page-link" href="#" data-page="${pageNum}">${pageNum}</a>
                                                 </li>`;
                                             }
                                         ).join("")}
                                         
                                         ${
-                                            response.current_page <
-                                            response.last_page
+                                            response.current_page < response.last_page
                                                 ? `<li class="page-item">
-                                                    <a class="page-link" href="#" data-page="${
-                                                        response.current_page +
-                                                        1
-                                                    }">»</a>
+                                                    <a class="page-link" href="#" data-page="${response.current_page + 1}">»</a>
                                                 </li>`
                                                 : `<li class="page-item disabled"><a class="page-link" href="#">»</a></li>`
                                         }
@@ -439,28 +476,64 @@ $(document).ready(function () {
         });
     }
 
-    // DELETE PRODUCT HANDLER
-    // $(document).on("click", ".delete-product", function () {
-    //     const productId = $(this).data("id");
-    //     if (confirm("Are you sure you want to delete this product?")) {
-    //         $.ajax({
-    //             url: `/admin/products/${productId}`,
-    //             type: "DELETE",
-    //             headers: {
-    //                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-    //                     "content"
-    //                 ),
-    //             },
-    //             success: function () {
-    //                 toastr.success("Product deleted successfully.");
-    //                 loadProducts(); // Reload the product list
-    //             },
-    //             error: function () {
-    //                 toastr.error("Failed to delete product. Please try again.");
-    //             },
-    //         });
-    //     }
-    // });
+    /**
+     * Handle Click on Edit Button & Populate Modal
+     */
+    $(document).on("click", ".edit", function () {
+        let productId = $(this).data("id");
+        let productName = $(this).data("name");
+        let productDescription = $(this).data("description");
+        let productCategory = $(this).data("category");
+        let productPrice = $(this).data("price");
+        let productStatus = $(this).data("status");
+        let productImage = $(this).data("image");
+
+        // Ensure a valid image is set, or use the default
+        if (!productImage || productImage === "/assets/img/") {
+            productImage = "/assets/img/default-placeholder.png";
+        }
+
+        // Populate modal fields with product data
+        $("#editId").val(productId);
+        $("#editName").val(productName);
+        $("#editDescription").val(productDescription);
+        $("#editCategory").val(productCategory);
+        $("#editPrice").val(productPrice);
+        $("#editStatus").val(productStatus);
+
+        // Update Image Preview
+        $("#imagePreview").attr("src", productImage).css({
+            "display": "block",
+            "border": "1px solid #ddd",
+            "padding": "5px",
+            "max-width": "150px"
+        });
+
+        // Show Modal
+        $("#editModal").modal("show");
+    });
+
+    /**
+     * Handle Image Upload Preview in Edit Modal
+     */
+    $("#editImage").on("change", function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                $("#imagePreview").attr("src", e.target.result).show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    /**
+     * Export Products Button
+     */
+    $("#exportProductsBtn").on("click", function () {
+        // Open the export page in a new tab
+        window.open("/admin/products/export", "_blank");
+    });
 
     /* Apply Filters */
     function applyFilters() {
@@ -471,10 +544,16 @@ $(document).ready(function () {
             maxPrice: $("#maxPrice").val(),
             status: $("#filterStatus").val(),
         };
-        loadProducts(1, filters); // Load products with filters
+        loadProducts(1, filters);
     }
 
+<<<<<<< HEAD
     /* Handle Form Submission for Adding Product */
+=======
+    /**
+     * Handle Adding Product
+     */
+>>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     $("#addProductBtn").on("click", function () {
         const formData = new FormData();
         formData.append("product_name", $("#addName").val());
@@ -496,7 +575,7 @@ $(document).ready(function () {
                 if (response.success) {
                     toastr.success(response.message);
                     $("#addModal").modal("hide");
-                    loadProducts(); // Reload products
+                    loadProducts();
                 }
             },
 
@@ -515,6 +594,7 @@ $(document).ready(function () {
         });
     });
 
+<<<<<<< HEAD
     /* Load Categories Dynamically */
     function loadCategories() {
         $.ajax({
@@ -543,11 +623,13 @@ $(document).ready(function () {
     // Load categories on page load
     loadCategories();
 
+=======
+>>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     // Initial product load
     loadProducts();
 
     // Event handlers
-    $("#searchInput").on("keyup", applyFilters); // Search input
+    $("#searchInput").on("keyup", applyFilters);
     $("#applyFiltersBtn").on("click", function () {
         applyFilters();
         $("#filterModal").modal("hide");
@@ -556,31 +638,41 @@ $(document).ready(function () {
     $(document).on("click", ".pagination .page-link", function (e) {
         e.preventDefault();
         const page = $(this).data("page");
-        if (page)
-            loadProducts(page, {
-                query: $("#searchInput").val(),
-                category: $("#filterCategory").val(),
-                minPrice: $("#minPrice").val(),
-                maxPrice: $("#maxPrice").val(),
-                status: $("#filterStatus").val(),
-            });
-    });
-
-    // Preview uploaded image
-    $("#addImage").on("change", function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) =>
-                $("#imagePreview").attr("src", e.target.result).show();
-            reader.readAsDataURL(file);
+        if (page) {
+            loadProducts(page);
         }
     });
 });
+<<<<<<< HEAD
 
 $(document).ready(function () {
     $("#exportProductsBtn").on("click", function () {
         // Open the export page in a new tab
         window.open("/admin/products/export", "_blank");
+=======
+function loadCategories() {
+    $.ajax({
+        url: "/admin/categories",
+        type: "GET",
+        success: function (categories) {
+            const categoryDropdown = $("#addCategory");
+            categoryDropdown
+                .empty()
+                .append('<option value="">Select Category</option>'); // Default placeholder
+
+            // Append categories
+            categories.forEach((category) => {
+                categoryDropdown.append(
+                    `<option value="${category.id}">${category.category_name}</option>` // Use `id` as the value
+                );
+            });
+        },
+        error: function () {
+            toastr.error("Failed to load categories.");
+        },
+>>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     });
-});
+}
+
+// Load categories on page load
+loadCategories();
