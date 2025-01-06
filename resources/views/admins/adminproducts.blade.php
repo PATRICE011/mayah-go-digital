@@ -226,61 +226,7 @@
                                 </thead>
 
                                 <tbody>
-                                    <!-- <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <div class="m-r-10">
-                                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Bread Stix" class="rounded" width="45">
-                                            </div>
-                                        </td>
-                                        <td>Product #1 </td>
-                                        <td class="text-truncate" style="max-width: 200px;" title="Lorem ipsum dolor sit amet consectetur adipisicing elit. In, eligendi!">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. In, eligendi!
-                                        </td>
-                                        <td>Biscuits </td>
-                                        <td>$80.00</td>
-                                        <td>Active</td>
-                                        <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
-                                        </td>
-                                        <td>
-                                            <a href="" class="text-primary">
-                                                <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            </a>
-                                            <form action="" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-link text-danger p-0" onclick="return confirm('Are you sure you want to delete this product?');">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="8" class="text-right">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination justify-content-end mb-0">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                            < </a>
-                                                    </li>
-
-                                                    <li class="page-item active">
-                                                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                                                    </li>
-
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#"> > </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </td>
-                                    </tr> -->
+                                    <!-- DYNAMIC PRODUCTS SECTION -->
                                 </tbody>
                             </table>
                         </div>

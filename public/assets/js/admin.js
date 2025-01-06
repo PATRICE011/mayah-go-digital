@@ -126,18 +126,21 @@ jQuery(document).ready(function ($) {
             lineColor: "#5969ff",
             fillColor: "#dbdeff",
         },
+
         {
             selector: "#sparkline-2",
             data: [3, 7, 6, 4, 5, 4, 3, 5, 5, 2, 3, 1],
             lineColor: "#ff407b",
             fillColor: "#ffdbe6",
         },
+
         {
             selector: "#sparkline-3",
             data: [5, 3, 4, 6, 5, 7, 9, 4, 3, 5, 6, 1],
             lineColor: "#25d5f2",
             fillColor: "#dffaff",
         },
+
         {
             selector: "#sparkline-4",
             data: [6, 5, 3, 4, 2, 5, 3, 8, 6, 4, 5, 1],
@@ -160,6 +163,7 @@ jQuery(document).ready(function ($) {
         }
     });
 });
+
 // dashboard graphs
 document.addEventListener("DOMContentLoaded", function () {
     // Define common chart options
@@ -180,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: xLabel,
             },
         },
+
         y: {
             title: {
                 display: true,
@@ -205,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Saturday",
                     "Sunday",
                 ],
+
                 datasets: [
                     {
                         label: "Current Week",
@@ -214,6 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         fill: true,
                         tension: 0.4,
                     },
+
                     {
                         label: "Previous Week",
                         data: [6900, 6400, 6100, 7000, 7200, 7700, 7400],
@@ -224,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                 ],
             },
+
             options: {
                 ...defaultOptions,
                 plugins: {
@@ -267,6 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         display: false, // Disable the legend
                     },
                 },
+
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
@@ -282,13 +291,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
-// PRODUCTS
 
+// PRODUCTS
 function getImageUrl(imagePath) {
     if (imagePath.startsWith("http") || imagePath.startsWith("/")) {
         // If it's a full URL or relative path, use it as is
         return imagePath;
-    } else {
+    } 
+    
+    else {
         // Otherwise, prepend the base URL
         return `${baseURL}/${imagePath}`;
     }
@@ -313,45 +324,52 @@ $(document).ready(function () {
                     .map(
                         (product, index) => `
                     <tr>
-                        <td>${
-                            (response.current_page - 1) * response.per_page +
-                            index +
-                            1
-                        }</td>
+                        <td>
+                            ${
+                                (response.current_page - 1) * response.per_page +
+                                index +
+                                1
+                            }
+                        </td>
+
                         <td>
                             <div class="m-r-10">
-                                <img src="/assets/img/${
-                                    product.product_image
-                                }" alt="${
-                            product.product_name
-                        }" class="rounded" width="45">
+                                <img src="/assets/img/${product.product_image}" alt="${product.product_name}" class="rounded" width="45">
                             </div>
                         </td>
+
                         <td>${product.product_name}</td>
-                        <td class="text-truncate" style="max-width: 200px;" title="${
-                            product.product_description || "N/A"
-                        }">
+
+                        <td class="text-truncate" style="max-width: 200px;" title="${product.product_description || "N/A"}">
                             ${product.product_description || "N/A"}
                         </td>
-                        <td>${
+
+                        <td>
+                            ${
                             product.category
                                 ? product.category.category_name
                                 : "N/A"
-                        }</td>
+                            }
+                        </td>
+
                         <td>₱${product.product_price}</td>
+                        
                         <td>${product.product_stocks}</td>
-                        <td>${
+                        
+                        <td>
+                            ${
                             product.product_stocks > 0
                                 ? "Active"
                                 : "Out of Stock"
-                        }</td>
+                            }
+                        </td>
+                        
                         <td>
                             <a href="#" class="text-primary">
                                 <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
                             </a>
-                            <button class="btn btn-link text-danger p-0 delete-product" data-id="${
-                                product.id
-                            }">
+
+                            <button class="btn btn-link text-danger p-0 delete-product" data-id="${product.id}">
                                 <i class="ri-delete-bin-line"></i>
                             </button>
                         </td>
@@ -377,9 +395,10 @@ $(document).ready(function () {
                                                 </li>`
                                                 : `<li class="page-item disabled"><a class="page-link" href="#">«</a></li>`
                                         }
+
                                         ${Array.from(
                                             { length: response.last_page },
-                                            (_, i) => {
+                                                (_, i) => {
                                                 const pageNum = i + 1;
                                                 return `
                                                 <li class="page-item ${
@@ -392,6 +411,7 @@ $(document).ready(function () {
                                                 </li>`;
                                             }
                                         ).join("")}
+                                        
                                         ${
                                             response.current_page <
                                             response.last_page
@@ -442,9 +462,7 @@ $(document).ready(function () {
     //     }
     // });
 
-    /**
-     * Apply Filters
-     */
+    /* Apply Filters */
     function applyFilters() {
         const filters = {
             query: $("#searchInput").val(),
@@ -456,9 +474,7 @@ $(document).ready(function () {
         loadProducts(1, filters); // Load products with filters
     }
 
-    /**
-     * Handle Form Submission for Adding Product
-     */
+    /* Handle Form Submission for Adding Product */
     $("#addProductBtn").on("click", function () {
         const formData = new FormData();
         formData.append("product_name", $("#addName").val());
@@ -483,22 +499,23 @@ $(document).ready(function () {
                     loadProducts(); // Reload products
                 }
             },
+
             error: function (xhr) {
                 const errors = xhr.responseJSON?.errors;
                 if (errors) {
                     Object.values(errors).forEach((messages) => {
                         messages.forEach((msg) => toastr.error(msg));
                     });
-                } else {
+                } 
+                
+                else {
                     toastr.error("An unexpected error occurred.");
                 }
             },
         });
     });
 
-    /**
-     * Load Categories Dynamically
-     */
+    /* Load Categories Dynamically */
     function loadCategories() {
         $.ajax({
             url: "/admin/categories",
@@ -516,6 +533,7 @@ $(document).ready(function () {
                     );
                 });
             },
+
             error: function () {
                 toastr.error("Failed to load categories.");
             },
@@ -534,6 +552,7 @@ $(document).ready(function () {
         applyFilters();
         $("#filterModal").modal("hide");
     });
+
     $(document).on("click", ".pagination .page-link", function (e) {
         e.preventDefault();
         const page = $(this).data("page");
@@ -558,6 +577,7 @@ $(document).ready(function () {
         }
     });
 });
+
 $(document).ready(function () {
     $("#exportProductsBtn").on("click", function () {
         // Open the export page in a new tab

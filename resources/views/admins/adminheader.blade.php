@@ -127,9 +127,9 @@
                             <i class="fas fa-fw fa-file"></i> Products
                         </a>
 
-                        <a href="{{ route('admins.adminstocks') }}" class="nav-link {{ isset($activePage) && $activePage === 'stocks' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminstocks') }}" class="nav-link {{ isset($activePage) && $activePage === 'stocks' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Stocks
-                        </a>
+                        </a> -->
 
                         <a href="{{ route('admins.admincategories') }}" class="nav-link {{ isset($activePage) && $activePage === 'categories' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Category
