@@ -14,6 +14,7 @@ class Category extends Model
 
     // Define the attributes that are mass assignable
     protected $fillable = [
+        'category_image',
         'category_name',
         'slug'
     ];

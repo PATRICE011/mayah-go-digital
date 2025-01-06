@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Str;
 class AdminController extends Controller
 {
-    
+
     public function index()
     {
         // Metrics for the cards
@@ -173,41 +173,41 @@ class AdminController extends Controller
     }
 
     public function adminproducts()
-{
-    $categories = Category::all();
+    {
+        $categories = Category::all();
 
-    if (request()->ajax()) {
-        $query = request('query', ''); // Search term
-        $categorySlug = request('category', ''); // Selected category slug
-        $minPrice = request('minPrice', 0); // Minimum price filter
-        $maxPrice = request('maxPrice', null); // Maximum price filter
-        $status = request('status', ''); // Active/Inactive filter
+        if (request()->ajax()) {
+            $query = request('query', ''); // Search term
+            $categorySlug = request('category', ''); // Selected category slug
+            $minPrice = request('minPrice', 0); // Minimum price filter
+            $maxPrice = request('maxPrice', null); // Maximum price filter
+            $status = request('status', ''); // Active/Inactive filter
 
-        $products = Product::with('category')
-            ->when($query, function ($queryBuilder) use ($query) {
-                $queryBuilder->where('product_name', 'like', "%$query%");
-            })
-            ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
-                $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
-                    $categoryQuery->where('slug', $categorySlug); // Match category slug
-                });
-            })
-            ->when($minPrice, function ($queryBuilder) use ($minPrice) {
-                $queryBuilder->where('product_price', '>=', $minPrice);
-            })
-            ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
-                $queryBuilder->where('product_price', '<=', $maxPrice);
-            })
-            ->when($status, function ($queryBuilder) use ($status) {
-                $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
-            })
-            ->paginate(5);
+            $products = Product::with('category')
+                ->when($query, function ($queryBuilder) use ($query) {
+                    $queryBuilder->where('product_name', 'like', "%$query%");
+                })
+                ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
+                    $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
+                        $categoryQuery->where('slug', $categorySlug); // Match category slug
+                    });
+                })
+                ->when($minPrice, function ($queryBuilder) use ($minPrice) {
+                    $queryBuilder->where('product_price', '>=', $minPrice);
+                })
+                ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
+                    $queryBuilder->where('product_price', '<=', $maxPrice);
+                })
+                ->when($status, function ($queryBuilder) use ($status) {
+                    $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
+                })
+                ->paginate(5);
 
-        return response()->json($products);
+            return response()->json($products);
+        }
+
+        return view('admins.adminproducts', compact('categories'));
     }
-
-    return view('admins.adminproducts', compact('categories'));
-}
 
 
     public function store(Request $request)
@@ -253,14 +253,79 @@ class AdminController extends Controller
     }
 
 
-
-    public function admincategories()
+    public function admincategories(Request $request)
     {
-        if (request()->ajax()) {
-            $categories = Category::all();
-            return response()->json($categories);
+        if ($request->ajax()) {
+            $query = Category::query();
+
+            // Apply search filter if there's a search term
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where('category_name', 'like', '%' . $request->search . '%');
+            }
+
+            $categories = $query->paginate(5);
+
+            return response()->json([
+                'data' => $categories->items(), // Paginated category data
+                'current_page' => $categories->currentPage(),
+                'last_page' => $categories->lastPage(),
+                'per_page' => $categories->perPage(),
+                'total' => $categories->total(),
+            ]);
         }
+
         return view("admins.admincategories");
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'category_name' => 'required|unique:categories,category_name|max:255',
+            'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
+        DB::beginTransaction(); // ✅ Start Transaction
+
+        try {
+            $imageName = null;
+
+            // Handle Image Upload
+            if ($request->hasFile('category_image')) {
+                $image = $request->file('category_image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('assets/img/'), $imageName);
+            }
+
+            // ✅ Insert data using DB instead of Eloquent
+            $categoryId = DB::table('categories')->insertGetId([
+                'category_name' => $request->category_name,
+                'category_image' => $imageName,
+                'slug' => Str::slug($request->category_name),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            DB::commit(); // ✅ Commit Transaction
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category added successfully!',
+                'category' => [
+                    'id' => $categoryId,
+                    'category_name' => $request->category_name,
+                    'category_image' => $imageName,
+                    'slug' => Str::slug($request->category_name)
+                ]
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to add category.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function adminstocks()
@@ -303,7 +368,7 @@ class AdminController extends Controller
         return view("admins.adminaudit");
     }
 
-  
+
 
     public function logout(Request $request)
     {

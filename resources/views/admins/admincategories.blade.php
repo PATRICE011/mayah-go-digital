@@ -32,58 +32,14 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
                         <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
-                        </div>
-
-                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
-
-                        <!-- Filter Modal -->
-                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="filterModalLabel">Filter Category</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Add Filter Fields Here -->
-                                        <form id="filterForm">
-                                            <div class="form-group">
-                                                <label for="filteCategory">Category</label>
-                                                <select class="form-control" id="filterCategory">
-                                                    <option value="">Biscuits</option>
-                                                    <option value="school-supplies">School Supplies</option>
-                                                    <option value="drinks">Drinks</option>
-                                                </select>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <label for="filterStatus">Status</label>
-                                                <select class="form-control" id="filterStatus">
-                                                    <option value="">All</option>
-                                                    <option value="active">Active</option>
-                                                    <option value="inactive">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <input type="text" id="searchCategory" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
                         <button class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
                         </button>
 
+                        <!-- ADD CATEGORY BUTTON -->
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Category
                         </button>
@@ -101,9 +57,11 @@
 
                                     <div class="modal-body">
                                         <form id="addForm">
+                                            @csrf
+
                                             <div class="form-group">
-                                                <label for="addImage">Product Image</label>
-                                                <input type="file" class="form-control" id="addImage" accept="image/*">
+                                                <label for="addImage">Category Image</label>
+                                                <input type="file" name="category_image" class="form-control" id="addImage" accept="image/*">
                                                 <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
 
                                                 <div class="mt-3">
@@ -112,26 +70,19 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="addName">Category Name</label>
-                                                <input type="text" class="form-control" id="addCategoryName" placeholder="Enter category name">
+                                                <label for="addCategoryName">Category Name</label>
+                                                <input name="category_name" type="text" class="form-control" id="addCategoryName" placeholder="Enter category name">
                                             </div>
 
-                                            <div class="form-group">
-                                                <label for="addStatus">Status</label>
-                                                <select class="form-control" id="addStatus">
-                                                    <option value="active">Active</option>
-                                                    <option value="inactive">Inactive</option>
-                                                </select>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Add Category</button>
                                             </div>
                                         </form>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Add Category</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="card-body p-0">
@@ -142,138 +93,96 @@
                                         <th class="border-0">#</th>
                                         <th class="border-0">Image</th>
                                         <th class="border-0">Category</th>
-                                        <th class="border-0">Status</th>
+
                                         <th class="border-0">Action</th>
                                     </tr>
                                 </thead>
 
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>
-                                            <div class="m-r-10">
-                                                <img src="{{ asset('assets/img/BISCUITS-1.png') }}" alt="Bread Stix" class="rounded" width="50">
-                                            </div>
-                                        </td>
-                                        <td>Biscuits</td>
-                                        <td>Active</td>
-                                        <td>
-                                            <div class="action__btn">
-                                                <!-- EDIT BUTTON -->
-                                                <button class="edit" data-toggle="modal" data-target="#editModal">
-                                                    <i class="ri-mail-line"></i>
-                                                </button>
+                                <tbody id="categoryTableBody">
+                                    <!-- AJAX will populate this dynamically -->
 
-                                                <!-- EDIT MODAL -->
-                                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="editModalLabel">Edit Categories</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-
-                                                            <div class="modal-body">
-                                                                <form id="editForm">
-                                                                    <div class="form-group">
-                                                                        <label for="editCategoryImage">Product Image</label>
-                                                                        <input type="file" class="form-control" id="editCategoryImage" accept="image/*">
-                                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                                        <div class="mt-3">
-                                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editCategory">Category</label>
-                                                                        <select class="form-control" id="editCategory">
-                                                                            <option value="">Biscuits</option>
-                                                                            <option value="">Drinks</option>
-                                                                            <option value="">School Supplies</option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="editStatus">Status</label>
-                                                                        <select class="form-control" id="editStatus">
-                                                                            <option value="active">Active</option>
-                                                                            <option value="inactive">Inactive</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- ARCHIVE BUTTON -->
-                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </button>
-
-                                                <!-- ARCHIVE MODAL -->
-                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
-                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Are you sure you want to archive this item? This action cannot be undone.
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" class="btn btn-danger">Archive</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
+                                    <!-- Pagination Row (AJAX will update this) -->
+                                    <tr id="paginationRow">
                                         <td colspan="8" class="text-right">
                                             <nav aria-label="Page navigation">
                                                 <ul class="pagination justify-content-end mb-0">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                            < </a>
-                                                    </li>
-
-                                                    <li class="page-item active">
-                                                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                                                    </li>
-
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#"> > </a>
-                                                    </li>
+                                                    <!-- Pagination will be inserted dynamically here -->
                                                 </ul>
                                             </nav>
                                         </td>
                                     </tr>
+
                                 </tbody>
+
+                                <!-- EDIT MODAL -->
+                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Categories</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <form id="editForm">
+                                                    <div class="form-group">
+                                                        <label for="editCategoryImage">Product Image</label>
+                                                        <input type="file" class="form-control" id="editCategoryImage" accept="image/*">
+                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
+
+                                                        <div class="mt-3">
+                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="editCategory">Category</label>
+                                                        <select class="form-control" id="editCategory">
+                                                            <option value="">Biscuits</option>
+                                                            <option value="">Drinks</option>
+                                                            <option value="">School Supplies</option>
+                                                        </select>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ARCHIVE MODAL -->
+                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to archive this item? This action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-danger">Archive</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 @section('scripts')
-    <script src="category.js"></script>
+<script src="category.js"></script>
 @endsection
 @endsection
