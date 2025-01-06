@@ -114,8 +114,8 @@
                             <i class="fa fa-plus-circle"></i> Add Product
                         </button>
 
-                         <!-- ADD MODAL -->
-                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                        <!-- ADD MODAL -->
+                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -132,7 +132,7 @@
                                                 <label for="addImage">Product Image</label>
                                                 <input type="file" class="form-control" id="addImage" accept="image/*">
                                                 <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-            
+
                                             </div>
 
                                             <!-- Product Name -->
@@ -224,38 +224,39 @@
                                         </div>
 
                                         <div class="modal-body">
-                                            <form id="editForm">
-                                                <input type="hidden" id="editId"> <!-- Store Product ID -->
+                                            <!-- Edit Product Form -->
+                                            <form id="editForm" method="POST" action="" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('POST')
 
-                                                <!-- Store Current Image Path -->
-                                                <input type="hidden" id="editCurrentImage" name="editCurrentImage">
+                                                <input type="hidden" name="id" id="editId"> <!-- Store Product ID -->
 
                                                 <div class="form-group">
                                                     <label for="editImage">Product Image</label>
-                                                    <input type="file" class="form-control" id="editImage" accept="image/*">
-                                                    <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
+                                                    <input type="file" class="form-control" name="product_image" id="editImage" accept="image/*">
+                                                    <small class="form-text text-muted">Choose an image file to upload (JPG, PNG).</small>
 
                                                     <div class="mt-3">
-                                                    <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
+                                                        <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editName">Product Name</label>
-                                                    <input type="text" class="form-control" id="editName" placeholder="Enter product name">
+                                                    <input type="text" class="form-control" name="product_name" id="editName">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editDescription">Product Description</label>
-                                                    <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                    <textarea class="form-control" name="product_description" id="editDescription" rows="5"></textarea>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editCategory">Category</label>
-                                                    <select class="form-control" id="editCategory">
-                                                        <option value="1">Biscuits</option>
-                                                        <option value="2">Drinks</option>
-                                                        <option value="3">School Supplies</option>
+                                                    <select class="form-control" name="category_id" id="editCategory">
+                                                        @foreach ($categories as $category)
+                                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
 
@@ -263,26 +264,35 @@
                                                     <label for="editPrice">Price</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">₱</span>
-                                                        <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
+                                                        <input type="number" class="form-control" name="product_price" id="editPrice" min="0" step="0.01">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
+                                                    <label for="editStocks">Stocks</label>
+                                                    <input type="number" class="form-control" name="product_stocks" id="editStocks" min="0">
+                                                </div>
+
+
+                                                <div class="form-group">
                                                     <label for="editStatus">Status</label>
-                                                    <select class="form-control" id="editStatus">
+                                                    <select class="form-control" name="status" id="editStatus">
                                                         <option value="active">Active</option>
                                                         <option value="inactive">Inactive</option>
                                                     </select>
                                                 </div>
-                                            </form>
-                                        </div>
 
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" onclick="updateProduct()">Save Changes</button>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <!-- end of edit modal -->
                         </div>
                     </div>
                 </div>

@@ -65,6 +65,7 @@ $(document).ready(function () {
                                     data-description="${product.product_description}"
                                     data-category="${product.category ? product.category.id : ''}"
                                     data-price="${product.product_price}"
+                                    data-stocks="${product.product_stocks}" 
                                     data-status="${product.product_stocks > 0 ? 'active' : 'inactive'}"
                                     data-image="${getImageUrl(product.product_image || 'default-placeholder.png')}">
                                 <i class="ri-pencil-line"></i>
@@ -122,32 +123,35 @@ $(document).ready(function () {
      */
     
 
-    /**
-     * Handle the click event on the edit button.
-     */
     $(document).on("click", ".edit", function () {
         const productData = $(this).data();
-
+    
+        // Set form action dynamically
+        const formAction = `/admin/update-product/${productData.id}`;
+        $("#editForm").attr("action", formAction);
+    
+        // Populate form fields
         $("#editId").val(productData.id);
         $("#editName").val(productData.name);
         $("#editDescription").val(productData.description);
         $("#editCategory").val(productData.category);
         $("#editPrice").val(productData.price);
+        $("#editStocks").val(productData.stocks);
         $("#editStatus").val(productData.status);
-
-        $("#imagePreview").attr("src", productData.image).css({
-            display: "block",
-            border: "1px solid #ddd",
-            padding: "5px",
-            maxWidth: "150px"
-        });
-
+    
+        // Show image preview
+        if (productData.image) {
+            $("#imagePreview").attr("src", productData.image).show();
+        } else {
+            $("#imagePreview").hide();
+        }
+    
+        // Show modal
         $("#editModal").modal("show");
     });
-
-    /**
-     * Handle the image upload preview in edit modal.
-     */
+    
+    
+    // Image Upload Preview
     $("#editImage").on("change", function () {
         const file = this.files[0];
         if (file) {
@@ -158,6 +162,7 @@ $(document).ready(function () {
             reader.readAsDataURL(file);
         }
     });
+    
 
     /**
      * Export Products Button Click Event
@@ -226,6 +231,7 @@ $(document).ready(function () {
 
     // Initialize
     loadProducts();
+    
    
 });
 function loadCategories() {

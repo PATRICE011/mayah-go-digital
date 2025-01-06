@@ -10,6 +10,7 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+
 class AdminController extends Controller
 {
 
@@ -251,6 +252,41 @@ class AdminController extends Controller
             'product' => $product
         ]);
     }
+
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Validate request
+        $request->validate([
+            'product_name' => 'required|string|max:255',
+            'product_description' => 'nullable|string',
+            'category_id' => 'required|exists:categories,id',
+            'product_price' => 'required|numeric|min:0',
+            'product_stocks' => 'required|integer|min:0',
+            'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('product_image')) {
+            $imagePath = $request->file('product_image')->store('product_images', 'public');
+            $product->product_image = "/storage/" . $imagePath;
+        }
+
+        // Update product details
+        $product->update([
+            'product_name' => $request->product_name,
+            'product_description' => $request->product_description,
+            'category_id' => $request->category_id,
+            'product_price' => $request->product_price,
+            'product_stocks' => $request->product_stocks,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
+    }
+
+
 
 
     public function admincategories(Request $request)
