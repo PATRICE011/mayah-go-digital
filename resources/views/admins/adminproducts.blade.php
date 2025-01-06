@@ -172,14 +172,14 @@
                                             </div>
 
                                             <!-- Status -->
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label for="addStatus">Status</label>
                                                 <select class="form-control" id="addStatus">
                                                     <option value="active">Active</option>
                                                     <option value="inactive">Inactive</option>
                                                 </select>
                                             </div>
-                                        </form>
+                                        </form> -->
                                     </div>
 
                                     <div class="modal-footer">

@@ -61,6 +61,8 @@
     <!-- Include Custom admin.js -->
     <script src="{{ asset('assets/js/admin.js') }}"></script>
     <script src="{{ asset('assets/js/category.js') }}"></script>
+    <script src="{{ asset('assets/js/product.js') }}"></script>
+    
     <!-- Toastr Options -->
     <script>
         toastr.options = {
