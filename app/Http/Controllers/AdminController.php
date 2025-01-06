@@ -277,6 +277,10 @@ class AdminController extends Controller
         return view("admins.admincategories");
     }
 
+    public function getAllCategories()
+    {
+        return response()->json(Category::all());
+    }
     public function storeCategory(Request $request)
     {
         $request->validate([

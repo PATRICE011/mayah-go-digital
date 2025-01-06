@@ -88,6 +88,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
         Route::post('/store-products', [AdminController::class, 'store']);
        
+        Route::get('/all-categories', [AdminController::class, 'getAllCategories']);
         Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [AdminController::class, 'storeCategory'])->name('categories.store');
 

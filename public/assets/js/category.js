@@ -6,9 +6,9 @@ $(document).ready(function () {
         }
     });
 
-    loadCategories(); // Load categories on page load
+    loadCategories2(); // Load categories on page load
 
-    function loadCategories(page = 1, search = '') {
+    function loadCategories2(page = 1, search = '') {
         $.ajax({
             url: `/admin/categories?page=${page}&search=${search}`,
             type: "GET",

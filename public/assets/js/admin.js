@@ -333,7 +333,7 @@ $(document).ready(function () {
                             <td>${product.category ? product.category.category_name : 'N/A'}</td>
                             <td>₱${product.product_price}</td>
                             <td>${product.product_stocks}</td>
-                            <td>${product.product_stocks > 0 ? 'Active' : 'Out of Stock'}</td>
+                            <td>${product.product_stocks > 0 ? 'Active' : 'Inactive'}</td>
                             <td>
                                 <div class="action__btn">
                                     <!-- EDIT BUTTON -->
@@ -538,7 +538,7 @@ $(document).ready(function () {
 });
 function loadCategories() {
     $.ajax({
-        url: "/admin/categories",
+        url: "/admin/all-categories",
         type: "GET",
         success: function (categories) {
             const categoryDropdown = $("#addCategory");
