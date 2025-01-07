@@ -77,17 +77,14 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     ->prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admins.index');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('admins.logout');
+        Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
         Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
-        // Add any more admin/staff specific routes here
-        // Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('admins.manageProducts');
-        // Route::get('/manage-users', [UserController::class, 'manageUsers'])->name('admins.manageUsers');
-        // Add other admin routes as needed
-
-        Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
-        Route::post('/store-products', [AdminController::class, 'store']);
-        Route::post('/update-product/{id}', [AdminController::class, 'updateProduct'])->name('admin.update-product');
+       
+        Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
+        Route::post('/store-products', [productController::class, 'store']);
+        Route::post('/update-product/{id}', [productController::class, 'updateProduct'])->name('admin.update-product');
+        Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
 
 
 

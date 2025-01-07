@@ -278,7 +278,25 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!-- modal -->
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete <strong id="productToDelete"></strong>? This action cannot be undone.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -292,5 +310,7 @@
 <script>
     const baseURL = "{{ asset('assets/img/') }}";
 </script>
+<script src="{{ asset('assets/js/product.js')  }}?v={{ time() }}"></script>
+
 @endsection
 @endsection

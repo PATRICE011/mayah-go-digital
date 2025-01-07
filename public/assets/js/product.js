@@ -70,7 +70,7 @@ $(document).ready(function () {
                                     data-image="${getImageUrl(product.product_image || 'default-placeholder.png')}">
                                 <i class="ri-pencil-line"></i>
                             </button>
-                            <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                            <button class="archive" data-id="${product.id}" data-name="${product.product_name}" data-bs-toggle="modal" data-bs-target="#archiveModal">
                                 <i class="ri-delete-bin-line"></i>
                             </button>
                         </div>
@@ -270,6 +270,38 @@ $(document).ready(function () {
                     toastr.error("An unexpected error occurred.");
                 }
             }
+        });
+    });
+    
+    $(document).on("click", ".archive", function () {
+        const productId = $(this).data("id");
+        const productName = $(this).data("name");
+    
+        // Set the product name and ID in the modal
+        $("#productToDelete").text(productName);
+        $("#confirmDeleteButton").data("id", productId);
+    
+        // Show the modal
+        $("#deleteConfirmationModal").modal("show");
+    });
+    
+    // Handle delete confirmation
+    $("#confirmDeleteButton").on("click", function () {
+        const productId = $(this).data("id");
+    
+        // Perform the delete operation via AJAX
+        $.ajax({
+            url: `/admin/delete-product/${productId}`, // Backend route to handle deletion
+            type: "DELETE",
+            success: function (response) {
+                toastr.success(response.message);
+                $("#deleteConfirmationModal").modal("hide"); // Hide the modal
+                loadProducts(); // Reload the product list after deletion
+            },
+            error: function (xhr) {
+                console.error("Error deleting product:", xhr.responseText);
+                toastr.error("Failed to delete the product. Please try again.");
+            },
         });
     });
     
