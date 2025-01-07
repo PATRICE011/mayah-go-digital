@@ -127,16 +127,16 @@ class productController extends Controller
         try {
             $product = Product::findOrFail($id);
 
-            // Optional: Delete product image
-            if ($product->product_image && file_exists(public_path('assets/img/' . $product->product_image))) {
-                unlink(public_path('assets/img/' . $product->product_image));
-            }
-
             $product->delete();
 
             return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to delete product.'], 500);
         }
+    }
+
+    public function getAllCategories()
+    {
+        return response()->json(Category::all());
     }
 }

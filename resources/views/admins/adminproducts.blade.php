@@ -291,7 +291,7 @@
                                             <p>Are you sure you want to delete <strong id="productToDelete"></strong>? This action cannot be undone.</p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  id="cancelDeleteButton">Cancel</button>
                                             <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
                                         </div>
                                     </div>

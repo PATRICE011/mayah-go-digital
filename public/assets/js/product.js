@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Base URL (modify if needed)
     const baseURL = "/assets/img";
 
-    /** 
+    /**
      * Get the correct image URL, handling both relative and full URLs.
      * @param {string} imagePath - The image path from the database
      * @returns {string} - Full image URL
@@ -39,44 +39,74 @@ $(document).ready(function () {
      */
     function renderProducts(response) {
         const tableBody = response.data
-            .map((product, index) => `
+            .map(
+                (product, index) => `
                 <tr>
-                    <td>${(response.current_page - 1) * response.per_page + index + 1}</td>
+                    <td>${
+                        (response.current_page - 1) * response.per_page +
+                        index +
+                        1
+                    }</td>
                     <td>
                         <div class="m-r-10">
-                            <img src="${getImageUrl(product.product_image || 'default-placeholder.png')}"
+                            <img src="${getImageUrl(
+                                product.product_image ||
+                                    "default-placeholder.png"
+                            )}"
                                  alt="${product.product_name}"
                                  class="rounded product-image" width="45">
                         </div>
                     </td>
                     <td>${product.product_name}</td>
-                    <td class="text-truncate" style="max-width: 200px;" title="${product.product_description || 'N/A'}">
-                        ${product.product_description || 'N/A'}
+                    <td class="text-truncate" style="max-width: 200px;" title="${
+                        product.product_description || "N/A"
+                    }">
+                        ${product.product_description || "N/A"}
                     </td>
-                    <td>${product.category ? product.category.category_name : 'N/A'}</td>
+                    <td>${
+                        product.category
+                            ? product.category.category_name
+                            : "N/A"
+                    }</td>
                     <td>₱${product.product_price}</td>
                     <td>${product.product_stocks}</td>
-                    <td>${product.product_stocks > 0 ? 'Active' : 'Inactive'}</td>
+                    <td>${
+                        product.product_stocks > 0 ? "Active" : "Inactive"
+                    }</td>
                     <td>
                         <div class="action__btn">
                             <button class="edit" data-toggle="modal" data-target="#editModal"
                                     data-id="${product.id}"
                                     data-name="${product.product_name}"
-                                    data-description="${product.product_description}"
-                                    data-category="${product.category ? product.category.id : ''}"
+                                    data-description="${
+                                        product.product_description
+                                    }"
+                                    data-category="${
+                                        product.category
+                                            ? product.category.id
+                                            : ""
+                                    }"
                                     data-price="${product.product_price}"
                                     data-stocks="${product.product_stocks}" 
                                     
-                                    data-image="${getImageUrl(product.product_image || 'default-placeholder.png')}">
+                                    data-image="${getImageUrl(
+                                        product.product_image ||
+                                            "default-placeholder.png"
+                                    )}">
                                 <i class="ri-pencil-line"></i>
                             </button>
-                            <button class="archive" data-id="${product.id}" data-name="${product.product_name}" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                            <button class="archive" data-id="${
+                                product.id
+                            }" data-name="${
+                    product.product_name
+                }" data-bs-toggle="modal" data-bs-target="#archiveModal">
                                 <i class="ri-delete-bin-line"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            `)
+            `
+            )
             .join("");
 
         // Pagination controls
@@ -91,7 +121,7 @@ $(document).ready(function () {
      */
     function createEditModal() {
         // Check if the modal already exists to avoid duplication
-        if ($('#editModal').length === 0) {
+        if ($("#editModal").length === 0) {
             // Create the modal dynamically
             const modalHtml = `
                 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -159,11 +189,10 @@ $(document).ready(function () {
                 </div>
             `;
             // Append modal to the body
-            $('body').append(modalHtml);
+            $("body").append(modalHtml);
         }
     }
-    
-    
+
     function generatePagination(response) {
         return `
             <tr>
@@ -171,20 +200,37 @@ $(document).ready(function () {
                     <div id="paginationLinks">
                         <nav aria-label="Page navigation">
                             <ul class="pagination justify-content-end mb-0">
-                                ${response.current_page > 1
-                                    ? `<li class="page-item">
-                                        <a class="page-link" href="#" data-page="${response.current_page - 1}">«</a>
+                                ${
+                                    response.current_page > 1
+                                        ? `<li class="page-item">
+                                        <a class="page-link" href="#" data-page="${
+                                            response.current_page - 1
+                                        }">«</a>
                                     </li>`
-                                    : `<li class="page-item disabled"><a class="page-link" href="#">«</a></li>`}
-                                ${Array.from({ length: response.last_page }, (_, i) => `
-                                    <li class="page-item ${response.current_page === i + 1 ? 'active' : ''}">
-                                        <a class="page-link" href="#" data-page="${i + 1}">${i + 1}</a>
-                                    </li>`).join("")}
-                                ${response.current_page < response.last_page
-                                    ? `<li class="page-item">
-                                        <a class="page-link" href="#" data-page="${response.current_page + 1}">»</a>
+                                        : `<li class="page-item disabled"><a class="page-link" href="#">«</a></li>`
+                                }
+                                ${Array.from(
+                                    { length: response.last_page },
+                                    (_, i) => `
+                                    <li class="page-item ${
+                                        response.current_page === i + 1
+                                            ? "active"
+                                            : ""
+                                    }">
+                                        <a class="page-link" href="#" data-page="${
+                                            i + 1
+                                        }">${i + 1}</a>
                                     </li>`
-                                    : `<li class="page-item disabled"><a class="page-link" href="#">»</a></li>`}
+                                ).join("")}
+                                ${
+                                    response.current_page < response.last_page
+                                        ? `<li class="page-item">
+                                        <a class="page-link" href="#" data-page="${
+                                            response.current_page + 1
+                                        }">»</a>
+                                    </li>`
+                                        : `<li class="page-item disabled"><a class="page-link" href="#">»</a></li>`
+                                }
                             </ul>
                         </nav>
                     </div>
@@ -196,51 +242,52 @@ $(document).ready(function () {
     /**
      * Load categories into the dropdown.
      */
-    
 
-    $(document).on('click', '.edit', function () {
+    $(document).on("click", ".edit", function () {
         const product = $(this).data();
-    
+
         // Populate form fields in the modal with product data
-        $('#editProductId').val(product.id);
-        $('#editProductName').val(product.name);
-        $('#editProductDescription').val(product.description);
-        $('#editProductPrice').val(product.price);
-        $('#editProductStocks').val(product.stocks);
-    
+        $("#editProductId").val(product.id);
+        $("#editProductName").val(product.name);
+        $("#editProductDescription").val(product.description);
+        $("#editProductPrice").val(product.price);
+        $("#editProductStocks").val(product.stocks);
+
         // Fetch and populate categories dynamically
         $.ajax({
-            url: '/admin/all-categories', // Backend route to fetch categories
-            type: 'GET',
+            url: "/admin/all-categories", // Backend route to fetch categories
+            type: "GET",
             success: function (categories) {
-                const categoryDropdown = $('#editCategory');
+                const categoryDropdown = $("#editCategory");
                 categoryDropdown.empty(); // Clear existing options
-    
+
                 // Populate categories dynamically
-                categories.forEach(category => {
+                categories.forEach((category) => {
                     categoryDropdown.append(
-                        `<option value="${category.id}" ${category.id === product.category ? 'selected' : ''}>
+                        `<option value="${category.id}" ${
+                            category.id === product.category ? "selected" : ""
+                        }>
                             ${category.category_name}
                         </option>`
                     );
                 });
             },
             error: function () {
-                toastr.error('Failed to load categories.');
+                toastr.error("Failed to load categories.");
             },
         });
-    
+
         // Display the current image preview if it exists
         if (product.image) {
-            $('#currentImagePreview').attr('src', product.image).show();
+            $("#currentImagePreview").attr("src", product.image).show();
         } else {
-            $('#currentImagePreview').hide();
+            $("#currentImagePreview").hide();
         }
-    
+
         // Show the modal
-        $('#editProductModal').modal('show');
+        $("#editProductModal").modal("show");
     });
-    
+
     /**
      * Event listener for submitting the edit form.
      */
@@ -269,60 +316,83 @@ $(document).ready(function () {
                 } else {
                     toastr.error("An unexpected error occurred.");
                 }
-            }
+            },
         });
     });
-    
+
     $(document).on("click", ".archive", function () {
         const productId = $(this).data("id");
         const productName = $(this).data("name");
-    
+
         // Set the product name and ID in the modal
         $("#productToDelete").text(productName);
         $("#confirmDeleteButton").data("id", productId);
-    
+
         // Show the modal
         $("#deleteConfirmationModal").modal("show");
     });
-    
-    // Handle delete confirmation
-    $("#confirmDeleteButton").on("click", function () {
-        const productId = $(this).data("id");
-    
-        // Perform the delete operation via AJAX
-        $.ajax({
-            url: `/admin/delete-product/${productId}`, // Backend route to handle deletion
-            type: "DELETE",
-            success: function (response) {
-                toastr.success(response.message);
-                $("#deleteConfirmationModal").modal("hide"); // Hide the modal
-                loadProducts(); // Reload the product list after deletion
-            },
-            error: function (xhr) {
-                console.error("Error deleting product:", xhr.responseText);
-                toastr.error("Failed to delete the product. Please try again.");
-            },
+    $(document).ready(function () {
+        let productIdToDelete = null;
+
+        // Handle opening of delete confirmation modal
+        $(document).on("click", ".archive", function () {
+            productIdToDelete = $(this).data("id");
+            const productName = $(this).data("name");
+
+            // Update modal content
+            $("#productToDelete").text(productName);
+
+            // Show the delete confirmation modal
+            $("#deleteConfirmationModal").modal("show");
+        });
+
+        // Handle the Cancel button
+        $("#cancelDeleteButton").on("click", function () {
+            // Clear the productIdToDelete when Cancel is clicked
+            productIdToDelete = null;
+
+            // Explicitly hide the modal (optional, as Bootstrap handles it automatically)
+            $("#deleteConfirmationModal").modal("hide");
+        });
+
+        // Handle Confirm Delete button
+        $("#confirmDeleteButton").on("click", function () {
+            if (productIdToDelete) {
+                $.ajax({
+                    url: `/admin/delete-product/${productIdToDelete}`,
+                    type: "DELETE",
+                    success: function (response) {
+                        toastr.success(response.message);
+                        $("#deleteConfirmationModal").modal("hide"); // Hide modal on success
+                        loadProducts(); // Reload the product list
+                    },
+                    error: function (xhr) {
+                        toastr.error(
+                            "Failed to delete the product. Please try again."
+                        );
+                    },
+                });
+            }
         });
     });
-    
-    
+
     $(document).ready(function () {
         // Add CSRF token to AJAX requests
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
         });
-    
+
         $("#editForm").on("submit", function (e) {
             e.preventDefault(); // Prevent default form submission
-        
+
             const formData = new FormData(this);
-            formData.append('_method', 'PUT'); // Use Laravel's method spoofing
-        
+            formData.append("_method", "PUT"); // Use Laravel's method spoofing
+
             $.ajax({
                 url: $(this).attr("action"), // Form action URL
-                type: 'POST', // Send as POST but include _method=PUT
+                type: "POST", // Send as POST but include _method=PUT
                 data: formData,
                 processData: false, // Prevent jQuery from automatically transforming the data
                 contentType: false, // Prevent jQuery from setting the content type
@@ -338,23 +408,22 @@ $(document).ready(function () {
                     } else {
                         toastr.error("An unexpected error occurred.");
                     }
-                }
+                },
             });
         });
-        
-    
+
         function displayErrors(errors) {
             $(".error-message").remove(); // Clear previous errors
             for (const field in errors) {
                 const errorMessage = errors[field][0];
                 const input = $(`[name="${field}"]`);
-                input.after(`<span class="text-danger error-message">${errorMessage}</span>`);
+                input.after(
+                    `<span class="text-danger error-message">${errorMessage}</span>`
+                );
             }
         }
     });
-    
-    
-    
+
     // Image Upload Preview
     $("#editImage").on("change", function () {
         const file = this.files[0];
@@ -366,7 +435,6 @@ $(document).ready(function () {
             reader.readAsDataURL(file);
         }
     });
-    
 
     /**
      * Export Products Button Click Event
@@ -435,8 +503,6 @@ $(document).ready(function () {
 
     // Initialize
     loadProducts();
-    
-   
 });
 function loadCategories() {
     $.ajax({
@@ -444,7 +510,9 @@ function loadCategories() {
         type: "GET",
         success: function (categories) {
             const categoryDropdown = $("#addCategory");
-            categoryDropdown.empty().append('<option value="">Select Category</option>');
+            categoryDropdown
+                .empty()
+                .append('<option value="">Select Category</option>');
 
             categories.forEach((category) => {
                 categoryDropdown.append(
@@ -461,7 +529,7 @@ function loadCategories() {
 $(document).ready(function () {
     // Ensure categories load when the page is ready
     loadCategories();
-    
+
     /**
      * Handle pagination click
      */

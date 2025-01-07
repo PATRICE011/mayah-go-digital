@@ -183,6 +183,7 @@
     </div>
 </div>
 @section('scripts')
-<script src="category.js"></script>
+
+<script src="{{ asset('assets/js/category.js')  }}?v={{ time() }}"></script>
 @endsection
 @endsection

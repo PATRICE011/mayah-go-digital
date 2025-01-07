@@ -85,10 +85,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::post('/store-products', [productController::class, 'store']);
         Route::post('/update-product/{id}', [productController::class, 'updateProduct'])->name('admin.update-product');
         Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
+        Route::get('/all-categories', [productController::class, 'getAllCategories']);
 
 
-
-        Route::get('/all-categories', [AdminController::class, 'getAllCategories']);
+       
         Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [AdminController::class, 'storeCategory'])->name('categories.store');
 
