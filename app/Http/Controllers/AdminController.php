@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Audit;
+use App\Models\User;
 
 
 class AdminController extends Controller
@@ -175,11 +177,69 @@ class AdminController extends Controller
         ));
     }
 
-    
 
-   
+    public function adminadministrators()
+    {
+        return view("admins.adminadministrators");
+    }
 
-   
+
+    public function adminaudit(Request $request)
+    {
+        $query = Audit::query();
+
+        // Apply filters
+        if ($request->filled('name')) {
+            // Filter by user name
+            $query->whereHas('user', function ($userQuery) use ($request) {
+                $userQuery->where('name', 'like', '%' . $request->name . '%');
+            });
+        }
+
+        if ($request->filled('role')) {
+            // Filter by role ID (restricted to admin and staff only)
+            $query->whereHas('user', function ($userQuery) use ($request) {
+                $userQuery->whereIn('role_id', [1, 2]) // Restrict to admin and staff
+                    ->where('role_id', $request->role);
+            });
+        } else {
+            // Default restriction to admin and staff roles
+            $query->whereHas('user', function ($userQuery) {
+                $userQuery->whereIn('role_id', [1, 2]);
+            });
+        }
+
+        if ($request->filled('date')) {
+            // Filter by specific date
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Sort by latest (descending order)
+        $query->orderBy('created_at', 'desc');
+
+        // Retrieve audits with associated user and role data, paginated by 6
+        $audits = $query->with(['user.role'])->paginate(6);
+
+        // Preserve filters in pagination links
+        $audits->appends($request->all());
+
+        return view('admins.adminaudit', compact('audits'));
+    }
+
+
+    public function admincustomers()
+    {
+        return view("admins.admincustomers");
+    }
+
+    public function adminemployee()
+    {
+        return view("admins.adminemployee");
+    }
+
+
+
+
     public function adminstocks()
     {
         return view("admins.adminstocks");
@@ -199,28 +259,6 @@ class AdminController extends Controller
     {
         return view("admins.adminrefund");
     }
-
-    public function adminadministrators()
-    {
-        return view("admins.adminadministrators");
-    }
-
-    public function admincustomers()
-    {
-        return view("admins.admincustomers");
-    }
-
-    public function adminemployee()
-    {
-        return view("admins.adminemployee");
-    }
-
-    public function adminaudit()
-    {
-        return view("admins.adminaudit");
-    }
-
-
 
     public function logout(Request $request)
     {

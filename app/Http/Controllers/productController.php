@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Log;
+use App\Models\Audit;
 class productController extends Controller
 {
     
@@ -87,6 +88,16 @@ class productController extends Controller
         // Create the product
         $product = Product::create($validatedData);
 
+
+        // Log the audit
+        Audit::create([
+            'user_id' => Auth::id(),
+            'action' => 'created',
+            'model_type' => Product::class,
+            'model_id' => $product->id,
+            'changes' => $validatedData,
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Product added successfully!',
@@ -114,7 +125,19 @@ class productController extends Controller
                 $validatedData['product_image'] = "/storage/" . $imagePath;
             }
 
+
+            $oldValues = $product->getOriginal();
             $product->update($validatedData);
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'updated a product',
+                'model_type' => Product::class,
+                'model_id' => $product->id,
+                'old_values' => $oldValues,
+                'changes' => $validatedData,
+            ]);
+
 
             return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
         } catch (\Exception $e) {
@@ -126,8 +149,17 @@ class productController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-
+            $oldValues = $product->toArray();
             $product->delete();
+
+              // Log the audit
+        Audit::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete',
+            'model_type' => Product::class,
+            'model_id' => $id,
+            'old_values' => $oldValues,
+        ]);
 
             return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);
         } catch (\Exception $e) {

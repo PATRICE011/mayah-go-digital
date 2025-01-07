@@ -98,57 +98,36 @@
                                         <th class="border-0">Name</th>
                                         <th class="border-0">Role</th>
                                         <th class="border-0">Date & Time</th>
-                                        <th class="border-0">Description</th>
+                                        <th class="border-0" style="max-width: 300px;">Description</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
+                                    @forelse($audits as $audit)
                                     <tr>
-                                        <td>John Doe</td>
-                                        <td>Staff</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Added kinemerut</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Customer</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Logged Out</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Admin</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Added New Employee</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="8" class="text-right">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination justify-content-end mb-0">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"> < </a>
-                                                    </li>
-
-                                                    <li class="page-item active">
-                                                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                                                    </li>
-
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#"> > </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
+                                        <td>{{ $audit->user->name ?? 'System' }}</td>
+                                        <td>{{ $audit->user->role->name ?? 'N/A' }}</td>
+                                        <td>{{ $audit->created_at->format('h:i A, d-m-Y') }}</td>
+                                        <td class="text-truncate" style="max-width: 300px;" title="{{ ucfirst($audit->action) }}">
+                                            {{ ucfirst($audit->action) }}
                                         </td>
                                     </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center">No audit logs found.</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination Links -->
+                        <div class="card-footer">
+                            <nav aria-label="Audit Trail Pagination">
+                                {{ $audits->links('pagination::bootstrap-4') }}
+                            </nav>
+                        </div>
+
                     </div>
                 </div>
             </div>

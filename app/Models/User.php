@@ -21,5 +21,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Wishlist::class);  // Correct relationship (many wishlists per user)
     }
-}
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+}

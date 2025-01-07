@@ -150,9 +150,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Administrator
-                        </a>
+                        </a> -->
 
                         <a href="{{ route('admins.admincustomers') }}" class="nav-link {{ isset($activePage) && $activePage === 'customers' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Customers
