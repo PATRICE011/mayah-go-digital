@@ -66,7 +66,7 @@ $(document).ready(function () {
                                     data-category="${product.category ? product.category.id : ''}"
                                     data-price="${product.product_price}"
                                     data-stocks="${product.product_stocks}" 
-                                    data-status="${product.product_stocks > 0 ? 'active' : 'inactive'}"
+                                    
                                     data-image="${getImageUrl(product.product_image || 'default-placeholder.png')}">
                                 <i class="ri-pencil-line"></i>
                             </button>
@@ -89,6 +89,81 @@ $(document).ready(function () {
      * @param {object} response - The pagination data
      * @returns {string} - The HTML for pagination links
      */
+    function createEditModal() {
+        // Check if the modal already exists to avoid duplication
+        if ($('#editModal').length === 0) {
+            // Create the modal dynamically
+            const modalHtml = `
+                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editForm" method="POST" action="" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+    
+                                    <input type="hidden" name="id" id="editId">
+    
+                                    <div class="form-group">
+                                        <label for="editImage">Product Image</label>
+                                        <input type="file" class="form-control" name="product_image" id="editImage" accept="image/*">
+                                        <small class="form-text text-muted">Choose an image file to upload (JPG, PNG).</small>
+                                        <div class="mt-3">
+                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="editName">Product Name</label>
+                                        <input type="text" class="form-control" name="product_name" id="editName">
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="editDescription">Product Description</label>
+                                        <textarea class="form-control" name="product_description" id="editDescription" rows="5"></textarea>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="editCategory">Category</label>
+                                        <select class="form-control" name="category_id" id="editCategory">
+                                            <!-- Categories will be loaded dynamically -->
+                                        </select>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="editPrice">Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₱</span>
+                                            <input type="number" class="form-control" name="product_price" id="editPrice" min="0" step="0.01">
+                                        </div>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <label for="editStocks">Stocks</label>
+                                        <input type="number" class="form-control" name="product_stocks" id="editStocks" min="0">
+                                    </div>
+    
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Append modal to the body
+            $('body').append(modalHtml);
+        }
+    }
+    
+    
     function generatePagination(response) {
         return `
             <tr>
@@ -123,32 +198,129 @@ $(document).ready(function () {
      */
     
 
-    $(document).on("click", ".edit", function () {
-        const productData = $(this).data();
+    $(document).on('click', '.edit', function () {
+        const product = $(this).data();
     
-        // Set form action dynamically
-        const formAction = `/admin/update-product/${productData.id}`;
-        $("#editForm").attr("action", formAction);
+        // Populate form fields in the modal with product data
+        $('#editProductId').val(product.id);
+        $('#editProductName').val(product.name);
+        $('#editProductDescription').val(product.description);
+        $('#editProductPrice').val(product.price);
+        $('#editProductStocks').val(product.stocks);
     
-        // Populate form fields
-        $("#editId").val(productData.id);
-        $("#editName").val(productData.name);
-        $("#editDescription").val(productData.description);
-        $("#editCategory").val(productData.category);
-        $("#editPrice").val(productData.price);
-        $("#editStocks").val(productData.stocks);
-        $("#editStatus").val(productData.status);
+        // Fetch and populate categories dynamically
+        $.ajax({
+            url: '/admin/all-categories', // Backend route to fetch categories
+            type: 'GET',
+            success: function (categories) {
+                const categoryDropdown = $('#editCategory');
+                categoryDropdown.empty(); // Clear existing options
     
-        // Show image preview
-        if (productData.image) {
-            $("#imagePreview").attr("src", productData.image).show();
+                // Populate categories dynamically
+                categories.forEach(category => {
+                    categoryDropdown.append(
+                        `<option value="${category.id}" ${category.id === product.category ? 'selected' : ''}>
+                            ${category.category_name}
+                        </option>`
+                    );
+                });
+            },
+            error: function () {
+                toastr.error('Failed to load categories.');
+            },
+        });
+    
+        // Display the current image preview if it exists
+        if (product.image) {
+            $('#currentImagePreview').attr('src', product.image).show();
         } else {
-            $("#imagePreview").hide();
+            $('#currentImagePreview').hide();
         }
     
-        // Show modal
-        $("#editModal").modal("show");
+        // Show the modal
+        $('#editProductModal').modal('show');
     });
+    
+    /**
+     * Event listener for submitting the edit form.
+     */
+    $("#editProductBtn").on("click", function () {
+        const formData = new FormData($("#editProductForm")[0]); // Get all form data
+        const productId = $("#editProductId").val(); // Get the product ID
+
+        $.ajax({
+            url: `/admin/update-product/${productId}`, // Laravel update route
+            type: "POST", // Use POST method
+            data: formData,
+            processData: false, // Prevent jQuery from transforming the data
+            contentType: false, // Prevent jQuery from setting the content type
+            success: function (response) {
+                toastr.success("Product updated successfully!");
+                $("#editProductModal").modal("hide"); // Close the modal
+                loadProducts(); // Reload the product list
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    // Handle validation errors
+                    const errors = xhr.responseJSON.errors;
+                    for (const field in errors) {
+                        toastr.error(errors[field][0]);
+                    }
+                } else {
+                    toastr.error("An unexpected error occurred.");
+                }
+            }
+        });
+    });
+    
+    
+    $(document).ready(function () {
+        // Add CSRF token to AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    
+        $("#editForm").on("submit", function (e) {
+            e.preventDefault(); // Prevent default form submission
+        
+            const formData = new FormData(this);
+            formData.append('_method', 'PUT'); // Use Laravel's method spoofing
+        
+            $.ajax({
+                url: $(this).attr("action"), // Form action URL
+                type: 'POST', // Send as POST but include _method=PUT
+                data: formData,
+                processData: false, // Prevent jQuery from automatically transforming the data
+                contentType: false, // Prevent jQuery from setting the content type
+                success: function (response) {
+                    toastr.success("Product updated successfully!");
+                    $("#editModal").modal("hide"); // Hide modal
+                    loadProducts(); // Reload product list
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        displayErrors(errors); // Display validation errors
+                    } else {
+                        toastr.error("An unexpected error occurred.");
+                    }
+                }
+            });
+        });
+        
+    
+        function displayErrors(errors) {
+            $(".error-message").remove(); // Clear previous errors
+            for (const field in errors) {
+                const errorMessage = errors[field][0];
+                const input = $(`[name="${field}"]`);
+                input.after(`<span class="text-danger error-message">${errorMessage}</span>`);
+            }
+        }
+    });
+    
     
     
     // Image Upload Preview

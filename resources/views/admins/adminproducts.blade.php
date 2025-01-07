@@ -4,9 +4,17 @@
 @include('admins.adminheader', ['activePage' => 'products'])
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
+
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
+                    @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+
                     <h3 class="mb-2">Products</h3>
 
                     <div class="page-breadcrumb">
@@ -172,14 +180,14 @@
                                             </div>
 
                                             <!-- Status -->
-                                            <!-- <div class="form-group">
+                                            <div class="form-group">
                                                 <label for="addStatus">Status</label>
                                                 <select class="form-control" id="addStatus">
                                                     <option value="active">Active</option>
                                                     <option value="inactive">Inactive</option>
                                                 </select>
                                             </div>
-                                        </form> -->
+                                        </form>
                                     </div>
 
                                     <div class="modal-footer">
@@ -213,86 +221,66 @@
                                     <!-- DYNAMIC -->
                                 </tbody>
                             </table>
-                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                            <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-
                                         <div class="modal-body">
-                                            <!-- Edit Product Form -->
-                                            <form id="editForm" method="POST" action="" enctype="multipart/form-data">
+                                            <form id="editProductForm" enctype="multipart/form-data">
                                                 @csrf
-                                                @method('POST')
-
-                                                <input type="hidden" name="id" id="editId"> <!-- Store Product ID -->
+                                                <input type="hidden" id="editProductId" name="id">
 
                                                 <div class="form-group">
-                                                    <label for="editImage">Product Image</label>
-                                                    <input type="file" class="form-control" name="product_image" id="editImage" accept="image/*">
-                                                    <small class="form-text text-muted">Choose an image file to upload (JPG, PNG).</small>
-
-                                                    <div class="mt-3">
-                                                        <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                    </div>
+                                                    <label for="editProductName">Product Name</label>
+                                                    <input type="text" class="form-control" id="editProductName" name="product_name" required>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editName">Product Name</label>
-                                                    <input type="text" class="form-control" name="product_name" id="editName">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="editDescription">Product Description</label>
-                                                    <textarea class="form-control" name="product_description" id="editDescription" rows="5"></textarea>
+                                                    <label for="editProductDescription">Product Description</label>
+                                                    <textarea class="form-control" id="editProductDescription" name="product_description" rows="4"></textarea>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editCategory">Category</label>
-                                                    <select class="form-control" name="category_id" id="editCategory">
-                                                        @foreach ($categories as $category)
-                                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                                        @endforeach
+                                                    <select class="form-control" id="editCategory" name="category_id" required>
+                                                        <!-- Dynamically populate categories here -->
                                                     </select>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editPrice">Price</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">₱</span>
-                                                        <input type="number" class="form-control" name="product_price" id="editPrice" min="0" step="0.01">
-                                                    </div>
+                                                    <label for="editProductPrice">Price</label>
+                                                    <input type="number" class="form-control" id="editProductPrice" name="product_price" required min="0" step="0.01">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editStocks">Stocks</label>
-                                                    <input type="number" class="form-control" name="product_stocks" id="editStocks" min="0">
+                                                    <label for="editProductStocks">Stocks</label>
+                                                    <input type="number" class="form-control" id="editProductStocks" name="product_stocks" required min="0">
                                                 </div>
-
 
                                                 <div class="form-group">
-                                                    <label for="editStatus">Status</label>
-                                                    <select class="form-control" name="status" id="editStatus">
-                                                        <option value="active">Active</option>
-                                                        <option value="inactive">Inactive</option>
-                                                    </select>
+                                                    <label for="editProductImage">Product Image</label>
+                                                    <input type="file" class="form-control" id="editProductImage" name="product_image" accept="image/*">
+                                                    <img id="currentImagePreview" src="" alt="Current Image" style="max-width: 100px; display: none;">
                                                 </div>
 
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                                                </div>
+
                                             </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="editProductBtn" class="btn btn-primary">save</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
 
-                            <!-- end of edit modal -->
+
                         </div>
                     </div>
                 </div>

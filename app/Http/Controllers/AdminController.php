@@ -10,6 +10,8 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+
 
 class AdminController extends Controller
 {
@@ -174,41 +176,44 @@ class AdminController extends Controller
     }
 
     public function adminproducts()
-    {
-        $categories = Category::all();
+{
+   
 
-        if (request()->ajax()) {
-            $query = request('query', ''); // Search term
-            $categorySlug = request('category', ''); // Selected category slug
-            $minPrice = request('minPrice', 0); // Minimum price filter
-            $maxPrice = request('maxPrice', null); // Maximum price filter
-            $status = request('status', ''); // Active/Inactive filter
+    $categories = Category::all();
 
-            $products = Product::with('category')
-                ->when($query, function ($queryBuilder) use ($query) {
-                    $queryBuilder->where('product_name', 'like', "%$query%");
-                })
-                ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
-                    $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
-                        $categoryQuery->where('slug', $categorySlug); // Match category slug
-                    });
-                })
-                ->when($minPrice, function ($queryBuilder) use ($minPrice) {
-                    $queryBuilder->where('product_price', '>=', $minPrice);
-                })
-                ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
-                    $queryBuilder->where('product_price', '<=', $maxPrice);
-                })
-                ->when($status, function ($queryBuilder) use ($status) {
-                    $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
-                })
-                ->paginate(5);
+    if (request()->ajax()) {
+        $query = request('query', ''); // Search term
+        $categorySlug = request('category', ''); // Selected category slug
+        $minPrice = request('minPrice', 0); // Minimum price filter
+        $maxPrice = request('maxPrice', null); // Maximum price filter
+        $status = request('status', ''); // Active/Inactive filter
 
-            return response()->json($products);
-        }
+        $products = Product::with('category')
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('product_name', 'like', "%$query%");
+            })
+            ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
+                $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
+                    $categoryQuery->where('slug', $categorySlug); // Match category slug
+                });
+            })
+            ->when($minPrice, function ($queryBuilder) use ($minPrice) {
+                $queryBuilder->where('product_price', '>=', $minPrice);
+            })
+            ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
+                $queryBuilder->where('product_price', '<=', $maxPrice);
+            })
+            ->when($status, function ($queryBuilder) use ($status) {
+                $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
+            })
+            ->paginate(5);
+            
+        return response()->json($products);
 
-        return view('admins.adminproducts', compact('categories'));
     }
+
+    return view('admins.adminproducts', compact('categories'));
+}
 
 
     public function store(Request $request)
@@ -221,6 +226,7 @@ class AdminController extends Controller
             'product_stocks' => 'required|integer|min:0', // Validate stocks
             'category_id' => 'required|exists:categories,id',
         ]);
+
 
         // Handle the image logic
         if ($request->hasFile('product_image')) {
@@ -251,44 +257,34 @@ class AdminController extends Controller
             'message' => 'Product added successfully!',
             'product' => $product
         ]);
-    }
-
-    public function updateProduct(Request $request, $id)
+    }public function updateProduct(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-
-        // Validate request
-        $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'product_price' => 'required|numeric|min:0',
-            'product_stocks' => 'required|integer|min:0',
-            'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        // Handle image upload
-        if ($request->hasFile('product_image')) {
-            $imagePath = $request->file('product_image')->store('product_images', 'public');
-            $product->product_image = "/storage/" . $imagePath;
+        try {
+            $product = Product::findOrFail($id);
+    
+            $validatedData = $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_description' => 'nullable|string',
+                'category_id' => 'required|exists:categories,id',
+                'product_price' => 'required|numeric|min:0',
+                'product_stocks' => 'required|integer|min:0',
+                'product_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+    
+            // Update product image if provided
+            if ($request->hasFile('product_image')) {
+                $imagePath = $request->file('product_image')->store('product_images', 'public');
+                $validatedData['product_image'] = "/storage/" . $imagePath;
+            }
+    
+            $product->update($validatedData);
+    
+            return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to update product.', 'error' => $e->getMessage()], 500);
         }
-
-        // Update product details
-        $product->update([
-            'product_name' => $request->product_name,
-            'product_description' => $request->product_description,
-            'category_id' => $request->category_id,
-            'product_price' => $request->product_price,
-            'product_stocks' => $request->product_stocks,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->route('admin.products')->with('success', 'Product updated successfully!');
     }
-
-
-
-
+    
     public function admincategories(Request $request)
     {
         if ($request->ajax()) {
