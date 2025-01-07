@@ -35,7 +35,7 @@ class categoryController extends Controller
         return view("admins.admincategories");
     }
 
-    
+
     public function storeCategory(Request $request)
     {
         $request->validate([
@@ -88,26 +88,72 @@ class categoryController extends Controller
     }
 
     public function destroy($id)
-{
-    try {
-        $category = Category::findOrFail($id); // Ensure the category exists
-        $category->delete(); // Delete the category
+    {
+        try {
+            $category = Category::findOrFail($id); // Ensure the category exists
+            $category->delete(); // Delete the category
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category archived successfully.'
-        ]);
-    } catch (ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Category not found.'
-        ], 404);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to archive category. Please try again.'
-        ], 500);
+            return response()->json([
+                'success' => true,
+                'message' => 'Category archived successfully.'
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to archive category. Please try again.'
+            ], 500);
+        }
     }
-}
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'category_name' => 'required|string|max:255',
+            'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        try {
+            $category = Category::findOrFail($id);
+
+            $category->category_name = $request->input('category_name');
+
+            if ($request->hasFile('category_image')) {
+                $image = $request->file('category_image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('assets/img'), $imageName);
+                $category->category_image = $imageName;
+            }
+
+            $category->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category updated successfully.',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update category. Please try again.',
+            ], 500);
+        }
+    }
+
+    public function printCategories()
+    {
+        // Fetch categories from the database
+        $categories = Category::all();
+
+        // Pass categories to the Blade view
+        return view('admins.export-category', compact('categories'));
+    }
 }

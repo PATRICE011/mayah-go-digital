@@ -184,7 +184,88 @@ $(document).ready(function () {
             $("#archiveModal").modal("hide");
         });
     });
+    // edit 
+    $(document).ready(function () {
+        let editCategoryId = null; // Store the ID of the category being edited
     
+        // Open the edit modal and populate current data
+        $(document).on("click", ".edit", function () {
+            editCategoryId = $(this).data("id"); // Get the category ID
+            const categoryName = $(this).data("name"); // Get the category name
+            const categoryImage = $(this).data("image"); // Get the category image
+    
+            // Populate the modal fields
+            $("#editCategoryName").val(categoryName);
+            $("#editImagePreview").attr("src", categoryImage).show();
+    
+            // Show the modal
+            $("#editModal").modal("show");
+        });
+    
+        // Handle the file input change for edit image preview
+        $("#editImage").on("change", function (event) {
+            let file = event.target.files[0];
+            if (file && file.type.startsWith("image/")) {
+                let reader = new FileReader();
+                reader.onload = function () {
+                    $("#editImagePreview").attr("src", reader.result).show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                toastr.error("Please upload a valid image.");
+                $("#editImagePreview").hide();
+                $(this).val(''); // Reset the input
+            }
+        });
+    
+        // Handle the edit form submission
+        $("#editForm").on("submit", function (e) {
+            e.preventDefault();
+    
+            if (!editCategoryId) {
+                toastr.error("Invalid category. Please try again.");
+                return;
+            }
+    
+            let formData = new FormData(this);
+            formData.append("id", editCategoryId); // Include the category ID
+    
+            $.ajax({
+                url: `/admin/update-category/${editCategoryId}`, // Adjust route to match your backend
+                type: "POST", // Use PUT if your backend requires it
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        $("#editModal").modal("hide"); // Close the modal
+                        $("#editForm")[0].reset(); // Reset the form
+                        $("#editImagePreview").hide(); // Hide the preview
+                        loadCategories2(); // Reload the categories
+                    } else {
+                        toastr.error("Failed to update category. Please try again.");
+                    }
+                },
+                error: function (xhr) {
+                    try {
+                        let errors = xhr.responseJSON.errors;
+                        if (errors && errors.category_name) toastr.error(errors.category_name[0]);
+                        if (errors && errors.category_image) toastr.error(errors.category_image[0]);
+                    } catch (e) {
+                        toastr.error("An unexpected error occurred. Please check the console.");
+                        console.error(xhr.responseText);
+                    }
+                }
+            });
+        });
+    });
+    
+    $("#exportCategoryBtn").on("click", function () {
+        window.open("/admin/print-categories", "_blank");
+    });
+
     function toggleSpinner(show) {
         if (show) {
             $("#spinner").show();

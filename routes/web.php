@@ -92,6 +92,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
+        Route::post('update-category/{id}', [categoryController::class, 'update']);
 
        
        
@@ -108,6 +109,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             $products = Product::with('category')->get(); // Fetch all products with categories
             return view('admins.export-products', compact('products'));
         })->name('products.export');
+
+        Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
+
     });
 
 // Public Routes (accessible by all)
