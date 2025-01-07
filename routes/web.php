@@ -89,8 +89,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
 
        
-        Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
-        Route::post('/store-categories', [AdminController::class, 'storeCategory'])->name('categories.store');
+        Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
+        Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
+        Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
 
        
        

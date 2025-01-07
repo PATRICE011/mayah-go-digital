@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class categoryController extends Controller
 {
     //
@@ -84,4 +86,28 @@ class categoryController extends Controller
             ], 500);
         }
     }
+
+    public function destroy($id)
+{
+    try {
+        $category = Category::findOrFail($id); // Ensure the category exists
+        $category->delete(); // Delete the category
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category archived successfully.'
+        ]);
+    } catch (ModelNotFoundException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Category not found.'
+        ], 404);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to archive category. Please try again.'
+        ], 500);
+    }
+}
+
 }

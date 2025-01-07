@@ -320,61 +320,56 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", ".archive", function () {
-        const productId = $(this).data("id");
-        const productName = $(this).data("name");
-
-        // Set the product name and ID in the modal
-        $("#productToDelete").text(productName);
-        $("#confirmDeleteButton").data("id", productId);
-
-        // Show the modal
-        $("#deleteConfirmationModal").modal("show");
-    });
     $(document).ready(function () {
-        let productIdToDelete = null;
-
-        // Handle opening of delete confirmation modal
+        let productIdToArchive = null; // Variable to store the product ID for archiving
+    
+        // Handle opening of archive modal
         $(document).on("click", ".archive", function () {
-            productIdToDelete = $(this).data("id");
-            const productName = $(this).data("name");
-
-            // Update modal content
+            productIdToArchive = $(this).data("id"); // Get the product ID from the button
+            const productName = $(this).data("name"); // Get the product name from the button
+    
+            // Update the modal content with product details
             $("#productToDelete").text(productName);
-
-            // Show the delete confirmation modal
-            $("#deleteConfirmationModal").modal("show");
+    
+            // Show the archive modal
+            $("#archiveModal").modal("show");
         });
-
-        // Handle the Cancel button
-        $("#cancelDeleteButton").on("click", function () {
-            // Clear the productIdToDelete when Cancel is clicked
-            productIdToDelete = null;
-
-            // Explicitly hide the modal (optional, as Bootstrap handles it automatically)
-            $("#deleteConfirmationModal").modal("hide");
+    
+        // Handle the Cancel button in the modal
+        $("#archiveModal .btn-secondary").on("click", function () {
+            // Clear the productIdToArchive when Cancel is clicked
+            productIdToArchive = null;
+            $("#archiveModal").modal("hide");
         });
-
-        // Handle Confirm Delete button
-        $("#confirmDeleteButton").on("click", function () {
-            if (productIdToDelete) {
+    
+        // Handle Confirm Archive button in the modal
+        $("#archiveModal .btn-danger").on("click", function () {
+            if (productIdToArchive) {
+                // Send the DELETE request
                 $.ajax({
-                    url: `/admin/delete-product/${productIdToDelete}`,
+                    url: `/admin/delete-product/${productIdToArchive}`, // Adjust URL to match your backend route
                     type: "DELETE",
                     success: function (response) {
+                        // Show success message
                         toastr.success(response.message);
-                        $("#deleteConfirmationModal").modal("hide"); // Hide modal on success
-                        loadProducts(); // Reload the product list
+    
+                        // Hide the modal
+                        $("#archiveModal").modal("hide");
+    
+                        // Reload the product list (update this to your reload function)
+                        loadProducts();
                     },
                     error: function (xhr) {
-                        toastr.error(
-                            "Failed to delete the product. Please try again."
-                        );
+                        // Handle error and show appropriate message
+                        toastr.error("Failed to archive the product. Please try again.");
                     },
                 });
+            } else {
+                toastr.error("Invalid product. Please try again.");
             }
         });
     });
+    
 
     $(document).ready(function () {
         // Add CSRF token to AJAX requests
