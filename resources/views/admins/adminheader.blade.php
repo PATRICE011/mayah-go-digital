@@ -146,9 +146,9 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
+                            <!-- <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Administrator
-                            </a>
+                            </a> -->
 
                             <a href="{{ route('admins.admincustomers') }}" class="nav-link {{ isset($activePage) && $activePage === 'customers' ? 'active' : '' }}">
                                 <i class="fas fa-fw fa-file"></i> Customers
@@ -168,11 +168,11 @@
                             <i class="fas fa-fw fa-file"></i> Audit Trail
                         </a>
 
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Sales Report
                         </a>
 
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products Report
                         </a>
                     </li>

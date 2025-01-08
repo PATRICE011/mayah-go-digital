@@ -368,6 +368,17 @@ class AdminController extends Controller
         return view("admins.adminaudit");
     }
 
+    public function adminsalesreport()
+    {
+        return view("admins.adminsalesreport");
+    }
+
+    public function adminproductsreport()
+    {
+        return view("admins.adminproductsreport");
+    }
+
+
 
 
     public function logout(Request $request)

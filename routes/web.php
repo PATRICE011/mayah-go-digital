@@ -101,6 +101,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
         Route::get('/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
         Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
+        Route::get('/sales-report', [AdminController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
+        Route::get('/products-report', [AdminController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
     
         Route::get('/products/export', function () {
             $products = Product::with('category')->get(); // Fetch all products with categories

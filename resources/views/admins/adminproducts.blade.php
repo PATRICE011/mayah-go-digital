@@ -210,11 +210,7 @@
                                 </thead>
 
                                 <tbody>
-<<<<<<< HEAD
                                     <!-- DYNAMIC PRODUCTS SECTION -->
-=======
-                                    <!-- DYNAMIC -->
->>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
                                 </tbody>
                             </table>
                             <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">

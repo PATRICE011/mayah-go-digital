@@ -327,7 +327,6 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 const tableBody = response.data
-<<<<<<< HEAD
                     .map(
                         (product, index) => `
                     <tr>
@@ -383,48 +382,6 @@ $(document).ready(function () {
                     </tr>
                 `
                     )
-=======
-                    .map((product, index) => `
-                        <tr>
-                            <td>${(response.current_page - 1) * response.per_page + index + 1}</td>
-                            <td>
-                                <div class="m-r-10">
-                                    <img src="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}"
-                                         alt="${product.product_name}"
-                                         class="rounded product-image" width="45">
-                                </div>
-                            </td>
-                            <td>${product.product_name}</td>
-                            <td class="text-truncate" style="max-width: 200px;" title="${product.product_description || 'N/A'}">
-                                ${product.product_description || 'N/A'}
-                            </td>
-                            <td>${product.category ? product.category.category_name : 'N/A'}</td>
-                            <td>₱${product.product_price}</td>
-                            <td>${product.product_stocks}</td>
-                            <td>${product.product_stocks > 0 ? 'Active' : 'Out of Stock'}</td>
-                            <td>
-                                <div class="action__btn">
-                                    <!-- EDIT BUTTON -->
-                                    <button class="edit" data-toggle="modal" data-target="#editModal"
-                                            data-id="${product.id}"
-                                            data-name="${product.product_name}"
-                                            data-description="${product.product_description}"
-                                            data-category="${product.category ? product.category.id : ''}"
-                                            data-price="${product.product_price}"
-                                            data-status="${product.product_stocks > 0 ? 'active' : 'inactive'}"
-                                            data-image="${product.product_image ? `/assets/img/${product.product_image}` : '/assets/img/default-placeholder.png'}">
-                                        <i class="ri-pencil-line"></i>
-                                    </button>
-
-                                    <!-- ARCHIVE BUTTON -->
-                                    <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `)
->>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
                     .join("");
 
                 // Pagination controls
@@ -547,13 +504,7 @@ $(document).ready(function () {
         loadProducts(1, filters);
     }
 
-<<<<<<< HEAD
     /* Handle Form Submission for Adding Product */
-=======
-    /**
-     * Handle Adding Product
-     */
->>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     $("#addProductBtn").on("click", function () {
         const formData = new FormData();
         formData.append("product_name", $("#addName").val());
@@ -594,7 +545,6 @@ $(document).ready(function () {
         });
     });
 
-<<<<<<< HEAD
     /* Load Categories Dynamically */
     function loadCategories() {
         $.ajax({
@@ -623,8 +573,6 @@ $(document).ready(function () {
     // Load categories on page load
     loadCategories();
 
-=======
->>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     // Initial product load
     loadProducts();
 
@@ -643,34 +591,11 @@ $(document).ready(function () {
         }
     });
 });
-<<<<<<< HEAD
 
 $(document).ready(function () {
     $("#exportProductsBtn").on("click", function () {
         // Open the export page in a new tab
         window.open("/admin/products/export", "_blank");
-=======
-function loadCategories() {
-    $.ajax({
-        url: "/admin/categories",
-        type: "GET",
-        success: function (categories) {
-            const categoryDropdown = $("#addCategory");
-            categoryDropdown
-                .empty()
-                .append('<option value="">Select Category</option>'); // Default placeholder
-
-            // Append categories
-            categories.forEach((category) => {
-                categoryDropdown.append(
-                    `<option value="${category.id}">${category.category_name}</option>` // Use `id` as the value
-                );
-            });
-        },
-        error: function () {
-            toastr.error("Failed to load categories.");
-        },
->>>>>>> 47b6fc53993aa566442cf3f8e5c38db81568e256
     });
 }
 
