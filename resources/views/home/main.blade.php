@@ -260,6 +260,8 @@
                                 @endauth
 
                             </div>
+
+
                         </div>
 
                         <!-- Product Content -->
@@ -395,13 +397,14 @@
     </section>
 
     <!--==================== NEW ARRIVALS ====================-->
+
     <section class="new__arrivals container section">
         <h3 class="section__title"><span>New</span> Arrivals</h3>
 
         <div class="new__container swiper">
             <div class="swiper-wrapper">
                 @php
-                // Fetch products sorted by newest arrivals (based on created_at)
+                // Fetch products sorted by newest arrivals (based on created_at) and exclude products with zero stock
                 $newArrivals = DB::table('products')
                 ->join('categories', 'products.category_id', '=', 'categories.id')
                 ->select(
@@ -413,10 +416,12 @@
                 'products.created_at',
                 'categories.category_name'
                 )
+                ->where('products.product_stocks', '>', 0) // Exclude products with zero stock
                 ->orderBy('products.created_at', 'DESC') // Sort by newest arrivals
                 ->limit(10) // Limit to 10 newest products
                 ->get();
                 @endphp
+
 
                 @foreach ($newArrivals as $product)
                 <div class="product__item swiper-slide">
@@ -449,6 +454,7 @@
                             </a>
                             @endauth
                         </div>
+
                     </div>
 
                     <!-- Product Content -->

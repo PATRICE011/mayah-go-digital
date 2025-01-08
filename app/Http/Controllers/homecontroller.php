@@ -40,9 +40,12 @@ class HomeController extends Controller
                 'products.product_name',
                 'products.product_image',
                 'products.product_price',
+                'products.product_stocks', // Include product_stocks here
                 'categories.category_name'
             )
+            ->where('products.product_stocks', '>', 0) // Restrict products with zero stock
             ->get();
+
         // Fetch categories directly
         $categories = DB::table('categories')
             ->leftJoin('products', 'categories.id', '=', 'products.category_id') // Include categories without products
@@ -89,9 +92,12 @@ class HomeController extends Controller
                 'products.product_name',
                 'products.product_image',
                 'products.product_price',
+                'products.product_stocks', // Include product_stocks here
                 'categories.category_name'
             )
+            ->where('products.product_stocks', '>', 0) // Restrict products with zero stock
             ->get();
+
         // Fetch categories directly
         $categories = DB::table('categories')
             ->leftJoin('products', 'categories.id', '=', 'products.category_id') // Include categories without products

@@ -20,9 +20,8 @@
         @if ($product->product_stocks == 0)
         <div class="out-of-stock-message">Out of Stock</div>
         @elseif ($product->product_stocks > 0 && $product->product_stocks < 10)
-            <div class="low-stock-message">Low Stock
-    </div>
-    @endif
+            <div class="low-stock-message">Low Stock</div>
+        @endif
 
     <div class="product__actions">
         <!-- Quick View -->
