@@ -98,6 +98,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name('admins.adminemployee');
         Route::post('/employees/store', [EmployeeController::class, 'store'])->name('admin.employees.store');
         Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete']);
+        Route::put('/employees/update/{id}', [EmployeeController::class, 'update']);
+        Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
 
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');

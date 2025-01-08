@@ -39,63 +39,8 @@
                             <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
 
-                        <!-- Filter Modal -->
-                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="filterModalLabel">Filter Employees</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-
-                                    <div class="modal-body">
-                                        <!-- Add Filter Fields Here -->
-                                        <form id="filterForm">
-                                            <div class="form-group">
-                                                <label for="filteAdminName">Employee Name</label>
-                                                <input type="text" class="form-control" id="filterName" placeholder="Enter Employee name">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filteCategory">Phone Number</label>
-                                                <input type="tel" class="form-control" id="filterPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filterRole">Role</label>
-                                                <select class="form-control" id="filterRole">
-                                                    <option value="">All</option>
-                                                    <option value="">POS Operator</option>
-                                                    <option value="">Manager</option>
-                                                    <option value="">Staff</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filterStatus">Status</label>
-                                                <select class="form-control" id="filterStatus">
-                                                    <option value="">All</option>
-                                                    <option value="active">Active</option>
-                                                    <option value="inactive">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-sm btn-outline-danger mr-2">
+                        <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
                             <i class="fa fa-file-export"></i> Export
                         </button>
 
@@ -196,28 +141,10 @@
                                                     <label for="editPhoneNumber">Phone Number</label>
                                                     <input type="tel" class="form-control" id="editPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
                                                 </div>
-
-                                                <div class="form-group">
-                                                    <label for="editEmployeeRole">Role</label>
-                                                    <select class="form-control" id="editEmployeeRole">
-                                                        <option value="active">All</option>
-                                                        <option value="">POS Operator</option>
-                                                        <option value="">Manager</option>
-                                                        <option value="">Staff</option>
-                                                    </select>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="editStatus">Status</label>
-                                                    <select class="form-control" id="editStatus">
-                                                        <option value="active">Active</option>
-                                                        <option value="inactive">Inactive</option>
-                                                    </select>
-                                                </div>
                                             </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                            <button type="button" class="btn btn-primary" id="applyChangesButton">Apply Changes</button>
                                         </div>
                                     </div>
                                 </div>

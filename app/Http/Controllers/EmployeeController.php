@@ -15,20 +15,21 @@ class EmployeeController extends Controller
     public function adminemployee(Request $request)
     {
         if ($request->ajax()) {
-            $employees = User::with('role') // Assuming 'role' is the correct relationship
-                ->where('role_id', 2)  // Filtering by role_id
-                ->where(function ($query) use ($request) {
-                    if (!empty($request->search)) {
-                        $query->where('name', 'like', "%{$request->search}%")
-                            ->orWhere('email', 'like', "%{$request->search}%");  // Assuming you might also want to search by email
-                    }
+            $search = $request->input('search', ''); // Capture the search term
+
+            $employees = User::with('role')
+                ->where('role_id', 2) // Assuming role_id 2 is for employees
+                ->when($search != '', function ($query) use ($search) {
+                    return $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('mobile', 'like', "%{$search}%");
                 })
-                ->paginate(10); // Adjust pagination as needed
+                ->paginate(10);
+
 
             return response()->json($employees);
         }
 
-        return view("admins.adminemployee");
+        return view('admins.adminemployee');
     }
 
     public function store(Request $request)
@@ -97,5 +98,62 @@ class EmployeeController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate the incoming data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'mobile' => 'required|string|regex:/^[0-9]+$/|min:10|max:15', // Validate phone number format
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        try {
+            // Check if the employee exists
+            $employee = DB::table('users_area')->where('id', $id)->first();
+
+            if (!$employee) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Employee not found.',
+                ], 404);
+            }
+
+            // Update the employee's data using the DB facade
+            DB::table('users_area')
+                ->where('id', $id)
+                ->update([
+                    'name' => $request->name,
+                    'mobile' => $request->mobile,
+                    'updated_at' => now(), // Update the timestamp
+                ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Employee updated successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the employee.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function exportEmployees()
+    {
+        // Fetch all employees (modify as needed, e.g., filtering, sorting)
+        $employees = User::where('role_id', 2)->get(); // Assuming role_id = 2 is for employees
+
+        // Return a view specifically designed for printing
+        return view('admins.export-employees', compact('employees'));
     }
 }
