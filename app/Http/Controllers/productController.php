@@ -43,7 +43,7 @@ class productController extends Controller
                 ->when($status, function ($queryBuilder) use ($status) {
                     $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
                 })
-                ->paginate(5);
+                ->paginate(10);
 
             return response()->json($products);
         }

@@ -118,36 +118,25 @@
                                         <form id="addForm">
                                             <div class="form-group">
                                                 <label for="addName">Employee Name</label>
-                                                <input type="text" class="form-control" id="addAdminName" placeholder="Enter Employee name">
+                                                <input type="text" name="name" class="form-control" id="addAdminName" placeholder="Enter Employee name">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="addPhoneNumber">Phone Number</label>
-                                                <input type="tel" class="form-control" id="addPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
+                                                <input type="tel" name="mobile" class="form-control" id="addPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
                                             </div>
 
-                                            <div class="form-group">
-                                                <label for="addRole">Role</label>
-                                                <select class="form-control" id="addRole">
-                                                    <option value="active">All</option>
-                                                    <option value="">POS Operator</option>
-                                                    <option value="">Manager</option>
-                                                    <option value="">Staff</option>
-                                                </select>
-                                            </div>
 
                                             <div class="form-group">
-                                                <label for="addStatus">Status</label>
-                                                <select class="form-control" id="addStatus">
-                                                    <option value="active">Active</option>
-                                                    <option value="inactive">Inactive</option>
-                                                </select>
+                                                <label for="addPassword">Password</label>
+                                                <input type="password" name="password" class="form-control" id="addPassword" placeholder="Enter Password" required>
                                             </div>
                                         </form>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Add Employee</button>
+                                        <button type="button" class="btn btn-primary" onclick="$('#addForm').submit()">Add Employee</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -162,26 +151,28 @@
                                         <th class="border-0">#</th>
                                         <th class="border-0">Name</th>
                                         <th class="border-0">Phone Number</th>
-                                        <th class="border-0">Role</th>
-                                        <th class="border-0">Status</th>
+
+
                                         <th class="border-0">Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody id="employeeTableBody">
 
+
+
+                                </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colspan="6">
                                             <nav aria-label="Page navigation">
-                                                <ul class="pagination justify-content-end mb-0">
+                                                <ul class="pagination justify-content-end mb-0" id="paginationContainer">
                                                     <!-- Pagination Links will be dynamically inserted here -->
                                                 </ul>
                                             </nav>
                                         </td>
                                     </tr>
                                 </tfoot>
-                                </tbody>
                             </table>
                             <!-- EDIT MODAL -->
                             <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">

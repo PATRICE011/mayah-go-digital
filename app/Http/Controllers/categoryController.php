@@ -21,7 +21,7 @@ class categoryController extends Controller
                 $query->where('category_name', 'like', '%' . $request->search . '%');
             }
 
-            $categories = $query->paginate(5);
+            $categories = $query->paginate(10);
 
             return response()->json([
                 'data' => $categories->items(), // Paginated category data

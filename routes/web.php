@@ -96,7 +96,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::post('update-category/{id}', [categoryController::class, 'update']);
 
         Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name('admins.adminemployee');
-        
+        Route::post('/employees/store', [EmployeeController::class, 'store'])->name('admin.employees.store');
+        Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete']);
+
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
