@@ -64,7 +64,7 @@
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                            <a href="{{url('/details', $product->id)}}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
 
@@ -74,12 +74,24 @@
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
+                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+
+
+                                @auth
+                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
+                                        <i class='bx bx-heart'></i>
+                                    </button>
+                                </form>
+                                @else
+                                <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
                                 </a>
+                                @endauth
+
                             </div>
                         </div>
 
@@ -99,9 +111,27 @@
                             </div>
 
                             <!-- Add to Cart -->
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt'></i>
+                            @auth
+                            <form
+                                id="add-to-cart-form-{{ $product->id }}"
+                                action="{{ route('home.inserttocart') }}"
+                                method="POST"
+                                class="d-inline">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <button
+                                    type="button"
+                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    <i class="bx bx-cart-alt"></i>
+                                </button>
+                            </form>
+                            @else
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                                <i class="bx bx-cart-alt"></i>
                             </a>
+                            @endauth
                         </div>
                     </div>
                     @endforeach
@@ -116,7 +146,7 @@
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                            <a href="{{url('/details', $product->id)}}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
 
@@ -126,12 +156,24 @@
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
+                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+
+
+                                @auth
+                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
+                                        <i class='bx bx-heart'></i>
+                                    </button>
+                                </form>
+                                @else
+                                <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
                                 </a>
+                                @endauth
+
                             </div>
                         </div>
 
@@ -151,9 +193,27 @@
                             </div>
 
                             <!-- Add to Cart -->
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt'></i>
+                            @auth
+                            <form
+                                id="add-to-cart-form-{{ $product->id }}"
+                                action="{{ route('home.inserttocart') }}"
+                                method="POST"
+                                class="d-inline">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <button
+                                    type="button"
+                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    <i class="bx bx-cart-alt"></i>
+                                </button>
+                            </form>
+                            @else
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                                <i class="bx bx-cart-alt"></i>
                             </a>
+                            @endauth
                         </div>
                     </div>
                     @endforeach
@@ -168,7 +228,7 @@
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                            <a href="{{url('/details', $product->id)}}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
 
@@ -178,12 +238,24 @@
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="#" class="action__btn" aria-label="Quick View">
+                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-                                <a href="#" class="action__btn" aria-label="Add To Wishlist">
+
+
+                                @auth
+                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
+                                        <i class='bx bx-heart'></i>
+                                    </button>
+                                </form>
+                                @else
+                                <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
                                 </a>
+                                @endauth
+
                             </div>
                         </div>
 
@@ -193,7 +265,7 @@
                             <span class="product__category">{{ $product->category_name }}</span>
 
                             <!-- Product Title -->
-                            <a href="{{ url('/product/' . $product->id) }}">
+                            <a href="{{url('/details', $product->id)}}">
                                 <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
@@ -203,9 +275,27 @@
                             </div>
 
                             <!-- Add to Cart -->
-                            <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                                <i class='bx bx-cart-alt'></i>
+                            @auth
+                            <form
+                                id="add-to-cart-form-{{ $product->id }}"
+                                action="{{ route('home.inserttocart') }}"
+                                method="POST"
+                                class="d-inline">
+                                @csrf
+                                <input type="hidden" name="id" value="{{ $product->id }}">
+                                <button
+                                    type="button"
+                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    <i class="bx bx-cart-alt"></i>
+                                </button>
+                            </form>
+                            @else
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                                <i class="bx bx-cart-alt"></i>
                             </a>
+                            @endauth
                         </div>
                     </div>
                     @endforeach
@@ -311,7 +401,7 @@
                 <div class="product__item swiper-slide">
                     <!-- Product Banner -->
                     <div class="product__banner">
-                        <a href="{{ url('/product/' . $product->id) }}" class="product__images">
+                        <a href="{{url('/details', $product->id)}}" class="product__images">
                             <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                 alt="{{ $product->product_name }}" class="product__img default">
 
@@ -321,12 +411,24 @@
 
                         <!-- Product Actions -->
                         <div class="product__actions">
-                            <a href="#" class="action__btn" aria-label="Quick View">
+                            <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
                                 <i class='bx bx-expand-horizontal'></i>
                             </a>
-                            <a href="#" class="action__btn" aria-label="Add To Wishlist">
+
+
+                            @auth
+                            <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="action__btn" aria-label="Add To Wishlist">
+                                    <i class='bx bx-heart'></i>
+                                </button>
+                            </form>
+                            @else
+                            <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart'></i>
                             </a>
+                            @endauth
+
                         </div>
                     </div>
 
@@ -336,20 +438,37 @@
                         <span class="product__category">{{ $product->category_name }}</span>
 
                         <!-- Product Title -->
-                        <a href="{{ url('/product/' . $product->id) }}">
+                        <a href="{{url('/details', $product->id)}}">
                             <h3 class="product__title">{{ $product->product_name }}</h3>
                         </a>
 
                         <!-- Product Price -->
                         <div class="product__price flex">
                             <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
-                            
+
                         </div>
 
-                        <!-- Add To Cart -->
-                        <a href="#" class="action__btn cart__btn" aria-label="Add To Cart">
-                            <i class='bx bx-cart-alt'></i>
+                        @auth
+                        <form
+                            id="add-to-cart-form-{{ $product->id }}"
+                            action="{{ route('home.inserttocart') }}"
+                            method="POST"
+                            class="d-inline">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $product->id }}">
+                            <button
+                                type="button"
+                                class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
+                                aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
+                                {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                <i class="bx bx-cart-alt"></i>
+                            </button>
+                        </form>
+                        @else
+                        <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                            <i class="bx bx-cart-alt"></i>
                         </a>
+                        @endauth
                     </div>
                 </div>
                 @endforeach
