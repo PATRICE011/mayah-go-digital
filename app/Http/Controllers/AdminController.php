@@ -232,13 +232,7 @@ class AdminController extends Controller
         return view("admins.admincustomers");
     }
 
-    public function adminemployee()
-    {
-        return view("admins.adminemployee");
-    }
-
-
-
+  
 
     public function adminstocks()
     {

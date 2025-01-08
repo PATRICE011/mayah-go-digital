@@ -150,16 +150,16 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
-                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
-                                                </button>
+                                                </button> -->
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to archive this item? This action cannot be undone.
+                                                Are you sure you want to delete this item? This action cannot be undone.
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-danger">Archive</button>
+                                                <button type="button" class="btn btn-danger">Delete</button>
                                             </div>
                                         </div>
                                     </div>
@@ -175,7 +175,9 @@
     </div>
 </div>
 @section('scripts')
-
+<script>
+    const baseURL = "{{ asset('assets/img/') }}";
+</script>
 <script src="{{ asset('assets/js/category.js')  }}?v={{ time() }}"></script>
 @endsection
 @endsection

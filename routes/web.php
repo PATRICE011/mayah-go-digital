@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UpdateProfileController;
@@ -94,15 +95,15 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
         Route::post('update-category/{id}', [categoryController::class, 'update']);
 
-       
-       
+        Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name('admins.adminemployee');
+        
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
         Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
-        Route::get('/users/employees', [AdminController::class, 'adminemployee'])->name('admins.adminemployee');
+        
         Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
     
         Route::get('/products/export', function () {
