@@ -400,11 +400,29 @@
 
         <div class="new__container swiper">
             <div class="swiper-wrapper">
-                @foreach ($products as $product)
+                @php
+                // Fetch products sorted by newest arrivals (based on created_at)
+                $newArrivals = DB::table('products')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->select(
+                'products.id',
+                'products.product_name',
+                'products.product_image',
+                'products.product_price',
+                'products.product_stocks',
+                'products.created_at',
+                'categories.category_name'
+                )
+                ->orderBy('products.created_at', 'DESC') // Sort by newest arrivals
+                ->limit(10) // Limit to 10 newest products
+                ->get();
+                @endphp
+
+                @foreach ($newArrivals as $product)
                 <div class="product__item swiper-slide">
                     <!-- Product Banner -->
                     <div class="product__banner">
-                        <a href="{{url('/details', $product->id)}}" class="product__images">
+                        <a href="{{ url('/details', $product->id) }}" class="product__images">
                             <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                 alt="{{ $product->product_name }}" class="product__img default">
 
@@ -414,10 +432,9 @@
 
                         <!-- Product Actions -->
                         <div class="product__actions">
-                            <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
+                            <a href="{{ url('/details', $product->id) }}" class="action__btn" aria-label="Quick View">
                                 <i class='bx bx-expand-horizontal'></i>
                             </a>
-
 
                             @auth
                             <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
@@ -431,7 +448,6 @@
                                 <i class='bx bx-heart'></i>
                             </a>
                             @endauth
-
                         </div>
                     </div>
 
@@ -441,14 +457,13 @@
                         <span class="product__category">{{ $product->category_name }}</span>
 
                         <!-- Product Title -->
-                        <a href="{{url('/details', $product->id)}}">
+                        <a href="{{ url('/details', $product->id) }}">
                             <h3 class="product__title">{{ $product->product_name }}</h3>
                         </a>
 
                         <!-- Product Price -->
                         <div class="product__price flex">
                             <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
-
                         </div>
 
                         <!-- Add to Cart Button -->
@@ -463,7 +478,9 @@
 
                             <button
                                 type="submit"
-                                class="action__btn cart__btn">
+                                class="action__btn cart__btn"
+                                {{ $product->product_stocks == 0 ? 'disabled' : '' }}
+                                aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}">
                                 <i class="bx bx-cart-alt"></i>
                             </button>
                         </form>
@@ -473,12 +490,9 @@
                             <i class="bx bx-cart-alt"></i>
                         </a>
                         @endauth
-
                     </div>
                 </div>
                 @endforeach
-
-
             </div>
 
             <div class="swiper-button-next">
@@ -490,6 +504,7 @@
             </div>
         </div>
     </section>
+
 
     <!--==================== SHOWCASE ====================-->
     <section class="showcase section">
