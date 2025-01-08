@@ -7,100 +7,168 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Log;
+use App\Models\Audit;
 class productController extends Controller
 {
     
-
-    public function getProduct(Request $request)
+    public function adminproducts()
     {
-        // Validate the incoming request
+
+
+        $categories = Category::all();
+
+        if (request()->ajax()) {
+            $query = request('query', ''); // Search term
+            $categorySlug = request('category', ''); // Selected category slug
+            $minPrice = request('minPrice', 0); // Minimum price filter
+            $maxPrice = request('maxPrice', null); // Maximum price filter
+            $status = request('status', ''); // Active/Inactive filter
+
+            $products = Product::with('category')
+                ->when($query, function ($queryBuilder) use ($query) {
+                    $queryBuilder->where('product_name', 'like', "%$query%");
+                })
+                ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
+                    $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
+                        $categoryQuery->where('slug', $categorySlug); // Match category slug
+                    });
+                })
+                ->when($minPrice, function ($queryBuilder) use ($minPrice) {
+                    $queryBuilder->where('product_price', '>=', $minPrice);
+                })
+                ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
+                    $queryBuilder->where('product_price', '<=', $maxPrice);
+                })
+                ->when($status, function ($queryBuilder) use ($status) {
+                    $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
+                })
+                ->paginate(5);
+
+            return response()->json($products);
+        }
+
+        return view('admins.adminproducts', compact('categories'));
+    }
+
+
+    public function store(Request $request)
+    {
         $validatedData = $request->validate([
             'product_name' => 'required|string|max:255',
-            'product_price' => 'required|numeric',
-            'product_stocks' => 'required|numeric',
-            'product_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required'
+            'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'product_description' => 'required|string',
+            'product_price' => 'required|numeric|min:0',
+            'product_stocks' => 'required|integer|min:0', // Validate stocks
+            'category_id' => 'required|exists:categories,id',
         ]);
 
-        // Handle the uploaded image
+
+        // Handle the image logic
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-            $imageName = $image->getClientOriginalName(); // Use the original name
-            $image->move(public_path('assets/img'), $imageName);
-            $validatedData['product_image'] = $imageName; // Store the original image name
-        } else {
-            $validatedData['product_image'] = null; // Handle the case where there's no image
+
+            // Define the destination path in the public directory
+            $destinationPath = public_path('assets/img');
+
+            // Use the original file name
+            $imageName = $image->getClientOriginalName();
+
+            // Check if the file already exists
+            if (!file_exists($destinationPath . '/' . $imageName)) {
+                // Move the file to the destination path if it does not exist
+                $image->move($destinationPath, $imageName);
+            }
+
+            // Store the filename in the database
+            $validatedData['product_image'] = $imageName;
         }
+        Log::info($validatedData);
 
-        // Save the product
-        Product::create($validatedData);
+        // Create the product
+        $product = Product::create($validatedData);
 
-        return redirect()->back()->with('success', 'Product uploaded successfully.');
+
+        // Log the audit
+        Audit::create([
+            'user_id' => Auth::id(),
+            'action' => 'created',
+            'model_type' => Product::class,
+            'model_id' => $product->id,
+            'changes' => $validatedData,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product added successfully!',
+            'product' => $product
+        ]);
     }
 
-    
-
-
-    // update inventory
-    public function update(Request $request, $id)
+    public function updateProduct(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
-        $product->product_name = $request->input('product_name');
-        $product->product_price = $request->input('product_price');
-        $product->product_stocks = $request->input('product_stocks');
-        
-        // ayusin 
-        if ($request->hasFile('product_image')) {
-            $image = $request->file('product_image');
-            $imageName = $image->getClientOriginalName(); // Use the original name
-            $image->move(public_path('assets/img'), $imageName);
-            $product['product_image'] = $imageName; // Store the original image name
-        }
+        try {
+            $product = Product::findOrFail($id);
 
-        $product->save();
-        return redirect()->route('admins.inventory')->with('success', 'Product updated successfully.');
-    }
-
-    // delete inventory
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return redirect()->route('admins.inventory')->with('success', 'Product deleted successfully.');
-    }
-
-    // search product
-    public function search(Request $request)
-    {
-        // 1) Build the query
-        $query = Product::query();
-    
-        // 2) Apply filters if `search` is present
-        if ($request->has('search')) {
-            $keyword = $request->input('search');
-            $query->whereRaw('LOWER(product_name) LIKE ?', [strtolower("{$keyword}%")]);
-        }
-        
-    
-        $results = $query->get();
-    
-        // 3) If it's an AJAX request, return JSON with the partial
-        if ($request->ajax()) {
-            $html = view('home.partials.product_grid', [
-                'products' => $results // partial expects `$products`
-            ])->render();
-    
-            return response()->json([
-                'html' => $html,
-                'error' => $results->isEmpty() ? 'No products found.' : null
+            $validatedData = $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_description' => 'nullable|string',
+                'category_id' => 'required|exists:categories,id',
+                'product_price' => 'required|numeric|min:0',
+                'product_stocks' => 'required|integer|min:0',
+                'product_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
-        }
-    
-        // 4) Otherwise, return a full view for non-AJAX usage
-        return view('home.shop', [
-            'products' => $results
-        ]);
-    }
-    
 
+            // Update product image if provided
+            if ($request->hasFile('product_image')) {
+                $imagePath = $request->file('product_image')->store('product_images', 'public');
+                $validatedData['product_image'] = "/storage/" . $imagePath;
+            }
+
+
+            $oldValues = $product->getOriginal();
+            $product->update($validatedData);
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'updated a product',
+                'model_type' => Product::class,
+                'model_id' => $product->id,
+                'old_values' => $oldValues,
+                'changes' => $validatedData,
+            ]);
+
+
+            return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to update product.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteProduct($id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $oldValues = $product->toArray();
+            $product->delete();
+
+              // Log the audit
+        Audit::create([
+            'user_id' => Auth::id(),
+            'action' => 'delete',
+            'model_type' => Product::class,
+            'model_id' => $id,
+            'old_values' => $oldValues,
+        ]);
+
+            return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete product.'], 500);
+        }
+    }
+
+    public function getAllCategories()
+    {
+        return response()->json(Category::all());
+    }
 }

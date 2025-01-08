@@ -77,19 +77,22 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     ->prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admins.index');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('admins.logout');
+        Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
         Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
-        // Add any more admin/staff specific routes here
-        // Route::get('/manage-products', [ProductController::class, 'manageProducts'])->name('admins.manageProducts');
-        // Route::get('/manage-users', [UserController::class, 'manageUsers'])->name('admins.manageUsers');
-        // Add other admin routes as needed
-
-        Route::get('/products', [AdminController::class, 'adminproducts'])->name('admins.adminproducts');
-        Route::post('/store-products', [AdminController::class, 'store']);
        
-        Route::get('/categories', [AdminController::class, 'admincategories'])->name('admins.admincategories');
-        Route::post('/store-categories', [AdminController::class, 'storeCategory'])->name('categories.store');
+        Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
+        Route::post('/store-products', [productController::class, 'store']);
+        Route::post('/update-product/{id}', [productController::class, 'updateProduct'])->name('admin.update-product');
+        Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
+        Route::get('/all-categories', [productController::class, 'getAllCategories']);
+
+
+       
+        Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
+        Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
+        Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
+        Route::post('update-category/{id}', [categoryController::class, 'update']);
 
        
        
@@ -108,6 +111,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             $products = Product::with('category')->get(); // Fetch all products with categories
             return view('admins.export-products', compact('products'));
         })->name('products.export');
+
+        Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
+
     });
 
 // Public Routes (accessible by all)

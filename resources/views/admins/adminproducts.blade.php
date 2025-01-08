@@ -4,9 +4,17 @@
 @include('admins.adminheader', ['activePage' => 'products'])
 <div class="dashboard-wrapper">
     <div class="container-fluid  dashboard-content">
+
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
+                    @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+
                     <h3 class="mb-2">Products</h3>
 
                     <div class="page-breadcrumb">
@@ -114,8 +122,8 @@
                             <i class="fa fa-plus-circle"></i> Add Product
                         </button>
 
-                         <!-- ADD MODAL -->
-                         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                        <!-- ADD MODAL -->
+                        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -132,7 +140,7 @@
                                                 <label for="addImage">Product Image</label>
                                                 <input type="file" class="form-control" id="addImage" accept="image/*">
                                                 <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-            
+
                                             </div>
 
                                             <!-- Product Name -->
@@ -213,76 +221,86 @@
                                     <!-- DYNAMIC PRODUCTS SECTION -->
                                 </tbody>
                             </table>
-                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                            <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-
                                         <div class="modal-body">
-                                            <form id="editForm">
-                                                <input type="hidden" id="editId"> <!-- Store Product ID -->
-
-                                                <!-- Store Current Image Path -->
-                                                <input type="hidden" id="editCurrentImage" name="editCurrentImage">
+                                            <form id="editProductForm" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" id="editProductId" name="id">
 
                                                 <div class="form-group">
-                                                    <label for="editImage">Product Image</label>
-                                                    <input type="file" class="form-control" id="editImage" accept="image/*">
-                                                    <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                    <div class="mt-3">
-                                                    <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                    </div>
+                                                    <label for="editProductName">Product Name</label>
+                                                    <input type="text" class="form-control" id="editProductName" name="product_name" required>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editName">Product Name</label>
-                                                    <input type="text" class="form-control" id="editName" placeholder="Enter product name">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="editDescription">Product Description</label>
-                                                    <textarea class="form-control" id="editDescription" rows="5" placeholder="Enter product description"></textarea>
+                                                    <label for="editProductDescription">Product Description</label>
+                                                    <textarea class="form-control" id="editProductDescription" name="product_description" rows="4"></textarea>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editCategory">Category</label>
-                                                    <select class="form-control" id="editCategory">
-                                                        <option value="1">Biscuits</option>
-                                                        <option value="2">Drinks</option>
-                                                        <option value="3">School Supplies</option>
+                                                    <select class="form-control" id="editCategory" name="category_id" required>
+                                                        <!-- Dynamically populate categories here -->
                                                     </select>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editPrice">Price</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">₱</span>
-                                                        <input type="number" class="form-control" id="editPrice" placeholder="Enter price" min="0" step="0.01">
-                                                    </div>
+                                                    <label for="editProductPrice">Price</label>
+                                                    <input type="number" class="form-control" id="editProductPrice" name="product_price" required min="0" step="0.01">
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="editStatus">Status</label>
-                                                    <select class="form-control" id="editStatus">
-                                                        <option value="active">Active</option>
-                                                        <option value="inactive">Inactive</option>
-                                                    </select>
+                                                    <label for="editProductStocks">Stocks</label>
+                                                    <input type="number" class="form-control" id="editProductStocks" name="product_stocks" required min="0">
                                                 </div>
+
+                                                <div class="form-group">
+                                                    <label for="editProductImage">Product Image</label>
+                                                    <input type="file" class="form-control" id="editProductImage" name="product_image" accept="image/*">
+                                                    <img id="currentImagePreview" src="" alt="Current Image" style="max-width: 100px; display: none;">
+                                                </div>
+
+
                                             </form>
-                                        </div>
 
+                                        </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" onclick="updateProduct()">Save Changes</button>
+                                            <button type="button" id="editProductBtn" class="btn btn-primary">save</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- modal -->
+                              <!-- ARCHIVE MODAL -->
+                              <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
+                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to archive this item? This action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-danger">Archive</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -294,5 +312,7 @@
 <script>
     const baseURL = "{{ asset('assets/img/') }}";
 </script>
+<script src="{{ asset('assets/js/product.js')  }}?v={{ time() }}"></script>
+
 @endsection
 @endsection

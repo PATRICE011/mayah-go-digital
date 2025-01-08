@@ -260,5 +260,7 @@
         </div>
     </div>
 </div>
-
+@section('script')
+<script src="{{ asset('assets/js/administrator.js')  }}?v={{ time() }}"></script>
+@endsection
 @endsection

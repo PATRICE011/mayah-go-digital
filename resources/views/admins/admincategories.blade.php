@@ -35,7 +35,7 @@
                             <input type="text" id="searchCategory" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2">
+                        <button class="btn btn-sm btn-outline-danger mr-2" id="exportCategoryBtn">
                             <i class="fa fa-file-export"></i> Export
                         </button>
 
@@ -114,45 +114,36 @@
 
                                 </tbody>
 
-                                <!-- EDIT MODAL -->
-                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="editModalLabel">Edit Categories</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-
-                                            <div class="modal-body">
-                                                <form id="editForm">
+                                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form id="editForm">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label for="editCategoryImage">Product Image</label>
-                                                        <input type="file" class="form-control" id="editCategoryImage" accept="image/*">
-                                                        <small class="form-text text-muted">Choose an image file to upload (e.g., JPG, PNG).</small>
-
-                                                        <div class="mt-3">
-                                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                                        </div>
+                                                        <label for="editCategoryName">Category Name</label>
+                                                        <input type="text" class="form-control" id="editCategoryName" name="category_name" required>
                                                     </div>
-
                                                     <div class="form-group">
-                                                        <label for="editCategory">Category</label>
-                                                        <select class="form-control" id="editCategory">
-                                                            <option value="">Biscuits</option>
-                                                            <option value="">Drinks</option>
-                                                            <option value="">School Supplies</option>
-                                                        </select>
+                                                        <label for="editImage">Category Image</label>
+                                                        <input type="file" class="form-control" id="editImage" name="category_image" accept="image/*">
+                                                        <img id="editImagePreview" src="" alt="Preview" class="mt-2" style="display: none; max-height: 100px;">
                                                     </div>
-                                                </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
+
                                 <!-- ARCHIVE MODAL -->
                                 <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -173,6 +164,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </table>
                         </div>
                     </div>
@@ -183,6 +175,7 @@
     </div>
 </div>
 @section('scripts')
-<script src="category.js"></script>
+
+<script src="{{ asset('assets/js/category.js')  }}?v={{ time() }}"></script>
 @endsection
 @endsection

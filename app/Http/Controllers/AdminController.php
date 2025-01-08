@@ -10,6 +10,11 @@ use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Audit;
+use App\Models\User;
+
+
 class AdminController extends Controller
 {
 
@@ -172,161 +177,68 @@ class AdminController extends Controller
         ));
     }
 
-    public function adminproducts()
+
+    public function adminadministrators()
     {
-        $categories = Category::all();
-
-        if (request()->ajax()) {
-            $query = request('query', ''); // Search term
-            $categorySlug = request('category', ''); // Selected category slug
-            $minPrice = request('minPrice', 0); // Minimum price filter
-            $maxPrice = request('maxPrice', null); // Maximum price filter
-            $status = request('status', ''); // Active/Inactive filter
-
-            $products = Product::with('category')
-                ->when($query, function ($queryBuilder) use ($query) {
-                    $queryBuilder->where('product_name', 'like', "%$query%");
-                })
-                ->when($categorySlug, function ($queryBuilder) use ($categorySlug) {
-                    $queryBuilder->whereHas('category', function ($categoryQuery) use ($categorySlug) {
-                        $categoryQuery->where('slug', $categorySlug); // Match category slug
-                    });
-                })
-                ->when($minPrice, function ($queryBuilder) use ($minPrice) {
-                    $queryBuilder->where('product_price', '>=', $minPrice);
-                })
-                ->when($maxPrice, function ($queryBuilder) use ($maxPrice) {
-                    $queryBuilder->where('product_price', '<=', $maxPrice);
-                })
-                ->when($status, function ($queryBuilder) use ($status) {
-                    $queryBuilder->where('product_stocks', $status === 'active' ? '>' : '=', 0);
-                })
-                ->paginate(5);
-
-            return response()->json($products);
-        }
-
-        return view('admins.adminproducts', compact('categories'));
+        return view("admins.adminadministrators");
     }
 
 
-    public function store(Request $request)
+    public function adminaudit(Request $request)
     {
-        $validatedData = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'product_description' => 'required|string',
-            'product_price' => 'required|numeric|min:0',
-            'product_stocks' => 'required|integer|min:0', // Validate stocks
-            'category_id' => 'required|exists:categories,id',
-        ]);
+        $query = Audit::query();
 
-        // Handle the image logic
-        if ($request->hasFile('product_image')) {
-            $image = $request->file('product_image');
-
-            // Define the destination path in the public directory
-            $destinationPath = public_path('assets/img');
-
-            // Use the original file name
-            $imageName = $image->getClientOriginalName();
-
-            // Check if the file already exists
-            if (!file_exists($destinationPath . '/' . $imageName)) {
-                // Move the file to the destination path if it does not exist
-                $image->move($destinationPath, $imageName);
-            }
-
-            // Store the filename in the database
-            $validatedData['product_image'] = $imageName;
+        // Apply filters
+        if ($request->filled('name')) {
+            // Filter by user name
+            $query->whereHas('user', function ($userQuery) use ($request) {
+                $userQuery->where('name', 'like', '%' . $request->name . '%');
+            });
         }
-        Log::info($validatedData);
 
-        // Create the product
-        $product = Product::create($validatedData);
+        if ($request->filled('role')) {
+            // Filter by role ID (restricted to admin and staff only)
+            $query->whereHas('user', function ($userQuery) use ($request) {
+                $userQuery->whereIn('role_id', [1, 2]) // Restrict to admin and staff
+                    ->where('role_id', $request->role);
+            });
+        } else {
+            // Default restriction to admin and staff roles
+            $query->whereHas('user', function ($userQuery) {
+                $userQuery->whereIn('role_id', [1, 2]);
+            });
+        }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Product added successfully!',
-            'product' => $product
-        ]);
+        if ($request->filled('date')) {
+            // Filter by specific date
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Sort by latest (descending order)
+        $query->orderBy('created_at', 'desc');
+
+        // Retrieve audits with associated user and role data, paginated by 6
+        $audits = $query->with(['user.role'])->paginate(6);
+
+        // Preserve filters in pagination links
+        $audits->appends($request->all());
+
+        return view('admins.adminaudit', compact('audits'));
     }
 
 
-    public function admincategories(Request $request)
+    public function admincustomers()
     {
-        if ($request->ajax()) {
-            $query = Category::query();
-
-            // Apply search filter if there's a search term
-            if ($request->has('search') && !empty($request->search)) {
-                $query->where('category_name', 'like', '%' . $request->search . '%');
-            }
-
-            $categories = $query->paginate(5);
-
-            return response()->json([
-                'data' => $categories->items(), // Paginated category data
-                'current_page' => $categories->currentPage(),
-                'last_page' => $categories->lastPage(),
-                'per_page' => $categories->perPage(),
-                'total' => $categories->total(),
-            ]);
-        }
-
-        return view("admins.admincategories");
+        return view("admins.admincustomers");
     }
 
-    public function storeCategory(Request $request)
+    public function adminemployee()
     {
-        $request->validate([
-            'category_name' => 'required|unique:categories,category_name|max:255',
-            'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
-
-        DB::beginTransaction(); // ✅ Start Transaction
-
-        try {
-            $imageName = null;
-
-            // Handle Image Upload
-            if ($request->hasFile('category_image')) {
-                $image = $request->file('category_image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('assets/img/'), $imageName);
-            }
-
-            // ✅ Insert data using DB instead of Eloquent
-            $categoryId = DB::table('categories')->insertGetId([
-                'category_name' => $request->category_name,
-                'category_image' => $imageName,
-                'slug' => Str::slug($request->category_name),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-
-            DB::commit(); // ✅ Commit Transaction
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Category added successfully!',
-                'category' => [
-                    'id' => $categoryId,
-                    'category_name' => $request->category_name,
-                    'category_image' => $imageName,
-                    'slug' => Str::slug($request->category_name)
-                ]
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to add category.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return view("admins.adminemployee");
     }
+
+
+
 
     public function adminstocks()
     {
@@ -348,26 +260,6 @@ class AdminController extends Controller
         return view("admins.adminrefund");
     }
 
-    public function adminadministrators()
-    {
-        return view("admins.adminadministrators");
-    }
-
-    public function admincustomers()
-    {
-        return view("admins.admincustomers");
-    }
-
-    public function adminemployee()
-    {
-        return view("admins.adminemployee");
-    }
-
-    public function adminaudit()
-    {
-        return view("admins.adminaudit");
-    }
-
     public function adminsalesreport()
     {
         return view("admins.adminsalesreport");
@@ -377,9 +269,6 @@ class AdminController extends Controller
     {
         return view("admins.adminproductsreport");
     }
-
-
-
 
     public function logout(Request $request)
     {
