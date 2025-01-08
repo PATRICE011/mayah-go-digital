@@ -123,10 +123,13 @@
 
                         <!-- Pagination Links -->
                         <div class="card-footer">
-                            <nav aria-label="Audit Trail Pagination">
-                                {{ $audits->links('pagination::bootstrap-4') }}
-                            </nav>
+                            <div class="d-flex justify-content-end">
+                                <nav aria-label="Audit Trail Pagination">
+                                    {{ $audits->links('pagination::bootstrap-4') }}
+                                </nav>
+                            </div>
                         </div>
+
 
                     </div>
                 </div>
