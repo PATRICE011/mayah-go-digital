@@ -58,26 +58,52 @@
         </div>
 
         <div class="tab__items">
+            @php
+            // Fetch products with the highest total sales value
+            $highestTotalSalesProducts = DB::table('products')
+            ->join('order_items', 'products.id', '=', 'order_items.product_id') // Join order_items to calculate sales
+            ->join('categories', 'products.category_id', '=', 'categories.id') // Join categories for product categories
+            ->select(
+            'products.id',
+            'products.product_name',
+            'products.product_image',
+            'products.product_price',
+            'products.product_stocks',
+            'categories.category_name',
+            DB::raw('SUM(order_items.quantity * order_items.price) as total_sales_value') // Calculate total sales value
+            )
+            ->where('products.product_stocks', '>', 0) // Exclude products with zero stock
+            ->groupBy(
+            'products.id',
+            'products.product_name',
+            'products.product_image',
+            'products.product_price',
+            'products.product_stocks',
+            'categories.category_name'
+            )
+            ->orderBy('total_sales_value', 'DESC') // Sort by highest total sales value
+            ->limit(10) // Limit to top 10 products
+            ->get();
+            @endphp
+            <!-- ========= fetch products with the highest total sales value ========= -->
             <div class="tab__item active-tab" content id="featured">
                 <div class="products__container grid">
-                    @foreach ($products as $product)
+                    @foreach ($highestTotalSalesProducts as $product)
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{url('/details', $product->id)}}" class="product__images">
+                            <a href="{{ url('/details', $product->id) }}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
-
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
+                                <a href="{{ url('/details', $product->id) }}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
 
                                 @auth
                                 <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
@@ -91,7 +117,6 @@
                                     <i class='bx bx-heart'></i>
                                 </a>
                                 @endauth
-
                             </div>
                         </div>
 
@@ -101,7 +126,7 @@
                             <span class="product__category">{{ $product->category_name }}</span>
 
                             <!-- Product Title -->
-                            <a href="{{ url('/product/' . $product->id) }}">
+                            <a href="{{ url('/details', $product->id) }}">
                                 <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
@@ -122,45 +147,70 @@
 
                                 <button
                                     type="submit"
-                                    class="action__btn cart__btn">
+                                    class="action__btn cart__btn"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
                             @else
-                            <!-- Redirect unauthenticated users to login -->
                             <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                                 <i class="bx bx-cart-alt"></i>
                             </a>
                             @endauth
-
                         </div>
                     </div>
                     @endforeach
-
-
                 </div>
             </div>
+
+
+            @php
+            // Fetch products sorted by most sales
+            $popularProducts = DB::table('products')
+            ->join('order_items', 'products.id', '=', 'order_items.product_id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select(
+            'products.id',
+            'products.product_name',
+            'products.product_image',
+            'products.product_price',
+            'products.product_stocks',
+            'categories.category_name',
+            DB::raw('SUM(order_items.quantity) as total_sales') // Calculate total sales for each product
+            )
+            ->where('products.product_stocks', '>', 0) // Exclude products with zero stock
+            ->groupBy(
+            'products.id',
+            'products.product_name',
+            'products.product_image',
+            'products.product_price',
+            'products.product_stocks',
+            'categories.category_name'
+            )
+            ->orderBy('total_sales', 'DESC') // Sort by most sales
+            ->limit(10) // Limit to top 10 popular products
+            ->get();
+            @endphp
 
             <div class="tab__item" content id="popular">
                 <div class="products__container grid">
-                    @foreach ($products as $product)
+                    @foreach ($popularProducts as $product)
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{url('/details', $product->id)}}" class="product__images">
+                            <a href="{{ url('/details', $product->id) }}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
-
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
+                                <a href="{{ url('/details', $product->id) }}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
 
                                 @auth
                                 <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
@@ -174,7 +224,6 @@
                                     <i class='bx bx-heart'></i>
                                 </a>
                                 @endauth
-
                             </div>
                         </div>
 
@@ -184,7 +233,7 @@
                             <span class="product__category">{{ $product->category_name }}</span>
 
                             <!-- Product Title -->
-                            <a href="{{ url('/product/' . $product->id) }}">
+                            <a href="{{ url('/details', $product->id) }}">
                                 <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
@@ -194,7 +243,6 @@
                             </div>
 
                             <!-- Add to Cart -->
-                            <!-- Add to Cart Button -->
                             @auth
                             <form
                                 id="add-to-cart-form-{{ $product->id }}"
@@ -206,45 +254,61 @@
 
                                 <button
                                     type="submit"
-                                    class="action__btn cart__btn">
+                                    class="action__btn cart__btn"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
                             @else
-                            <!-- Redirect unauthenticated users to login -->
                             <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                                 <i class="bx bx-cart-alt"></i>
                             </a>
                             @endauth
-
                         </div>
                     </div>
                     @endforeach
-
-
                 </div>
             </div>
+
+
+            @php
+            // Fetch newly added products sorted by creation date
+            $newAddedProducts = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select(
+            'products.id',
+            'products.product_name',
+            'products.product_image',
+            'products.product_price',
+            'products.product_stocks',
+            'products.created_at',
+            'categories.category_name'
+            )
+            ->where('products.product_stocks', '>', 0) // Exclude out-of-stock products
+            ->orderBy('products.created_at', 'DESC') // Sort by newly added
+            ->limit(10) // Limit to the 10 most recent products
+            ->get();
+            @endphp
 
             <div class="tab__item" content id="new-added">
                 <div class="products__container grid">
-                    @foreach ($products as $product)
+                    @foreach ($newAddedProducts as $product)
                     <div class="product__item">
                         <!-- Product Banner -->
                         <div class="product__banner">
-                            <a href="{{url('/details', $product->id)}}" class="product__images">
+                            <a href="{{ url('/details', $product->id) }}" class="product__images">
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img default">
-
                                 <img src="{{ asset('assets/img/' . $product->product_image) }}"
                                     alt="{{ $product->product_name }}" class="product__img hover">
                             </a>
 
                             <!-- Product Actions -->
                             <div class="product__actions">
-                                <a href="{{url('/details', $product->id)}}" class="action__btn" aria-label="Quick View">
+                                <a href="{{ url('/details', $product->id) }}" class="action__btn" aria-label="Quick View">
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
-
 
                                 @auth
                                 <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
@@ -258,10 +322,7 @@
                                     <i class='bx bx-heart'></i>
                                 </a>
                                 @endauth
-
                             </div>
-
-
                         </div>
 
                         <!-- Product Content -->
@@ -270,7 +331,7 @@
                             <span class="product__category">{{ $product->category_name }}</span>
 
                             <!-- Product Title -->
-                            <a href="{{url('/details', $product->id)}}">
+                            <a href="{{ url('/details', $product->id) }}">
                                 <h3 class="product__title">{{ $product->product_name }}</h3>
                             </a>
 
@@ -291,7 +352,9 @@
 
                                 <button
                                     type="submit"
-                                    class="action__btn cart__btn">
+                                    class="action__btn cart__btn"
+                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}
+                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
@@ -304,10 +367,9 @@
                         </div>
                     </div>
                     @endforeach
-
-
                 </div>
             </div>
+
         </div>
     </section>
 
