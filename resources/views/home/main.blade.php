@@ -119,19 +119,20 @@
                                 class="d-inline">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $product->id }}">
+
                                 <button
-                                    type="button"
-                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
-                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
-                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    type="submit"
+                                    class="action__btn cart__btn">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
                             @else
-                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                            <!-- Redirect unauthenticated users to login -->
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                                 <i class="bx bx-cart-alt"></i>
                             </a>
                             @endauth
+
                         </div>
                     </div>
                     @endforeach
@@ -193,6 +194,7 @@
                             </div>
 
                             <!-- Add to Cart -->
+                            <!-- Add to Cart Button -->
                             @auth
                             <form
                                 id="add-to-cart-form-{{ $product->id }}"
@@ -201,19 +203,20 @@
                                 class="d-inline">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $product->id }}">
+
                                 <button
-                                    type="button"
-                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
-                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
-                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    type="submit"
+                                    class="action__btn cart__btn">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
                             @else
-                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                            <!-- Redirect unauthenticated users to login -->
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                                 <i class="bx bx-cart-alt"></i>
                             </a>
                             @endauth
+
                         </div>
                     </div>
                     @endforeach
@@ -283,16 +286,16 @@
                                 class="d-inline">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $product->id }}">
+
                                 <button
-                                    type="button"
-                                    class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
-                                    aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
-                                    {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                    type="submit"
+                                    class="action__btn cart__btn">
                                     <i class="bx bx-cart-alt"></i>
                                 </button>
                             </form>
                             @else
-                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                            <!-- Redirect unauthenticated users to login -->
+                            <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                                 <i class="bx bx-cart-alt"></i>
                             </a>
                             @endauth
@@ -448,6 +451,7 @@
 
                         </div>
 
+                        <!-- Add to Cart Button -->
                         @auth
                         <form
                             id="add-to-cart-form-{{ $product->id }}"
@@ -456,19 +460,20 @@
                             class="d-inline">
                             @csrf
                             <input type="hidden" name="id" value="{{ $product->id }}">
+
                             <button
-                                type="button"
-                                class="action__btn cart__btn" {{ $product->product_stocks == 0 ? 'disabled' : '' }}"
-                                aria-disabled="{{ $product->product_stocks == 0 ? 'true' : 'false' }}"
-                                {{ $product->product_stocks == 0 ? 'disabled' : '' }}>
+                                type="submit"
+                                class="action__btn cart__btn">
                                 <i class="bx bx-cart-alt"></i>
                             </button>
                         </form>
                         @else
-                        <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add To Wishlist">
+                        <!-- Redirect unauthenticated users to login -->
+                        <a href="{{ route('login') }}" class="action__btn cart__btn" aria-label="Add to Cart">
                             <i class="bx bx-cart-alt"></i>
                         </a>
                         @endauth
+
                     </div>
                 </div>
                 @endforeach

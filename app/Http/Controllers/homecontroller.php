@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+
+    // FOR GUEST
     public function index(Request $request)
     {
         Auth::logout(); // Log out the user
@@ -43,15 +45,24 @@ class HomeController extends Controller
             ->get();
         // Fetch categories directly
         $categories = DB::table('categories')
-            ->select('category_name', 'slug', 'category_image')
+            ->leftJoin('products', 'categories.id', '=', 'products.category_id') // Include categories without products
+            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id') // Include products without sales
+            ->select(
+                'categories.id',
+                'categories.category_name',
+                'categories.category_image',
+                'categories.slug',
+                DB::raw('COALESCE(SUM(order_items.quantity), 0) as popularity') // Use COALESCE to handle null values
+            )
+            ->groupBy('categories.id', 'categories.category_name', 'categories.category_image', 'categories.slug')
+            ->orderBy('popularity', 'DESC') // Sort by popularity
             ->get();
-
 
         return view('home.index', compact('categories', 'cartCount', 'wishlistCount', 'products'));
     }
 
 
-    // ==== AUTHENTICATED ROUTE =====
+    // ==== AUTHENTICATED  =====
     public function home()
     {
 
@@ -83,7 +94,17 @@ class HomeController extends Controller
             ->get();
         // Fetch categories directly
         $categories = DB::table('categories')
-            ->select('category_name', 'slug', 'category_image')
+            ->leftJoin('products', 'categories.id', '=', 'products.category_id') // Include categories without products
+            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id') // Include products without sales
+            ->select(
+                'categories.id',
+                'categories.category_name',
+                'categories.category_image',
+                'categories.slug',
+                DB::raw('COALESCE(SUM(order_items.quantity), 0) as popularity') // Use COALESCE to handle null values
+            )
+            ->groupBy('categories.id', 'categories.category_name', 'categories.category_image', 'categories.slug')
+            ->orderBy('popularity', 'DESC') // Sort by popularity
             ->get();
 
 
