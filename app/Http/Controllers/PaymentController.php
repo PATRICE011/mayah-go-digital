@@ -24,7 +24,7 @@ class PaymentController extends Controller
         $orderId = Session::get('order_id');
 
         if (!$sessionId || !$orderId) {
-            return redirect()->route('/cart')->with('error', 'Session or Order not found.');
+            return redirect('/user/myaccount')->with('error', 'Session or Order not found.');
         }
 
         // Fetch session details from PayMongo API
@@ -111,11 +111,11 @@ class PaymentController extends Controller
                 // Redirect the user to the orders page
                 return redirect('/user/myaccount')->with('message', 'Order placed successfully.');
             } else {
-                return redirect('/post-error')->with('error', 'No matching pending order found.');
+                return redirect('/user')->with('error', 'No matching pending order found.');
             }
         } else {
             Log::error('Failed to retrieve PayMongo session details', (array)$response);
-            return redirect('/post-error')->with('error', 'Payment session retrieval failed.');
+            return redirect('/user')->with('error', 'Payment session retrieval failed.');
         }
     }
 
@@ -237,6 +237,6 @@ class PaymentController extends Controller
         // You can log or process any actions needed when payment is canceled
         // For now, we just redirect the user back to the cart or homepage
 
-        return redirect('/cart')->with('message', 'Payment was canceled.');
+        return redirect('/user')->with('message', 'Payment was canceled.');
     }
 }

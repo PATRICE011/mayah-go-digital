@@ -77,16 +77,20 @@
                     <div class="card-body">
                         <h5 class="text-muted">Growth</h5>
                         <div class="metric-value d-inline-block">
-                            <h1 class="mb-1 text-primary">+{{ number_format(abs($growthRate), 2) }}%</h1>
+                            <h1 class="mb-1 text-primary">
+                                {{ number_format($growthRate, 2) }}%
+                            </h1>
                         </div>
                         <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
                             <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
-                            <span>{{ number_format(abs($growthRate), 2) }}%</span>
+                            <span>{{ number_format($growthRate, 2) }}%</span>
                         </div>
                     </div>
                     <div id="sparkline-4"></div>
                 </div>
             </div>
+
+
         </div>
 
 

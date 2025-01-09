@@ -66,14 +66,27 @@ class AdminController extends Controller
      */
     private function calculateGrowthRate($currentOrders)
     {
+        // Get the count of orders from the previous month
         $previousOrders = DB::table('orders')
-            ->whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])
+            ->whereBetween('created_at', [
+                now()->subMonth()->startOfMonth(),
+                now()->subMonth()->endOfMonth()
+            ])
             ->count();
 
-        return $previousOrders > 0
-            ? (($currentOrders - $previousOrders) / $previousOrders) * 100
-            : 0;
+        // Debugging log
+        Log::info("Current Orders: $currentOrders, Previous Orders: $previousOrders");
+
+        if ($previousOrders == 0) {
+            return 0; // Avoid division by zero
+        }
+
+        // Calculate growth rate
+        $growthRate = (($currentOrders - $previousOrders) / $previousOrders) * 100;
+
+        return round($growthRate, 2);
     }
+
 
     /**
      * Get top-selling products.
@@ -135,7 +148,6 @@ class AdminController extends Controller
 
     public function admindashboard()
     {
-        // Metrics for the cards
         $totalCustomers = DB::table('users_area')->count();
         $totalOrders = DB::table('orders')->count();
         $totalProducts = DB::table('products')->count();
@@ -143,15 +155,12 @@ class AdminController extends Controller
         // Growth rate calculation
         $growthRate = $this->calculateGrowthRate($totalOrders);
 
-        // Top Selling Products
         $topSellingProducts = $this->getTopSellingProducts(10);
 
-        // Revenue calculations
         $todaysEarnings = $this->calculateRevenueForDate(now());
         $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
         $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
 
-        // Total sales by category
         $salesByCategory = $this->getSalesByCategory();
 
         $colors = [
@@ -159,9 +168,7 @@ class AdminController extends Controller
             'Dairy' => '#dc3545',
             'Drinks' => '#ffc107',
             'School Supplies' => '#17a2b8',
-            // Add more categories and colors if needed
         ];
-
 
         return view('admins.dashboard', compact(
             'totalCustomers',
@@ -184,7 +191,7 @@ class AdminController extends Controller
     }
 
 
-    
+
 
     // public function adminstocks()
     // {

@@ -17,11 +17,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('status');
-            $table->timestamps();
-
-
+            $table->timestampsTz(); // Ensures timestamps with timezones
             $table->foreign('user_id')->references('id')->on('users_area')->onDelete('cascade');
         });
+        
     }
 
 
