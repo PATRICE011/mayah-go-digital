@@ -95,33 +95,23 @@
                             <table class="table">
                                 <thead class="bg-light">
                                     <tr class="border-0">
-                                        <th class="border-0">Name</th>
-                                        <th class="border-0">Role</th>
-                                        <th class="border-0">Date & Time</th>
-                                        <th class="border-0">Description</th>
+                                        <th class="border-0">#</th>
+                                        <th class="border-0">Product Name</th>
+                                        <th class="border-0">Quantity</th>
+                                        <th class="border-0">Price</th>
+                                        <th class="border-0">Order Time</th>
+                                        <th class="border-0">Customer</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr>
-                                        <td>John Doe</td>
-                                        <td>Staff</td>
+                                        <td>1</td>
+                                        <td>bread Stix</td>
+                                        <td>20</td>
+                                        <td>320</td>
                                         <td>04:42 PM, 19-11-2024</td>
-                                        <td>Added kinemerut</td>
-                                    </tr>
-
-                                    <tr>
                                         <td>John Doe</td>
-                                        <td>Customer</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Logged Out</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Admin</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Added New Employee</td>
                                     </tr>
 
                                     <tr>
@@ -129,7 +119,8 @@
                                             <nav aria-label="Page navigation">
                                                 <ul class="pagination justify-content-end mb-0">
                                                     <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"> < </a>
+                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                                            < </a>
                                                     </li>
 
                                                     <li class="page-item active">

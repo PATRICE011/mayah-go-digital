@@ -188,7 +188,6 @@
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
                                         <th class="border-0">Product Name</th>
-                                        <th class="border-0">Product Id</th>
                                         <th class="border-0">Quantity</th>
                                         <th class="border-0">Price</th>
                                         <th class="border-0">Order Time</th>
@@ -200,7 +199,6 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $product->product_name }}</td>
-                                        <td>{{ $product->product_id }}</td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>₱{{ number_format($product->price, 2) }}</td>
                                         <td>{{ $product->order_time }}</td>
@@ -215,7 +213,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="7">
-                                            <a href="#" class="btn btn-outline-light float-right">View Details</a>
+                                            <a href="{{ route('admins.adminproductsreport') }}" class="btn btn-outline-light float-right">View Details</a>
                                         </td>
                                     </tr>
                                 </tfoot>

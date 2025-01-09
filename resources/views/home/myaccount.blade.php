@@ -181,7 +181,7 @@
                                 <p class="total-completed__title">Total Completed</p>
                             </div>
 
-                            <div class="stat-box">
+                            <!-- <div class="stat-box">
                                 <div class="icon icon-total-returned">
                                     <i class="ri-corner-up-left-fill"></i>
                                 </div>
@@ -197,7 +197,7 @@
                                 </div>
                                 <h4 class="wallet-balance__quantity">₱{{ number_format($user->wallet_balance, 2) }}</h4>
                                 <p class="wallet-balance__title">Wallet Balance</p>
-                            </div>
+                            </div> -->
                         </div>
 
                         <h3 class="tab__header-title">Recent Orders</h3>
