@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OtpController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
@@ -77,9 +79,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 // Admin & Staff Routes (Roles 1 & 2 - Admin, Staff)
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     ->prefix('admin')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admins.index');
+        // Route::get('/', [AdminController::class, 'index'])->name('admins.index');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
-        Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
+        Route::get('/', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
        
         Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
@@ -88,27 +90,31 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
         Route::get('/all-categories', [productController::class, 'getAllCategories']);
 
-
        
         Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
         Route::post('update-category/{id}', [categoryController::class, 'update']);
 
-        Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name('admins.adminemployee');
-        Route::post('/employees/store', [EmployeeController::class, 'store'])->name('admin.employees.store');
+        Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name("admins.adminemployee");
+        Route::post('/employees/store', [EmployeeController::class, 'store']);
         Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete']);
         Route::put('/employees/update/{id}', [EmployeeController::class, 'update']);
-        Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
+        Route::get('/employees/export', [EmployeeController::class, 'exportEmployees']);
 
+        Route::get('/customers', [CustomerController::class, 'admincustomers'])->name("admins.admincustomers");
+        Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete']);
+        Route::put('/customers/update/{id}', [CustomerController::class, 'update']);
+        Route::get('/customers/export', [CustomerController::class, 'exportEmployees']);
+       
+       
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
-        Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
-        
-        Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
+       
+        Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
         Route::get('/sales-report', [AdminController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
         Route::get('/products-report', [AdminController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
     

@@ -71,27 +71,48 @@
                 </div>
             </div>
 
-            <!-- Growth Card -->
+            <!-- Categories Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="card fixed-card">
+                    <div class="card-body">
+                        <h5 class="text-muted">Categories</h5>
+                        <div class="metric-value d-inline-block">
+                            <h1 class="mb-1 text-primary">{{ number_format($totalCategories) }}</h1>
+                        </div>
+                        <div class="metric-label d-inline-block float-right text-success">
+                            <i class="fa fa-fw fa-caret-up"></i><span>5.27%</span> <!-- Placeholder for change percentage -->
+                        </div>
+                    </div>
+                    <div id="sparkline-1"></div>
+                </div>
+            </div>
+
+            <!-- Growth Card -->
+            <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                 <div class="card fixed-card">
                     <div class="card-body">
                         <h5 class="text-muted">Growth</h5>
                         <div class="metric-value d-inline-block">
-                            <h1 class="mb-1 text-primary">+{{ number_format(abs($growthRate), 2) }}%</h1>
+                            <h1 class="mb-1 text-primary">
+                                {{ number_format($growthRate, 2) }}%
+                            </h1>
                         </div>
                         <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
                             <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
-                            <span>{{ number_format(abs($growthRate), 2) }}%</span>
+                            <span>{{ number_format($growthRate, 2) }}%</span>
                         </div>
                     </div>
                     <div id="sparkline-4"></div>
                 </div>
-            </div>
+            </div> -->
+
+
         </div>
 
 
-        <!-- LINE GRAPHS -->
+       
         <div class="row">
+             <!-- LINE GRAPHS -->
             <!-- Revenue Section -->
             <div class="col-xl-8 col-lg-12 col-md-8 col-sm-12 col-12">
                 <div class="card">
@@ -245,13 +266,26 @@
 </div>
 @section('scripts')
 <script>
+    // Prepare dynamic data for the Sales Pie Chart
     window.salesData = {
-        labels: @json($salesByCategory -> pluck('category_name')),
-        data: @json($salesByCategory -> pluck('total_sales')),
-        colors: @json(array_map(function($name) use($colors) {
-            return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
-        }, $salesByCategory -> pluck('category_name') -> toArray()))
+        labels: @json($salesByCategory->pluck('category_name')), // Category names for labels
+        data: @json($salesByCategory->pluck('total_sales')), // Total sales for each category
+        colors: @json(
+            array_map(
+                function ($name) use ($colors) {
+                    return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
+                },
+                $salesByCategory->pluck('category_name')->toArray() // Convert labels to an array
+            )
+        ),
+    };
+
+    // Prepare dynamic data for the Revenue Line Chart
+    window.revenueData = {
+        currentWeekRevenue: @json($currentWeekRevenue),
+        previousWeekRevenue: @json($previousWeekRevenue),
     };
 </script>
 @endsection
+
 @endsection

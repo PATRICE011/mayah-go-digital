@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\Audit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class categoryController extends Controller
@@ -66,6 +68,14 @@ class categoryController extends Controller
 
             DB::commit(); // ✅ Commit Transaction
 
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'Added a Category',
+                'model_type' => Category::class,
+                
+            ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Category added successfully!',
@@ -93,6 +103,15 @@ class categoryController extends Controller
             $category = Category::findOrFail($id); // Ensure the category exists
             $category->delete(); // Delete the category
 
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'Deleted a Category',
+                'model_type' => Category::class,
+                
+            ]);
+
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Category archived successfully.'
@@ -131,6 +150,15 @@ class categoryController extends Controller
 
             $category->save();
 
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'Updated a Category',
+                'model_type' => Category::class,
+                
+            ]);
+
+
             return response()->json([
                 'success' => true,
                 'message' => 'Category updated successfully.',
@@ -153,6 +181,7 @@ class categoryController extends Controller
         // Fetch categories from the database
         $categories = Category::all();
 
+        
         // Pass categories to the Blade view
         return view('admins.export-category', compact('categories'));
     }

@@ -66,14 +66,27 @@ class AdminController extends Controller
      */
     private function calculateGrowthRate($currentOrders)
     {
+        // Get the count of orders from the previous month
         $previousOrders = DB::table('orders')
-            ->whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->subMonth()->endOfMonth()])
+            ->whereBetween('created_at', [
+                now()->subMonth()->startOfMonth(),
+                now()->subMonth()->endOfMonth()
+            ])
             ->count();
 
-        return $previousOrders > 0
-            ? (($currentOrders - $previousOrders) / $previousOrders) * 100
-            : 0;
+        // Debugging log
+        Log::info("Current Orders: $currentOrders, Previous Orders: $previousOrders");
+
+        if ($previousOrders == 0) {
+            return 0; // Avoid division by zero
+        }
+
+        // Calculate growth rate
+        $growthRate = (($currentOrders - $previousOrders) / $previousOrders) * 100;
+
+        return round($growthRate, 2);
     }
+
 
     /**
      * Get top-selling products.
@@ -133,49 +146,86 @@ class AdminController extends Controller
             ->get();
     }
 
+    private function getDailyRevenueForWeek($startDate, $endDate)
+{
+    // Fetch daily revenue for the week
+    $revenues = DB::table('orders')
+        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        ->whereBetween('orders.created_at', [$startDate, $endDate])
+        ->select(
+            DB::raw('DAYOFWEEK(orders.created_at) as day'), // Day of the week (1 = Sunday, 7 = Saturday)
+            DB::raw('SUM(order_items.quantity * order_items.price) as total_revenue') // Sum of revenue
+        )
+        ->groupBy('day')
+        ->pluck('total_revenue', 'day') // Returns an associative array: [day => total_revenue]
+        ->toArray();
+
+    // Ensure all 7 days are represented with 0 revenue if missing
+    $weeklyRevenue = array_fill(1, 7, 0); // Sunday (1) to Saturday (7)
+
+    foreach ($revenues as $day => $revenue) {
+        $weeklyRevenue[$day] = $revenue;
+    }
+
+    return array_values($weeklyRevenue); // Return as an indexed array
+}
+
+
+
     public function admindashboard()
     {
-        // Metrics for the cards
         $totalCustomers = DB::table('users_area')->count();
         $totalOrders = DB::table('orders')->count();
         $totalProducts = DB::table('products')->count();
+        $totalCategories = DB::table('categories')->count();
 
         // Growth rate calculation
         $growthRate = $this->calculateGrowthRate($totalOrders);
 
-        // Top Selling Products
         $topSellingProducts = $this->getTopSellingProducts(10);
 
-        // Revenue calculations
         $todaysEarnings = $this->calculateRevenueForDate(now());
         $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
         $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
 
-        // Total sales by category
         $salesByCategory = $this->getSalesByCategory();
+
+        // Fetch daily earnings for the current and previous week
+        $currentWeekRevenue = $this->getDailyRevenueForWeek(
+            now()->startOfWeek(),
+            now()->endOfWeek()
+        );
+    
+        $previousWeekRevenue = $this->getDailyRevenueForWeek(
+            now()->subWeek()->startOfWeek(),
+            now()->subWeek()->endOfWeek()
+        );
 
         $colors = [
             'Biscuits' => '#007bff',
             'Dairy' => '#dc3545',
             'Drinks' => '#ffc107',
             'School Supplies' => '#17a2b8',
-            // Add more categories and colors if needed
         ];
-
 
         return view('admins.dashboard', compact(
             'totalCustomers',
             'totalOrders',
             'totalProducts',
+            'totalCategories',
             'growthRate',
             'topSellingProducts',
             'todaysEarnings',
             'currentWeekEarnings',
             'previousWeekEarnings',
             'salesByCategory',
-            'colors'
+            'colors',
+            'currentWeekRevenue',  // Pass current week revenue
+            'previousWeekRevenue'  // Pass previous week revenue
         ));
     }
+
+
 
 
     public function adminadministrators()
@@ -184,60 +234,12 @@ class AdminController extends Controller
     }
 
 
-    public function adminaudit(Request $request)
-    {
-        $query = Audit::query();
-
-        // Apply filters
-        if ($request->filled('name')) {
-            // Filter by user name
-            $query->whereHas('user', function ($userQuery) use ($request) {
-                $userQuery->where('name', 'like', '%' . $request->name . '%');
-            });
-        }
-
-        if ($request->filled('role')) {
-            // Filter by role ID (restricted to admin and staff only)
-            $query->whereHas('user', function ($userQuery) use ($request) {
-                $userQuery->whereIn('role_id', [1, 2]) // Restrict to admin and staff
-                    ->where('role_id', $request->role);
-            });
-        } else {
-            // Default restriction to admin and staff roles
-            $query->whereHas('user', function ($userQuery) {
-                $userQuery->whereIn('role_id', [1, 2]);
-            });
-        }
-
-        if ($request->filled('date')) {
-            // Filter by specific date
-            $query->whereDate('created_at', $request->date);
-        }
-
-        // Sort by latest (descending order)
-        $query->orderBy('created_at', 'desc');
-
-        // Retrieve audits with associated user and role data, paginated by 6
-        $audits = $query->with(['user.role'])->paginate(6);
-
-        // Preserve filters in pagination links
-        $audits->appends($request->all());
-
-        return view('admins.adminaudit', compact('audits'));
-    }
 
 
-    public function admincustomers()
-    {
-        return view("admins.admincustomers");
-    }
-
-  
-
-    public function adminstocks()
-    {
-        return view("admins.adminstocks");
-    }
+    // public function adminstocks()
+    // {
+    //     return view("admins.adminstocks");
+    // }
 
     public function adminposorders()
     {
