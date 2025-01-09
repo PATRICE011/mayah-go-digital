@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\OtpController;
-
+use App\Models\Audit;
+use App\Models\User;
 class AuthController extends Controller
 {
     // Display the registration form
@@ -39,6 +40,15 @@ class AuthController extends Controller
 
             // Get the authenticated user
             $user = Auth::user();
+
+
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'Logged In',
+                'model_type' => User::class,
+                
+            ]);
 
             // Handle role-based redirection
             $roleId = $user->role_id;
