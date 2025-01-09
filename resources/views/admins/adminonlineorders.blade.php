@@ -116,21 +116,126 @@
                                         <td>04:42 PM, 19-11-2024</td>
                                         <td>Picked Up</td>
                                         <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
-                                        </td>
-                                    </tr>
+                                            <div class="action__btn">
+                                                <!-- VIEW BUTTON -->
+                                                <button class="edit" data-toggle="modal" data-target="#orderDetailsModal">
+                                                    <i class="ri-mail-line"></i>
+                                                </button>
 
-                                    <tr>
-                                        <td>1</td>
-                                        <td>52174</td>
-                                        <td>John Doe</td>
-                                        <td>₱20.00</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>Pending</td>
-                                        <td>
-                                            <i class="ri-mail-line" style="margin-right: 0.5rem;"></i>
-                                            <i class="ri-delete-bin-line"></i>
+                                                <!-- VIEW MODAL -->
+                                                <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                <div class="mb-4">
+                                                                    <h6><strong>Order Details</strong></h6>
+                                                                    <p>Order ID: <span class="text-primary">#5660681</span></p>
+                                                                    <p>Order Date: <span class="text-secondary">09-01-2025</span></p>
+                                                                    <p>Order Status: <span class="text-warning">Pending</span></p>
+                                                                    <p>Payment Status: <span class="text-success">Paid</span></p>
+                                                                    <p>Payment Method: <span class="text-warning">Gcash</span></p>
+                                                                </div>
+
+                                                                <div class="mb-4">
+                                                                    <h6><strong>Order Summary</strong></h6>
+                                                                    <table class="table table-bordered">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Product</th>
+                                                                                <th>Price</th>
+                                                                                <th>Quantity</th>
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>Bread Stix</td>
+                                                                                <td>₱16.00</td>
+                                                                                <td>1</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td>Fita</td>
+                                                                                <td>₱10.00</td>
+                                                                                <td>1</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td>C2 Green</td>
+                                                                                <td>₱25.00</td>
+                                                                                <td>2</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td>C2 Yellow</td>
+                                                                                <td>₱25.00</td>
+                                                                                <td>1</td>
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <td colspan="2"><strong>Subtotal</strong></td>
+                                                                                <td>₱101.00</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+
+                                                                <!-- Form Section -->
+                                                                <div class="mb-4">
+                                                                    <form id="viewForm">
+                                                                        <div class="form-group mb-3">
+                                                                            <label for="viewStatus">Status</label>
+                                                                            <select class="form-control" id="viewStatus">
+                                                                                <option value="pending">Pending</option>
+                                                                                <option value="confirmed">Confirmed</option>
+                                                                                <option value="readyForPickup">Ready For Pickup</option>
+                                                                                <option value="completed">Completed</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Footer -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <!-- ARCHIVE BUTTON -->
+                                                <button class="archive" data-bs-toggle="modal" data-bs-target="#archiveModal">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </button>
+
+                                                <!-- ARCHIVE MODAL -->
+                                                <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="archiveModalLabel">Archive Item</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to archive this item? This action cannot be undone.
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn btn-danger">Archive</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
 
@@ -139,7 +244,8 @@
                                             <nav aria-label="Page navigation">
                                                 <ul class="pagination justify-content-end mb-0">
                                                     <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"> < </a>
+                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                                            < </a>
                                                     </li>
 
                                                     <li class="page-item active">

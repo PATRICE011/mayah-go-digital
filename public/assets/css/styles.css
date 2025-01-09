@@ -73,7 +73,6 @@ body{
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   font-weight: var(--weight-400);
-  -webkit-appearance: none; /* Remove default styles on Webkit browsers */
 }
 
 body{
@@ -914,6 +913,7 @@ input[type="number"] {
 
 .product__category-section input[type="checkbox"] {
   margin-right: 8px;
+
 }
 
 .product__category-section label {
