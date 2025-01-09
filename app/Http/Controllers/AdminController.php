@@ -285,10 +285,7 @@ class AdminController extends Controller
         return view("admins.adminsalesreport");
     }
 
-    public function adminproductsreport()
-    {
-        return view("admins.adminproductsreport");
-    }
+   
 
     public function logout(Request $request)
     {
