@@ -1330,39 +1330,76 @@ input[type="number"] {
 /*=============== LOGIN & REGISTER ===============*/
 .login-register__container {
   display: flex;
-  flex-direction: column; /* Stack elements vertically */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem; /* Add padding for better spacing */
+  padding: 1rem;
 }
 
-/* Style adjustments for individual forms */
-.login,
-.register {
-  width: 100%; /* Use full width for smaller screens */
-  max-width: 400px; /* Limit maximum width */
-  margin-bottom: 1.5rem; /* Add spacing between elements */
+/* Form styling */
+.login {
+  width: 100%;
+  max-width: 400px;
   border: 1px solid var(--border-color-alt);
-  padding: 1.5rem; /* Adjust padding for smaller screens */
   border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+  padding: 1.5rem;
+  background-color: var(--body-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Style for labels */
+/* Form group for stacking inputs and labels */
+.form-group {
+  margin-bottom: 1rem; /* Space between fields */
+}
+
+/* Label styling */
 .login-register__label {
+  display: block; /* Ensures labels are on top of inputs */
+  margin-bottom: 0.5rem;
   color: var(--first-color);
   font-size: var(--small-font-size);
   font-weight: var(--weight-700);
-  margin-bottom: 0.5rem; /* Add spacing for readability */
 }
 
-/* Style for links */
+/* Input field styling */
+.login-register__input {
+  width: 100%;
+  height: 45px;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  font-size: var(--small-font-size);
+}
+
+/* Button styling */
+.login-register__button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--first-color);
+  color: var(--first-color-alt);
+  border: none;
+  border-radius: 0.25rem;
+  font-size: var(--small-font-size);
+  font-weight: var(--weight-600);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-register__button:hover {
+  background-color: var(--first-color-alt);
+  color: var(--first-color);
+}
+
+/* Link styling */
 .login-register__link {
   color: var(--first-color);
   text-decoration: none;
   font-size: var(--small-font-size);
-  font-weight: var(--weight-500);
-  margin-top: 1rem; /* Add spacing above the link */
+  margin-top: 1rem;
+}
+
+.login-register__link:hover {
+  text-decoration: underline;
 }
 
 /*=============== ACCOUNTS ===============*/
@@ -2149,22 +2186,14 @@ input[type="number"] {
     flex-direction: column;
   }
 
-  .login-register__container {
-    padding: 1rem; /* Ensure proper spacing for small screens */
-  }
-
   .login,
   .register {
-    padding: 1rem; /* Reduce padding for smaller screens */
-    font-size: var(--normal-font-size);
+    padding: 1rem;
   }
 
-  .login-register__label {
-    font-size: var(--small-font-size); /* Adjust label size */
-  }
-
+  .login-register__label,
   .login-register__link {
-    font-size: var(--small-font-size); /* Adjust link size */
+    font-size: var(--tiny-font-size);
   }
 }
 
@@ -2220,9 +2249,16 @@ input[type="number"] {
     align-items: center;
   }
 
-  /* .order-details{
-    grid-template-columns: none;
-  } */
+  .login,
+  .register {
+    padding: 0.75rem;
+    width: 90%; /* Ensure it doesn't touch screen edges */
+  }
+
+  .login-register__button {
+    padding: 0.5rem;
+    font-size: var(--tiny-font-size);
+  }
 }
 
 @media screen and (max-width: 350px) {
