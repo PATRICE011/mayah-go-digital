@@ -11,8 +11,8 @@ $(document).ready(function () {
                 page,
                 per_page: perPage,
                 search: searchTerm,
-                from_date: fromDate || '',  
-                to_date: toDate || ''  
+                from_date: fromDate || '',
+                to_date: toDate || ''
             },
             dataType: "json",
             success: function (response) {
@@ -108,26 +108,25 @@ $(document).ready(function () {
         fetchSalesReport(page);
     });
 
-   
-
-    $(document).ready(function () {
-        $("#exportSalesReportBtn").on("click", function () {
-            const search = $('input[placeholder="Search..."]').val(); // Get the search term
-            const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
-                search
-            )}`;
-            window.open(exportUrl, "_blank"); // Open the export view in a new tab
-        });
-    });
-     // Handle search input
-     $('input[placeholder="Search..."]').on("input", function () {
+    // Handle search input
+    $('input[placeholder="Search..."]').on("input", function () {
         searchTerm = $(this).val().trim();
         fetchSalesReport();
     });
+
     // Handle date filters
     $("#fromDate, #toDate").on("change", function () {
         fromDate = $("#fromDate").val();
         toDate = $("#toDate").val();
         fetchSalesReport();
+    });
+
+    // Handle export button click
+    $("#exportSalesReportBtn").on("click", function () {
+        const search = $('input[placeholder="Search..."]').val(); // Get the search term
+        const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
+            search
+        )}`;
+        window.open(exportUrl, "_blank"); // Open the export view in a new tab
     });
 });

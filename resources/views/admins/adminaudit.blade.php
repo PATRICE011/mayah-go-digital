@@ -35,58 +35,8 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
-                        <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
-                        </div>
-
-                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
-
-                        <!-- Filter Modal -->
-                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="filterModalLabel">Filter Audit</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Add Filter Fields Here -->
-                                        <form id="filterForm">
-                                            <div class="form-group">
-                                                <label for="filteCategory">Name</label>
-                                                <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filterRole">Role</label>
-                                                <select class="form-control" id="filterRole">
-                                                    <option value="">All</option>
-                                                    <option value="">POS Operator</option>
-                                                    <option value="">Manager</option>
-                                                    <option value="">Staff</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filteCategory">Date</label>
-                                                <input type="date" class="form-control" id="filterDate">
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-sm btn-outline-danger mr-2">
-                            <i class="fa fa-file-export"></i> Export
+                        <button id="refreshAuditListBtn" class="btn btn-sm btn-primary mr-2">
+                            <i class="fa fa-sync-alt"></i> Refresh List
                         </button>
                     </div>
 
@@ -125,8 +75,27 @@
                         <div class="card-footer">
                             <div class="d-flex justify-content-end">
                                 <nav aria-label="Audit Trail Pagination">
-                                    {{ $audits->links('pagination::bootstrap-4') }}
+                                    <ul class="pagination justify-content-end">
+                                        @if ($audits->onFirstPage())
+                                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                                        @else
+                                        <li class="page-item"><a class="page-link" href="{{ $audits->previousPageUrl() }}">&laquo;</a></li>
+                                        @endif
+
+                                        @foreach ($audits->getUrlRange(1, $audits->lastPage()) as $page => $url)
+                                        <li class="page-item {{ $audits->currentPage() == $page ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                        </li>
+                                        @endforeach
+
+                                        @if ($audits->hasMorePages())
+                                        <li class="page-item"><a class="page-link" href="{{ $audits->nextPageUrl() }}">&raquo;</a></li>
+                                        @else
+                                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                                        @endif
+                                    </ul>
                                 </nav>
+
                             </div>
                         </div>
 
@@ -137,4 +106,9 @@
         </div>
     </div>
 </div>
+
+@section('scripts')
+
+<script src="{{ asset('assets/js/audit.js')  }}?v={{ time() }}"></script>
+@endsection
 @endsection
