@@ -15,11 +15,9 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
 
+        // Define time ranges for previous and current weeks
         $currentWeekStart = now()->startOfWeek();
-        $currentWeekEnd = now()->endOfWeek();
-
         $previousWeekStart = now()->subWeek()->startOfWeek();
-        $previousWeekEnd = now()->subWeek()->endOfWeek();
 
         $categories = [
             [
@@ -34,39 +32,11 @@ class ProductSeeder extends Seeder
                 'category_name' => 'Drinks',
                 'slug' => Str::slug('Drinks'),
             ],
-            [
-                'id' => 3,
-                'category_image' => 'BISCUITS-1.png',
-                'category_name' => 'Confectionery',
-                'slug' => Str::slug('Confectionery'),
-            ],
-            [
-                'id' => 4,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Soft Beverages',
-                'slug' => Str::slug('Soft Beverages'),
-            ],
-            [
-                'id' => 5,
-                'category_image' => 'BISCUITS-1.png',
-                'category_name' => 'Cookies',
-                'slug' => Str::slug('Cookies'),
-            ],
-            [
-                'id' => 6,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Energy Drinks',
-                'slug' => Str::slug('Energy Drinks'),
-            ],
-            [
-                'id' => 7,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Sample Drinks',
-                'slug' => Str::slug('Sample Drinks'),
-            ],
+
         ];
         DB::table('categories')->insert($categories);
 
+        // Products data
         $products = [
             [
                 'product_name' => 'Bread Stix',
@@ -115,20 +85,16 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        // Insert products with timestamps for the previous week
-        foreach ($products as $key => $product) {
-            DB::table('products')->insert(array_merge($product, [
-                'created_at' => $previousWeekStart->copy()->addDays(rand(0, 6)), // Random day in previous week
-                'updated_at' => $previousWeekStart->copy()->addDays(rand(0, 6)),
-            ]));
-        }
+         // Assign random timestamps for the products
+         foreach ($products as $product) {
+            // Randomly assign either the current week or the previous week
+            $randomTimestamp = rand(0, 1)
+                ? $currentWeekStart->copy()->addDays(rand(0, 6)) // Random day in current week
+                : $previousWeekStart->copy()->addDays(rand(0, 6)); // Random day in previous week
 
-        // Insert products with timestamps for the current week
-        foreach ($products as $key => $product) {
             DB::table('products')->insert(array_merge($product, [
-                'product_name' => $product['product_name'] . ' (Current Week)', // Add a label for current week
-                'created_at' => $currentWeekStart->copy()->addDays(rand(0, 6)), // Random day in current week
-                'updated_at' => $currentWeekStart->copy()->addDays(rand(0, 6)),
+                'created_at' => $randomTimestamp,
+                'updated_at' => $randomTimestamp,
             ]));
         }
     }
