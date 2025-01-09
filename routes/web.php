@@ -13,6 +13,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductReportController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\UpdateProfileController;
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
@@ -107,7 +109,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::put('/customers/update/{id}', [CustomerController::class, 'update']);
         Route::get('/customers/export', [CustomerController::class, 'exportEmployees']);
        
-       
+        Route::get('/products-report', [ProductReportController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
+        Route::get('/print-product-report', [ProductReportController::class, 'printProductReport'])->name('admins.printProductReport');
+
+        Route::get('/sales-report', [SalesReportController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
+        Route::get('/export-sales-report', [SalesReportController::class, 'exportSalesReport'])->name('admins.exportSalesReport');
+
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
@@ -115,8 +122,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
        
         Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
-        Route::get('/sales-report', [AdminController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
-        Route::get('/products-report', [AdminController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
+        
+        
     
         Route::get('/products/export', function () {
             $products = Product::with('category')->get(); // Fetch all products with categories

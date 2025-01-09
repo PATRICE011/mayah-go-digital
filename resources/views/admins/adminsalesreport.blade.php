@@ -38,54 +38,14 @@
                         <div class="mr-2" style="width: 200px;">
                             <input type="text" class="form-control form-control-sm" placeholder="Search...">
                         </div>
-
-                        <button class="btn btn-sm btn-outline-warning mr-2" data-toggle="modal" data-target="#filterModal">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
-
-                        <!-- Filter Modal -->
-                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="filterModalLabel">Filter Audit</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <!-- Add Filter Fields Here -->
-                                        <form id="filterForm">
-                                            <div class="form-group">
-                                                <label for="filteCategory">Name</label>
-                                                <input type="text" class="form-control" id="filterName" placeholder="Enter name">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filterRole">Role</label>
-                                                <select class="form-control" id="filterRole">
-                                                    <option value="">All</option>
-                                                    <option value="">POS Operator</option>
-                                                    <option value="">Manager</option>
-                                                    <option value="">Staff</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label for="filteCategory">Date</label>
-                                                <input type="date" class="form-control" id="filterDate">
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
-                                    </div>
-                                </div>
-                            </div>
+                         <!-- Date Range Filter -->
+                        <div class="mr-2 d-flex align-items-center" style="width: 350px;">
+                            <input type="date" id="fromDate" class="form-control form-control-sm" style="width: 150px;" placeholder="From Date">
+                            <span class="mx-2">to</span>
+                            <input type="date" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2">
+                        <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
                         </button>
                     </div>
@@ -98,47 +58,17 @@
                                         <th class="border-0">#</th>
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Quantity</th>
-                                        <th class="border-0">Price</th>
-                                        <th class="border-0">Order Time</th>
+                                        <th class="border-0">Unit Price</th>
+                                        <th class="border-0">Amount</th>
+                                        <th class="border-0">Date</th>
                                         <th class="border-0">Customer</th>
                                     </tr>
                                 </thead>
-
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>bread Stix</td>
-                                        <td>20</td>
-                                        <td>320</td>
-                                        <td>04:42 PM, 19-11-2024</td>
-                                        <td>John Doe</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="8" class="text-right">
-                                            <nav aria-label="Page navigation">
-                                                <ul class="pagination justify-content-end mb-0">
-                                                    <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                            < </a>
-                                                    </li>
-
-                                                    <li class="page-item active">
-                                                        <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-                                                    </li>
-
-                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#"> > </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
-                                        </td>
-                                    </tr>
+                                <tbody id="salesReportBody">
+                                    <!-- Dynamic Content Here -->
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>
@@ -146,4 +76,9 @@
         </div>
     </div>
 </div>
+@section('scripts')
+
+<script src="{{ asset('assets/js/sales_report.js')  }}?v={{ time() }}"></script>
+
+@endsection
 @endsection

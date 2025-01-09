@@ -14,6 +14,11 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+
+        // Define time ranges for previous and current weeks
+        $currentWeekStart = now()->startOfWeek();
+        $previousWeekStart = now()->subWeek()->startOfWeek();
+
         $categories = [
             [
                 'id' => 1,
@@ -27,41 +32,11 @@ class ProductSeeder extends Seeder
                 'category_name' => 'Drinks',
                 'slug' => Str::slug('Drinks'),
             ],
-            [
-                'id' => 3,
-                'category_image' => 'BISCUITS-1.png',
-                'category_name' => 'Confectionery',
-                'slug' => Str::slug('Confectionery'),
-            ],
-            [
-                'id' => 4,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Soft Beverages',
-                'slug' => Str::slug('Soft Beverages'),
-            ],
-            [
-                'id' => 5,
-                'category_image' => 'BISCUITS-1.png',
-                'category_name' => 'Cookies',
-                'slug' => Str::slug('Cookies'),
-            ],
-            [
-                'id' => 6,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Energy Drinks',
-                'slug' => Str::slug('Energy Drinks'),
-            ],
-            [
-                'id' => 7,
-                'category_image' => 'DRINKS-1.png',
-                'category_name' => 'Sample Drinks',
-                'slug' => Str::slug('Sample Drinks'),
-            ],
-        ];
-        
 
+        ];
         DB::table('categories')->insert($categories);
 
+        // Products data
         $products = [
             [
                 'product_name' => 'Bread Stix',
@@ -98,7 +73,6 @@ class ProductSeeder extends Seeder
                 'category_id' => 2,
                 'product_description' => 'C2 Yellow is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
-
             ],
             [
                 'product_name' => 'C2 Red',
@@ -108,10 +82,20 @@ class ProductSeeder extends Seeder
                 'category_id' => 2,
                 'product_description' => 'C2 Red is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
-
             ],
         ];
 
-        DB::table('products')->insert($products);
+         // Assign random timestamps for the products
+         foreach ($products as $product) {
+            // Randomly assign either the current week or the previous week
+            $randomTimestamp = rand(0, 1)
+                ? $currentWeekStart->copy()->addDays(rand(0, 6)) // Random day in current week
+                : $previousWeekStart->copy()->addDays(rand(0, 6)); // Random day in previous week
+
+            DB::table('products')->insert(array_merge($product, [
+                'created_at' => $randomTimestamp,
+                'updated_at' => $randomTimestamp,
+            ]));
+        }
     }
 }

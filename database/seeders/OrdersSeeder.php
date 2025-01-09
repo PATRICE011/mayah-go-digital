@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
 class OrdersSeeder extends Seeder
 {
     /**
@@ -13,13 +13,16 @@ class OrdersSeeder extends Seeder
      */
     public function run()
     {
-        // Example user IDs from the `users_area` table
-        $userIds = DB::table('users_area')->pluck('id')->toArray();
+        // Fetch users with role_id = 2
+        $userIds = DB::table('users_area')
+            ->where('role_id', 2)
+            ->pluck('id')
+            ->toArray();
 
-        // Example product data from the `products` table
+        // Fetch product data from the `products` table
         $products = DB::table('products')->select('id', 'product_price')->get();
 
-        // Seed data for both current week and previous week
+        // Define weeks for seeding data
         $weeks = [
             'current' => [
                 'start' => now()->startOfWeek(),
@@ -39,11 +42,11 @@ class OrdersSeeder extends Seeder
             for ($day = $startOfWeek; $day <= $endOfWeek; $day->addDay()) {
                 // Create 1–3 orders for each day
                 for ($i = 1; $i <= rand(1, 3); $i++) {
-                    // Insert a new order
+                    // Insert a new order for a random user with role_id = 2
                     $orderId = DB::table('orders')->insertGetId([
-                        'user_id' => $userIds[array_rand($userIds)], // Random user
+                        'user_id' => $userIds[array_rand($userIds)], // Random user with role_id = 2
                         'status' => 'paid', // Order status
-                        'created_at' => $day->copy(), // Set created_at to the specific day
+                        'created_at' => $day->copy(), // Specific day's timestamp
                         'updated_at' => $day->copy(),
                     ]);
 
@@ -78,7 +81,7 @@ class OrdersSeeder extends Seeder
                     // Insert into orderdetails
                     DB::table('orderdetails')->insert([
                         'order_id' => $orderId,
-                        'order_id_custom' => Str::random(7), // Generate a unique 7-character order ID
+                        'order_id_custom' => str_pad(mt_rand(1, 9999999), 7, '0', STR_PAD_LEFT),
                         'payment_method' => ['gcash', 'paymaya', 'cod'][array_rand(['gcash', 'paymaya', 'cod'])], // Random payment method
                         'total_amount' => $totalAmount,
                         'created_at' => $day->copy(),

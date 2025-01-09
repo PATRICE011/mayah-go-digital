@@ -31,7 +31,7 @@
                             <h1 class="mb-1 text-primary">{{ number_format($totalCustomers) }}</h1>
                         </div>
                         <div class="metric-label d-inline-block float-right text-success">
-                            <i class="fa fa-fw fa-caret-up"></i><span>5.27%</span> <!-- Placeholder for change percentage -->
+                        <i class="fa fa-fw fa-caret-up"></i><span>{{ number_format($customerGrowth, 2) }}%</span>
                         </div>
                     </div>
                     <div id="sparkline-1"></div>
@@ -40,20 +40,20 @@
 
             <!-- Orders Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card fixed-card">
-                    <div class="card-body">
-                        <h5 class="text-muted">Orders</h5>
-                        <div class="metric-value d-inline-block">
-                            <h1 class="mb-1 text-primary">{{ number_format($totalOrders) }}</h1>
-                        </div>
-                        <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
-                            <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
-                            <span>{{ number_format(abs($growthRate), 2) }}%</span>
-                        </div>
+            <div class="card fixed-card">
+                <div class="card-body">
+                    <h5 class="text-muted">Orders</h5>
+                    <div class="metric-value d-inline-block">
+                        <h1 class="mb-1 text-primary">{{ number_format($totalOrders) }}</h1>
                     </div>
-                    <div id="sparkline-2"></div>
+                    <div class="metric-label d-inline-block float-right {{ $orderGrowth >= 0 ? 'text-success' : 'text-danger' }}">
+                        <i class="fa fa-fw fa-caret-{{ $orderGrowth >= 0 ? 'up' : 'down' }}"></i>
+                        <span>{{ number_format(abs($orderGrowth), 2) }}%</span>
+                    </div>
                 </div>
+                <div id="sparkline-2"></div>
             </div>
+        </div>
 
             <!-- Total Products Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -63,27 +63,30 @@
                         <div class="metric-value d-inline-block">
                             <h1 class="mb-1 text-primary">{{ number_format($totalProducts) }}</h1>
                         </div>
-                        <div class="metric-label d-inline-block float-right text-danger">
-                            <i class="fa fa-fw fa-caret-down"></i><span>7.00%</span> <!-- Placeholder for change percentage -->
+                        <div class="metric-label d-inline-block float-right text-{{ $productGrowth >= 0 ? 'success' : 'danger' }}">
+                            <i class="fa fa-fw fa-caret-{{ $productGrowth >= 0 ? 'up' : 'down' }}"></i><span>{{ number_format(abs($productGrowth), 2) }}%</span>
                         </div>
                     </div>
                     <div id="sparkline-3"></div>
                 </div>
             </div>
 
-            <!-- Categories Card -->
+             <!-- Growth Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                 <div class="card fixed-card">
                     <div class="card-body">
-                        <h5 class="text-muted">Categories</h5>
+                        <h5 class="text-muted">Growth</h5>
                         <div class="metric-value d-inline-block">
-                            <h1 class="mb-1 text-primary">{{ number_format($totalCategories) }}</h1>
+                            <h1 class="mb-1 text-primary">
+                                {{ number_format($growthRate, 2) }}%
+                            </h1>
                         </div>
-                        <div class="metric-label d-inline-block float-right text-success">
-                            <i class="fa fa-fw fa-caret-up"></i><span>5.27%</span> <!-- Placeholder for change percentage -->
+                        <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
+                            <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
+                            <span>{{ number_format($growthRate, 2) }}%</span>
                         </div>
                     </div>
-                    <div id="sparkline-1"></div>
+                    <div id="sparkline-4"></div>
                 </div>
             </div>
         </div>
