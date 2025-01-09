@@ -257,9 +257,6 @@ class AdminController extends Controller
         return view("admins.adminadministrators");
     }
 
-
-
-
     // public function adminstocks()
     // {
     //     return view("admins.adminstocks");
@@ -280,10 +277,7 @@ class AdminController extends Controller
         return view("admins.adminrefund");
     }
 
-    public function adminsalesreport()
-    {
-        return view("admins.adminsalesreport");
-    }
+   
 
    
 
