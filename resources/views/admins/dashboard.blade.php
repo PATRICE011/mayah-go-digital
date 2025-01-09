@@ -71,8 +71,24 @@
                 </div>
             </div>
 
-            <!-- Growth Card -->
+            <!-- Categories Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="card fixed-card">
+                    <div class="card-body">
+                        <h5 class="text-muted">Categories</h5>
+                        <div class="metric-value d-inline-block">
+                            <h1 class="mb-1 text-primary">{{ number_format($totalCategories) }}</h1>
+                        </div>
+                        <div class="metric-label d-inline-block float-right text-success">
+                            <i class="fa fa-fw fa-caret-up"></i><span>5.27%</span> <!-- Placeholder for change percentage -->
+                        </div>
+                    </div>
+                    <div id="sparkline-1"></div>
+                </div>
+            </div>
+
+            <!-- Growth Card -->
+            <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                 <div class="card fixed-card">
                     <div class="card-body">
                         <h5 class="text-muted">Growth</h5>
@@ -88,7 +104,7 @@
                     </div>
                     <div id="sparkline-4"></div>
                 </div>
-            </div>
+            </div> -->
 
 
         </div>

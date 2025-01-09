@@ -151,29 +151,31 @@ class AdminController extends Controller
         $totalCustomers = DB::table('users_area')->count();
         $totalOrders = DB::table('orders')->count();
         $totalProducts = DB::table('products')->count();
-
+        $totalCategories = DB::table('categories')->count(); // Count categories
+    
         // Growth rate calculation
         $growthRate = $this->calculateGrowthRate($totalOrders);
-
+    
         $topSellingProducts = $this->getTopSellingProducts(10);
-
+    
         $todaysEarnings = $this->calculateRevenueForDate(now());
         $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
         $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
-
+    
         $salesByCategory = $this->getSalesByCategory();
-
+    
         $colors = [
             'Biscuits' => '#007bff',
             'Dairy' => '#dc3545',
             'Drinks' => '#ffc107',
             'School Supplies' => '#17a2b8',
         ];
-
+    
         return view('admins.dashboard', compact(
             'totalCustomers',
             'totalOrders',
             'totalProducts',
+            'totalCategories', // Pass total categories
             'growthRate',
             'topSellingProducts',
             'todaysEarnings',
@@ -183,6 +185,7 @@ class AdminController extends Controller
             'colors'
         ));
     }
+    
 
 
     public function adminadministrators()
