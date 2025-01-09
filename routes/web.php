@@ -90,7 +90,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
         Route::get('/all-categories', [productController::class, 'getAllCategories']);
 
-
        
         Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
