@@ -147,72 +147,98 @@ class AdminController extends Controller
     }
 
     private function getDailyRevenueForWeek($startDate, $endDate)
-{
-    // Fetch daily revenue for the week
-    $revenues = DB::table('orders')
-        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
-        ->whereBetween('orders.created_at', [$startDate, $endDate])
-        ->select(
-            DB::raw('DAYOFWEEK(orders.created_at) as day'), // Day of the week (1 = Sunday, 7 = Saturday)
-            DB::raw('SUM(order_items.quantity * order_items.price) as total_revenue') // Sum of revenue
-        )
-        ->groupBy('day')
-        ->pluck('total_revenue', 'day') // Returns an associative array: [day => total_revenue]
-        ->toArray();
+    {
+        // Fetch daily revenue for the week
+        $revenues = DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->whereBetween('orders.created_at', [$startDate, $endDate])
+            ->select(
+                DB::raw('DAYOFWEEK(orders.created_at) as day'), // Day of the week (1 = Sunday, 7 = Saturday)
+                DB::raw('SUM(order_items.quantity * order_items.price) as total_revenue') // Sum of revenue
+            )
+            ->groupBy('day')
+            ->pluck('total_revenue', 'day') // Returns an associative array: [day => total_revenue]
+            ->toArray();
 
-    // Ensure all 7 days are represented with 0 revenue if missing
-    $weeklyRevenue = array_fill(1, 7, 0); // Sunday (1) to Saturday (7)
+        // Ensure all 7 days are represented with 0 revenue if missing
+        $weeklyRevenue = array_fill(1, 7, 0); // Sunday (1) to Saturday (7)
 
-    foreach ($revenues as $day => $revenue) {
-        $weeklyRevenue[$day] = $revenue;
+        foreach ($revenues as $day => $revenue) {
+            $weeklyRevenue[$day] = $revenue;
+        }
+
+        return array_values($weeklyRevenue); // Return as an indexed array
     }
-
-    return array_values($weeklyRevenue); // Return as an indexed array
-}
-
-
 
     public function admindashboard()
     {
+        // Fetching current totals
         $totalCustomers = DB::table('users_area')->count();
+        $totalCustomersLastWeek = DB::table('users_area')
+            ->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])
+            ->count();
+    
         $totalOrders = DB::table('orders')->count();
+        $totalOrdersLastWeek = DB::table('orders')
+            ->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])
+            ->count();
+    
         $totalProducts = DB::table('products')->count();
+        $totalProductsLastWeek = DB::table('products')
+            ->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])
+            ->count();
+    
         $totalCategories = DB::table('categories')->count();
-
-        // Growth rate calculation
-        $growthRate = $this->calculateGrowthRate($totalOrders);
-
+        $totalCategoriesLastWeek = DB::table('categories')
+            ->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])
+            ->count();
+    
+        // Calculating growth percentage for customers
+        $customerGrowth = $totalCustomersLastWeek > 0 ? 
+            (($totalCustomers - $totalCustomersLastWeek) / $totalCustomersLastWeek) * 100 : 0;
+    
+        // Calculating growth percentage for products
+        $productGrowth = $totalProductsLastWeek > 0 ?
+            (($totalProducts - $totalProductsLastWeek) / $totalProductsLastWeek) * 100 : 0;
+    
+        // Calculating growth rate for orders
+        $orderGrowth = $totalOrdersLastWeek > 0 ?
+            (($totalOrders - $totalOrdersLastWeek) / $totalOrdersLastWeek) * 100 : 0;
+    
+        // Calculating growth rate for categories
+        $categoryGrowth = $totalCategoriesLastWeek > 0 ?
+            (($totalCategories - $totalCategoriesLastWeek) / $totalCategoriesLastWeek) * 100 : 0;
+    
+        // Assuming growthRate is an overarching metric, average of individual growths
+        $growthRate = ($customerGrowth + $productGrowth + $orderGrowth + $categoryGrowth) / 4;
+    
+        // Other metrics
         $topSellingProducts = $this->getTopSellingProducts(10);
-
         $todaysEarnings = $this->calculateRevenueForDate(now());
         $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
         $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
-
         $salesByCategory = $this->getSalesByCategory();
-
-        // Fetch daily earnings for the current and previous week
-        $currentWeekRevenue = $this->getDailyRevenueForWeek(
-            now()->startOfWeek(),
-            now()->endOfWeek()
-        );
+        $currentWeekRevenue = $this->getDailyRevenueForWeek(now()->startOfWeek(), now()->endOfWeek());
+        $previousWeekRevenue = $this->getDailyRevenueForWeek(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
     
-        $previousWeekRevenue = $this->getDailyRevenueForWeek(
-            now()->subWeek()->startOfWeek(),
-            now()->subWeek()->endOfWeek()
-        );
-
+        // Colors for categories
         $colors = [
             'Biscuits' => '#007bff',
             'Dairy' => '#dc3545',
             'Drinks' => '#ffc107',
             'School Supplies' => '#17a2b8',
         ];
-
+    
+        // Passing all data to the view, including dynamic growth rates
         return view('admins.dashboard', compact(
             'totalCustomers',
             'totalOrders',
             'totalProducts',
             'totalCategories',
+            'customerGrowth',
+            'productGrowth',
+            'orderGrowth',
+            'categoryGrowth',
             'growthRate',
             'topSellingProducts',
             'todaysEarnings',
@@ -220,13 +246,11 @@ class AdminController extends Controller
             'previousWeekEarnings',
             'salesByCategory',
             'colors',
-            'currentWeekRevenue',  // Pass current week revenue
-            'previousWeekRevenue'  // Pass previous week revenue
+            'currentWeekRevenue',
+            'previousWeekRevenue'
         ));
     }
-
-
-
+    
 
     public function adminadministrators()
     {

@@ -14,6 +14,13 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $currentWeekStart = now()->startOfWeek();
+        $currentWeekEnd = now()->endOfWeek();
+
+        $previousWeekStart = now()->subWeek()->startOfWeek();
+        $previousWeekEnd = now()->subWeek()->endOfWeek();
+
         $categories = [
             [
                 'id' => 1,
@@ -58,8 +65,6 @@ class ProductSeeder extends Seeder
                 'slug' => Str::slug('Sample Drinks'),
             ],
         ];
-        
-
         DB::table('categories')->insert($categories);
 
         $products = [
@@ -98,7 +103,6 @@ class ProductSeeder extends Seeder
                 'category_id' => 2,
                 'product_description' => 'C2 Yellow is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
-
             ],
             [
                 'product_name' => 'C2 Red',
@@ -108,10 +112,24 @@ class ProductSeeder extends Seeder
                 'category_id' => 2,
                 'product_description' => 'C2 Red is a refreshing lemon iced tea, perfect for a hot day. Enjoy the refreshing taste!',
                 'cart_product_description' => 'Crunchy and baked breadsticks.',
-
             ],
         ];
 
-        DB::table('products')->insert($products);
+        // Insert products with timestamps for the previous week
+        foreach ($products as $key => $product) {
+            DB::table('products')->insert(array_merge($product, [
+                'created_at' => $previousWeekStart->copy()->addDays(rand(0, 6)), // Random day in previous week
+                'updated_at' => $previousWeekStart->copy()->addDays(rand(0, 6)),
+            ]));
+        }
+
+        // Insert products with timestamps for the current week
+        foreach ($products as $key => $product) {
+            DB::table('products')->insert(array_merge($product, [
+                'product_name' => $product['product_name'] . ' (Current Week)', // Add a label for current week
+                'created_at' => $currentWeekStart->copy()->addDays(rand(0, 6)), // Random day in current week
+                'updated_at' => $currentWeekStart->copy()->addDays(rand(0, 6)),
+            ]));
+        }
     }
 }
