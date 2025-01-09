@@ -39,8 +39,7 @@
 
 
 <body>
-    <!-- Header and Dashboard -->
-    <!-- @include('admins.adminheader') -->
+
     <div class="dashboard-main-wrapper">
         @yield('content')
     </div>

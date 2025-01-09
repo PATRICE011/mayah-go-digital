@@ -79,9 +79,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 // Admin & Staff Routes (Roles 1 & 2 - Admin, Staff)
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     ->prefix('admin')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admins.index');
+        // Route::get('/', [AdminController::class, 'index'])->name('admins.index');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
-        Route::get('/dashboard', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
+        Route::get('/', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
        
         Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
