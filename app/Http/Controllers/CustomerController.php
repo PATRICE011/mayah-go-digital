@@ -5,7 +5,8 @@ use App\Models\User;
 use App\Models\Audit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 class CustomerController extends Controller
 {
     //
@@ -51,7 +52,7 @@ class CustomerController extends Controller
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
-                'action' => 'Removed an Employee',
+                'action' => 'Deleted a Customer',
                 'model_type' => User::class,
                 
             ]);
@@ -91,7 +92,7 @@ class CustomerController extends Controller
             if (!$employee) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Employee not found.',
+                    'message' => 'Customer not found.',
                 ], 404);
             }
 
@@ -107,19 +108,19 @@ class CustomerController extends Controller
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
-                'action' => 'Updated an Employee Information',
+                'action' => 'Updated a Customer Information',
                 'model_type' => User::class,
                 
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Employee updated successfully.',
+                'message' => 'Customer updated successfully.',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while updating the employee.',
+                'message' => 'An error occurred while updating the Customer.',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -128,9 +129,9 @@ class CustomerController extends Controller
     public function exportEmployees()
     {
         // Fetch all employees (modify as needed, e.g., filtering, sorting)
-        $employees = User::where('role_id', 2)->get(); // Assuming role_id = 2 is for employees
+        $employees = User::where('role_id', 3)->get(); // Assuming role_id = 2 is for employees
 
         // Return a view specifically designed for printing
-        return view('admins.export-employees', compact('employees'));
+        return view('admins.export-customers', compact('employees'));
     }
 }

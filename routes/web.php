@@ -97,14 +97,16 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
         Route::post('update-category/{id}', [categoryController::class, 'update']);
 
-        Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name('admins.adminemployee');
-        Route::post('/employees/store', [EmployeeController::class, 'store'])->name('admin.employees.store');
+        Route::get('/employees', [EmployeeController::class, 'adminemployee'])->name("admins.adminemployee");
+        Route::post('/employees/store', [EmployeeController::class, 'store']);
         Route::delete('/employees/delete/{id}', [EmployeeController::class, 'delete']);
         Route::put('/employees/update/{id}', [EmployeeController::class, 'update']);
-        Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
+        Route::get('/employees/export', [EmployeeController::class, 'exportEmployees']);
 
-        Route::get('/customers', [CustomerController::class, 'admincustomers'])->name('admins.admincustomers');
-        
+        Route::get('/customers', [CustomerController::class, 'admincustomers'])->name("admins.admincustomers");
+        Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete']);
+        Route::put('/customers/update/{id}', [CustomerController::class, 'update']);
+        Route::get('/customers/export', [CustomerController::class, 'exportEmployees']);
        
        
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');

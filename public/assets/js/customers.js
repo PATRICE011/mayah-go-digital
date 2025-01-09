@@ -18,7 +18,7 @@ $(document).ready(function () {
      */
     function loadEmployees(page = 1, search = "") {
         $.ajax({
-            url: `/admin/employees?page=${page}&search=${encodeURIComponent(search)}`,
+            url: `/admin/customers?page=${page}&search=${encodeURIComponent(search)}`,
             type: "GET",
             dataType: "json",
             success: function (response) {
@@ -151,7 +151,7 @@ $(document).ready(function () {
     $("#archiveModal .btn-danger").on("click", function () {
         if (employeeIdToDelete) {
             $.ajax({
-                url: `/admin/employees/delete/${employeeIdToDelete}`,
+                url: `/admin/customers/delete/${employeeIdToDelete}`,
                 type: "DELETE",
                 success: function (response) {
                     if (response.success) {
@@ -199,7 +199,7 @@ $(document).ready(function () {
 
         if (employeeIdToEdit) {
             $.ajax({
-                url: `/admin/employees/update/${employeeIdToEdit}`,
+                url: `/admin/customers/update/${employeeIdToEdit}`,
                 type: "PUT",
                 data: updatedEmployeeData,
                 success: function (response) {

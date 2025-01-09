@@ -38,7 +38,7 @@
                         <div class="mr-2" style="width: 200px;">
                             <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
-                        
+
                         <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
                             <i class="fa fa-file-export"></i> Export
                         </button>
@@ -90,12 +90,12 @@
                                             <form id="editForm">
                                                 <div class="form-group">
                                                     <label for="editCustomerName">Customer Name</label>
-                                                    <input type="text" class="form-control" id="editCustomerName" placeholder="Enter Customer name">
+                                                    <input type="text" name="name" class="form-control" id="editEmployeeName" placeholder="Enter Customer name">
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label for="editPhoneNumber">Phone Number</label>
-                                                    <input type="tel" class="form-control" id="editPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
+                                                    <input type="tel" name="mobile" class="form-control" id="editPhoneNumber" placeholder="Enter phone number" pattern="[0-9]+" minlength="10" maxlength="15">
                                                 </div>
 
                                                 <!-- <div class="form-group">
@@ -108,7 +108,7 @@
                                             </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" onclick="applyFilters()">Apply Changes</button>
+                                            <button type="button" class="btn btn-primary" id="applyChangesButton">Apply Changes</button>
                                         </div>
                                     </div>
                                 </div>
