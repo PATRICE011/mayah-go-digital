@@ -206,6 +206,16 @@ class AdminController extends Controller
         return view("admins.adminrefund");
     }
 
+    public function adminsalesreport()
+    {
+        return view("admins.adminsalesreport");
+    }
+
+    public function adminproductsreport()
+    {
+        return view("admins.adminproductsreport");
+    }
+
     public function logout(Request $request)
     {
         Auth::guard('web')->logout();

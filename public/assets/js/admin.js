@@ -126,18 +126,21 @@ jQuery(document).ready(function ($) {
             lineColor: "#5969ff",
             fillColor: "#dbdeff",
         },
+
         {
             selector: "#sparkline-2",
             data: [3, 7, 6, 4, 5, 4, 3, 5, 5, 2, 3, 1],
             lineColor: "#ff407b",
             fillColor: "#ffdbe6",
         },
+
         {
             selector: "#sparkline-3",
             data: [5, 3, 4, 6, 5, 7, 9, 4, 3, 5, 6, 1],
             lineColor: "#25d5f2",
             fillColor: "#dffaff",
         },
+
         {
             selector: "#sparkline-4",
             data: [6, 5, 3, 4, 2, 5, 3, 8, 6, 4, 5, 1],
@@ -160,6 +163,7 @@ jQuery(document).ready(function ($) {
         }
     });
 });
+
 // dashboard graphs
 document.addEventListener("DOMContentLoaded", function () {
     // Define common chart options
@@ -180,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: xLabel,
             },
         },
+
         y: {
             title: {
                 display: true,
@@ -205,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Saturday",
                     "Sunday",
                 ],
+
                 datasets: [
                     {
                         label: "Current Week",
@@ -218,6 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         fill: true,
                         tension: 0.4,
                     },
+
                     {
                         label: "Previous Week",
                         data: [6900, 6400, 6100, 7000, 7200, 7700, 7400],
@@ -232,6 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                 ],
             },
+
             options: {
                 ...defaultOptions,
                 plugins: {
@@ -275,6 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         display: false, // Disable the legend
                     },
                 },
+
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
