@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OtpController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
@@ -101,14 +103,17 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::put('/employees/update/{id}', [EmployeeController::class, 'update']);
         Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
 
+        Route::get('/customers', [CustomerController::class, 'admincustomers'])->name('admins.admincustomers');
+        
+       
+       
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
         Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
-        Route::get('/users/customers', [AdminController::class, 'admincustomers'])->name('admins.admincustomers');
-        
-        Route::get('/audit-trail', [AdminController::class, 'adminaudit'])->name('admins.adminaudit');
+       
+        Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
     
         Route::get('/products/export', function () {
             $products = Product::with('category')->get(); // Fetch all products with categories

@@ -92,7 +92,7 @@ class productController extends Controller
         // Log the audit
         Audit::create([
             'user_id' => Auth::id(),
-            'action' => 'created',
+            'action' => 'Added a Product',
             'model_type' => Product::class,
             'model_id' => $product->id,
             'changes' => $validatedData,
@@ -131,7 +131,7 @@ class productController extends Controller
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
-                'action' => 'updated a product',
+                'action' => 'updated a Product',
                 'model_type' => Product::class,
                 'model_id' => $product->id,
                 'old_values' => $oldValues,
@@ -155,7 +155,7 @@ class productController extends Controller
               // Log the audit
         Audit::create([
             'user_id' => Auth::id(),
-            'action' => 'delete',
+            'action' => 'Deleted a Product',
             'model_type' => Product::class,
             'model_id' => $id,
             'old_values' => $oldValues,

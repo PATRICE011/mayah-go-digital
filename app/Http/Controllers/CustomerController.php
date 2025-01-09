@@ -1,25 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Audit;
 use Illuminate\Support\Facades\Auth;
-class EmployeeController extends Controller
+use Illuminate\Http\Request;
+
+class CustomerController extends Controller
 {
     //
 
-    public function adminemployee(Request $request)
+    public function admincustomers(Request $request)
     {
+
         if ($request->ajax()) {
             $search = $request->input('search', ''); // Capture the search term
 
             $employees = User::with('role')
-                ->where('role_id', 2) // Assuming role_id 2 is for employees
+                ->where('role_id', 3) // Assuming role_id 2 is for employees
                 ->when($search != '', function ($query) use ($search) {
                     return $query->where('name', 'like', "%{$search}%")
                         ->orWhere('mobile', 'like', "%{$search}%");
@@ -30,52 +28,7 @@ class EmployeeController extends Controller
             return response()->json($employees);
         }
 
-        return view('admins.adminemployee');
-    }
-
-    public function store(Request $request)
-    {
-        // Validate the incoming data except for the unique mobile for now
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'mobile' => 'required|string',  // Temporarily remove the unique rule
-            'password' => 'required|string|min:5',
-        ]);
-
-        // Early return if validation fails on basic fields
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-        }
-
-        // Check for existing mobile number in the database
-        $existingUser = DB::table('users_area')->where('mobile', $request->mobile)->first();
-        if ($existingUser) {
-            // Manually add an error message for the mobile number
-            return response()->json([
-                'success' => false,
-                'errors' => ['mobile' => ['The mobile number is already registered. Please use a different number.']]
-            ], 422);
-        }
-
-        // Insert a new user into the database using the DB facade
-        DB::table('users_area')->insert([
-            'name' => $request->name,
-            'mobile' => $request->mobile,
-            'password' => Hash::make($request->password),  // Hash the password securely
-            'role_id' => 2,  // Assuming '2' is the role ID for employees
-            'created_at' => now(),  // Manually handle timestamps
-            'updated_at' => now(),
-        ]);
-
-        // Log the audit
-        Audit::create([
-            'user_id' => Auth::id(),
-            'action' => 'Added an Employee',
-            'model_type' => User::class,
-            
-        ]);
-        // Return a successful response
-        return response()->json(['success' => true, 'message' => 'Employee added successfully!']);
+        return view("admins.admincustomers");
     }
 
     public function delete($id)
@@ -88,7 +41,7 @@ class EmployeeController extends Controller
             if (!$employee) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Employee not found.'
+                    'message' => 'Customer not found.'
                 ], 404);
             }
 
@@ -105,12 +58,12 @@ class EmployeeController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Employee deleted successfully.'
+                'message' => 'Customer deleted successfully.'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while deleting the employee.',
+                'message' => 'An error occurred while deleting the customer.',
                 'error' => $e->getMessage(),
             ], 500);
         }

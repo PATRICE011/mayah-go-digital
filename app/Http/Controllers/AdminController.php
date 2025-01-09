@@ -184,60 +184,12 @@ class AdminController extends Controller
     }
 
 
-    public function adminaudit(Request $request)
-    {
-        $query = Audit::query();
+    
 
-        // Apply filters
-        if ($request->filled('name')) {
-            // Filter by user name
-            $query->whereHas('user', function ($userQuery) use ($request) {
-                $userQuery->where('name', 'like', '%' . $request->name . '%');
-            });
-        }
-
-        if ($request->filled('role')) {
-            // Filter by role ID (restricted to admin and staff only)
-            $query->whereHas('user', function ($userQuery) use ($request) {
-                $userQuery->whereIn('role_id', [1, 2]) // Restrict to admin and staff
-                    ->where('role_id', $request->role);
-            });
-        } else {
-            // Default restriction to admin and staff roles
-            $query->whereHas('user', function ($userQuery) {
-                $userQuery->whereIn('role_id', [1, 2]);
-            });
-        }
-
-        if ($request->filled('date')) {
-            // Filter by specific date
-            $query->whereDate('created_at', $request->date);
-        }
-
-        // Sort by latest (descending order)
-        $query->orderBy('created_at', 'desc');
-
-        // Retrieve audits with associated user and role data, paginated by 6
-        $audits = $query->with(['user.role'])->paginate(6);
-
-        // Preserve filters in pagination links
-        $audits->appends($request->all());
-
-        return view('admins.adminaudit', compact('audits'));
-    }
-
-
-    public function admincustomers()
-    {
-        return view("admins.admincustomers");
-    }
-
-  
-
-    public function adminstocks()
-    {
-        return view("admins.adminstocks");
-    }
+    // public function adminstocks()
+    // {
+    //     return view("admins.adminstocks");
+    // }
 
     public function adminposorders()
     {
