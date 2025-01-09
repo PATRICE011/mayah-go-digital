@@ -86,27 +86,6 @@
                     <div id="sparkline-1"></div>
                 </div>
             </div>
-
-            <!-- Growth Card -->
-            <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                <div class="card fixed-card">
-                    <div class="card-body">
-                        <h5 class="text-muted">Growth</h5>
-                        <div class="metric-value d-inline-block">
-                            <h1 class="mb-1 text-primary">
-                                {{ number_format($growthRate, 2) }}%
-                            </h1>
-                        </div>
-                        <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
-                            <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
-                            <span>{{ number_format($growthRate, 2) }}%</span>
-                        </div>
-                    </div>
-                    <div id="sparkline-4"></div>
-                </div>
-            </div> -->
-
-
         </div>
 
 
@@ -206,7 +185,6 @@
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
                                         <th class="border-0">Product Name</th>
-                                        <th class="border-0">Product Id</th>
                                         <th class="border-0">Quantity</th>
                                         <th class="border-0">Price</th>
                                         <th class="border-0">Order Time</th>
@@ -218,7 +196,6 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $product->product_name }}</td>
-                                        <td>{{ $product->product_id }}</td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>₱{{ number_format($product->price, 2) }}</td>
                                         <td>{{ $product->order_time }}</td>
@@ -233,7 +210,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="7">
-                                            <a href="#" class="btn btn-outline-light float-right">View Details</a>
+                                            <a href="{{ route('admins.adminproductsreport') }}" class="btn btn-outline-light float-right">View Details</a>
                                         </td>
                                     </tr>
                                 </tfoot>
