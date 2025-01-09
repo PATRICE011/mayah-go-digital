@@ -6,6 +6,18 @@ if (addImageInput && imagePreview) {
     addImageInput.addEventListener("change", function (event) {
         const file = event.target.files[0]; // Get the selected file
         if (file) {
+            // Validate file type
+            if (!file.type.startsWith("image/")) {
+                alert("Please select a valid image file.");
+                return;
+            }
+
+            // Validate file size (2MB limit)
+            if (file.size > 2 * 1024 * 1024) {
+                alert("Image size must be less than 2MB.");
+                return;
+            }
+
             const reader = new FileReader(); // Create a FileReader to read the file
             reader.onload = function (e) {
                 imagePreview.src = e.target.result; // Set the image source to the file content
@@ -126,21 +138,18 @@ jQuery(document).ready(function ($) {
             lineColor: "#5969ff",
             fillColor: "#dbdeff",
         },
-
         {
             selector: "#sparkline-2",
             data: [3, 7, 6, 4, 5, 4, 3, 5, 5, 2, 3, 1],
             lineColor: "#ff407b",
             fillColor: "#ffdbe6",
         },
-
         {
             selector: "#sparkline-3",
             data: [5, 3, 4, 6, 5, 7, 9, 4, 3, 5, 6, 1],
             lineColor: "#25d5f2",
             fillColor: "#dffaff",
         },
-
         {
             selector: "#sparkline-4",
             data: [6, 5, 3, 4, 2, 5, 3, 8, 6, 4, 5, 1],
@@ -164,137 +173,88 @@ jQuery(document).ready(function ($) {
     });
 });
 
-// dashboard graphs
+// Dashboard graphs
 document.addEventListener("DOMContentLoaded", function () {
-    // Define common chart options
-    const defaultOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false, // Disable legend for both charts
-            },
-        },
-    };
+    "use strict";
 
-    // Define scales configuration for charts that need axes
-    const scalesConfig = (xLabel, yLabel) => ({
-        x: {
-            title: {
-                display: true,
-                text: xLabel,
-            },
-        },
+   // Revenue Chart
+const revenueCanvas = document.getElementById("revenue");
+const revenueData = window.revenueData || { 
+    currentWeekRevenue: [0, 0, 0, 0, 0, 0, 0], 
+    previousWeekRevenue: [0, 0, 0, 0, 0, 0, 0] 
+};
 
-        y: {
-            title: {
-                display: true,
-                text: yLabel,
+if (revenueCanvas) {
+    const revenueCtx = revenueCanvas.getContext("2d");
+
+    // Debugging: Check the data being passed
+    console.log("Current Week Revenue:", revenueData.currentWeekRevenue);
+    console.log("Previous Week Revenue:", revenueData.previousWeekRevenue);
+
+    new Chart(revenueCtx, {
+        type: "line",
+        data: {
+            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            datasets: [
+                {
+                    label: "Current Week",
+                    data: revenueData.currentWeekRevenue,
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    pointBackgroundColor: "rgba(255, 99, 132, 1)",
+                    fill: true,
+                    tension: 0.4,
+                },
+                {
+                    label: "Previous Week",
+                    data: revenueData.previousWeekRevenue,
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    pointBackgroundColor: "rgba(54, 162, 235, 1)",
+                    fill: true,
+                    tension: 0.4,
+                },
+            ],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top",
+                },
             },
-            beginAtZero: true,
+            scales: {
+                x: {
+                    title: { display: true, text: "Days of the Week" },
+                },
+                y: {
+                    title: { display: true, text: "Revenue (₱)" },
+                    beginAtZero: true,
+                },
+            },
         },
     });
+}
 
-    // Revenue Chart (Line Chart)
-    const revenueCanvas = document.getElementById("revenue");
-    if (revenueCanvas) {
-        const revenueCtx = revenueCanvas.getContext("2d");
-        new Chart(revenueCtx, {
-            type: "line",
-            data: {
-                labels: [
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                    "Sunday",
-                ],
 
-                datasets: [
-                    {
-                        label: "Current Week",
-                        data: [7000, 6800, 6500, 7200, 7500, 8000, 7500],
-                        borderColor: "rgba(255, 99, 132, 1)", // Vibrant red-pink
-                        backgroundColor: "rgba(255, 99, 132, 0.2)", // Soft red fill
-                        pointBackgroundColor: "rgba(255, 99, 132, 1)", // Red dots
-                        pointBorderColor: "#fff",
-                        pointHoverBackgroundColor: "#fff",
-                        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
-                        fill: true,
-                        tension: 0.4,
-                    },
-
-                    {
-                        label: "Previous Week",
-                        data: [6900, 6400, 6100, 7000, 7200, 7700, 7400],
-                        borderColor: "rgba(54, 162, 235, 1)", // Strong blue
-                        backgroundColor: "rgba(54, 162, 235, 0.2)", // Light blue fill
-                        pointBackgroundColor: "rgba(54, 162, 235, 1)", // Blue dots
-                        pointBorderColor: "#fff",
-                        pointHoverBackgroundColor: "#fff",
-                        pointHoverBorderColor: "rgba(54, 162, 235, 1)",
-                        fill: true,
-                        tension: 0.4,
-                    },
-                ],
-            },
-
-            options: {
-                ...defaultOptions,
-                plugins: {
-                    ...defaultOptions.plugins,
-                    legend: {
-                        display: true, // Enable legend for the revenue chart
-                        position: "top",
-                    },
-                },
-                scales: scalesConfig("Days of the Week", "Revenue (₱)"),
-            },
-        });
-    }
-
-    // Total Sale Pie Chart
+    // Total Sales Pie Chart
     const totalSaleCanvas = document.getElementById("total-sale");
-
     if (totalSaleCanvas && window.salesData) {
         const totalSaleCtx = totalSaleCanvas.getContext("2d");
-
-        const labels = window.salesData.labels || [];
-        const data = window.salesData.data || [];
-        const colors = window.salesData.colors || [];
 
         new Chart(totalSaleCtx, {
             type: "pie",
             data: {
-                labels: labels, // Dynamic labels from the Blade template
+                labels: window.salesData.labels || [],
                 datasets: [
                     {
-                        data: data, // Dynamic data from the Blade template
-                        backgroundColor: colors, // Dynamic colors
-                        borderColor: colors, // Use the same colors for borders
-                        borderWidth: 1,
+                        data: window.salesData.data || [],
+                        backgroundColor: window.salesData.colors || [],
                     },
                 ],
             },
             options: {
-                plugins: {
-                    legend: {
-                        display: false, // Disable the legend
-                    },
-                },
-
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            const value =
-                                data.datasets[tooltipItem.datasetIndex].data[
-                                    tooltipItem.index
-                                ];
-                            return `₱${value.toFixed(2)}`; // Format tooltip as currency
-                        },
-                    },
-                },
+                plugins: { legend: { display: false } },
             },
         });
     }

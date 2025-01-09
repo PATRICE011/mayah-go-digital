@@ -110,8 +110,9 @@
         </div>
 
 
-        <!-- LINE GRAPHS -->
+       
         <div class="row">
+             <!-- LINE GRAPHS -->
             <!-- Revenue Section -->
             <div class="col-xl-8 col-lg-12 col-md-8 col-sm-12 col-12">
                 <div class="card">
@@ -265,13 +266,26 @@
 </div>
 @section('scripts')
 <script>
+    // Prepare dynamic data for the Sales Pie Chart
     window.salesData = {
-        labels: @json($salesByCategory -> pluck('category_name')),
-        data: @json($salesByCategory -> pluck('total_sales')),
-        colors: @json(array_map(function($name) use($colors) {
-            return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
-        }, $salesByCategory -> pluck('category_name') -> toArray()))
+        labels: @json($salesByCategory->pluck('category_name')), // Category names for labels
+        data: @json($salesByCategory->pluck('total_sales')), // Total sales for each category
+        colors: @json(
+            array_map(
+                function ($name) use ($colors) {
+                    return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
+                },
+                $salesByCategory->pluck('category_name')->toArray() // Convert labels to an array
+            )
+        ),
+    };
+
+    // Prepare dynamic data for the Revenue Line Chart
+    window.revenueData = {
+        currentWeekRevenue: @json($currentWeekRevenue),
+        previousWeekRevenue: @json($previousWeekRevenue),
     };
 </script>
 @endsection
+
 @endsection

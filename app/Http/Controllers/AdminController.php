@@ -146,46 +146,86 @@ class AdminController extends Controller
             ->get();
     }
 
+    private function getDailyRevenueForWeek($startDate, $endDate)
+{
+    // Fetch daily revenue for the week
+    $revenues = DB::table('orders')
+        ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        ->whereBetween('orders.created_at', [$startDate, $endDate])
+        ->select(
+            DB::raw('DAYOFWEEK(orders.created_at) as day'), // Day of the week (1 = Sunday, 7 = Saturday)
+            DB::raw('SUM(order_items.quantity * order_items.price) as total_revenue') // Sum of revenue
+        )
+        ->groupBy('day')
+        ->pluck('total_revenue', 'day') // Returns an associative array: [day => total_revenue]
+        ->toArray();
+
+    // Ensure all 7 days are represented with 0 revenue if missing
+    $weeklyRevenue = array_fill(1, 7, 0); // Sunday (1) to Saturday (7)
+
+    foreach ($revenues as $day => $revenue) {
+        $weeklyRevenue[$day] = $revenue;
+    }
+
+    return array_values($weeklyRevenue); // Return as an indexed array
+}
+
+
+
     public function admindashboard()
     {
         $totalCustomers = DB::table('users_area')->count();
         $totalOrders = DB::table('orders')->count();
         $totalProducts = DB::table('products')->count();
-        $totalCategories = DB::table('categories')->count(); // Count categories
-    
+        $totalCategories = DB::table('categories')->count();
+
         // Growth rate calculation
         $growthRate = $this->calculateGrowthRate($totalOrders);
-    
+
         $topSellingProducts = $this->getTopSellingProducts(10);
-    
+
         $todaysEarnings = $this->calculateRevenueForDate(now());
         $currentWeekEarnings = $this->calculateRevenueForDateRange(now()->startOfWeek(), now()->endOfWeek());
         $previousWeekEarnings = $this->calculateRevenueForDateRange(now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek());
-    
+
         $salesByCategory = $this->getSalesByCategory();
+
+        // Fetch daily earnings for the current and previous week
+        $currentWeekRevenue = $this->getDailyRevenueForWeek(
+            now()->startOfWeek(),
+            now()->endOfWeek()
+        );
     
+        $previousWeekRevenue = $this->getDailyRevenueForWeek(
+            now()->subWeek()->startOfWeek(),
+            now()->subWeek()->endOfWeek()
+        );
+
         $colors = [
             'Biscuits' => '#007bff',
             'Dairy' => '#dc3545',
             'Drinks' => '#ffc107',
             'School Supplies' => '#17a2b8',
         ];
-    
+
         return view('admins.dashboard', compact(
             'totalCustomers',
             'totalOrders',
             'totalProducts',
-            'totalCategories', // Pass total categories
+            'totalCategories',
             'growthRate',
             'topSellingProducts',
             'todaysEarnings',
             'currentWeekEarnings',
             'previousWeekEarnings',
             'salesByCategory',
-            'colors'
+            'colors',
+            'currentWeekRevenue',  // Pass current week revenue
+            'previousWeekRevenue'  // Pass previous week revenue
         ));
     }
-    
+
+
 
 
     public function adminadministrators()
