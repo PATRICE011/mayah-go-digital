@@ -17,73 +17,144 @@ class userController extends Controller
 {
 
     public function shop(Request $request)
-    {
-        // 1. Fetch all categories (for sidebar, etc.)
-        $categories = DB::table('categories')->get();
-    
-        // 2. Build the initial query
-        $query = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name');
-    
-        // 3. Filter by categories if provided
-        if ($request->has('categories')) {
-            $selectedCategories = $request->categories;  // e.g., array of category names
-            $query->whereIn('categories.category_name', $selectedCategories);
-        }
-    
-        // 4. Filter by search if provided
-        if ($request->filled('search')) {
-            $keyword = $request->input('search');
-            $query->where('products.product_name', 'LIKE', "%{$keyword}%");
-        }
-    
-        // 5. Execute the query
-        $products = $query->get();
-        $totalProducts = $products->count();
-    
-        // 6. User-related data
-        $user = Auth::user();
-        $cartCount = 0;
-        $wishlistCount = 0;
-    
-        if ($user) {
-            $cartId = DB::table('carts')
-                ->where('user_id', $user->id)
-                ->value('id');
-    
-            if ($cartId) {
-                $cartCount = DB::table('cart_items')
-                    ->where('cart_id', $cartId)
-                    ->sum('quantity');
-            }
-    
-            $wishlistCount = DB::table('wishlists')
-                ->where('user_id', $user->id)
-                ->count();
-        }
-    
-        // 7. If it's an AJAX request, return partial HTML
-        if ($request->ajax()) {
-            // Render the partial `home.partials.product_grid` with the filtered $products
-            $html = view('home.partials.product_grid', compact('products'))->render();
-    
-            return response()->json([
-                'products' => $html,
-                'totalProducts' => $totalProducts,
-            ]);
-        }
-    
-        // 8. Otherwise, return the full view (shop page)
-        return view('home.shop', compact(
-            'products',
-            'categories',
-            'totalProducts',
-            'cartCount',
-            'wishlistCount'
-        ));
+{
+    // Fetch all categories (for sidebar, etc.)
+    $categories = DB::table('categories')->get();
+
+    // Build the initial query
+    $query = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->select('products.*', 'categories.category_name');
+
+    // Filter by categories if provided
+    if ($request->has('categories') && is_array($request->categories)) {
+        $selectedCategories = $request->categories; // array of category names
+        $query->whereIn('categories.category_name', $selectedCategories);
     }
+
+    // Filter by search if provided
+    if ($request->filled('search')) {
+        $keyword = $request->input('search');
+        $query->where('products.product_name', 'LIKE', "%{$keyword}%");
+    }
+
+    // Paginate the results (10 items per page)
+    $products = $query->paginate(12); // Adjust the '10' to set the number of items per page
+    $totalProducts = $products->total(); // Total products across all pages
+
+    // User-related data
+    $user = Auth::user();
+    $cartCount = 0;
+    $wishlistCount = 0;
+
+    if ($user) {
+        $cartId = DB::table('carts')
+            ->where('user_id', $user->id)
+            ->value('id');
+
+        if ($cartId) {
+            $cartCount = DB::table('cart_items')
+                ->where('cart_id', $cartId)
+                ->sum('quantity');
+        }
+
+        $wishlistCount = DB::table('wishlists')
+            ->where('user_id', $user->id)
+            ->count();
+    }
+
+    // If it's an AJAX request, return partial HTML
+    if ($request->ajax()) {
+        $html = view('home.partials.product_grid', compact('products'))->render();
+        $paginationHtml = view('home.partials.pagination_links', ['products' => $products])->render();
+
+        return response()->json([
+            'products' => $html,
+            'pagination' => $paginationHtml,
+            'totalProducts' => $totalProducts,
+        ]);
+    }
+
+    // Otherwise, return the full view (shop page)
+    return view('home.shop', compact(
+        'products',
+        'categories',
+        'totalProducts',
+        'cartCount',
+        'wishlistCount'
+    ));
+}
+
     
+    public function filterProducts(Request $request)
+    {
+        $categories = $request->input('categories', []);
+
+        $products = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name')
+            ->when(!empty($categories), function ($query) use ($categories) {
+                $query->whereIn('categories.category_name', $categories);
+            })
+            ->get();
+
+        $totalProducts = DB::table('products')->count();
+
+        $html = '';
+        foreach ($products as $product) {
+            $stockClass = $product->product_stocks == 0
+                ? 'out-of-stock'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
+            $stockMessage = $product->product_stocks == 0
+                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10
+                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
+                    : '');
+
+            // Use the same form structure as in the partial
+            $html .= '
+        <div class="product__item ' . $stockClass . '">
+            <div class="product__banner">
+                <a href="#" class="product__images">
+                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img default">
+                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img hover">
+                </a>
+                ' . $stockMessage . '
+                <div class="product__actions">
+                    <a href="' . url('/details') . '" class="action__btn" aria-label="Quick View">
+                        <i class="bx bx-expand-horizontal"></i>
+                    </a>
+                    <a href="#" class="action__btn" aria-label="Add To Wishlist">
+                        <i class="bx bx-heart"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="product__content">
+                <span class="product__category">' . $product->category_name . '</span>
+                <a href="details.html">
+                    <h3 class="product__title">' . $product->product_name . '</h3>
+                </a>
+                <div class="product__price flex">
+                    <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
+                    <span class="old__price">₱ 9.00</span>
+                </div>
+                <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="' . route('home.inserttocart') . '">
+                    ' . csrf_field() . '
+                    <input type="hidden" name="id" value="' . $product->id . '">
+                    <button type="button" class="action__btn cart__btn ' . ($product->product_stocks == 0 ? 'disabled' : '') . '" ' . ($product->product_stocks == 0 ? 'disabled' : '') . '>
+                        <i class="bx bx-cart-alt"></i>
+                    </button>
+                </form>
+            </div>
+        </div>';
+        }
+
+        return response()->json([
+            'html' => $html,
+            'count' => $products->count(),
+            'total' => $totalProducts,
+        ]);
+    }
 
     // DETAILS START
     public function details($id, Request $request)
@@ -358,73 +429,5 @@ public function orderDetails($orderId)
 
 
 
-    public function filterProducts(Request $request)
-    {
-        $categories = $request->input('categories', []);
-
-        $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name')
-            ->when(!empty($categories), function ($query) use ($categories) {
-                $query->whereIn('categories.category_name', $categories);
-            })
-            ->get();
-
-        $totalProducts = DB::table('products')->count();
-
-        $html = '';
-        foreach ($products as $product) {
-            $stockClass = $product->product_stocks == 0
-                ? 'out-of-stock'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
-            $stockMessage = $product->product_stocks == 0
-                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10
-                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
-                    : '');
-
-            // Use the same form structure as in the partial
-            $html .= '
-        <div class="product__item ' . $stockClass . '">
-            <div class="product__banner">
-                <a href="#" class="product__images">
-                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img default">
-                    <img src="' . asset('assets/img/' . $product->product_image) . '" alt="' . $product->product_name . '" class="product__img hover">
-                </a>
-                ' . $stockMessage . '
-                <div class="product__actions">
-                    <a href="' . url('/details') . '" class="action__btn" aria-label="Quick View">
-                        <i class="bx bx-expand-horizontal"></i>
-                    </a>
-                    <a href="#" class="action__btn" aria-label="Add To Wishlist">
-                        <i class="bx bx-heart"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="product__content">
-                <span class="product__category">' . $product->category_name . '</span>
-                <a href="details.html">
-                    <h3 class="product__title">' . $product->product_name . '</h3>
-                </a>
-                <div class="product__price flex">
-                    <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
-                    <span class="old__price">₱ 9.00</span>
-                </div>
-                <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="' . route('home.inserttocart') . '">
-                    ' . csrf_field() . '
-                    <input type="hidden" name="id" value="' . $product->id . '">
-                    <button type="button" class="action__btn cart__btn ' . ($product->product_stocks == 0 ? 'disabled' : '') . '" ' . ($product->product_stocks == 0 ? 'disabled' : '') . '>
-                        <i class="bx bx-cart-alt"></i>
-                    </button>
-                </form>
-            </div>
-        </div>';
-        }
-
-        return response()->json([
-            'html' => $html,
-            'count' => $products->count(),
-            'total' => $totalProducts,
-        ]);
-    }
+   
 }

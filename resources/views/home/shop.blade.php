@@ -20,12 +20,10 @@
                 <span> / </span>
                 <a href="{{url('user/register')}}" class="header__top-action"> Sign-up</a>
                 @else
-                @auth
                 <form action="{{ url('/user/logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="header__top-action" style="border: none; background: none; cursor: pointer;">Logout</button>
                 </form>
-                @endauth
                 <span> / </span>
                 <span class="header__top-action">Welcome, {{ Auth::user()->name }}</span>
                 @endguest
@@ -33,34 +31,22 @@
         </div>
     </div>
     <nav class="nav container">
-        @auth
-        <a href="{{url('/user')}}" class="nav__logo">
+        <a href="{{ url(Auth::check() ? '/user' : '/') }}" class="nav__logo">
             <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
         </a>
-        @else
-        <a href="{{url('/')}}" class="nav__logo">
-            <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
-        </a>
-        @endauth
         <div class="nav__menu" id="nav-menu">
             <ul class="nav__list">
-                @auth
-                <li class="nav__item"><a href="{{url('/user')}}" class="nav__link">HOME</a></li>
-                @else
-                <li class="nav__item"><a href="{{url('/')}}" class="nav__link">HOME</a></li>
-                @endauth
+                <li class="nav__item"><a href="{{ url(Auth::check() ? '/user' : '/') }}" class="nav__link">HOME</a></li>
                 <li class="nav__item"><a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a></li>
                 @auth
                 <li class="nav__item"><a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a></li>
                 @endauth
             </ul>
-
             <div class="header__search">
                 <input type="text" placeholder="Search Item" class="form__input" id="searchInput">
                 <button class="search__btn"><i class='bx bx-search search' id="searchButton"></i></button>
             </div>
         </div>
-
         <div class="header__user-actions">
             <a href="{{url('/wishlist')}}" class="header__action-btn"><i class='bx bx-heart'></i><span class="count">{{$wishlistCount}}</span></a>
             <a href="{{ url('/cart') }}" class="header__action-btn"><i class='bx bx-cart-alt'></i><span id="cart-count" class="count">{{ $cartCount }}</span></a>
@@ -72,11 +58,7 @@
 
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
-        @auth
-        <li><a href="{{url('/user')}}" class="breadcrumb__link">Home</a></li>
-        @else
-        <li><a href="{{url('/')}}" class="breadcrumb__link">Home</a></li>
-        @endauth
+        <li><a href="{{ url(Auth::check() ? '/user' : '/') }}" class="breadcrumb__link">Home</a></li>
         <li><span class="breadcrumb__link">></span></li>
         <li><span class="breadcrumb__link">Shop</span></li>
     </ul>
@@ -84,7 +66,6 @@
 
 <section class="products section--lg container">
 
-    {{-- Example: "We found X items for you!" --}}
     <p class="total__products">
         We found <span>{{ $totalProducts ?? 0 }}</span> items for you!
     </p>
@@ -105,26 +86,14 @@
         </div>
 
         <div class="products__grid">
-            <!-- Container for the product items, which we’ll replace via AJAX -->
             <div class="products__container grid" id="productsContainer">
-                {{-- Include the partial that shows product items --}}
                 @include('home.partials.product_grid', ['products' => $products ?? collect()])
+            </div>
+            <div id="paginationLinks">
+                @include('home.partials.pagination_links', ['products' => $products])
             </div>
         </div>
     </div>
-
-    <ul class="pagination">
-        <li><a href="#" class="pagination__link active">01</a></li>
-        <li><a href="#" class="pagination__link">02</a></li>
-        <li><a href="#" class="pagination__link">03</a></li>
-        <li><a href="#" class="pagination__link">...</a></li>
-        <li><a href="#" class="pagination__link">10</a></li>
-        <li>
-            <a href="#" class="pagination__link icon">
-                <i class="ri-arrow-right-s-line"></i>
-            </a>
-        </li>
-    </ul>
 </section>
 
 @include('home.footer')
@@ -132,24 +101,29 @@
 @section('scripts')
 <script>
     $(function() {
-        // Handle input changes
+        // Handle search
         $('#searchInput').on('keyup', function() {
             let query = $(this).val().trim();
-
-            performSearch(query); // Always call performSearch, even when input is empty
+            fetchProducts('?search=' + encodeURIComponent(query));
         });
 
-        function performSearch(query) {
+        // Handle pagination
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            let url = $(this).attr('href');
+            fetchProducts(url);
+        });
+
+        function fetchProducts(url) {
             $.ajax({
-                url: '/search-products', // Update this to match your route
+                url: url,
                 method: 'GET',
-                data: {
-                    search: query
-                },
                 success: function(response) {
-                    // Replace HTML in #productsContainer with the partial
-                    if (response.html) {
-                        $('#productsContainer').html(response.html);
+                    if (response.products) {
+                        $('#productsContainer').html(response.products);
+                    }
+                    if (response.pagination) {
+                        $('#paginationLinks').html(response.pagination);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -157,9 +131,6 @@
                 }
             });
         }
-
-        // Load all products on page load
-        performSearch('');
     });
 </script>
 @endsection
