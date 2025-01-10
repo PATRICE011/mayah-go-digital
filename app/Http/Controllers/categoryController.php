@@ -37,45 +37,58 @@ class categoryController extends Controller
         return view("admins.admincategories");
     }
 
-
     public function storeCategory(Request $request)
     {
         $request->validate([
             'category_name' => 'required|unique:categories,category_name|max:255',
-            'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'category_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
-
-        DB::beginTransaction(); // ✅ Start Transaction
-
+    
+        DB::beginTransaction(); // Start Transaction
+    
         try {
-            $imageName = null;
-
-            // Handle Image Upload
+            $imageName = null; // Initialize imageName as null
+    
+            // Handle the image logic
             if ($request->hasFile('category_image')) {
                 $image = $request->file('category_image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('assets/img/'), $imageName);
+    
+                // Define the destination path in the public directory
+                $destinationPath = public_path('assets/img');
+    
+                // Use the original file name
+                $imageName = $image->getClientOriginalName();
+    
+                // Check if the file already exists
+                if (!file_exists($destinationPath . '/' . $imageName)) {
+                    // Move the file to the destination path if it does not exist
+                    $image->move($destinationPath, $imageName);
+                } else {
+                    // If the file exists, do not move or duplicate it, just use the existing file name
+                    $imageName = $imageName; // This ensures the existing file name is used
+                }
             }
-
-            // ✅ Insert data using DB instead of Eloquent
+    
+            // Insert data using DB
             $categoryId = DB::table('categories')->insertGetId([
                 'category_name' => $request->category_name,
-                'category_image' => $imageName,
+                'category_image' => $imageName, // Store the filename if image is uploaded
                 'slug' => Str::slug($request->category_name),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-
-            DB::commit(); // ✅ Commit Transaction
-
+    
+            DB::commit(); // Commit Transaction
+    
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
                 'action' => 'Added a Category',
                 'model_type' => Category::class,
-                
+                'model_id' => $categoryId,
+                'changes' => ['category_name' => $request->category_name, 'category_image' => $imageName]
             ]);
-
+    
             return response()->json([
                 'success' => true,
                 'message' => 'Category added successfully!',
@@ -88,14 +101,14 @@ class categoryController extends Controller
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
+    
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to add category.',
-                'error' => $e->getMessage()
+                'message' => 'Failed to add category. ' . $e->getMessage()
             ], 500);
         }
     }
+    
 
     public function destroy($id)
     {
