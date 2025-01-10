@@ -53,9 +53,10 @@
 
                             </table>
 
-                            <div class="pagination-container">
+                            <div class="pagination-container mb-3 mt-3 mr-3">
                                 {{ $orders->links() }}
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -90,9 +91,9 @@
                             <option value="">All</option>
                             <option value="pending">Pending</option>
                             <option value="pickedUp">Confirmed</option>
-                            
+
                             <option value="packed">Ready for pickup</option>
-                            
+
                             <option value="completed">Completed</option>
                         </select>
                     </div>

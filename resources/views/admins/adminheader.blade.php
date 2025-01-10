@@ -18,7 +18,10 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
                         <div class="nav-user-info">
-                            <h5 class="mb-0 text-white nav-user-name">John Abraham </h5>
+                            <!-- Dynamic User Name -->
+                            <h5 class="mb-0 text-white nav-user-name">
+                                {{ Auth::user()->name ?? 'Guest' }}
+                            </h5>
                             <span class="status"></span><span class="ml-2">Available</span>
                         </div>
 
@@ -28,13 +31,16 @@
                             @csrf
                             <button type="submit" class="dropdown-item"><i class="fas fa-power-off mr-2"></i>Logout</button>
                         </form>
-
                     </div>
                 </li>
             </ul>
         </div>
     </nav>
 </div>
+
+@php
+$role = Auth::user()->role_id; // Fetch user's role
+@endphp
 
 <div class="nav-left-sidebar sidebar-dark">
     <div class="menu-list">
@@ -47,87 +53,80 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav flex-column">
+                    <!-- Dashboard - Visible for all roles -->
                     <li class="nav-item">
                         <a href="{{ route('admins.dashboard') }}" class="nav-link {{ isset($activePage) && $activePage === 'dashboard' ? 'active' : '' }}">
-                            <i class="fa fa-fw fa-user-circle"></i>Dashboard
+                            <i class="fa fa-fw fa-user-circle"></i> Dashboard
                         </a>
                     </li>
 
+                    <!-- Product & Stocks Section -->
+                    @if($role != 2) {{-- Hide for role ID 2 --}}
                     <li class="nav-divider">
                         Product & Stocks
                     </li>
-
                     <li class="nav-item">
                         <a href="{{ route('admins.adminproducts') }}" class="nav-link {{ isset($activePage) && $activePage === 'products' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products
                         </a>
-
-                        <!-- <a href="{{ route('admins.adminstocks') }}" class="nav-link {{ isset($activePage) && $activePage === 'stocks' ? 'active' : '' }}">
-                            <i class="fas fa-fw fa-file"></i> Stocks
-                        </a> -->
-
                         <a href="{{ route('admins.admincategories') }}" class="nav-link {{ isset($activePage) && $activePage === 'categories' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Category
                         </a>
                     </li>
+                    @endif
 
+                    <!-- POS & Orders Section -->
                     <li class="nav-divider">
                         POS & Orders
                     </li>
-
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fas fa-fw fa-file"></i> POS
-                        </a>
-
-                        <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
-                            <i class="fas fa-fw fa-file"></i> POS Orders
-                        </a>
-
+                        @if($role == 1 || $role == 2) {{-- Only for role 1 and 2 --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders
                         </a>
-
+                        @else {{-- For other roles --}}
+                        <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
+                            <i class="fas fa-fw fa-file"></i> POS Orders
+                        </a>
                         <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
                         </a>
+                        @endif
                     </li>
 
+                    <!-- Users Section -->
+                    @if($role != 2) {{-- Hide for role ID 2 --}}
                     <li class="nav-divider">
                         Users
                     </li>
-
                     <li class="nav-item">
-                        <!-- <a href="{{ route('admins.adminadministrators') }}" class="nav-link {{ isset($activePage) && $activePage === 'administrators' ? 'active' : '' }}">
-                            <i class="fas fa-fw fa-file"></i> Administrator
-                        </a> -->
-
                         <a href="{{ route('admins.admincustomers') }}" class="nav-link {{ isset($activePage) && $activePage === 'customers' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Customers
                         </a>
-
                         <a href="{{ route('admins.adminemployee') }}" class="nav-link {{ isset($activePage) && $activePage === 'employee' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Employees
                         </a>
                     </li>
+                    @endif
 
+
+                    <!-- Reports Section -->
+                    @if($role != 2) {{-- Hide for role ID 2 --}}
                     <li class="nav-divider">
                         Reports
                     </li>
-
                     <li class="nav-item">
                         <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Audit Trail
                         </a>
-
                         <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Sales Report
                         </a>
-
                         <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products Report
                         </a>
                     </li>
+                    @endif
                 </ul>
             </div>
         </nav>
