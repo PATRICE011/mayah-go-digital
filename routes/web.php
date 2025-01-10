@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OnlineOrdersController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductReportController;
@@ -41,7 +42,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [HomeController::class, 'home']);
         Route::post('/logout', [AuthController::class, 'logout'])->name('users.logout');
-        
+
         Route::prefix('cart')->group(function () {
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
@@ -68,7 +69,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
             Route::post('/update-profile', [UpdateProfileController::class, 'updateProfile'])->name('user.update-profile');
             Route::post('/change-password', [UpdateProfileController::class, 'changePassword'])->name('changePassword');
             Route::post('/validate-old-password', [UpdateProfileController::class, 'validateOldPassword']);
-
         });
 
         Route::prefix('order-status')->group(function () {
@@ -85,14 +85,14 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
         Route::get('/', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
-       
+
         Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
         Route::post('/store-products', [productController::class, 'store']);
         Route::post('/update-product/{id}', [productController::class, 'updateProduct'])->name('admin.update-product');
         Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
         Route::get('/all-categories', [productController::class, 'getAllCategories']);
 
-       
+
         Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
         Route::delete('/delete-category/{id}', [categoryController::class, 'destroy']);
@@ -108,30 +108,40 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete']);
         Route::put('/customers/update/{id}', [CustomerController::class, 'update']);
         Route::get('/customers/export', [CustomerController::class, 'exportEmployees']);
-       
+
         Route::get('/products-report', [ProductReportController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
         Route::get('/print-product-report', [ProductReportController::class, 'printProductReport'])->name('admins.printProductReport');
 
         Route::get('/sales-report', [SalesReportController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
         Route::get('/export-sales-report', [SalesReportController::class, 'exportSalesReport'])->name('admins.exportSalesReport');
 
+
+        Route::get('/online-orders', [OnlineOrdersController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
+        Route::get('/order-details/{id}', [OnlineOrdersController::class, 'getOrderDetails'])
+            ->name('admins.getOrderDetails');
+        Route::post('/update-order-status/{id}', [OnlineOrdersController::class, 'updateOrderStatus'])
+            ->name('admins.updateOrderStatus');
+
+
+
+
+
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
-        Route::get('/online-orders', [AdminController::class, 'adminonlineorders'])->name('admins.adminonlineorders');
+
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
-       
+
         Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
-        
-        
-    
+
+
+
         Route::get('/products/export', function () {
             $products = Product::with('category')->get(); // Fetch all products with categories
             return view('admins.export-products', compact('products'));
         })->name('products.export');
 
         Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
-
     });
 
 // Public Routes (accessible by all)

@@ -267,10 +267,7 @@ class AdminController extends Controller
         return view("admins.adminposorders");
     }
 
-    public function adminonlineorders()
-    {
-        return view("admins.adminonlineorders");
-    }
+  
 
     public function adminrefund()
     {
