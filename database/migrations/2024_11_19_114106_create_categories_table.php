@@ -21,7 +21,7 @@ class CreateCategoriesTable extends Migration
             $table->string('category_name')->unique(); // Category name with a unique constraint if needed
             $table->string('slug')->unique();
             $table->timestamps(); // Created at and Updated at timestamps
-            // add product image
+          
         });
        
        

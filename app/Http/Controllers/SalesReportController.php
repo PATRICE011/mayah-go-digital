@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Exports\SalesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalesReportController extends Controller
 {
@@ -82,30 +84,9 @@ class SalesReportController extends Controller
 
 
 
+
     public function exportSalesReport(Request $request)
     {
-        $search = $request->input('search', ''); // Optional search term
-
-        // Fetch sales report data
-        $sales = DB::table('order_items')
-            ->join('products', 'order_items.product_id', '=', 'products.id')
-            ->join('orders', 'order_items.order_id', '=', 'orders.id')
-            ->leftJoin('users_area', 'orders.user_id', '=', 'users_area.id')
-            ->select(
-                'products.product_name',
-                'order_items.quantity',
-                'order_items.price as unit_price',
-                DB::raw('order_items.quantity * order_items.price as total_amount'),
-                'orders.created_at as date',
-                'users_area.name as customer_name'
-            )
-            ->when($search, function ($query, $search) {
-                return $query->where('products.product_name', 'LIKE', "%{$search}%")
-                    ->orWhere('users_area.name', 'LIKE', "%{$search}%");
-            })
-            ->get();
-
-        // Return the print-friendly view
-        return view('admins.export-sales-report', compact('sales', 'search'));
+        return Excel::download(new SalesExport($request->from_date, $request->to_date, $request->search), 'sales-report.xlsx');
     }
 }

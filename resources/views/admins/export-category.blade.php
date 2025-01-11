@@ -69,5 +69,11 @@
     </table>
 
     <button class="no-print" onclick="window.print()">Print Report</button>
+
+    <script>
+        window.onload = function() {
+            window.print();  // Automatically print the page
+        }
+    </script>
 </body>
 </html>

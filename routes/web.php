@@ -91,7 +91,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::post('/update-product/{id}', [productController::class, 'updateProduct'])->name('admin.update-product');
         Route::delete('/delete-product/{id}', [productController::class, 'deleteProduct'])->name('admin.delete-product');
         Route::get('/all-categories', [productController::class, 'getAllCategories']);
-
+        Route::get('/products/export-products', [productController::class, 'export']);
 
         Route::get('/categories', [categoryController::class, 'admincategories'])->name('admins.admincategories');
         Route::post('/store-categories', [categoryController::class, 'storeCategory'])->name('categories.store');
@@ -107,10 +107,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/customers', [CustomerController::class, 'admincustomers'])->name("admins.admincustomers");
         Route::delete('/customers/delete/{id}', [CustomerController::class, 'delete']);
         Route::put('/customers/update/{id}', [CustomerController::class, 'update']);
-        Route::get('/customers/export', [CustomerController::class, 'exportEmployees']);
+        Route::get('/customers/export', [CustomerController::class, 'exportCustomers']);
 
         Route::get('/products-report', [ProductReportController::class, 'adminproductsreport'])->name('admins.adminproductsreport');
-        Route::get('/print-product-report', [ProductReportController::class, 'printProductReport'])->name('admins.printProductReport');
+        Route::get('/print-product-report', [ProductReportController::class, 'exportProductsReport'])->name('admins.printProductReport');
 
         Route::get('/sales-report', [SalesReportController::class, 'adminsalesreport'])->name('admins.adminsalesreport');
         Route::get('/export-sales-report', [SalesReportController::class, 'exportSalesReport'])->name('admins.exportSalesReport');

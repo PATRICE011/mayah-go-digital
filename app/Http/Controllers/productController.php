@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Log;
 use App\Models\Audit;
+
+use App\Exports\ProductsExport;
+use Maatwebsite\Excel\Facades\Excel;
 class productController extends Controller
 {
     
@@ -170,5 +173,13 @@ class productController extends Controller
     public function getAllCategories()
     {
         return response()->json(Category::all());
+    }
+
+    public function export()
+    {
+        $response = Excel::download(new ProductsExport, 'products.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        ob_end_clean();
+    
+        return $response;
     }
 }

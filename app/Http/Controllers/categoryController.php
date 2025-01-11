@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use App\Models\Audit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exports\CategoriesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class categoryController extends Controller
 {
@@ -191,11 +193,6 @@ class categoryController extends Controller
 
     public function printCategories()
     {
-        // Fetch categories from the database
-        $categories = Category::all();
-
-        
-        // Pass categories to the Blade view
-        return view('admins.export-category', compact('categories'));
+        return Excel::download(new CategoriesExport, 'categories.xlsx');
     }
 }

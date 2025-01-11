@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Audit;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\EmployeesExport;
+use Maatwebsite\Excel\Facades\Excel;
 class EmployeeController extends Controller
 {
     //
@@ -173,11 +175,7 @@ class EmployeeController extends Controller
     }
 
     public function exportEmployees()
-    {
-        // Fetch all employees (modify as needed, e.g., filtering, sorting)
-        $employees = User::where('role_id', 2)->get(); // Assuming role_id = 2 is for employees
-
-        // Return a view specifically designed for printing
-        return view('admins.export-employees', compact('employees'));
-    }
+{
+    return Excel::download(new EmployeesExport, 'employees.xlsx');
+}
 }
