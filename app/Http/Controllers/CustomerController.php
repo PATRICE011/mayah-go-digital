@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Exports\CustomersExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class CustomerController extends Controller
 {
     //
@@ -126,12 +129,8 @@ class CustomerController extends Controller
         }
     }
 
-    public function exportEmployees()
+    public function exportCustomers()
     {
-        // Fetch all employees (modify as needed, e.g., filtering, sorting)
-        $employees = User::where('role_id', 3)->get(); // Assuming role_id = 2 is for employees
-
-        // Return a view specifically designed for printing
-        return view('admins.export-customers', compact('employees'));
+        return Excel::download(new CustomersExport, 'customers.xlsx');
     }
 }

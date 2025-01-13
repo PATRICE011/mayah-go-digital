@@ -230,9 +230,7 @@ $(document).ready(function () {
      * Export employees for printing
      */
     $(document).on("click", ".btn-export", function () {
-        const exportWindow = window.open("/admin/employees/export", "_blank");
-        exportWindow.onload = function () {
-            exportWindow.print();
-        };
+         window.open("/admin/customers/export");
+        
     });
 });

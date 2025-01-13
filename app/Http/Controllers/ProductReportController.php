@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Exports\ProductReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductReportController extends Controller
 {
@@ -55,5 +57,10 @@ class ProductReportController extends Controller
 
         // Return the print-friendly view
         return view('admins.export-product-report', compact('sales', 'search'));
+    }
+
+    public function exportProductsReport(Request $request)
+    {
+        return Excel::download(new ProductReportExport($request->input('search')), 'product-report.xlsx');
     }
 }

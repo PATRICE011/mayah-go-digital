@@ -435,7 +435,7 @@ $(document).ready(function () {
      * Export Products Button Click Event
      */
     $("#exportProductsBtn").on("click", function () {
-        window.open("/admin/products/export", "_blank");
+        window.open("/admin/products/export-products");
     });
 
     /**
