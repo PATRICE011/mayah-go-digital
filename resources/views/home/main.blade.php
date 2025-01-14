@@ -105,13 +105,22 @@
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
 
-                                @auth
-                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                <!-- Add to Wishlist -->
+                                <form
+                                    id="wish-button-{{ $product->id }}"
+                                    action="{{ route('addtowish', $product->id) }}"
+                                    method="POST"
+                                    style="display: none;">
                                     @csrf
-                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
-                                        <i class='bx bx-heart'></i>
-                                    </button>
                                 </form>
+
+                                @auth
+                                <a href="javascript:void(0);"
+                                    class="action__btn"
+                                    aria-label="Add To Wishlist"
+                                    onclick="addToWishlist({{ $product->id }});">
+                                    <i class="bx bx-heart"></i>
+                                </a>
                                 @else
                                 <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
@@ -212,13 +221,22 @@
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
 
-                                @auth
-                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                <!-- Add to Wishlist -->
+                                <form
+                                    id="wish-button-{{ $product->id }}"
+                                    action="{{ route('addtowish', $product->id) }}"
+                                    method="POST"
+                                    style="display: none;">
                                     @csrf
-                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
-                                        <i class='bx bx-heart'></i>
-                                    </button>
                                 </form>
+
+                                @auth
+                                <a href="javascript:void(0);"
+                                    class="action__btn"
+                                    aria-label="Add To Wishlist"
+                                    onclick="addToWishlist({{ $product->id }});">
+                                    <i class="bx bx-heart"></i>
+                                </a>
                                 @else
                                 <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
@@ -310,13 +328,22 @@
                                     <i class='bx bx-expand-horizontal'></i>
                                 </a>
 
-                                @auth
-                                <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                                <!-- Add to Wishlist -->
+                                <form
+                                    id="wish-button-{{ $product->id }}"
+                                    action="{{ route('addtowish', $product->id) }}"
+                                    method="POST"
+                                    style="display: none;">
                                     @csrf
-                                    <button type="submit" class="action__btn" aria-label="Add To Wishlist">
-                                        <i class='bx bx-heart'></i>
-                                    </button>
                                 </form>
+
+                                @auth
+                                <a href="javascript:void(0);"
+                                    class="action__btn"
+                                    aria-label="Add To Wishlist"
+                                    onclick="addToWishlist({{ $product->id }});">
+                                    <i class="bx bx-heart"></i>
+                                </a>
                                 @else
                                 <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                     <i class='bx bx-heart'></i>
@@ -503,13 +530,22 @@
                                 <i class='bx bx-expand-horizontal'></i>
                             </a>
 
-                            @auth
-                            <form action="{{ url('/user/wishlist/add', $product->id) }}" method="POST">
+                            <!-- Add to Wishlist -->
+                            <form
+                                id="wish-button-{{ $product->id }}"
+                                action="{{ route('addtowish', $product->id) }}"
+                                method="POST"
+                                style="display: none;">
                                 @csrf
-                                <button type="submit" class="action__btn" aria-label="Add To Wishlist">
-                                    <i class='bx bx-heart'></i>
-                                </button>
                             </form>
+
+                            @auth
+                            <a href="javascript:void(0);"
+                                class="action__btn"
+                                aria-label="Add To Wishlist"
+                                onclick="addToWishlist({{ $product->id }});">
+                                <i class="bx bx-heart"></i>
+                            </a>
                             @else
                             <a href="{{ route('login') }}" class="action__btn" aria-label="Add To Wishlist">
                                 <i class='bx bx-heart'></i>
