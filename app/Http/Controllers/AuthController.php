@@ -83,26 +83,32 @@ class AuthController extends Controller
     {
         // Validate registration form fields
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]*$/', // Allows only letters and spaces
+            ],
             'mobile' => [
                 'required',
                 'string',
                 'max:15',
                 'unique:users_area,mobile',
+                'regex:/^(09\d{9}|(\+639)\d{9})$/', // Philippine mobile number format
             ],
             'password' => 'required|string|min:8|confirmed',
         ]);
-
+    
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-
+    
         // Generate OTP
         $otp = rand(100000, 999999);
         $otpCreatedAt = now();
-
+    
         // Store user data and OTP in session
         $request->session()->put('user_data', [
             'name' => $request->name,
@@ -112,12 +118,12 @@ class AuthController extends Controller
             'otp_created_at' => $otpCreatedAt->toDateTimeString(),
             'role_id' => 3, // Default role
         ]);
-
+    
         try {
             // Send OTP to the user's mobile
             $otpController = new OtpController();
             $otpController->sendOtp($request->mobile, $otp);
-
+    
             // Redirect to OTP verification page
             return redirect('user/otp')
                 ->with('message', 'Registration successful! Please check your mobile for the OTP.');
@@ -125,6 +131,7 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
         }
     }
+    
 
     // Handle logout request
     public function logout(Request $request)

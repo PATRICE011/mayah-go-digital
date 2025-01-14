@@ -14,7 +14,7 @@
                     our extensive collection ensures you're well-prepared and set for success.
                 </p>
 
-                <a href="" class="btn">
+                <a href="{{url('/shop')}}" class="btn">
                     Shop Now
                 </a>
             </div>
@@ -31,10 +31,10 @@
             <div class="swiper-wrapper">
                 @foreach ($categories as $category)
                 <a href="{{ url('/shop?category=' . $category->slug) }}" class="category__item swiper-slide">
-                    <img src="{{ asset('assets/img/' . $category->category_image) }}"
-                        alt="{{ $category->category_name }}">
+                    <img src="{{ asset('assets/img/' . $category->category_image) }}" alt="{{ $category->category_name }}">
                     <h3 class="category__title">{{ $category->category_name }}</h3>
                 </a>
+
                 @endforeach
             </div>
 
