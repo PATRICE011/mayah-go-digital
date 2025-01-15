@@ -90,9 +90,9 @@
                         <select class="form-control" id="filterStatus">
                             <option value="">All</option>
                             <option value="pending">Pending</option>
-                            <option value="pickedUp">Confirmed</option>
+                            <option value="confirmed">Confirmed</option>
 
-                            <option value="packed">Ready for pickup</option>
+                            <option value="readyForPickup">Ready for pickup</option>
 
                             <option value="completed">Completed</option>
                         </select>

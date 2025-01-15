@@ -56,14 +56,20 @@ class OnlineOrdersController extends Controller
 
     public function updateOrderStatus(Request $request, $id)
     {
-        $order = Order::findOrFail($id); // Fetch order by ID
-        $validated = $request->validate([
-            'status' => 'required|string|in:pending,confirmed,ready-for-pickup,completed'
-        ]);
-
-        $order->status = $validated['status']; // Update status
-        $order->save(); // Save changes
-
-        return response()->json(['success' => true, 'message' => 'Order status updated successfully.']);
+        try {
+            $order = Order::findOrFail($id); // Fetch order by ID
+    
+            $validated = $request->validate([
+                'status' => 'required|string|in:pending,confirmed,readyForPickup,completed' // Correct the case to match HTML
+            ]);
+    
+            $order->status = $validated['status']; // Update status
+            $order->save(); // Save changes
+    
+            return response()->json(['success' => true, 'message' => 'Order status updated successfully.', 'newStatus' => $order->status]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
     }
+    
 }
