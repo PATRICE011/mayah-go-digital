@@ -99,7 +99,7 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> Online Orders
                         </a>
 
-                        <a href="{{ route('admins.adminpos') }}" class="nav-link {{ isset($activePage) && $activePage === 'pos' ? 'active' : '' }}>
+                        <a href="{{ route('admins.adminpos') }}" class="nav-link {{ isset($activePage) && $activePage === 'pos' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> POS
                         </a>
 

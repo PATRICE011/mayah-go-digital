@@ -1575,6 +1575,7 @@ input[type="number"] {
   flex: 1;
   position: relative;
   color: #777; /* Default text color */
+  /* font-size: 10px; */
 }
 
 .order-progress-step::before {
@@ -1749,6 +1750,7 @@ input[type="number"] {
 
 .product__item {
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .cart__btn.low-stock-btn {
@@ -2195,6 +2197,14 @@ input[type="number"] {
   .login-register__link {
     font-size: var(--tiny-font-size);
   }
+
+  .order-progress-step {
+    font-size: 10px;
+  }
+
+  .form__input{
+    margin-bottom: 0.5rem;
+  }
 }
 
 /* For small devices */
@@ -2209,6 +2219,7 @@ input[type="number"] {
 
   .deals__item{
     padding: 1.25rem;
+    margin-bottom: 2rem;
   }
 
   .pagination{
@@ -2259,6 +2270,10 @@ input[type="number"] {
     padding: 0.5rem;
     font-size: var(--tiny-font-size);
   }
+
+  .form__input{
+    margin-bottom: 0.5rem;
+  }
 }
 
 @media screen and (max-width: 350px) {
@@ -2300,6 +2315,10 @@ input[type="number"] {
   .order-progress-step {
     font-size: 10px;
   }
+
+  .form__input{
+    margin-bottom: 0.5rem;
+  }
 }
 
 /* Browser testing optimizations */
@@ -2311,4 +2330,8 @@ input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none; /* Chrome, Safari, Edge */
   margin: 0;
+}
+
+div.phpdebugbar{
+  display: none;
 }

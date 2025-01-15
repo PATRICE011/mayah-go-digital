@@ -6995,3 +6995,7 @@ Media Query
     border: none;
     background-color: transparent;
 }
+
+div.phpdebugbar{
+    display: none;
+  }
