@@ -1,10 +1,10 @@
 @extends('admins.layout')
 @section('title', 'Mayah Store - Admin Products')
 @section('content')
-@include('admins.adminheader', ['activePage' => 'salesreport'])
+@include('admins.adminheader', ['activePage' => 'posreport'])
 
 <div class="dashboard-wrapper">
-    <div class="container-fluid  dashboard-content">
+    <div class="container-fluid dashboard-content">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
@@ -21,8 +21,8 @@
                                     <a href="#" class="breadcrumb-link">Reports</a>
                                 </li>
 
-                                <li class="breadcrumb-item">
-                                    <a href="#" class="breadcrumb-link">Sales Report</a>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Sales Report
                                 </li>
                             </ol>
                         </nav>
@@ -31,25 +31,29 @@
             </div>
         </div>
 
+        <!-- Filters and Export -->
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
+                        <!-- Search -->
                         <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
-                         <!-- Date Range Filter -->
+                        <!-- Date Range Filter -->
                         <div class="mr-2 d-flex align-items-center" style="width: 350px;">
                             <input type="date" id="fromDate" class="form-control form-control-sm" style="width: 150px;" placeholder="From Date">
                             <span class="mx-2">to</span>
                             <input type="date" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date">
                         </div>
-
-                        <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
+                        <!-- Export Button -->
+                        <a href="{{ route('admins.export.report') }}" class="btn btn-sm btn-outline-danger">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </a>
+
                     </div>
 
+                    <!-- Sales Report Table -->
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table">
@@ -65,10 +69,28 @@
                                     </tr>
                                 </thead>
                                 <tbody id="salesReportBody">
-                                    <!-- Dynamic Content Here -->
+                                    @forelse($salesReport as $report)
+                                    <tr>
+                                        <td>{{ $report['id'] }}</td>
+                                        <td>{{ $report['product_name'] }}</td>
+                                        <td>{{ $report['quantity'] }}</td>
+                                        <td>₱{{ $report['unit_price'] }}</td>
+                                        <td>₱{{ $report['amount'] }}</td>
+                                        <td>{{ $report['date'] }}</td>
+                                        <td>{{ $report['customer'] }}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center">No sales data available.</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
+                        </div>
 
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center mt-3">
+                            {{ $salesReport->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
                 </div>
@@ -76,9 +98,15 @@
         </div>
     </div>
 </div>
+
 @section('scripts')
-
-<script src="{{ asset('assets/js/sales_report.js')  }}?v={{ time() }}"></script>
-
+<script>
+    $(document).ready(function() {
+        // Export Button Click Event
+        $('#exportSalesReportBtn').on('click', function() {
+            window.location.href = '';
+        });
+    });
+</script>
 @endsection
 @endsection

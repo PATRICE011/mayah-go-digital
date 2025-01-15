@@ -9,7 +9,8 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use App\Exports\SalesReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 class PosController extends Controller
 {
     /**
@@ -205,8 +206,48 @@ class PosController extends Controller
     /**
      * Admin POS Report Page
      */
-    public function adminposreport()
+    public function adminposreport(Request $request)
     {
-        return view("admins.adminposreport");
+        // Fetch and transform data before pagination
+        $salesReport = \App\Models\PosOrderItem::with(['product', 'order.user']) // Load relationships
+            ->latest()
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product_name' => $item->product->product_name ?? 'Unknown',
+                    'quantity' => $item->quantity,
+                    'unit_price' => number_format($item->price, 2),
+                    'amount' => number_format($item->total, 2),
+                    'date' => $item->created_at->format('Y-m-d H:i'),
+                    'customer' => $item->order->user->name ?? 'Guest',
+                ];
+            });
+    
+        // Manually paginate the transformed data
+        $perPage = 6; // Items per page
+        $currentPage = $request->input('page', 1); // Current page or default to 1
+        $paginatedReport = new \Illuminate\Pagination\LengthAwarePaginator(
+            $salesReport->slice(($currentPage - 1) * $perPage, $perPage), // Slice the collection
+            $salesReport->count(), // Total items
+            $perPage, // Items per page
+            $currentPage, // Current page
+            ['path' => $request->url(), 'query' => $request->query()] // Append query parameters
+        );
+    
+        return view('admins.adminposreport', [
+            'salesReport' => $paginatedReport, // Pass the paginated object
+        ]);
     }
+    
+    public function exportPosReport(Request $request)
+    {
+        // Optional: Accept date filters or other parameters from the request
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+    
+        // Generate and download the report
+        return Excel::download(new SalesReportExport($fromDate, $toDate), 'pos-report.xlsx');
+    }
+    
 }

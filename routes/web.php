@@ -136,6 +136,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::post('/cart/update', [PosController::class, 'updateCart'])->name('cart.update'); // Update cart
             Route::post('/checkout', [PosController::class, 'checkout'])->name('checkout');
             Route::get('/report', [PosController::class, 'adminposreport'])->name('admins.adminposreport');
+            Route::get('/pos/export', [PosController::class, 'exportPosReport'])->name('admins.export.report');
+
         });
 
 
