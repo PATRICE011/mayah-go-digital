@@ -31,7 +31,7 @@
                             <h1 class="mb-1 text-primary">{{ number_format($totalCustomers) }}</h1>
                         </div>
                         <div class="metric-label d-inline-block float-right text-success">
-                        <i class="fa fa-fw fa-caret-up"></i><span>{{ number_format($customerGrowth, 2) }}%</span>
+                            <i class="fa fa-fw fa-caret-up"></i><span>{{ number_format($customerGrowth, 2) }}%</span>
                         </div>
                     </div>
                     <div id="sparkline-1"></div>
@@ -40,20 +40,20 @@
 
             <!-- Orders Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-            <div class="card fixed-card">
-                <div class="card-body">
-                    <h5 class="text-muted">Orders</h5>
-                    <div class="metric-value d-inline-block">
-                        <h1 class="mb-1 text-primary">{{ number_format($totalOrders) }}</h1>
+                <div class="card fixed-card">
+                    <div class="card-body">
+                        <h5 class="text-muted">Orders</h5>
+                        <div class="metric-value d-inline-block">
+                            <h1 class="mb-1 text-primary">{{ number_format($totalOrders) }}</h1>
+                        </div>
+                        <div class="metric-label d-inline-block float-right {{ $orderGrowth >= 0 ? 'text-success' : 'text-danger' }}">
+                            <i class="fa fa-fw fa-caret-{{ $orderGrowth >= 0 ? 'up' : 'down' }}"></i>
+                            <span>{{ number_format(abs($orderGrowth), 2) }}%</span>
+                        </div>
                     </div>
-                    <div class="metric-label d-inline-block float-right {{ $orderGrowth >= 0 ? 'text-success' : 'text-danger' }}">
-                        <i class="fa fa-fw fa-caret-{{ $orderGrowth >= 0 ? 'up' : 'down' }}"></i>
-                        <span>{{ number_format(abs($orderGrowth), 2) }}%</span>
-                    </div>
+                    <div id="sparkline-2"></div>
                 </div>
-                <div id="sparkline-2"></div>
             </div>
-        </div>
 
             <!-- Total Products Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -71,30 +71,31 @@
                 </div>
             </div>
 
-             <!-- Growth Card -->
+            <!-- Growth Card -->
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                 <div class="card fixed-card">
                     <div class="card-body">
                         <h5 class="text-muted">Growth</h5>
-                        <div class="metric-value d-inline-block">
+                        <div class="d-flex align-items-center justify-content-between">
                             <h1 class="mb-1 text-primary">
                                 {{ number_format($growthRate, 2) }}%
                             </h1>
-                        </div>
-                        <div class="metric-label d-inline-block float-right {{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}">
-                            <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
-                            <span>{{ number_format($growthRate, 2) }}%</span>
+                            <span class="{{ $growthRate >= 0 ? 'text-success' : 'text-danger' }}" style="font-size: 18px;">
+                                <i class="fa fa-fw fa-caret-{{ $growthRate >= 0 ? 'up' : 'down' }}"></i>
+                            </span>
                         </div>
                     </div>
                     <div id="sparkline-4"></div>
                 </div>
             </div>
+
+
         </div>
 
 
-       
+
         <div class="row">
-             <!-- LINE GRAPHS -->
+            <!-- LINE GRAPHS -->
             <!-- Revenue Section -->
             <div class="col-xl-8 col-lg-12 col-md-8 col-sm-12 col-12">
                 <div class="card">
@@ -248,14 +249,14 @@
 <script>
     // Prepare dynamic data for the Sales Pie Chart
     window.salesData = {
-        labels: @json($salesByCategory->pluck('category_name')), // Category names for labels
-        data: @json($salesByCategory->pluck('total_sales')), // Total sales for each category
+        labels: @json($salesByCategory -> pluck('category_name')), // Category names for labels
+        data: @json($salesByCategory -> pluck('total_sales')), // Total sales for each category
         colors: @json(
             array_map(
-                function ($name) use ($colors) {
+                function($name) use($colors) {
                     return $colors[$name] ?? '#cccccc'; // Default to gray if no color is defined
                 },
-                $salesByCategory->pluck('category_name')->toArray() // Convert labels to an array
+                $salesByCategory -> pluck('category_name') -> toArray() // Convert labels to an array
             )
         ),
     };
