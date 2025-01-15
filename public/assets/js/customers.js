@@ -40,6 +40,7 @@ $(document).ready(function () {
                 (employee, index) => `
                     <tr>
                         <td>${(response.current_page - 1) * response.per_page + index + 1}</td>
+                        <td>123456</td>
                         <td>${employee.name}</td>
                         <td>${employee.mobile}</td>
                         <td>

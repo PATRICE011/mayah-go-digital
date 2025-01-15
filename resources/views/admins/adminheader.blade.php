@@ -75,19 +75,19 @@ $role = Auth::user()->role_id; // Fetch user's role
                     </li>
                     @endif
 
-                    <!-- <li class="nav-divider">
+                    <li class="nav-divider">
                         POS & Orders
-                    </li> -->
+                    </li>
 
                     <li class="nav-divider">
                         Orders
                     </li>
                     <li class="nav-item">
-                        <!-- <a href="#" class="nav-link">
+                        <a href="{{ route('admins.adminpos') }}" class="nav-link {{ isset($activePage) && $activePage === 'pos' ? 'active' : '' }}>
                             <i class="fas fa-fw fa-file"></i> POS
                         </a>
 
-                        <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> POS Orders
                         </a> -->
 
@@ -95,9 +95,9 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> Online Orders
                         </a>
 
-                        <!-- <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
+                        <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
-                        </a> -->
+                        </a>
                     </li>
 
                     <!-- Users Section -->
@@ -115,7 +115,6 @@ $role = Auth::user()->role_id; // Fetch user's role
                     </li>
                     @endif
 
-
                     <!-- Reports Section -->
                     @if($role != 2) {{-- Hide for role ID 2 --}}
                     <li class="nav-divider">
@@ -125,9 +124,15 @@ $role = Auth::user()->role_id; // Fetch user's role
                         <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Audit Trail
                         </a>
+
                         <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Sales Report
                         </a>
+
+                        <a href="{{ route('admins.adminposreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'posreport' ? 'active' : '' }}">
+                            <i class="fas fa-fw fa-file"></i> POS Sales Report
+                        </a>
+
                         <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products Report
                         </a>

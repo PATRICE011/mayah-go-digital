@@ -51,6 +51,7 @@
                                 <thead class="bg-light">
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
+                                        <th class="border-0">Customer ID</th>
                                         <th class="border-0">Name</th>
                                         <th class="border-0">Phone Number</th>
 

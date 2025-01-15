@@ -57,6 +57,8 @@ $(document).ready(function () {
                                  class="rounded product-image" width="45">
                         </div>
                     </td>
+                    <td>123456</td>
+
                     <td>${product.product_name}</td>
                     <td class="text-truncate" style="max-width: 200px;" title="${
                         product.product_description || "N/A"

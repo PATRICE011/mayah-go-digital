@@ -127,6 +127,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
 
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
+        Route::get('/pos', [AdminController::class, 'adminpos'])->name('admins.adminpos');
+        Route::get('/posreport', [AdminController::class, 'adminposreport'])->name('admins.adminposreport');
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
 
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
