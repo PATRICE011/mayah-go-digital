@@ -45,9 +45,11 @@
                             <input type="date" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date">
                         </div>
 
-                        <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
+                        <!-- <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </button> -->
+
+                        <a href="{{url('/admin/export-sales-report')}}" class="btn btn-sm btn-outline-danger mr-2"><i class="fa fa-file-export"></i> Export</a>
                     </div>
 
                     <div class="card-body p-0">

@@ -39,9 +39,11 @@
                             <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
+                        <!-- <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </button> -->
+                        <a href="{{url('/admin/customers/export')}}" class="btn btn-sm btn-outline-danger mr-2 btn-export"><i class="fa fa-file-export"></i>Export</a>
+
 
                     </div>
 

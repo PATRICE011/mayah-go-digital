@@ -40,9 +40,11 @@
                         </div>
 
 
-                        <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
+                        <!-- <button class="btn btn-sm btn-outline-danger mr-2 btn-export">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </button> -->
+
+                        <a href="{{url('/admin/employees/export')}}" class="btn btn-sm btn-outline-danger mr-2 btn-export"><i class="fa fa-file-export"></i>Export</a>
 
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Employee

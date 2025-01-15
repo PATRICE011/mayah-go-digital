@@ -262,9 +262,9 @@ $(document).ready(function () {
         });
     });
     
-    $("#exportCategoryBtn").on("click", function () {
-        window.open("/admin/print-categories");
-    });
+    // $("#exportCategoryBtn").on("click", function () {
+    //     window.open("/admin/print-categories");
+    // });
 
     function toggleSpinner(show) {
         if (show) {
