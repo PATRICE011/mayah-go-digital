@@ -14,9 +14,11 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OnlineOrdersController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\UpdateProfileController;
+
 use App\Http\Controllers\SmsStatusController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -125,11 +127,25 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
 
 
+        Route::prefix('pos')->group(function () {
+            Route::get('/', [PosController::class, 'adminpos'])->name('admins.adminpos');
+            Route::get('/categories', [PosController::class, 'getCategories'])->name('categories.get');
+            Route::get('/products', [PosController::class, 'getProducts'])->name('products.get');
+            Route::post('/cart/add', [PosController::class, 'addToCart'])->name('cart.add');
+            Route::get('/cart', [PosController::class, 'getCart'])->name('cart.get');
+            Route::post('/cart/update', [PosController::class, 'updateCart'])->name('cart.update'); // Update cart
+            Route::post('/checkout', [PosController::class, 'checkout'])->name('checkout');
+            Route::get('/report', [PosController::class, 'adminposreport'])->name('admins.adminposreport');
+            Route::get('/pos/export', [PosController::class, 'exportPosReport'])->name('admins.export.report');
+
+        });
+
+
 
 
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
-        Route::get('/pos', [AdminController::class, 'adminpos'])->name('admins.adminpos');
-        Route::get('/posreport', [AdminController::class, 'adminposreport'])->name('admins.adminposreport');
+
+
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
 
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');

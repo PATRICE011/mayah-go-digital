@@ -31,8 +31,14 @@ class PosOrderItem extends Model
     /**
      * Get the product associated with this order item.
      */
+
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->belongsTo(Product::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(PosOrder::class);
     }
 }
