@@ -87,12 +87,17 @@ class ProductSeeder extends Seeder
 
          // Assign random timestamps for the products
          foreach ($products as $product) {
+
+            do {
+                $productId = random_int(100000, 99999999);
+            } while (DB::table('products')->where('product_id', $productId)->exists());
             // Randomly assign either the current week or the previous week
             $randomTimestamp = rand(0, 1)
                 ? $currentWeekStart->copy()->addDays(rand(0, 6)) // Random day in current week
                 : $previousWeekStart->copy()->addDays(rand(0, 6)); // Random day in previous week
 
             DB::table('products')->insert(array_merge($product, [
+                'product_id' => $productId,
                 'created_at' => $randomTimestamp,
                 'updated_at' => $randomTimestamp,
             ]));

@@ -79,9 +79,6 @@ $role = Auth::user()->role_id; // Fetch user's role
                         POS & Orders
                     </li>
 
-                    <li class="nav-divider">
-                        Orders
-                    </li>
                     <li class="nav-item">
                         <!-- <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> POS Orders
