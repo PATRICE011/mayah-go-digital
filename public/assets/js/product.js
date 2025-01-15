@@ -435,9 +435,9 @@ $(document).ready(function () {
     /**
      * Export Products Button Click Event
      */
-    $("#exportProductsBtn").on("click", function () {
-        window.open("/admin/products/export-products");
-    });
+    // $("#exportProductsBtn").on("click", function () {
+    //     window.open("/admin/products/export-products");
+    // });
 
     /**
      * Apply search and filter parameters.

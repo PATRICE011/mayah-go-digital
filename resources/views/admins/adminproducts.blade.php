@@ -113,10 +113,10 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2" id="exportProductsBtn">
+                        <!-- <button class="btn btn-sm btn-outline-danger mr-2" id="exportProductsBtn">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
-
+                        </button> -->
+                        <a href="{{url('/admin/products/export-products')}}" class="btn btn-sm btn-outline-danger mr-2"> <i class="fa fa-file-export"></i> Export</a>
 
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Product
