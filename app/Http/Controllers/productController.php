@@ -12,9 +12,10 @@ use App\Models\Audit;
 
 use App\Exports\ProductsExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class productController extends Controller
 {
-    
+
     public function adminproducts()
     {
 
@@ -66,7 +67,6 @@ class productController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
-
         // Handle the image logic
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
@@ -86,11 +86,12 @@ class productController extends Controller
             // Store the filename in the database
             $validatedData['product_image'] = $imageName;
         }
-        Log::info($validatedData);
+
+        // Generate a unique 8-digit product_id
+        $validatedData['product_id'] = $this->generateUniqueProductId();
 
         // Create the product
         $product = Product::create($validatedData);
-
 
         // Log the audit
         Audit::create([
@@ -106,6 +107,21 @@ class productController extends Controller
             'message' => 'Product added successfully!',
             'product' => $product
         ]);
+    }
+
+    /**
+     * Generate a unique 8-digit product ID.
+     *
+     * @return string
+     */
+    private function generateUniqueProductId()
+    {
+        do {
+            // Generate a random 8-digit number
+            $productId = random_int(10000000, 99999999);
+        } while (Product::where('product_id', $productId)->exists()); // Ensure uniqueness
+
+        return (string) $productId;
     }
 
     public function updateProduct(Request $request, $id)
@@ -155,14 +171,14 @@ class productController extends Controller
             $oldValues = $product->toArray();
             $product->delete();
 
-              // Log the audit
-        Audit::create([
-            'user_id' => Auth::id(),
-            'action' => 'Deleted a Product',
-            'model_type' => Product::class,
-            'model_id' => $id,
-            'old_values' => $oldValues,
-        ]);
+            // Log the audit
+            Audit::create([
+                'user_id' => Auth::id(),
+                'action' => 'Deleted a Product',
+                'model_type' => Product::class,
+                'model_id' => $id,
+                'old_values' => $oldValues,
+            ]);
 
             return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);
         } catch (\Exception $e) {
@@ -179,7 +195,7 @@ class productController extends Controller
     {
         $response = Excel::download(new ProductsExport, 'products.xlsx', \Maatwebsite\Excel\Excel::XLSX);
         ob_end_clean();
-    
+
         return $response;
     }
 }
