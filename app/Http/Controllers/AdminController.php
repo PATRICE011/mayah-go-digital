@@ -274,15 +274,7 @@ class AdminController extends Controller
         return view("admins.adminrefund");
     }
 
-    public function adminpos()
-    {
-        return view("admins.adminpos");
-    }
-
-    public function adminposreport()
-    {
-        return view("admins.adminposreport");
-    }
+ 
 
     public function logout(Request $request)
     {

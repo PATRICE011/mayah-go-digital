@@ -19,7 +19,7 @@ class CreatePosOrdersTable extends Migration
             $table->decimal('total_amount', 10, 2); // Total price for the order
             $table->decimal('cash_paid', 10, 2); // Amount of cash paid
             $table->decimal('change', 10, 2)->default(0); // Change to return
-            $table->enum('order_type', ['dine-in', 'delivery', 'takeaway']); // Type of order
+            
             $table->enum('status', ['completed', 'pending', 'cancelled'])->default('pending'); // Order status
             $table->timestamps(); // created_at and updated_at
         });
