@@ -35,10 +35,11 @@
                             <input type="text" id="searchCategory" class="form-control form-control-sm" placeholder="Search...">
                         </div>
 
-                        <button class="btn btn-sm btn-outline-danger mr-2" id="exportCategoryBtn">
+                        <!-- <button class="btn btn-sm btn-outline-danger mr-2" id="exportCategoryBtn">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </button> -->
 
+                        <a href="{{url('/admin/print-categories')}}" class="btn btn-sm btn-outline-danger mr-2"><i class="fa fa-file-export"></i>Export</a>
                         <!-- ADD CATEGORY BUTTON -->
                         <button class="btn btn-sm btn-warning text-white" data-toggle="modal" data-target="#addModal">
                             <i class="fa fa-plus-circle"></i> Add Category

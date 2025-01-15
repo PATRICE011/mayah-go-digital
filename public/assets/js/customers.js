@@ -230,8 +230,8 @@ $(document).ready(function () {
     /**
      * Export employees for printing
      */
-    $(document).on("click", ".btn-export", function () {
-         window.open("/admin/customers/export");
+    // $(document).on("click", ".btn-export", function () {
+    //      window.open("/admin/customers/export");
         
-    });
+    // });
 });
