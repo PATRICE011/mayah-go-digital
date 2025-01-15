@@ -80,18 +80,22 @@ $role = Auth::user()->role_id; // Fetch user's role
                         POS & Orders
                     </li>
                     <li class="nav-item">
-                        @if($role == 1 || $role == 2) {{-- Only for role 1 and 2 --}}
+                        @if($role == 1) {{-- Role ID 1: See all 3 pages --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders
                         </a>
-                        @else {{-- For other roles --}}
                         <a href="{{ route('admins.adminposorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'posorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> POS Orders
                         </a>
                         <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
                         </a>
+                        @elseif($role == 2) {{-- Role ID 2: See only Online Orders --}}
+                        <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
+                            <i class="fas fa-fw fa-file"></i> Online Orders
+                        </a>
                         @endif
+
                     </li>
 
                     <!-- Users Section -->

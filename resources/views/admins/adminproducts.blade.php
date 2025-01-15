@@ -207,6 +207,7 @@
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
                                         <th class="border-0">Image</th>
+                                        <th class="border-0">Product ID</th>
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Product Description</th>
                                         <th class="border-0">Category</th>
