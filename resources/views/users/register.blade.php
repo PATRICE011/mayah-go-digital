@@ -106,16 +106,6 @@
         <div class="register">
             <h3 class="section__title">Register</h3>
 
-            <!-- Display errors -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
             <form action="{{ url('user/register') }}" method="POST" class="form grid">
                 @csrf

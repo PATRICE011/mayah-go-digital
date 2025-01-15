@@ -88,31 +88,40 @@ class userController extends Controller
     
     public function filterProducts(Request $request)
     {
-        $categories = $request->input('categories', []);
+        // Get categories from AJAX or query parameter
+    $categories = $request->input('categories', []);
 
-        $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.category_name')
-            ->when(!empty($categories), function ($query) use ($categories) {
-                $query->whereIn('categories.category_name', $categories);
-            })
-            ->get();
+    // If a category slug is in the query string, add it to the filter
+    $categorySlug = $request->query('category');
+    if ($categorySlug) {
+        $categories[] = $categorySlug;
+    }
 
-        $totalProducts = DB::table('products')->count();
+    // Fetch products with filtering
+    $query = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->select('products.*', 'categories.category_name');
 
-        $html = '';
-        foreach ($products as $product) {
-            $stockClass = $product->product_stocks == 0
-                ? 'out-of-stock'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
-            $stockMessage = $product->product_stocks == 0
-                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
-                : ($product->product_stocks > 0 && $product->product_stocks < 10
-                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
-                    : '');
+    // Apply category filter
+    if (!empty($categories)) {
+        $query->whereIn('categories.slug', $categories);
+    }
 
-            // Use the same form structure as in the partial
-            $html .= '
+    $products = $query->get();
+
+    // Generate HTML for filtered products
+    $html = '';
+    foreach ($products as $product) {
+        $stockClass = $product->product_stocks == 0
+            ? 'out-of-stock'
+            : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
+        $stockMessage = $product->product_stocks == 0
+            ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
+            : ($product->product_stocks > 0 && $product->product_stocks < 10
+                ? '<div class="stock-status low-stock-message">Low Stock</div>'
+                : '');
+
+        $html .= '
         <div class="product__item ' . $stockClass . '">
             <div class="product__banner">
                 <a href="#" class="product__images">
@@ -136,7 +145,6 @@ class userController extends Controller
                 </a>
                 <div class="product__price flex">
                     <span class="new__price">₱ ' . number_format($product->product_price, 2) . '</span>
-                    <span class="old__price">₱ 9.00</span>
                 </div>
                 <form id="addToCartForm-' . $product->id . '" class="add-to-cart-form" data-url="' . route('home.inserttocart') . '">
                     ' . csrf_field() . '
@@ -147,13 +155,12 @@ class userController extends Controller
                 </form>
             </div>
         </div>';
-        }
+    }
 
-        return response()->json([
-            'html' => $html,
-            'count' => $products->count(),
-            'total' => $totalProducts,
-        ]);
+    return response()->json([
+        'html' => $html,
+        'count' => $products->count(),
+    ]);
     }
 
     // DETAILS START

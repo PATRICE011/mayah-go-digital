@@ -30,6 +30,7 @@ Route::middleware(['guest'])->group(function () {
         Route::get('/login', [AuthController::class, 'getLogin'])->name('login');
         Route::post('/login', [AuthController::class, 'postLogin']);
         Route::post('/register', [AuthController::class, 'postRegister']);
+        Route::post('/validate-register', [AuthController::class, 'validateRegister'])->name('validate.register');
 
         Route::get('/otp', [OtpController::class, 'showOtp']);
         Route::post('/otp', [OtpController::class, 'verifyOtp']);
@@ -159,4 +160,4 @@ Route::get('/privacypolicy', [UserController::class, 'privacypolicy'])->name('ho
 
 Route::post('/filter-products', [UserController::class, 'filterProducts']); // Filter products via POST
 
-Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');
+// Route::get('/search-products', [ProductController::class, 'search'])->name('searchProduct');

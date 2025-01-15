@@ -58,7 +58,10 @@ $(document).ready(function () {
                         </div>
                     </td>
                     <td>123456</td>
+<<<<<<< HEAD
 
+=======
+>>>>>>> cff6c17cb800715ec96ea0e7a45d465bfdfc4cfc
                     <td>${product.product_name}</td>
                     <td class="text-truncate" style="max-width: 200px;" title="${
                         product.product_description || "N/A"
