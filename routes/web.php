@@ -140,9 +140,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
         });
 
-
-
-
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
 
 
@@ -152,7 +149,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
 
         Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
-
 
 
         Route::get('/products/export', function () {
