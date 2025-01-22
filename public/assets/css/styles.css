@@ -2332,11 +2332,9 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-<<<<<<< HEAD
 div.phpdebugbar{
   display: none;
 }
-=======
 
 
 /* POS */
@@ -2382,4 +2380,3 @@ div.phpdebugbar{
   background-color: #d9534f;
   border-color: #d43f3a;
 }
->>>>>>> e3d10b8c3512101f220510608f679ca6f825fdb3

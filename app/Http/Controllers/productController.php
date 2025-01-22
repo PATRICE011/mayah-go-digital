@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Audit;
 
 use App\Exports\ProductsExport;
+
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelFileType;
+
+
 
 class productController extends Controller
 {
@@ -90,8 +94,15 @@ class productController extends Controller
         // Generate a unique 8-digit product_id
         $validatedData['product_id'] = $this->generateUniqueProductId();
 
-        // Create the product
-        $product = Product::create($validatedData);
+        try {
+            $product = Product::create($validatedData);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Database Error: ' . $e->getMessage(),
+            ], 500);
+        }
+
 
         // Log the audit
         Audit::create([
@@ -193,7 +204,10 @@ class productController extends Controller
 
     public function export()
     {
-        $response = Excel::download(new ProductsExport, 'products.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        // Download the export as an XLSX file
+        $response = Excel::download(new ProductsExport, 'products.xlsx', ExcelFileType::XLSX);
+
+        // Clean the output buffer (if necessary)
         ob_end_clean();
 
         return $response;
