@@ -161,6 +161,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     
     
         Route::get('/stocks/report', [StockController::class, 'index']);
+       
+
     });
 
 // Public Routes (accessible by all)

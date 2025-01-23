@@ -3,124 +3,146 @@
 @section('content')
 @include('admins.adminheader', ['activePage' => 'stocksreport'])
 
+<style>
+    .horizontal-layout {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    .card {
+        flex: 1 1 30%;
+        margin: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .card-body {
+        overflow-x: auto;
+    }
+    .table-responsive {
+        min-width: 360px;
+    }
+    .search-box {
+        margin-bottom: 20px;
+    }
+    .export-btn {
+        text-align: right;
+        margin-top: 20px;
+    }
+</style>
+
 <div class="dashboard-wrapper">
-    <div class="container-fluid  dashboard-content">
-        <!-- Page Header -->
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="page-header">
-                    <h3 class="mb-2">Stock In-Out Balance Tracker</h3>
-                    <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="#" class="breadcrumb-link">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item">
-                                    <a href="#" class="breadcrumb-link">Reports</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    Stock In-Out Balance Tracker
-                                </li>
-                            </ol>
-                        </nav>
+    <div class="container-fluid dashboard-content">
+    <div class="export-btn">
+            <button onclick="window.location=''" class="btn btn-sm btn-outline-danger mr-2">
+                <i class="fa fa-file-export"></i> Export
+            </button>
+        </div>
+        <div class="horizontal-layout">
+            <!-- Stock In Table with Search -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Stock In
+                </div>
+                <div class="card-body">
+                    <form action="{{ url()->current() }}" method="GET" class="search-box">
+                        <input type="text" name="searchIn" class="form-control mb-2" placeholder="Search in Stock In..." value="{{ request('searchIn') }}">
+                        <!-- <button type="submit" class="btn btn-primary">Search</button> -->
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Item Name</th>
+                                    <th>In Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($movement_in as $item)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($item->stock_in_date)->format('m/d/Y') }}</td>
+                                    <td>{{ $item->product_name }}</td>
+                                    <td>{{ $item->stock_in_quantity }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    {{ $movement_in->appends(['searchIn' => request('searchIn')])->links() }}
                 </div>
             </div>
-        </div>
 
-        <!-- Card with Table -->
-        <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-end align-items-center">
-                        <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
-                        </div>
-                        <button id="printReportBtn" class="btn btn-sm btn-outline-danger mr-2">
-                            <i class="fa fa-file-export"></i> Export
-                        </button>
+            <!-- Stock Out Table with Search -->
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    Stock Out
+                </div>
+                <div class="card-body">
+                    <form action="{{ url()->current() }}" method="GET" class="search-box">
+                        <input type="text" name="searchOut" class="form-control mb-2" placeholder="Search in Stock Out..." value="{{ request('searchOut') }}">
+                        <!-- <button type="submit" class="btn btn-primary">Search</button> -->
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Item Name</th>
+                                    <th>Out Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($movement_out as $item)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($item->stock_out_date)->format('m/d/Y') }}</td>
+                                    <td>{{ $item->product_name }}</td>
+                                    <td>{{ $item->stock_out_quantity }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    {{ $movement_out->appends(['searchOut' => request('searchOut')])->links() }}
+                </div>
+            </div>
 
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <!-- Stock In-Out Balance Table -->
-                            <table class="table table-bordered">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th colspan="3" class="text-center bg-success text-white">Stock In</th>
-                                        <th colspan="3" class="text-center bg-danger text-white">Stock Out</th>
-                                        <th colspan="2" class="text-center bg-primary text-white">Stock Balance</th>
-                                    </tr>
-                                    <tr>
-                                        <!-- Stock In Columns -->
-                                        <th>Date</th>
-                                        <th>Item Name</th>
-                                        <th>In Quantity</th>
-                                        <!-- Stock Out Columns -->
-                                        <th>Date</th>
-                                        <th>Item Name</th>
-                                        <th>Out Quantity</th>
-                                        <!-- Stock Balance Columns -->
-                                        <th>Item Name</th>
-                                        <th>Balance Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dynamic Rows -->
-                                    <tr>
-                                        <!-- Stock In -->
-                                        <td>7/1/2024</td>
-                                        <td>Television</td>
-                                        <td>20</td>
-                                        <!-- Stock Out -->
-                                        <td>7/1/2024</td>
-                                        <td>Television</td>
-                                        <td>4</td>
-                                        <!-- Stock Balance -->
-                                        <td>Television</td>
-                                        <td>16</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7/2/2024</td>
-                                        <td>Refrigerator</td>
-                                        <td>20</td>
-                                        <td>7/2/2024</td>
-                                        <td>Refrigerator</td>
-                                        <td>3</td>
-                                        <td>Refrigerator</td>
-                                        <td>17</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7/2/2024</td>
-                                        <td>Fan</td>
-                                        <td>16</td>
-                                        <td>7/2/2024</td>
-                                        <td>Fan</td>
-                                        <td>4</td>
-                                        <td>Fan</td>
-                                        <td>12</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7/2/2024</td>
-                                        <td>Heater</td>
-                                        <td>10</td>
-                                        <td>7/2/2024</td>
-                                        <td>Heater</td>
-                                        <td>10</td>
-                                        <td>Heater</td>
-                                        <td>0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <!-- End of Table -->
-                        </div>
+            <!-- Current Stock Table with Search -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Current Stock
+                </div>
+                <div class="card-body">
+                    <form action="{{ url()->current() }}" method="GET" class="search-box">
+                        <input type="text" name="searchStock" class="form-control mb-2" placeholder="Search in Current Stock..." value="{{ request('searchStock') }}">
+                        <!-- <button type="submit" class="btn btn-primary">Search</button> -->
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Balance Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($current_stock as $stock)
+                                <tr>
+                                    <td>{{ $stock->product_name }}</td>
+                                    <td>{{ $stock->balance_quantity }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    {{ $current_stock->appends(['searchStock' => request('searchStock')])->links() }}
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 @endsection

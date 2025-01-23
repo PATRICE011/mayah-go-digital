@@ -137,7 +137,7 @@ $role = Auth::user()->role_id; // Fetch user's role
                     </li>
                     <li class="nav-item">
                        
-                        <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : 'active' }}">
+                        <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Stock In & Out Report
                         </a>
 

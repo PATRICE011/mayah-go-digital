@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
@@ -74,20 +75,13 @@ class productController extends Controller
         // Handle the image logic
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-
-            // Define the destination path in the public directory
             $destinationPath = public_path('assets/img');
-
-            // Use the original file name
             $imageName = $image->getClientOriginalName();
 
-            // Check if the file already exists
             if (!file_exists($destinationPath . '/' . $imageName)) {
-                // Move the file to the destination path if it does not exist
                 $image->move($destinationPath, $imageName);
             }
 
-            // Store the filename in the database
             $validatedData['product_image'] = $imageName;
         }
 
@@ -95,14 +89,26 @@ class productController extends Controller
         $validatedData['product_id'] = $this->generateUniqueProductId();
 
         try {
+            // Create the product
             $product = Product::create($validatedData);
+
+            // Log the initial stock-in movement
+            if ($validatedData['product_stocks'] > 0) {
+                DB::table('stock_movements')->insert([
+                    'product_id' => $product->id,
+                    'type' => 'in',
+                    'quantity' => $validatedData['product_stocks'],
+                    'remarks' => 'Initial stock',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Database Error: ' . $e->getMessage(),
             ], 500);
         }
-
 
         // Log the audit
         Audit::create([
@@ -119,6 +125,7 @@ class productController extends Controller
             'product' => $product
         ]);
     }
+
 
     /**
      * Generate a unique 8-digit product ID.
