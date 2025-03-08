@@ -37,9 +37,7 @@
 <div class="dashboard-wrapper">
     <div class="container-fluid dashboard-content">
     <div class="export-btn">
-            <button onclick="window.location=''" class="btn btn-sm btn-outline-danger mr-2">
-                <i class="fa fa-file-export"></i> Export
-            </button>
+    <a href="{{url('/admin/stocks/report/export')}}" class="btn btn-sm btn-outline-danger mr-2"> <i class="fa fa-file-export"></i> Export</a>
     </div>
         <div class="horizontal-layout">
             <!-- Stock In Table with Search -->

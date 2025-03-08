@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use App\Exports\StockReportExport;
+use Maatwebsite\Excel\Facades\Excel;
 class StockController extends Controller
 {
     //
@@ -54,5 +55,7 @@ class StockController extends Controller
             ->paginate(10);
     }
     
-
+    public function export(){
+        return Excel::download(new StockReportExport, 'stocks-report.xlsx');
+    }
 }
