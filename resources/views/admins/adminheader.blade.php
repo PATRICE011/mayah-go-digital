@@ -104,9 +104,10 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> POS Orders
                         </a> -->
 
-                        <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
-                        </a>
+                        </a> -->
+                        
                         @elseif($role == 2) {{-- Role ID 2: See only Online Orders --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders

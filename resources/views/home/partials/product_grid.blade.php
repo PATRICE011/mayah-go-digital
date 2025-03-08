@@ -67,11 +67,7 @@
                     color: {{ $product->product_stocks > 0 && $product->product_stocks < 10 ? 'gold' : ($product->product_stocks == 0 ? 'red' : 'inherit') }};">
             ₱ {{ number_format($product->product_price, 2) }}
         </span>
-        @if($product->product_old_price)
-        <span class="old__price">
-            ₱ {{ number_format($product->product_old_price, 2) }}
-        </span>
-        @endif
+        
     </div>
 
     <!-- Add to Cart -->
