@@ -35,7 +35,7 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                 'order_items.price as unit_price',
                 'products.product_raw_price as raw_price',
                 DB::raw('order_items.quantity * order_items.price as total_amount'),
-                DB::raw('order_items.quantity * products.product_raw_price as total_raw_cost'), // NEW: Total Raw Cost
+                DB::raw('order_items.quantity * products.product_raw_price as total_raw_cost'),
                 'orders.created_at as date',
                 'users_area.name as customer_name'
             )
@@ -54,18 +54,16 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
             ->when($this->toDate && !$this->fromDate, function ($query) {
                 $query->where('orders.created_at', '<=', $this->toDate . ' 23:59:59');
             })
+            ->orderBy('orders.created_at', 'desc') // SORT BY LATEST PURCHASE
             ->get();
 
-        // Reset index and calculate Gross Income
-        $salesData = array_values($salesData->toArray());
-        $totalRevenue = 0;
-        $totalRawCost = 0;
+        // Compute Totals
+        $totalRevenue = $salesData->sum('total_amount');
+        $totalRawCost = $salesData->sum('total_raw_cost');
+        $grossIncome = $totalRevenue - $totalRawCost;
 
-        // Add numbering and format data
-        $formattedData = collect($salesData)->map(function ($item, $index) use (&$totalRevenue, &$totalRawCost) {
-            $totalRevenue += $item->total_amount;
-            $totalRawCost += $item->total_raw_cost; // NEW: Sum up total raw cost
-
+        // Format Data for UI
+        $formattedData = collect($salesData)->map(function ($item, $index) {
             return [
                 'row_number' => $index + 1,
                 'product_name' => $item->product_name,
@@ -78,46 +76,42 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
             ];
         });
 
-        // Calculate Gross Income
-        $grossIncome = $totalRevenue - $totalRawCost;
-
-        // Add breakdown rows
+        // Append Total Rows
         $formattedData->push([
-            'row_number' => '',
+            'row_number' => 'TOTAL REVENUE',
             'product_name' => '',
             'quantity' => '',
             'unit_price' => '',
             'raw_price' => '',
-            'total_amount' => 'TOTAL REVENUE: ' . number_format($totalRevenue, 2),
+            'total_amount' => number_format($totalRevenue, 2),
             'date' => '',
             'customer_name' => '',
         ]);
 
         $formattedData->push([
-            'row_number' => '',
+            'row_number' => 'TOTAL RAW COST',
             'product_name' => '',
             'quantity' => '',
             'unit_price' => '',
             'raw_price' => '',
-            'total_amount' => 'TOTAL RAW COST: ' . number_format($totalRawCost, 2),
+            'total_amount' => number_format($totalRawCost, 2),
             'date' => '',
             'customer_name' => '',
         ]);
 
         $formattedData->push([
-            'row_number' => '',
+            'row_number' => 'GROSS INCOME',
             'product_name' => '',
             'quantity' => '',
             'unit_price' => '',
             'raw_price' => '',
-            'total_amount' => 'GROSS INCOME: ' . number_format($grossIncome, 2), // NEW: Gross Income
+            'total_amount' => number_format($grossIncome, 2),
             'date' => '',
             'customer_name' => '',
         ]);
 
         return $formattedData;
     }
-
 
     public function headings(): array
     {
@@ -128,20 +122,15 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
     {
         return [
             1 => [
-                'font' => ['bold' => true, 'size' => 16],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'color' => ['argb' => 'FFFF00']
-                ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
-            ],
-            2 => [
                 'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF']],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'color' => ['argb' => 'FF0000']
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'wrapText' => true
                 ]
             ]
         ];
@@ -153,31 +142,12 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
 
-                // Merge title across all columns (A to H)
-                $sheet->mergeCells('A1:H1');
-                $sheet->setCellValue('A1', 'SALES REPORT');
-
-                // Style title
-                $sheet->getStyle('A1')->applyFromArray([
-                    'font' => ['bold' => true, 'size' => 20, 'color' => ['argb' => '000000']],
-                    'alignment' => [
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
-                    ],
-                    'fill' => [
-                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'color' => ['argb' => 'FFFF00']
-                    ]
-                ]);
-                $sheet->getRowDimension(1)->setRowHeight(30);
-
-                // Set column headers manually
+                // Set column headers in Row 1
                 $headings = ['#', 'Product Name', 'Quantity', 'Unit Price', 'Raw Price', 'Total Amount', 'Date', 'Customer'];
-                $headingRow = 2;
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {
-                    $cell = $columnIndex . $headingRow;
+                    $cell = $columnIndex . '1';
                     $sheet->setCellValue($cell, $heading);
 
                     // Apply styling for headers
@@ -197,16 +167,31 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                     $columnIndex++;
                 }
 
+                // Set row height for headers
+                $sheet->getRowDimension(1)->setRowHeight(25);
+
+                // Ensure Data Starts at Row 2
+                $rowCount = DB::table('order_items')->count() + 4; // Account for total rows
+
+                $sheet->getStyle("A1:H{$rowCount}")->applyFromArray([
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['argb' => '000000']
+                        ],
+                    ],
+                ]);
+
                 // Adjust column widths
                 $columnWidths = [
-                    'A' => 8,  // #
-                    'B' => 25, // Product Name
-                    'C' => 10, // Quantity
-                    'D' => 12, // Unit Price
-                    'E' => 12, // Raw Price
-                    'F' => 15, // Total Amount
-                    'G' => 18, // Date
-                    'H' => 20  // Customer
+                    'A' => 8,   // #
+                    'B' => 25,  // Product Name
+                    'C' => 10,  // Quantity
+                    'D' => 12,  // Unit Price
+                    'E' => 12,  // Raw Price
+                    'F' => 15,  // Total Amount
+                    'G' => 18,  // Date
+                    'H' => 20   // Customer
                 ];
                 foreach ($columnWidths as $col => $width) {
                     $sheet->getColumnDimension($col)->setWidth($width);

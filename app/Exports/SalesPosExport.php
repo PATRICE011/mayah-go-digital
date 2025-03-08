@@ -27,10 +27,11 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function query()
     {
-        $query = PosOrderItem::with(['product', 'order.user'])->latest();
+        $query = PosOrderItem::with(['product', 'order.user'])
+            ->orderBy('created_at', 'desc'); // Fetch latest purchases first
 
         if ($this->fromDate && $this->toDate) {
-            $query->whereBetween('created_at', [$this->fromDate, $this->toDate]);
+            $query->whereBetween('created_at', [$this->fromDate . ' 00:00:00', $this->toDate . ' 23:59:59']);
         }
 
         return $query;
@@ -43,12 +44,14 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function map($item): array
     {
+        static $index = 1; // Ensure data numbering starts at 1
+
         return [
-            $item->id,
+            $index++,
             $item->product->product_name ?? 'Unknown',
             $item->quantity,
-            number_format($item->price, 2),
-            number_format($item->total, 2),
+            number_format((float) $item->price, 2),
+            number_format((float) $item->total, 2),
             $item->created_at->format('Y-m-d H:i'),
             $item->order->user->name ?? 'Guest',
         ];
@@ -58,26 +61,15 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     {
         return [
             1 => [
-                'font' => [
-                    'bold' => true,
-                    'size' => 16
-                ],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'color' => ['argb' => 'FFFF00']
-                ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
-            ],
-            2 => [
-                'font' => [
-                    'bold' => true,
-                    'color' => ['argb' => 'FFFFFF']
-                ],
+                'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF']],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                     'color' => ['argb' => 'FF0000']
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'wrapText' => true
                 ]
             ]
         ];
@@ -86,47 +78,21 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
-                // Merge title cells for "SALES REPORT"
-                $event->sheet->mergeCells('A1:G1');
-                $event->sheet->setCellValue('A1', 'SALES REPORT');
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet;
 
-                // Style header title
-                $event->sheet->getStyle('A1')->applyFromArray([
-                    'font' => [
-                        'bold' => true,
-                        'size' => 20,
-                        'color' => ['argb' => '000000']
-                    ],
-                    'alignment' => [
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
-                    ],
-                    'fill' => [
-                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'color' => ['argb' => 'FFFF00']
-                    ]
-                ]);
-
-                // Set row height for title
-                $event->sheet->getRowDimension(1)->setRowHeight(30);
-
-                // Set column headers
+                // Explicitly set headers in Row 1
                 $headings = ['#', 'Product Name', 'Quantity', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
-                $headingRow = 2;
+                $headingRow = 1;
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {
                     $cell = $columnIndex . $headingRow;
-                    $event->sheet->setCellValue($cell, $heading);
+                    $sheet->setCellValue($cell, $heading);
 
                     // Apply styling for headers
-                    $event->sheet->getStyle($cell)->applyFromArray([
-                        'font' => [
-                            'bold' => true,
-                            'color' => ['argb' => 'FFFFFF'],
-                            'size' => 12
-                        ],
+                    $sheet->getStyle($cell)->applyFromArray([
+                        'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF'], 'size' => 12],
                         'alignment' => [
                             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
                             'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
@@ -141,27 +107,13 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                     $columnIndex++;
                 }
 
-                // Set row height for header row
-                $event->sheet->getRowDimension(2)->setRowHeight(30);
+                // Ensure row height for headers
+                $sheet->getRowDimension(1)->setRowHeight(25);
 
-                // Set column widths for better readability
-                $columnWidths = [
-                    'A' => 8,   // ID
-                    'B' => 25,  // Product Name
-                    'C' => 10,  // Quantity
-                    'D' => 12,  // Unit Price
-                    'E' => 15,  // Total Amount
-                    'F' => 18,  // Date
-                    'G' => 20   // Customer
-                ];
+                // Ensure Data Starts at Row 2
+                $rowCount = PosOrderItem::count() + 1; // Adjust row count for correct data placement
 
-                foreach ($columnWidths as $col => $width) {
-                    $event->sheet->getColumnDimension($col)->setWidth($width);
-                }
-
-                // Apply borders to all data rows
-                $rowCount = PosOrderItem::count() + 2;
-                $event->sheet->getStyle("A1:G{$rowCount}")->applyFromArray([
+                $sheet->getStyle("A1:G{$rowCount}")->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -170,10 +122,24 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                     ],
                 ]);
 
-                // Alternate row colors for better readability
-                for ($i = 3; $i <= $rowCount; $i++) {
+                // Manually set column widths for better readability
+                $columnWidths = [
+                    'A' => 8,   // #
+                    'B' => 25,  // Product Name
+                    'C' => 10,  // Quantity
+                    'D' => 12,  // Unit Price
+                    'E' => 15,  // Total Amount
+                    'F' => 18,  // Date
+                    'G' => 20   // Customer
+                ];
+                foreach ($columnWidths as $col => $width) {
+                    $sheet->getColumnDimension($col)->setWidth($width);
+                }
+
+                // Apply alternate row colors for readability
+                for ($i = 2; $i <= $rowCount; $i++) {
                     if ($i % 2 == 0) {
-                        $event->sheet->getStyle("A{$i}:G{$i}")->applyFromArray([
+                        $sheet->getStyle("A{$i}:G{$i}")->applyFromArray([
                             'fill' => [
                                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
                                 'color' => ['argb' => 'F2F2F2']
@@ -183,7 +149,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 }
 
                 // Format currency fields
-                $event->sheet->getStyle("D3:E{$rowCount}")->getNumberFormat()->setFormatCode('#,##0.00');
+                $sheet->getStyle("D2:E{$rowCount}")->getNumberFormat()->setFormatCode('#,##0.00');
             },
         ];
     }
