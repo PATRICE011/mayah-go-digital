@@ -61,6 +61,6 @@ class ProductReportController extends Controller
 
     public function exportProductsReport(Request $request)
     {
-        return Excel::download(new ProductReportExport($request->input('search')), 'product-report.xlsx');
+        return Excel::download(new ProductReportExport, 'product-report.xlsx');
     }
 }
