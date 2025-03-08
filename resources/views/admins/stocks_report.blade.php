@@ -40,7 +40,7 @@
             <button onclick="window.location=''" class="btn btn-sm btn-outline-danger mr-2">
                 <i class="fa fa-file-export"></i> Export
             </button>
-        </div>
+    </div>
         <div class="horizontal-layout">
             <!-- Stock In Table with Search -->
             <div class="card">
