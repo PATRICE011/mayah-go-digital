@@ -78,6 +78,9 @@ class PaymentController extends Controller
                         if ($product->product_stocks < 0) {
                             return redirect()->back()->with('error', 'Insufficient stock for product: ' . $product->product_name);
                         }
+
+                        // Increment the product_stocks_sold
+                        $product->product_stocks_sold += $item->quantity;
                         $product->save();
 
                         // Log stock out in stock_movements table

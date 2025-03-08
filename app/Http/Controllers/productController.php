@@ -67,6 +67,7 @@ class productController extends Controller
             'product_name' => 'required|string|max:255',
             'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'product_description' => 'required|string',
+            'product_raw_price' => 'required|numeric|min:0',
             'product_price' => 'required|numeric|min:0',
             'product_stocks' => 'required|integer|min:0', // Validate stocks
             'category_id' => 'required|exists:categories,id',
@@ -151,6 +152,7 @@ class productController extends Controller
                 'product_name' => 'required|string|max:255',
                 'product_description' => 'nullable|string',
                 'category_id' => 'required|exists:categories,id',
+                'product_raw_price' => 'required|numeric|min:0',
                 'product_price' => 'required|numeric|min:0',
                 'product_stocks' => 'required|integer|min:0',
                 'product_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

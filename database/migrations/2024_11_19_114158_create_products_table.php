@@ -21,8 +21,9 @@ return new class extends Migration
             $table->text('product_description')->nullable(); 
             $table->text('cart_product_description')->nullable(); 
             $table->integer('product_price');
-            $table->integer('product_old_price')->nullable(); 
+            $table->integer('product_raw_price')->nullable(); 
             $table->integer('product_stocks')->default(0)->nullable();
+            $table->integer('product_stocks_sold')->default(0)->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Foreign key to categories
             $table->timestamps();
         });

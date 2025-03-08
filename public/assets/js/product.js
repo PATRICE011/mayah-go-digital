@@ -69,6 +69,7 @@ $(document).ready(function () {
                             ? product.category.category_name
                             : "N/A"
                     }</td>
+                    <td>₱${product.product_raw_price}</td>
                     <td>₱${product.product_price}</td>
                     <td>${product.product_stocks}</td>
                     <td>${
@@ -88,6 +89,7 @@ $(document).ready(function () {
                                             : ""
                                     }"
                                     data-price="${product.product_price}"
+                                    data-raw-price="${product.product_raw_price}"
                                     data-stocks="${product.product_stocks}" 
                                     
                                     data-image="${getImageUrl(
@@ -180,6 +182,7 @@ $(document).ready(function () {
         $("#editProductName").val(product.name);
         $("#editProductDescription").val(product.description);
         $("#editProductPrice").val(product.price);
+        $("#editProductRawPrice").val(product.rawPrice);
         $("#editProductStocks").val(product.stocks);
 
         // Fetch and populate categories dynamically
@@ -390,6 +393,7 @@ $(document).ready(function () {
         formData.append("product_description", $("#addDescription").val());
         formData.append("product_image", $("#addImage")[0].files[0]);
         formData.append("product_price", $("#addPrice").val());
+        formData.append("product_raw_price", $("#addRawPrice").val());
         formData.append("product_stocks", $("#addStocks").val());
         formData.append("category_id", $("#addCategory").val());
         formData.append("status", $("#addStatus").val());

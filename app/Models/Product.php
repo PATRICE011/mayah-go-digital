@@ -18,7 +18,9 @@ class Product extends Model
         'product_description',
         'cart_product_description',
         'product_price',
+        'product_raw_price',
         'product_stocks',
+        'product_stocks_sold',
         'category_id',
     ];
 

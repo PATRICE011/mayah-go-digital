@@ -164,7 +164,16 @@
                                                 </select>
                                             </div>
 
-                                            <!-- Price -->
+                                            <!-- Raw Price -->
+                                            <div class="form-group">
+                                                <label for="addRawPrice">Raw Price</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">₱</span>
+                                                    <input type="number" class="form-control" id="addRawPrice" placeholder="Enter raw price" min="0" step="0.01">
+                                                </div>
+                                            </div>
+
+                                            <!--  Price -->
                                             <div class="form-group">
                                                 <label for="addPrice">Price</label>
                                                 <div class="input-group">
@@ -211,6 +220,7 @@
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Product Description</th>
                                         <th class="border-0">Category</th>
+                                        <th class="border-0">Raw Price</th>
                                         <th class="border-0">Price</th>
                                         <th class="border-0">Stocks</th>
                                         <th class="border-0">Status</th>
@@ -254,9 +264,16 @@
                                                 </div>
 
                                                 <div class="form-group">
+                                                    <label for="editProductRawPrice">Raw Price</label>
+                                                    <input type="number" class="form-control" id="editProductRawPrice" name="product_raw_price" required min="0" step="0.01">
+                                                </div>
+
+
+                                                <div class="form-group">
                                                     <label for="editProductPrice">Price</label>
                                                     <input type="number" class="form-control" id="editProductPrice" name="product_price" required min="0" step="0.01">
                                                 </div>
+
 
                                                 <div class="form-group">
                                                     <label for="editProductStocks">Stocks</label>
@@ -280,26 +297,26 @@
                                 </div>
                             </div>
                             <!-- modal -->
-                              <!-- ARCHIVE MODAL -->
-                              <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="archiveModalLabel">Delete Item</h5>
-                                                <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <!-- ARCHIVE MODAL -->
+                            <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="archiveModalLabel">Delete Item</h5>
+                                            <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button> -->
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to delete this item? This action cannot be undone.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-danger">Delete</button>
-                                            </div>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this item? This action cannot be undone.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn btn-danger">Delete</button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
 
                         </div>
