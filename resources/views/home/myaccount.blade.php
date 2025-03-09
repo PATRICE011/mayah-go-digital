@@ -128,9 +128,15 @@
 <section class="breadcrumb">
     <ul class="breadcrumb__list flex container">
         <li>
+            @auth
             <a href="{{url('/user')}}" class="breadcrumb__link">
                 Home
             </a>
+            @else
+            <a href="{{url('/')}}" class="breadcrumb__link">
+                Home
+            </a>
+            @endauth
         </li>
 
         <li>

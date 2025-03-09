@@ -9,7 +9,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Exports\SalesReportExport;
+use App\Exports\SalesPosExport;
 use Maatwebsite\Excel\Facades\Excel;
 class PosController extends Controller
 {
@@ -247,7 +247,7 @@ class PosController extends Controller
         $toDate = $request->input('to_date');
     
         // Generate and download the report
-        return Excel::download(new SalesReportExport($fromDate, $toDate), 'pos-report.xlsx');
+        return Excel::download(new SalesPosExport($fromDate, $toDate), 'pos-report.xlsx');
     }
     
 }

@@ -1,5 +1,5 @@
 @extends('admins.layout')
-@section('title', 'Mayah Store - Admin Products')
+@section('title', 'Mayah Store - Admin Products Report')
 @section('content')
 @include('admins.adminheader', ['activePage' => 'productsreport'])
 
@@ -40,9 +40,11 @@
                         </div>
 
 
-                        <button id="printReportBtn" class="btn btn-sm btn-outline-danger mr-2">
+                        <!-- <button id="printReportBtn" class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
-                        </button>
+                        </button> -->
+
+                        <a href="{{url('/admin/print-product-report')}}" class="btn btn-sm btn-outline-danger mr-2"> <i class="fa fa-file-export"></i> Export</a>
                     </div>
 
                     <div class="card-body p-0">

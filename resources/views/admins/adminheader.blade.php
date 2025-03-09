@@ -88,9 +88,9 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> Online Orders
                         </a> -->
 
-                        <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
-                        </a>
+                        </a> -->
                         @if($role == 1) {{-- Role ID 1: See all 3 pages --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders
@@ -104,9 +104,10 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> POS Orders
                         </a> -->
 
-                        <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
-                        </a>
+                        </a> -->
+                        
                         @elseif($role == 2) {{-- Role ID 2: See only Online Orders --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders
@@ -136,8 +137,9 @@ $role = Auth::user()->role_id; // Fetch user's role
                         Reports
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
-                            <i class="fas fa-fw fa-file"></i> Audit Trail
+                       
+                        <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : '' }}">
+                            <i class="fas fa-fw fa-file"></i> Stock In & Out Report
                         </a>
 
                         <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
@@ -150,6 +152,10 @@ $role = Auth::user()->role_id; // Fetch user's role
 
                         <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products Report
+                        </a>
+
+                        <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
+                            <i class="fas fa-fw fa-file"></i> Audit Trail
                         </a>
                     </li>
                     @endif

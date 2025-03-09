@@ -38,9 +38,15 @@
    </div>
 
    <nav class="nav container">
+      @auth
       <a href="{{url('/user')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
+      @else
+      <a href="{{url('/')}}" class="nav__logo">
+         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+      </a>
+      @endif
 
       <div class="nav__menu" id="nav-menu">
          <div class="nav__menu-top">
@@ -48,7 +54,7 @@
                <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
             </a>
 
-            <div class="nav__close" id="nav-close"> 
+            <div class="nav__close" id="nav-close">
                <i class="ri-close-line"></i>
             </div>
          </div>
@@ -107,9 +113,15 @@
 <section class="breadcrumb">
    <ul class="breadcrumb__list flex container">
       <li>
+         @auth
+         <a href="{{url('/user')}}" class="breadcrumb__link">
+            Home
+         </a>
+         @else
          <a href="{{url('/')}}" class="breadcrumb__link">
             Home
          </a>
+         @endif
       </li>
 
       <li>
@@ -177,17 +189,17 @@
 
                <td>
                   @if ($wishlistItem->product->product_stocks > 0)
+                  <!-- Add to Cart Form -->
                   <form action="{{ route('home.inserttocart') }}" method="POST" class="d-inline">
                      @csrf
                      <input type="hidden" name="id" value="{{ $wishlistItem->product->id }}">
-               
-                     <button type="button" class="btn btn--sm">Add to Cart</button>
+                     <button type="submit" class="btn btn--sm">Add to Cart</button>
                   </form>
                   @else
-                  <button class="btn btn--sm" disabled>Out of Stock</button>
+                  <!-- Out of Stock Indicator -->
+                  <span class="text-muted">Unavailable</span>
                   @endif
                </td>
-
 
                <td>
                   <form id="destroy-button" action="{{ route('wishlist.remove',$wishlistItem->id) }}" method="POST">

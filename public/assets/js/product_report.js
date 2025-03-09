@@ -78,9 +78,9 @@ $(document).ready(function () {
         fetchSalesReport(); // Fetch filtered results
     });
 
-    $('#printReportBtn').on('click', function () {
-        const search = $('input[placeholder="Search..."]').val(); // Get search term if applied
-        const printUrl = `/admin/print-product-report?search=${encodeURIComponent(search)}`;
-        window.open(printUrl, '_blank'); // Open the print view in a new tab
-    });
+    // $('#printReportBtn').on('click', function () {
+    //     const search = $('input[placeholder="Search..."]').val(); 
+    //     const printUrl = `/admin/print-product-report?search=${encodeURIComponent(search)}`;
+    //     window.open(printUrl); 
+    // });
 });

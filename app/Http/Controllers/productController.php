@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,11 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Audit;
 
 use App\Exports\ProductsExport;
+
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelFileType;
+
+
 
 class productController extends Controller
 {
@@ -62,6 +67,7 @@ class productController extends Controller
             'product_name' => 'required|string|max:255',
             'product_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'product_description' => 'required|string',
+            'product_raw_price' => 'required|numeric|min:0',
             'product_price' => 'required|numeric|min:0',
             'product_stocks' => 'required|integer|min:0', // Validate stocks
             'category_id' => 'required|exists:categories,id',
@@ -70,28 +76,40 @@ class productController extends Controller
         // Handle the image logic
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-
-            // Define the destination path in the public directory
             $destinationPath = public_path('assets/img');
-
-            // Use the original file name
             $imageName = $image->getClientOriginalName();
 
-            // Check if the file already exists
             if (!file_exists($destinationPath . '/' . $imageName)) {
-                // Move the file to the destination path if it does not exist
                 $image->move($destinationPath, $imageName);
             }
 
-            // Store the filename in the database
             $validatedData['product_image'] = $imageName;
         }
 
         // Generate a unique 8-digit product_id
         $validatedData['product_id'] = $this->generateUniqueProductId();
 
-        // Create the product
-        $product = Product::create($validatedData);
+        try {
+            // Create the product
+            $product = Product::create($validatedData);
+
+            // Log the initial stock-in movement
+            if ($validatedData['product_stocks'] > 0) {
+                DB::table('stock_movements')->insert([
+                    'product_id' => $product->id,
+                    'type' => 'in',
+                    'quantity' => $validatedData['product_stocks'],
+                    'remarks' => 'Initial stock',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Database Error: ' . $e->getMessage(),
+            ], 500);
+        }
 
         // Log the audit
         Audit::create([
@@ -108,6 +126,7 @@ class productController extends Controller
             'product' => $product
         ]);
     }
+
 
     /**
      * Generate a unique 8-digit product ID.
@@ -133,6 +152,7 @@ class productController extends Controller
                 'product_name' => 'required|string|max:255',
                 'product_description' => 'nullable|string',
                 'category_id' => 'required|exists:categories,id',
+                'product_raw_price' => 'required|numeric|min:0',
                 'product_price' => 'required|numeric|min:0',
                 'product_stocks' => 'required|integer|min:0',
                 'product_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -193,7 +213,10 @@ class productController extends Controller
 
     public function export()
     {
-        $response = Excel::download(new ProductsExport, 'products.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+        // Download the export as an XLSX file
+        $response = Excel::download(new ProductsExport, 'products.xlsx', ExcelFileType::XLSX);
+
+        // Clean the output buffer (if necessary)
         ob_end_clean();
 
         return $response;

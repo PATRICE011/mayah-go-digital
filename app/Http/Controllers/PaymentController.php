@@ -12,6 +12,7 @@ use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use Illuminate\Support\Facades\DB;
+
 class PaymentController extends Controller
 {
     // Handle successful payment
@@ -55,7 +56,7 @@ class PaymentController extends Controller
 
                 // Extract payment details
                 $paymentMethod = $response->data->attributes->payments[0]->attributes->source->type ?? null;
-                $totalAmount = $response->data->attributes->payments[0]->attributes->amount / 100 ?? null; 
+                $totalAmount = $response->data->attributes->payments[0]->attributes->amount / 100 ?? null;
 
                 Log::info('Payment Method: ' . $paymentMethod);
                 Log::info('Total Amount: ' . $totalAmount);
@@ -72,13 +73,28 @@ class PaymentController extends Controller
                 foreach ($order->orderItems as $item) {
                     $product = $item->product;
                     if ($product) {
+                        // Subtract stock
                         $product->product_stocks -= $item->quantity;
                         if ($product->product_stocks < 0) {
                             return redirect()->back()->with('error', 'Insufficient stock for product: ' . $product->product_name);
                         }
+
+                        // Increment the product_stocks_sold
+                        $product->product_stocks_sold += $item->quantity;
                         $product->save();
+
+                        // Log stock out in stock_movements table
+                        DB::table('stock_movements')->insert([
+                            'product_id' => $product->id,
+                            'type' => 'out',
+                            'quantity' => $item->quantity,
+                            'remarks' => 'Order ID: ' . $order->id,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
                     }
                 }
+
 
                 try {
                     // Create or update order details

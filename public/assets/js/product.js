@@ -69,6 +69,7 @@ $(document).ready(function () {
                             ? product.category.category_name
                             : "N/A"
                     }</td>
+                    <td>₱${product.product_raw_price}</td>
                     <td>₱${product.product_price}</td>
                     <td>${product.product_stocks}</td>
                     <td>${
@@ -88,6 +89,7 @@ $(document).ready(function () {
                                             : ""
                                     }"
                                     data-price="${product.product_price}"
+                                    data-raw-price="${product.product_raw_price}"
                                     data-stocks="${product.product_stocks}" 
                                     
                                     data-image="${getImageUrl(
@@ -120,79 +122,7 @@ $(document).ready(function () {
      * @param {object} response - The pagination data
      * @returns {string} - The HTML for pagination links
      */
-    function createEditModal() {
-        // Check if the modal already exists to avoid duplication
-        if ($("#editModal").length === 0) {
-            // Create the modal dynamically
-            const modalHtml = `
-                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editForm" method="POST" action="" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
-    
-                                    <input type="hidden" name="id" id="editId">
-    
-                                    <div class="form-group">
-                                        <label for="editImage">Product Image</label>
-                                        <input type="file" class="form-control" name="product_image" id="editImage" accept="image/*">
-                                        <small class="form-text text-muted">Choose an image file to upload (JPG, PNG).</small>
-                                        <div class="mt-3">
-                                            <img id="imagePreview" src="" alt="Selected Image" style="max-width: 150px; display: none; border: 1px solid #ddd; padding: 5px;">
-                                        </div>
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="editName">Product Name</label>
-                                        <input type="text" class="form-control" name="product_name" id="editName">
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="editDescription">Product Description</label>
-                                        <textarea class="form-control" name="product_description" id="editDescription" rows="5"></textarea>
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="editCategory">Category</label>
-                                        <select class="form-control" name="category_id" id="editCategory">
-                                            <!-- Categories will be loaded dynamically -->
-                                        </select>
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="editPrice">Price</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">₱</span>
-                                            <input type="number" class="form-control" name="product_price" id="editPrice" min="0" step="0.01">
-                                        </div>
-                                    </div>
-    
-                                    <div class="form-group">
-                                        <label for="editStocks">Stocks</label>
-                                        <input type="number" class="form-control" name="product_stocks" id="editStocks" min="0">
-                                    </div>
-    
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            // Append modal to the body
-            $("body").append(modalHtml);
-        }
-    }
+   
 
     function generatePagination(response) {
         return `
@@ -252,6 +182,7 @@ $(document).ready(function () {
         $("#editProductName").val(product.name);
         $("#editProductDescription").val(product.description);
         $("#editProductPrice").val(product.price);
+        $("#editProductRawPrice").val(product.rawPrice);
         $("#editProductStocks").val(product.stocks);
 
         // Fetch and populate categories dynamically
@@ -462,6 +393,7 @@ $(document).ready(function () {
         formData.append("product_description", $("#addDescription").val());
         formData.append("product_image", $("#addImage")[0].files[0]);
         formData.append("product_price", $("#addPrice").val());
+        formData.append("product_raw_price", $("#addRawPrice").val());
         formData.append("product_stocks", $("#addStocks").val());
         formData.append("category_id", $("#addCategory").val());
         formData.append("status", $("#addStatus").val());

@@ -1,5 +1,5 @@
 @extends('admins.layout')
-@section('title', 'Mayah Store - Admin POS Orders')
+@section('title', 'Mayah Store - Admin POS')
 @section('content')
 @include('admins.adminheader', ['activePage' => 'pos'])
 

@@ -17,111 +17,111 @@ class userController extends Controller
 {
 
     public function shop(Request $request)
-{
-    // Fetch all categories (for sidebar, etc.)
-    $categories = DB::table('categories')->get();
+    {
+        // Fetch all categories (for sidebar, etc.)
+        $categories = DB::table('categories')->get();
 
-    // Build the initial query
-    $query = DB::table('products')
-        ->join('categories', 'products.category_id', '=', 'categories.id')
-        ->select('products.*', 'categories.category_name');
+        // Build the initial query
+        $query = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name');
 
-    // Filter by categories if provided
-    if ($request->has('categories') && is_array($request->categories)) {
-        $selectedCategories = $request->categories; // array of category names
-        $query->whereIn('categories.category_name', $selectedCategories);
-    }
-
-    // Filter by search if provided
-    if ($request->filled('search')) {
-        $keyword = $request->input('search');
-        $query->where('products.product_name', 'LIKE', "%{$keyword}%");
-    }
-
-    // Paginate the results (10 items per page)
-    $products = $query->paginate(12); // Adjust the '10' to set the number of items per page
-    $totalProducts = $products->total(); // Total products across all pages
-
-    // User-related data
-    $user = Auth::user();
-    $cartCount = 0;
-    $wishlistCount = 0;
-
-    if ($user) {
-        $cartId = DB::table('carts')
-            ->where('user_id', $user->id)
-            ->value('id');
-
-        if ($cartId) {
-            $cartCount = DB::table('cart_items')
-                ->where('cart_id', $cartId)
-                ->sum('quantity');
+        // Filter by categories if provided
+        if ($request->has('categories') && is_array($request->categories)) {
+            $selectedCategories = $request->categories; // array of category names
+            $query->whereIn('categories.category_name', $selectedCategories);
         }
 
-        $wishlistCount = DB::table('wishlists')
-            ->where('user_id', $user->id)
-            ->count();
+        // Filter by search if provided
+        if ($request->filled('search')) {
+            $keyword = $request->input('search');
+            $query->where('products.product_name', 'LIKE', "%{$keyword}%");
+        }
+
+        // Paginate the results (10 items per page)
+        $products = $query->paginate(12); // Adjust the '10' to set the number of items per page
+        $totalProducts = $products->total(); // Total products across all pages
+
+        // User-related data
+        $user = Auth::user();
+        $cartCount = 0;
+        $wishlistCount = 0;
+
+        if ($user) {
+            $cartId = DB::table('carts')
+                ->where('user_id', $user->id)
+                ->value('id');
+
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')
+                    ->where('cart_id', $cartId)
+                    ->sum('quantity');
+            }
+
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count();
+        }
+
+        // If it's an AJAX request, return partial HTML
+        if ($request->ajax()) {
+            $html = view('home.partials.product_grid', compact('products'))->render();
+            $paginationHtml = view('home.partials.pagination_links', ['products' => $products])->render();
+
+            return response()->json([
+                'products' => $html,
+                'pagination' => $paginationHtml,
+                'totalProducts' => $totalProducts,
+            ]);
+        }
+
+        // Otherwise, return the full view (shop page)
+        return view('home.shop', compact(
+            'products',
+            'categories',
+            'totalProducts',
+            'cartCount',
+            'wishlistCount'
+        ));
     }
 
-    // If it's an AJAX request, return partial HTML
-    if ($request->ajax()) {
-        $html = view('home.partials.product_grid', compact('products'))->render();
-        $paginationHtml = view('home.partials.pagination_links', ['products' => $products])->render();
 
-        return response()->json([
-            'products' => $html,
-            'pagination' => $paginationHtml,
-            'totalProducts' => $totalProducts,
-        ]);
-    }
-
-    // Otherwise, return the full view (shop page)
-    return view('home.shop', compact(
-        'products',
-        'categories',
-        'totalProducts',
-        'cartCount',
-        'wishlistCount'
-    ));
-}
-
-    
     public function filterProducts(Request $request)
     {
         // Get categories from AJAX or query parameter
-    $categories = $request->input('categories', []);
+        $categories = $request->input('categories', []);
 
-    // If a category slug is in the query string, add it to the filter
-    $categorySlug = $request->query('category');
-    if ($categorySlug) {
-        $categories[] = $categorySlug;
-    }
+        // If a category slug is in the query string, add it to the filter
+        $categorySlug = $request->query('category');
+        if ($categorySlug) {
+            $categories[] = $categorySlug;
+        }
 
-    // Fetch products with filtering
-    $query = DB::table('products')
-        ->join('categories', 'products.category_id', '=', 'categories.id')
-        ->select('products.*', 'categories.category_name');
+        // Fetch products with filtering
+        $query = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.category_name');
 
-    // Apply category filter
-    if (!empty($categories)) {
-        $query->whereIn('categories.slug', $categories);
-    }
+        // Apply category filter
+        if (!empty($categories)) {
+            $query->whereIn('categories.slug', $categories);
+        }
 
-    $products = $query->get();
+        $products = $query->get();
 
-    // Generate HTML for filtered products
-    $html = '';
-    foreach ($products as $product) {
-        $stockClass = $product->product_stocks == 0
-            ? 'out-of-stock'
-            : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
-        $stockMessage = $product->product_stocks == 0
-            ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
-            : ($product->product_stocks > 0 && $product->product_stocks < 10
-                ? '<div class="stock-status low-stock-message">Low Stock</div>'
-                : '');
+        // Generate HTML for filtered products
+        $html = '';
+        foreach ($products as $product) {
+            $stockClass = $product->product_stocks == 0
+                ? 'out-of-stock'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10 ? 'low-stock' : '');
+            $stockMessage = $product->product_stocks == 0
+                ? '<div class="stock-status out-of-stock-message">Out of Stock</div>'
+                : ($product->product_stocks > 0 && $product->product_stocks < 10
+                    ? '<div class="stock-status low-stock-message">Low Stock</div>'
+                    : '');
 
-        $html .= '
+            $html .= '
         <div class="product__item ' . $stockClass . '">
             <div class="product__banner">
                 <a href="#" class="product__images">
@@ -155,58 +155,63 @@ class userController extends Controller
                 </form>
             </div>
         </div>';
-    }
+        }
 
-    return response()->json([
-        'html' => $html,
-        'count' => $products->count(),
-    ]);
+        return response()->json([
+            'html' => $html,
+            'count' => $products->count(),
+        ]);
     }
 
     // DETAILS START
     public function details($id, Request $request)
-{
-    // Retrieve the product
-    $product = DB::table('products')->where('id', $id)->first();
+    {
+        // Retrieve the product and its category using Eloquent
+        $product = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id') // Join the category
+            ->select('products.*', 'categories.category_name', 'categories.slug') // Fetch category name and slug
+            ->where('products.id', $id)
+            ->first();
 
-    if (!$product) {
-        return response()->json(['error' => 'Product not found'], 404);
-    }
-
-    $user = Auth::user();
-    $cartCount = 0;
-    $wishlistCount = 0;
-
-    if ($user) {
-        // Get the total cart count
-        $cartId = DB::table('carts')
-            ->where('user_id', $user->id)
-            ->value('id');
-
-        if ($cartId) {
-            $cartCount = DB::table('cart_items')
-                ->where('cart_id', $cartId)
-                ->sum('quantity');
+        if (!$product) {
+            return response()->json(['error' => 'Product not found'], 404);
         }
 
-        // Get the wishlist count
-        $wishlistCount = DB::table('wishlists')
-            ->where('user_id', $user->id)
-            ->count();
+        $user = Auth::user();
+        $cartCount = 0;
+        $wishlistCount = 0;
+
+        if ($user) {
+            // Get the total cart count
+            $cartId = DB::table('carts')
+                ->where('user_id', $user->id)
+                ->value('id');
+
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')
+                    ->where('cart_id', $cartId)
+                    ->sum('quantity');
+            }
+
+            // Get the wishlist count
+            $wishlistCount = DB::table('wishlists')
+                ->where('user_id', $user->id)
+                ->count();
+        }
+
+        // Check if the request expects JSON (e.g., AJAX)
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'product' => $product,
+                'cartCount' => $cartCount,
+                'wishlistCount' => $wishlistCount,
+            ]);
+        }
+
+        // Default to returning the view if it's a regular GET request
+        return view('home.details', compact('product', 'cartCount', 'wishlistCount'));
     }
 
-    // Check if the request expects JSON (e.g., AJAX)
-    if ($request->expectsJson() || $request->ajax()) {
-        return response()->json([
-            'product' => $product,
-            'cartCount' => $cartCount,
-            'wishlistCount' => $wishlistCount,
-        ]);
-    }
-
-    // Default to returning the view if it's a regular GET request
-    return view('home.details', compact('product', 'cartCount', 'wishlistCount'));
-}
 
 
 
@@ -318,123 +323,119 @@ class userController extends Controller
 
     // MYACCOUNT
     public function dashboard(Request $request)
-{
-    $user = Auth::user();
-    $cartCount = 0;
-    $wishlistCount = 0;
-    $orders = [];
-    $orderDetails = null;
-    $orderItems = [];
+    {
+        $user = Auth::user();
+        $cartCount = 0;
+        $wishlistCount = 0;
+        $orders = [];
+        $orderDetails = null;
+        $orderItems = [];
 
-    if ($user) {
-        // Fetch cart item count
-        $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
-        if ($cartId) {
-            $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
-        }
+        if ($user) {
+            // Fetch cart item count
+            $cartId = DB::table('carts')->where('user_id', $user->id)->value('id');
+            if ($cartId) {
+                $cartCount = DB::table('cart_items')->where('cart_id', $cartId)->sum('quantity');
+            }
 
-        // Fetch wishlist count
-        $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
+            // Fetch wishlist count
+            $wishlistCount = DB::table('wishlists')->where('user_id', $user->id)->count();
 
-        // Fetch orders for the user
-        $orders = DB::table('orders')
-            ->where('orders.user_id', $user->id)
-            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
-            ->join('order_items', 'orders.id', '=', 'order_items.order_id') // Join with order_items
-            ->select(
-                'orders.id as order_id',
-                'orders.status',
-                'orderdetails.order_id_custom',
-                'orders.created_at',
-                DB::raw('SUM(order_items.quantity * order_items.price) as subtotal') // Compute subtotal
-            )
-            ->groupBy('orders.id', 'orders.status', 'orderdetails.order_id_custom', 'orders.created_at') // Group by order fields
-            ->orderBy('orders.created_at', 'desc')
-            ->get();
-
-        // Check if the request is for a specific order's details
-        if ($request->has('order_id')) {
-            $orderDetails = DB::table('orders')
-                ->where('orders.id', $request->order_id)
-                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+            // Fetch orders for the user
+            $orders = DB::table('orders')
+                ->where('orders.user_id', $user->id)
+                ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id') // Join with orderdetails
+                ->join('order_items', 'orders.id', '=', 'order_items.order_id') // Join with order_items
                 ->select(
                     'orders.id as order_id',
-                    'orderdetails.order_id_custom',
                     'orders.status',
-                    'orderdetails.payment_method',
-                    'orderdetails.total_amount',
-                    'orders.created_at'
+                    'orderdetails.order_id_custom',
+                    'orders.created_at',
+                    DB::raw('SUM(order_items.quantity * order_items.price) as subtotal') // Compute subtotal
                 )
-                ->first();
-
-            $orderItems = DB::table('order_items')
-                ->where('order_id', $request->order_id)
-                ->join('products', 'order_items.product_id', '=', 'products.id')
-                ->select('products.product_name', 'order_items.quantity', 'order_items.price')
+                ->groupBy('orders.id', 'orders.status', 'orderdetails.order_id_custom', 'orders.created_at') // Group by order fields
+                ->orderBy('orders.created_at', 'desc')
                 ->get();
+
+            // Check if the request is for a specific order's details
+            if ($request->has('order_id')) {
+                $orderDetails = DB::table('orders')
+                    ->where('orders.id', $request->order_id)
+                    ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+                    ->select(
+                        'orders.id as order_id',
+                        'orderdetails.order_id_custom',
+                        'orders.status',
+                        'orderdetails.payment_method',
+                        'orderdetails.total_amount',
+                        'orders.created_at'
+                    )
+                    ->first();
+
+                $orderItems = DB::table('order_items')
+                    ->where('order_id', $request->order_id)
+                    ->join('products', 'order_items.product_id', '=', 'products.id')
+                    ->select('products.product_name', 'order_items.quantity', 'order_items.price')
+                    ->get();
+            }
         }
-    }
 
-         // Set the active_tab session if not already set
-    if (!$request->session()->has('active_tab')) {
-        $request->session()->put('active_tab', 'dashboard'); 
-    }
+        // Set the active_tab session if not already set
+        if (!$request->session()->has('active_tab')) {
+            $request->session()->put('active_tab', 'dashboard');
+        }
 
-    return view('home.myaccount', [
-        'cartCount' => $cartCount,
-        'wishlistCount' => $wishlistCount,
-        'orders' => $orders,
-        'orderDetails' => $orderDetails,
-        'orderItems' => $orderItems,
-        'user' => $user,
-    ]);
-}
-
-public function orderDetails($orderId)
-{
-    // Fetch the order details from the database
-    $order = DB::table('orders')
-        ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
-        ->where('orders.id', $orderId)
-        ->select(
-            'orders.id as order_id',
-            'orderdetails.order_id_custom',
-            'orders.status',
-            'orderdetails.payment_method',
-            'orderdetails.total_amount',
-            'orders.created_at'
-        )
-        ->first();
-
-    // Check if the order exists
-    if (!$order) {
-        return response()->json(['message' => 'Order not found.'], 404);
-    }
-
-    // Dynamically set the payment status
-    $order->payment_status = $order->status === 'paid' ? 'Paid' : 'Unpaid';
-
-    // Fetch all items in the order
-    $orderItems = DB::table('order_items')
-        ->where('order_id', $order->order_id)
-        ->join('products', 'order_items.product_id', '=', 'products.id')
-        ->select(
-            'products.product_name',
-            'order_items.quantity',
-            'order_items.price'
-        )
-        ->get();
-
-    // Return the rendered HTML partial for order details
-    return response()->json([
-        'html' => view('home.partials.orderdetails', [
-            'order' => $order,
+        return view('home.myaccount', [
+            'cartCount' => $cartCount,
+            'wishlistCount' => $wishlistCount,
+            'orders' => $orders,
+            'orderDetails' => $orderDetails,
             'orderItems' => $orderItems,
-        ])->render(),
-    ]);
-}
+            'user' => $user,
+        ]);
+    }
 
+    public function orderDetails($orderId)
+    {
+        // Fetch the order details from the database
+        $order = DB::table('orders')
+            ->join('orderdetails', 'orders.id', '=', 'orderdetails.order_id')
+            ->where('orders.id', $orderId)
+            ->select(
+                'orders.id as order_id',
+                'orderdetails.order_id_custom',
+                'orders.status',
+                'orderdetails.payment_method',
+                'orderdetails.total_amount',
+                'orders.created_at'
+            )
+            ->first();
 
+        // Check if the order exists
+        if (!$order) {
+            return response()->json(['message' => 'Order not found.'], 404);
+        }
 
-   
+        // Dynamically set the payment status
+        $order->payment_status = $order->status === 'paid' ? 'Paid' : 'Unpaid';
+
+        // Fetch all items in the order
+        $orderItems = DB::table('order_items')
+            ->where('order_id', $order->order_id)
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->select(
+                'products.product_name',
+                'order_items.quantity',
+                'order_items.price'
+            )
+            ->get();
+
+        // Return the rendered HTML partial for order details
+        return response()->json([
+            'html' => view('home.partials.orderdetails', [
+                'order' => $order,
+                'orderItems' => $orderItems,
+            ])->render(),
+        ]);
+    }
 }

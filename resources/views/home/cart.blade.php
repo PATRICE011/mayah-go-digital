@@ -38,9 +38,15 @@
    </div>
 
    <nav class="nav container">
+      @auth
       <a href="{{url('/user')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
+      @else
+      <a href="{{url('/')}}" class="nav__logo">
+         <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
+      </a>
+      @endif
 
       <div class="nav__menu" id="nav-menu">
          <div class="nav__menu-top">
@@ -48,7 +54,7 @@
                <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
             </a>
 
-            <div class="nav__close" id="nav-close"> 
+            <div class="nav__close" id="nav-close">
                <i class="ri-close-line"></i>
             </div>
          </div>
@@ -105,11 +111,19 @@
 
 <section class="breadcrumb">
    <ul class="breadcrumb__list flex container">
+      @auth
       <li>
-         <a href="{{url('/cart')}}" class="breadcrumb__link">
+         <a href="{{url('/user')}}" class="breadcrumb__link">
             Home
          </a>
       </li>
+      @else
+      <li>
+         <a href="{{url('/')}}" class="breadcrumb__link">
+            Home
+         </a>
+      </li>
+      @endauth
 
       <li>
          <span class="breadcrumb__link"> > </span>

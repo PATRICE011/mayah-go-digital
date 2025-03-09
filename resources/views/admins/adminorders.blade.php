@@ -1,5 +1,5 @@
 @extends('admins.layout')
-@section('title', 'Mayah Store - Admin Products')
+@section('title', 'Mayah Store - Admin Orders')
 @section('content')
 @include('admins.adminheader', ['activePage' => 'stocks'])
 <div class="dashboard-wrapper">

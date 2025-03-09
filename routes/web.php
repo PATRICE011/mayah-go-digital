@@ -20,6 +20,7 @@ use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\UpdateProfileController;
 
 use App\Http\Controllers\SmsStatusController;
+use App\Http\Controllers\StockController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
@@ -140,9 +141,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
         });
 
-
-
-
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
 
 
@@ -154,13 +152,17 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
 
 
-
         Route::get('/products/export', function () {
             $products = Product::with('category')->get(); // Fetch all products with categories
             return view('admins.export-products', compact('products'));
         })->name('products.export');
 
         Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
+    
+    
+        Route::get('/stocks/report', [StockController::class, 'index']);
+        Route::get('stocks/report/export', [StockController::class, 'export']);
+
     });
 
 // Public Routes (accessible by all)
