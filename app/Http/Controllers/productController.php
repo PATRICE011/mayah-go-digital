@@ -164,9 +164,32 @@ class productController extends Controller
                 $validatedData['product_image'] = "/storage/" . $imagePath;
             }
 
-
+            // Save the original values before updating
             $oldValues = $product->getOriginal();
+
+            // Determine if stock has changed
+            $oldStock = $product->product_stocks;
+            $newStock = $validatedData['product_stocks'];
+
+            // Only log stock movement if the stock has changed
+            if ($oldStock !== $newStock) {
+                $movementType = $newStock > $oldStock ? 'in' : 'out';
+                $quantity = abs($newStock - $oldStock); // The quantity of movement is the difference
+
+                // Log the stock movement
+                DB::table('stock_movements')->insert([
+                    'product_id' => $product->id,
+                    'type' => $movementType,
+                    'quantity' => $quantity,
+                    'remarks' => $movementType === 'in' ? 'Stock added' : 'Stock removed',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Update the product with validated data
             $product->update($validatedData);
+
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
@@ -177,12 +200,12 @@ class productController extends Controller
                 'changes' => $validatedData,
             ]);
 
-
             return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to update product.', 'error' => $e->getMessage()], 500);
         }
     }
+
 
     public function deleteProduct($id)
     {

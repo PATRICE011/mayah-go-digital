@@ -71,7 +71,7 @@ class ProductReportExport implements FromQuery, WithHeadings, WithMapping, WithS
                 $sheet = $event->sheet;
 
                 // Set headers explicitly in Row 1
-                $headings = ['#', 'Product Name', 'Total Stocks Sold', 'Raw Price', 'Unit Price', 'Total Amount Sold'];
+                $headings = ['#', 'Product Name', 'Total Stocks Sold', 'Unit Price', 'Selling Price', 'Total Amount Sold'];
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {

@@ -39,7 +39,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function headings(): array
     {
-        return ['#', 'Product Name', 'Quantity', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
+        return ['#', 'Product Name', 'Quantities Sold', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
     }
 
     public function map($item): array
@@ -82,7 +82,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 $sheet = $event->sheet;
 
                 // Explicitly set headers in Row 1
-                $headings = ['#', 'Product Name', 'Quantity', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
+                $headings = ['#', 'Product Name', 'Quantities Sold', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
                 $headingRow = 1;
                 $columnIndex = 'A';
 
@@ -126,7 +126,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 $columnWidths = [
                     'A' => 8,   // #
                     'B' => 25,  // Product Name
-                    'C' => 10,  // Quantity
+                    'C' => 20,  // Quantity
                     'D' => 12,  // Unit Price
                     'E' => 15,  // Total Amount
                     'F' => 18,  // Date
