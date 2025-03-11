@@ -33,7 +33,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithStyles, WithEv
 
     public function headings(): array
     {
-        return ['Name', 'Description', 'Price', 'Stocks', 'Category'];
+        return ['Name', 'Description', 'Selling Price', 'Stocks', 'Category'];
     }
 
     public function styles(Worksheet $sheet)

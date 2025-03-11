@@ -31,7 +31,7 @@ class ProductReportExport implements FromQuery, WithHeadings, WithMapping, WithS
 
     public function headings(): array
     {
-        return ['#', 'Product Name', 'Total Stocks Sold', 'Raw Price', 'Unit Price', 'Total Amount Sold'];
+        return ['#', 'Product Name', 'Total Stocks Sold', 'Unit Price', 'Selling Price', 'Total Amount Sold'];
     }
 
     public function map($row): array

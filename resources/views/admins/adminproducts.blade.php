@@ -166,19 +166,19 @@
 
                                             <!-- Raw Price -->
                                             <div class="form-group">
-                                                <label for="addRawPrice">Raw Price</label>
+                                                <label for="addRawPrice">Unit Price</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">₱</span>
-                                                    <input type="number" class="form-control" id="addRawPrice" placeholder="Enter raw price" min="0" step="0.01">
+                                                    <input type="number" class="form-control" id="addRawPrice" placeholder="Enter unit price" min="0" step="0.01">
                                                 </div>
                                             </div>
 
                                             <!--  Price -->
                                             <div class="form-group">
-                                                <label for="addPrice">Price</label>
+                                                <label for="addPrice">Selling Price</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">₱</span>
-                                                    <input type="number" class="form-control" id="addPrice" placeholder="Enter price" min="0" step="0.01">
+                                                    <input type="number" class="form-control" id="addPrice" placeholder="Enter selling price" min="0" step="0.01">
                                                 </div>
                                             </div>
 
@@ -220,8 +220,8 @@
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Product Description</th>
                                         <th class="border-0">Category</th>
-                                        <th class="border-0">Raw Price</th>
-                                        <th class="border-0">Price</th>
+                                        <th class="border-0">Unit Price</th>
+                                        <th class="border-0">Selling Price</th>
                                         <th class="border-0">Stocks</th>
                                         <th class="border-0">Status</th>
                                         <th class="border-0">Action</th>
