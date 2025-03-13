@@ -38,6 +38,7 @@
                     <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
                 </div>
                 <button id="checkout-btn" class="btn btn-success w-100 mb-2" disabled>Checkout</button>
+                <button id="clear-cart-btn" class="btn btn-danger w-100">Clear</button>
             </div>
         </div>
     </div>
@@ -71,7 +72,7 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         const csrfToken = '{{ csrf_token() }}';
 
         // Load Categories
@@ -79,20 +80,20 @@
             $.ajax({
                 url: '{{ route("categories.get") }}',
                 type: 'GET',
-                success: function (categories) {
-                    let html = `
+                success: function(categories) {
+                    let html = ` 
                         <a href="#" data-id="all" class="category-item text-decoration-none">
                             <li class="list-group-item list-group-item-action">Show All</li>
                         </a>`;
                     categories.forEach(category => {
-                        html += `
+                        html += ` 
                             <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
                                 <li class="list-group-item list-group-item-action">${category.category_name}</li>
                             </a>`;
                     });
                     $('#categories').html(html);
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Failed to load categories.', 'error');
                 }
             });
@@ -104,8 +105,11 @@
             $.ajax({
                 url: '{{ route("products.get") }}',
                 type: 'GET',
-                data: { category_id: categoryId, page },
-                success: function (response) {
+                data: {
+                    category_id: categoryId,
+                    page
+                },
+                success: function(response) {
                     const products = response.products;
                     const pagination = response.pagination;
 
@@ -132,7 +136,7 @@
                     }
                     $('#pagination').html(paginationHtml);
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Failed to load products.', 'error');
                 }
             });
@@ -143,19 +147,23 @@
             $.ajax({
                 url: '{{ route("cart.get") }}',
                 type: 'GET',
-                success: function (response) {
+                success: function(response) {
                     const cart = response.cart;
                     const total = response.total;
 
                     let cartHtml = '';
-                    $.each(cart, function (id, item) {
+                    $.each(cart, function(id, item) {
                         cartHtml += `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             ${item.name} 
                             <div class="d-flex align-items-center">
+                                <button class="btn btn-sm btn-outline-danger delete-item" data-id="${id}" style="margin-right: 10px;">
+    <i class="bx bx-trash"></i> <!-- Boxicon trash icon -->
+</button>
+
                                 <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
                                 <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase" style="margin-right: 10px;">+</button>
                                 <span class="ms-3">₱${item.subtotal.toFixed(2)}</span>
                             </div>
                         </li>`;
@@ -165,14 +173,14 @@
                     $('#cart-total').text(`₱${total.toFixed(2)}`);
                     $('#checkout-btn').prop('disabled', total === 0);
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Failed to load cart.', 'error');
                 }
             });
         }
 
         // Adjust Quantity
-        $(document).on('click', '.adjust-quantity', function () {
+        $(document).on('click', '.adjust-quantity', function() {
             const productId = $(this).data('id');
             const action = $(this).data('action');
             const input = $(`.cart-quantity[data-id="${productId}"]`);
@@ -193,52 +201,81 @@
             $.ajax({
                 url: '{{ route("cart.update") }}',
                 type: 'POST',
-                data: { product_id: productId, quantity, _token: csrfToken },
-                success: function () {
+                data: {
+                    product_id: productId,
+                    quantity,
+                    _token: csrfToken
+                },
+                success: function() {
                     loadCart();
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Failed to update cart.', 'error');
                 }
             });
         }
 
         // Add to Cart
-        $(document).on('click', '.product-card', function () {
+        $(document).on('click', '.product-card', function() {
             const productId = $(this).data('id');
             $.ajax({
                 url: '{{ route("cart.add") }}',
                 type: 'POST',
-                data: { product_id: productId, _token: csrfToken },
-                success: function () {
+                data: {
+                    product_id: productId,
+                    _token: csrfToken
+                },
+                success: function() {
                     loadCart();
                 },
-                error: function () {
+                error: function() {
                     Swal.fire('Error', 'Failed to add product to cart.', 'error');
                 }
             });
         });
 
-        // Filter Products by Category
-        $(document).on('click', '.category-item', function (e) {
-            e.preventDefault();
-            const categoryId = $(this).data('id');
-            loadProducts(categoryId);
+        // Delete Item from Cart
+        $(document).on('click', '.delete-item', function() {
+            const productId = $(this).data('id');
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    _token: csrfToken
+                },
+                success: function() {
+                    loadCart();
+                },
+                error: function() {
+                    Swal.fire('Error', 'Failed to delete item from cart.', 'error');
+                }
+            });
         });
 
-        // Pagination
-        $(document).on('click', '.pagination-item', function (e) {
-            e.preventDefault();
-            const page = $(this).data('page');
-            loadProducts('all', page);
+        // Clear Cart
+        $('#clear-cart-btn').on('click', function() {
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: {
+                    _token: csrfToken
+                },
+                success: function() {
+                    loadCart();
+                },
+                error: function() {
+                    Swal.fire('Error', 'Failed to clear cart.', 'error');
+                }
+            });
         });
 
         // Checkout
-        $('#checkout-btn').on('click', function () {
+        $('#checkout-btn').on('click', function() {
             $('#cashPaidModal').modal('show');
         });
 
-        $('#submit-payment').on('click', function () {
+        $('#submit-payment').on('click', function() {
             const cashPaid = parseFloat($('#cash-paid').val());
             const totalAmount = parseFloat($('#cart-total').text().replace('₱', '').replace(',', ''));
 
@@ -250,13 +287,16 @@
             $.ajax({
                 url: '{{ route("checkout") }}',
                 type: 'POST',
-                data: { cash_paid: cashPaid, _token: csrfToken },
-                success: function (response) {
+                data: {
+                    cash_paid: cashPaid,
+                    _token: csrfToken
+                },
+                success: function(response) {
                     $('#cashPaidModal').modal('hide');
                     Swal.fire('Success', `Order placed successfully! Change: ₱${response.change.toFixed(2)}`, 'success');
                     loadCart();
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     Swal.fire('Error', xhr.responseJSON.message || 'Checkout failed.', 'error');
                 }
             });
