@@ -121,12 +121,16 @@ $(document).ready(function () {
         fetchSalesReport();
     });
 
-    // Handle export button click
-    // $("#exportSalesReportBtn").on("click", function () {
-    //     const search = $('input[placeholder="Search..."]').val(); // Get the search term
-    //     const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
-    //         search
-    //     )}`;
-    //     window.open(exportUrl, "_blank"); // Open the export view in a new tab
-    // });
+    // ✅ Handle export button click with filters
+    $("#exportSalesReportBtn").on("click", function () {
+        const search = $('input[placeholder="Search..."]').val().trim();
+        const from = $("#fromDate").val();
+        const to = $("#toDate").val();
+
+        const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
+            search
+        )}&from_date=${encodeURIComponent(from)}&to_date=${encodeURIComponent(to)}`;
+
+        window.open(exportUrl, "_blank");
+    });
 });
