@@ -11,8 +11,8 @@ $(document).ready(function () {
                 page,
                 per_page: perPage,
                 search: searchTerm,
-                from_date: fromDate || '',
-                to_date: toDate || ''
+                from_date: fromDate || "",
+                to_date: toDate || "",
             },
             dataType: "json",
             success: function (response) {
@@ -63,10 +63,12 @@ $(document).ready(function () {
                                         { length: response.last_page },
                                         (_, i) => `
                                         <li class="page-item ${
-                                            response.current_page === i + 1
+                                            parseInt(response.current_page) ===
+                                            i + 1
                                                 ? "active"
                                                 : ""
                                         }">
+
                                             <a class="page-link" href="#" data-page="${
                                                 i + 1
                                             }">${i + 1}</a>
@@ -129,7 +131,9 @@ $(document).ready(function () {
 
         const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
             search
-        )}&from_date=${encodeURIComponent(from)}&to_date=${encodeURIComponent(to)}`;
+        )}&from_date=${encodeURIComponent(from)}&to_date=${encodeURIComponent(
+            to
+        )}`;
 
         window.open(exportUrl, "_blank");
     });
