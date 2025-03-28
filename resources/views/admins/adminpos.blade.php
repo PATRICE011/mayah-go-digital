@@ -42,62 +42,81 @@
         justify-content: space-between;
     }
 
-    .input-group {
-        margin-bottom: 20px;
-    }
-
-    .pagination {
-        margin-top: 20px;
-    }
-
-    .pagination-item {
-        margin: 0 5px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
-
+    /* Checkout Section */
     .checkout-section {
         display: flex;
         flex-direction: column;
         padding: 15px;
-        max-height: 400px; /* Added fixed height */
-        overflow-y: auto; /* Make the checkout section scrollable */
+        max-height: 400px;
+        overflow-y: auto;
+        position: relative;
     }
 
     .cart-item {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 15px;
+        padding: 12px 15px;
         border-bottom: 1px solid #ddd;
         margin-bottom: 10px;
         border-radius: 8px;
+        background-color: #fff;
     }
 
     .cart-item .cart-info {
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
+        font-weight: bold;
     }
 
     .cart-item .quantity-controls {
         display: flex;
         align-items: center;
-        margin-top: 10px;
-        justify-content: center;
+    }
+
+    .cart-item .quantity-controls button {
+        padding: 6px 12px;
+        font-size: 1rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        margin: 0 5px;
+    }
+
+    .cart-item .quantity-controls button:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .cart-item .cart-quantity {
+        width: 40px;
+        text-align: center;
+        font-size: 1.1rem;
+        margin: 0 5px;
     }
 
     .cart-item .delete-item {
-        margin-top: 10px;
-        align-self: flex-end;
+        padding: 6px 12px;
+        border: none;
+        background-color: #e74c3c;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .cart-item .delete-item:hover {
+        background-color: #c0392b;
+    }
+
+    .checkout-footer {
+        position: sticky;
+        bottom: 0;
+        background-color: #fff;
+        padding: 15px 0;
+        border-top: 1px solid #ddd;
+        z-index: 10;
     }
 
     .total-label {
@@ -105,22 +124,35 @@
         font-size: 1.2rem;
     }
 
-    .checkout-btn {
-        margin-top: 20px;
-    }
-
-    /* Style for product name and price */
-    .product-name {
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .product-price {
-        font-size: 1.1rem;
-        color: #28a745;
+    .checkout-btn,
+    #clear-cart-btn {
+        width: 100%;
         margin-top: 10px;
+        padding: 12px 0;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        border: none;
     }
 
+    .checkout-btn {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .checkout-btn:hover {
+        background-color: #218838;
+    }
+
+    #clear-cart-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    #clear-cart-btn:hover {
+        background-color: #c82333;
+    }
+
+    /* Search Bar Styles */
     #product-search {
         max-width: 180px;
     }
@@ -173,12 +205,16 @@
             <div class="col-md-3 bg-white shadow-sm rounded p-3 checkout-section">
                 <h5 class="text-primary mb-3">Checkout</h5>
                 <ul id="cart-items" class="list-group mb-3"></ul>
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="total-label">Total:</span>
-                    <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
+
+                <!-- Checkout Footer -->
+                <div class="checkout-footer">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="total-label">Total:</span>
+                        <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
+                    </div>
+                    <button id="checkout-btn" class="btn checkout-btn" disabled>Checkout</button>
+                    <button id="clear-cart-btn" class="btn" type="button">Clear Cart</button>
                 </div>
-                <button id="checkout-btn" class="btn btn-success w-100 mb-2" disabled>Checkout</button>
-                <button id="clear-cart-btn" class="btn btn-danger w-100 mb-2">Clear Cart</button>
             </div>
         </div>
     </div>
@@ -237,29 +273,36 @@
             });
         }
 
-        // Load Products with Search functionality
+        // Load Products with Search functionality and Category Filtering
         function loadProducts(categoryId = 'all', page = 1, searchQuery = '') {
             $('#products').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>');
             $.ajax({
                 url: '{{ route("products.search") }}',
                 type: 'GET',
-                data: { category_id: categoryId, page: page, search: searchQuery },
+                data: {
+                    category_id: categoryId,
+                    page: page,
+                    search: searchQuery
+                },
                 success: function(response) {
                     const products = response.products;
                     const pagination = response.pagination;
 
                     let html = '';
                     products.forEach(product => {
-                        html += `
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card shadow-sm product-card border-0" data-id="${product.id}">
-                                <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
-                                <div class="card-body text-center">
-                                    <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
-                                    <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
-                                </div>
-                            </div>
-                        </div>`;
+                        // Check if the product has stock
+                        if (product.product_stocks > 0) { // Use product.product_stocks
+                            html += `
+            <div class="col-lg-4 col-md-6">
+                <div class="card shadow-sm product-card border-0" data-id="${product.id}">
+                    <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
+                    <div class="card-body text-center">
+                        <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
+                        <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
+                    </div>
+                </div>
+            </div>`;
+                        }
                     });
                     $('#products').html(html);
 
@@ -276,6 +319,24 @@
                 }
             });
         }
+
+        // Handle Search Input
+        $('#product-search').on('keyup', function() {
+            const searchQuery = $(this).val();
+            loadProducts('all', 1, searchQuery);
+        });
+
+        // Clear Search Input
+        $('#clear-search').on('click', function() {
+            $('#product-search').val('');
+            loadProducts('all', 1);
+        });
+
+        // Handle Category Click
+        $(document).on('click', '.category-item', function() {
+            const categoryId = $(this).data('id');
+            loadProducts(categoryId, 1);
+        });
 
         // Load Cart
         function loadCart() {
@@ -306,6 +367,8 @@
 
                     $('#cart-items').html(cartHtml);
                     $('#cart-total').text(`₱${total.toFixed(2)}`);
+
+                    // Enable/Disable Checkout Button
                     $('#checkout-btn').prop('disabled', total === 0);
                 },
                 error: function() {
@@ -328,6 +391,126 @@
                 },
                 error: function() {
                     Swal.fire('Error', 'Failed to clear the cart.', 'error');
+                }
+            });
+        });
+
+        // Add to Cart
+        $(document).on('click', '.product-card', function() {
+            const productId = $(this).data('id');
+            $.ajax({
+                url: '{{ route("cart.add") }}',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    loadCart();
+                },
+                error: function() {
+                    Swal.fire('Error', 'Failed to add product to cart.', 'error');
+                }
+            });
+        });
+
+        // Adjust Quantity
+        $(document).on('click', '.adjust-quantity', function() {
+            const productId = $(this).data('id');
+            const action = $(this).data('action');
+            const input = $(`.cart-quantity[data-id="${productId}"]`);
+            let quantity = parseInt(input.val());
+
+            if (action === 'increase') {
+                quantity++;
+            } else if (action === 'decrease' && quantity > 1) {
+                quantity--;
+            }
+
+            input.val(quantity);
+            updateCart(productId, quantity);
+        });
+
+        // Update Cart
+        function updateCart(productId, quantity) {
+            $.ajax({
+                url: '{{ route("cart.update") }}',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    quantity,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function() {
+                    loadCart();
+                },
+                error: function() {
+                    Swal.fire('Error', 'Failed to update cart.', 'error');
+                }
+            });
+        }
+
+        // Delete Cart Item
+        $(document).on('click', '.delete-item', function() {
+            const productId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will remove the item from your cart.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route("cartDestroyPOS", ":id") }}'.replace(':id', productId),
+                        type: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            _method: 'DELETE'
+                        },
+                        success: function(response) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            loadCart();
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error', xhr.responseJSON.message || 'Failed to delete item from cart.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Submit Payment (Checkout)
+        $('#checkout-btn').on('click', function() {
+            $('#cashPaidModal').modal('show');
+        });
+
+        // Submit Payment Handler
+        $('#submit-payment').on('click', function() {
+            const cashPaid = parseFloat($('#cash-paid').val());
+            const totalAmount = parseFloat($('#cart-total').text().replace('₱', '').replace(',', ''));
+
+            if (!cashPaid || isNaN(cashPaid) || cashPaid < totalAmount) {
+                Swal.fire('Error', 'Cash paid must be greater than or equal to total amount.', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route("checkout") }}',
+                type: 'POST',
+                data: {
+                    cash_paid: cashPaid,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#cashPaidModal').modal('hide');
+                    Swal.fire('Success', `Order placed successfully! Change: ₱${response.change.toFixed(2)}`, 'success');
+                    loadCart();
+                },
+                error: function(xhr) {
+                    Swal.fire('Error', xhr.responseJSON.message || 'Checkout failed.', 'error');
                 }
             });
         });
