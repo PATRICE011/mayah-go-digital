@@ -57,7 +57,7 @@ class cartController extends Controller
                 ->where('product_id', $productId)
                 ->first();
 
-             // Successful responses
+            // Successful responses
             if ($cartItem) {
                 $cartCount = CartItem::where('cart_id', $cart->id)->sum('quantity');
                 return response()->json([
@@ -81,8 +81,8 @@ class cartController extends Controller
         } catch (\Exception $e) {
             Log::error('Add to Cart Error: ' . $e->getMessage()); // Log error for debugging
             return response()->json(['error' => 'An unexpected error occurred. Please try again.'], 500);
-            }
-}
+        }
+    }
 
 
 
@@ -218,6 +218,9 @@ class cartController extends Controller
         return back()->with('message', 'Item removed from cart.');
     }
 
+    // CartController.php
+
+   
     public function updateQuantity(Request $request)
     {
         // Validate the input

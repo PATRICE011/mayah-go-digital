@@ -38,7 +38,6 @@
                     <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
                 </div>
                 <button id="checkout-btn" class="btn btn-success w-100 mb-2" disabled>Checkout</button>
-                <button id="clear-cart-btn" class="btn btn-danger w-100">Clear</button>
             </div>
         </div>
     </div>
@@ -73,7 +72,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        const csrfToken = '{{ csrf_token() }}';
+        // Set up the CSRF token globally for every AJAX request
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
         // Load Categories
         function loadCategories() {
@@ -81,15 +85,15 @@
                 url: '{{ route("categories.get") }}',
                 type: 'GET',
                 success: function(categories) {
-                    let html = ` 
-                        <a href="#" data-id="all" class="category-item text-decoration-none">
-                            <li class="list-group-item list-group-item-action">Show All</li>
-                        </a>`;
+                    let html = `
+                    <a href="#" data-id="all" class="category-item text-decoration-none">
+                        <li class="list-group-item list-group-item-action">Show All</li>
+                    </a>`;
                     categories.forEach(category => {
-                        html += ` 
-                            <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
-                                <li class="list-group-item list-group-item-action">${category.category_name}</li>
-                            </a>`;
+                        html += `
+                        <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
+                            <li class="list-group-item list-group-item-action">${category.category_name}</li>
+                        </a>`;
                     });
                     $('#categories').html(html);
                 },
@@ -105,10 +109,7 @@
             $.ajax({
                 url: '{{ route("products.get") }}',
                 type: 'GET',
-                data: {
-                    category_id: categoryId,
-                    page
-                },
+                data: { category_id: categoryId, page },
                 success: function(response) {
                     const products = response.products;
                     const pagination = response.pagination;
@@ -116,15 +117,15 @@
                     let html = '';
                     products.forEach(product => {
                         html += `
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card shadow-sm product-card border-0" data-id="${product.id}">
-                                    <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
-                                        <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
-                                    </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card shadow-sm product-card border-0" data-id="${product.id}">
+                                <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
+                                    <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
                                 </div>
-                            </div>`;
+                            </div>
+                        </div>`;
                     });
                     $('#products').html(html);
 
@@ -147,24 +148,22 @@
             $.ajax({
                 url: '{{ route("cart.get") }}',
                 type: 'GET',
+                dataType: 'json',
                 success: function(response) {
                     const cart = response.cart;
                     const total = response.total;
 
                     let cartHtml = '';
-                    $.each(cart, function(id, item) {
+                    Object.entries(cart).forEach(([id, item]) => {
                         cartHtml += `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             ${item.name} 
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-danger delete-item" data-id="${id}" style="margin-right: 10px;">
-    <i class="bx bx-trash"></i> <!-- Boxicon trash icon -->
-</button>
-
                                 <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
                                 <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase" style="margin-right: 10px;">+</button>
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
                                 <span class="ms-3">₱${item.subtotal.toFixed(2)}</span>
+                                <button class="btn btn-sm btn-danger ms-2 delete-item" data-id="${id}">Delete</button>
                             </div>
                         </li>`;
                     });
@@ -204,7 +203,7 @@
                 data: {
                     product_id: productId,
                     quantity,
-                    _token: csrfToken
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
                     loadCart();
@@ -215,6 +214,38 @@
             });
         }
 
+        // Delete Cart Item
+        $(document).on('click', '.delete-item', function() {
+            const productId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will remove the item from your cart.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route("cartDestroyPOS", ":id") }}'.replace(':id', productId),
+                        type: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            _method: 'DELETE' // This tells Laravel it's a DELETE request
+                        },
+                        success: function(response) {
+                            Swal.fire('Deleted!', response.message, 'success');
+                            loadCart();
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error', xhr.responseJSON.message || 'Failed to delete item from cart.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
         // Add to Cart
         $(document).on('click', '.product-card', function() {
             const productId = $(this).data('id');
@@ -223,7 +254,7 @@
                 type: 'POST',
                 data: {
                     product_id: productId,
-                    _token: csrfToken
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
                     loadCart();
@@ -234,40 +265,18 @@
             });
         });
 
-        // Delete Item from Cart
-        $(document).on('click', '.delete-item', function() {
-            const productId = $(this).data('id');
-            $.ajax({
-                url: '',
-                type: 'POST',
-                data: {
-                    product_id: productId,
-                    _token: csrfToken
-                },
-                success: function() {
-                    loadCart();
-                },
-                error: function() {
-                    Swal.fire('Error', 'Failed to delete item from cart.', 'error');
-                }
-            });
+        // Filter Products by Category
+        $(document).on('click', '.category-item', function(e) {
+            e.preventDefault();
+            const categoryId = $(this).data('id');
+            loadProducts(categoryId);
         });
 
-        // Clear Cart
-        $('#clear-cart-btn').on('click', function() {
-            $.ajax({
-                url: '',
-                type: 'POST',
-                data: {
-                    _token: csrfToken
-                },
-                success: function() {
-                    loadCart();
-                },
-                error: function() {
-                    Swal.fire('Error', 'Failed to clear cart.', 'error');
-                }
-            });
+        // Pagination
+        $(document).on('click', '.pagination-item', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            loadProducts('all', page);
         });
 
         // Checkout
@@ -289,7 +298,7 @@
                 type: 'POST',
                 data: {
                     cash_paid: cashPaid,
-                    _token: csrfToken
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     $('#cashPaidModal').modal('hide');

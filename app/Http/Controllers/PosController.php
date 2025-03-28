@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\SalesPosExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 class PosController extends Controller
 {
     /**
@@ -87,6 +88,28 @@ class PosController extends Controller
         return response()->json(['message' => 'Product added to cart successfully', 'cart' => $cart]);
     }
 
+    public function destroyPOS(Request $request, $productId)
+    {
+        // Validate that the product ID exists in the session's cart
+        $cart = Session::get('cart', []);
+
+        // Check if the product is in the cart
+        if (!isset($cart[$productId])) {
+            return response()->json(['message' => 'Item not found in the cart.'], 404);
+        }
+
+        // Remove the item from the cart
+        unset($cart[$productId]);
+
+        // Update the session with the modified cart
+        Session::put('cart', $cart);
+
+        return response()->json([
+            'message' => 'Item removed from cart successfully.',
+            'cart' => $cart
+        ], 200);
+    }
+
     /**
      * Get Current Cart Items
      */
@@ -135,22 +158,22 @@ class PosController extends Controller
         if (!Session::has('cart') || empty(Session::get('cart'))) {
             return response()->json(['message' => 'Cart is empty'], 400);
         }
-    
+
         $request->validate([
             'cash_paid' => 'required|numeric|min:0',
         ]);
-    
+
         $cart = Session::get('cart');
         $totalAmount = array_sum(array_column($cart, 'subtotal'));
-    
+
         if ($request->cash_paid < $totalAmount) {
             return response()->json(['message' => 'Insufficient cash payment'], 400);
         }
-    
+
         $change = $request->cash_paid - $totalAmount;
-    
+
         DB::beginTransaction();
-    
+
         try {
             // Save the order
             $order = \App\Models\PosOrder::create([
@@ -163,21 +186,21 @@ class PosController extends Controller
                 'change' => $change,
                 'status' => 'completed',
             ]);
-    
+
             // Save each cart item as an order item and update product stocks
             foreach ($cart as $productId => $item) {
                 // Reduce product stock
                 $product = \App\Models\Product::find($productId);
-    
+
                 if ($product->product_stocks < $item['quantity']) {
                     DB::rollBack();
                     return response()->json([
                         'message' => "Insufficient stock for {$product->product_name}",
                     ], 400);
                 }
-    
+
                 $product->decrement('product_stocks', $item['quantity']);
-    
+
                 // Save the order item
                 \App\Models\PosOrderItem::create([
                     'order_id' => $order->id,
@@ -187,12 +210,12 @@ class PosController extends Controller
                     'total' => $item['subtotal'],
                 ]);
             }
-    
+
             // Clear the cart after successful checkout
             Session::forget('cart');
-    
+
             DB::commit();
-    
+
             return response()->json([
                 'message' => 'Order placed successfully',
                 'order_id' => $order->id,
@@ -223,7 +246,7 @@ class PosController extends Controller
                     'customer' => $item->order->user->name ?? 'Guest',
                 ];
             });
-    
+
         // Manually paginate the transformed data
         $perPage = 6; // Items per page
         $currentPage = $request->input('page', 1); // Current page or default to 1
@@ -234,20 +257,19 @@ class PosController extends Controller
             $currentPage, // Current page
             ['path' => $request->url(), 'query' => $request->query()] // Append query parameters
         );
-    
+
         return view('admins.adminposreport', [
             'salesReport' => $paginatedReport, // Pass the paginated object
         ]);
     }
-    
+
     public function exportPosReport(Request $request)
     {
         // Optional: Accept date filters or other parameters from the request
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
-    
+
         // Generate and download the report
         return Excel::download(new SalesPosExport($fromDate, $toDate), 'pos-report.xlsx');
     }
-    
 }
