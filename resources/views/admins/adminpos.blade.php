@@ -142,25 +142,35 @@
         margin-right: 10px;
     }
 
-    /* Search bar styles */
+
+
     #product-search {
-        width: 80%;
+        max-width: 180px;
+        /* Significantly reduced width */
     }
 
     #clear-search {
-        width: 15%;
+        max-width: 70px;
+        margin-left: 5px;
+        /* Proportionally reduced width */
     }
+
+    .input-group {
+        width: auto;
+        /* Allow the input group to size based on content */
+    }
+
 
     /* Additional Styles for mobile responsiveness */
     @media (max-width: 768px) {
         .checkout-section {
             padding: 10px;
         }
+
         .cart-item {
             padding: 10px;
         }
     }
-
 </style>
 
 <div class="dashboard-wrapper">
@@ -177,11 +187,11 @@
             <!-- Main Products Section -->
             <div class="col-md-6">
                 <h5 class="text-primary mb-3">Products</h5>
-                
+
                 <!-- Search Bar with Clear Button -->
                 <div class="input-group mb-3">
-                    <input type="text" id="product-search" class="form-control" placeholder="Search for products..." />
-                    <button class="btn btn-outline-secondary" type="button" id="clear-search">Clear</button>
+                    <input type="text" id="product-search" class="form-control form-control-sm" placeholder="Search products..." />
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="clear-search">Clear</button>
                 </div>
 
                 <div id="products" class="row g-4">
@@ -272,10 +282,10 @@
             $.ajax({
                 url: '{{ route("products.search") }}',
                 type: 'GET',
-                data: { 
-                    category_id: categoryId, 
-                    page: page, 
-                    search: searchQuery  
+                data: {
+                    category_id: categoryId,
+                    page: page,
+                    search: searchQuery
                 },
                 success: function(response) {
                     const products = response.products;
