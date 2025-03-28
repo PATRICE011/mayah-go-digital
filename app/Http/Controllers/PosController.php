@@ -155,113 +155,131 @@ class PosController extends Controller
      */
     public function checkout(Request $request)
     {
+        // Check if the cart is empty
         if (!Session::has('cart') || empty(Session::get('cart'))) {
             return response()->json(['message' => 'Cart is empty'], 400);
         }
 
+        // Validate cash paid
         $request->validate([
             'cash_paid' => 'required|numeric|min:0',
         ]);
 
+        // Get the cart from the session
         $cart = Session::get('cart');
         $totalAmount = array_sum(array_column($cart, 'subtotal'));
 
+        // Check if cash paid is enough
         if ($request->cash_paid < $totalAmount) {
             return response()->json(['message' => 'Insufficient cash payment'], 400);
         }
 
+        // Calculate change
         $change = $request->cash_paid - $totalAmount;
 
+        // Start a transaction
         DB::beginTransaction();
 
         try {
-            // Save the order
-            $order = \App\Models\PosOrder::create([
-                'order_number' => Str::random(10), // Unique order number
-                'user_id' => Auth::id(), // Logged-in user ID
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->header('User-Agent'),
-                'total_amount' => $totalAmount,
+            // Create a new POS order in the pos_orders table
+            $orderNumber = Str::random(10); // Generate a random order number
+            $posOrderId = DB::table('pos_orders')->insertGetId([
+                'order_number' => $orderNumber, // Unique order number
+                'user_id' => null, // For POS, the user is typically a guest, so leave null
                 'cash_paid' => $request->cash_paid,
                 'change' => $change,
-                'status' => 'completed',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
-            // Save each cart item as an order item and update product stocks
+            // Loop through the cart and save each item in the pos_order_items table
             foreach ($cart as $productId => $item) {
-                // Reduce product stock
-                $product = \App\Models\Product::find($productId);
-
-                if ($product->product_stocks < $item['quantity']) {
+                // Check if the product exists and if stock is sufficient
+                $product = DB::table('products')->where('id', $productId)->first();
+                if (!$product || $product->product_stocks < $item['quantity']) {
                     DB::rollBack();
                     return response()->json([
-                        'message' => "Insufficient stock for {$product->product_name}",
+                        'message' => "Insufficient stock for {$item['name']}",
                     ], 400);
                 }
 
-                $product->decrement('product_stocks', $item['quantity']);
+                // Decrease the product stock in the products table
+                DB::table('products')->where('id', $productId)->decrement('product_stocks', $item['quantity']);
 
-                // Save the order item
-                \App\Models\PosOrderItem::create([
-                    'order_id' => $order->id,
+                // Insert the order item into the pos_order_items table
+                DB::table('pos_order_items')->insert([
+                    'pos_order_id' => $posOrderId, // Link this order item to the pos_order
                     'product_id' => $productId,
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],
                     'total' => $item['subtotal'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
 
-            // Clear the cart after successful checkout
+            // Clear the cart after a successful checkout
             Session::forget('cart');
 
+            // Commit the transaction
             DB::commit();
 
             return response()->json([
                 'message' => 'Order placed successfully',
-                'order_id' => $order->id,
+                'order_id' => $posOrderId,
                 'change' => $change,
             ]);
         } catch (\Exception $e) {
+            // Rollback in case of failure
             DB::rollBack();
             return response()->json(['message' => 'Something went wrong while placing the order'], 500);
         }
     }
+
+
     /**
      * Admin POS Report Page
      */
     public function adminposreport(Request $request)
     {
-        // Fetch and transform data before pagination
-        $salesReport = \App\Models\PosOrderItem::with(['product', 'order.user']) // Load relationships
-            ->latest()
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'product_name' => $item->product->product_name ?? 'Unknown',
-                    'quantity' => $item->quantity,
-                    'unit_price' => number_format($item->price, 2),
-                    'amount' => number_format($item->total, 2),
-                    'date' => $item->created_at->format('Y-m-d H:i'),
-                    'customer' => $item->order->user->name ?? 'Guest',
-                ];
-            });
+        // Initialize query for retrieving POS order items
+        $query = DB::table('pos_order_items')
+            ->join('products', 'pos_order_items.product_id', '=', 'products.id')
+            ->join('pos_orders', 'pos_order_items.pos_order_id', '=', 'pos_orders.id')
+            ->select('pos_order_items.id', 'products.product_name', 'pos_order_items.quantity', 'pos_order_items.price', 'pos_order_items.total', 'pos_order_items.created_at', 'pos_orders.order_number', DB::raw('IFNULL(pos_orders.user_id, "Guest") as customer'))
+            ->orderBy('pos_order_items.created_at', 'desc');
 
-        // Manually paginate the transformed data
-        $perPage = 6; // Items per page
-        $currentPage = $request->input('page', 1); // Current page or default to 1
-        $paginatedReport = new \Illuminate\Pagination\LengthAwarePaginator(
-            $salesReport->slice(($currentPage - 1) * $perPage, $perPage), // Slice the collection
-            $salesReport->count(), // Total items
-            $perPage, // Items per page
-            $currentPage, // Current page
-            ['path' => $request->url(), 'query' => $request->query()] // Append query parameters
-        );
+        // Apply search filter if any search term is provided
+        if ($searchQuery = $request->input('search')) {
+            $query->where('products.product_name', 'like', "%$searchQuery%")
+                ->orWhere('products.product_description', 'like', "%$searchQuery%");
+        }
+
+        // Apply date range filter if any dates are provided
+        if ($fromDate = $request->input('fromDate')) {
+            $query->whereDate('pos_order_items.created_at', '>=', $fromDate);
+        }
+
+        if ($toDate = $request->input('toDate')) {
+            $query->whereDate('pos_order_items.created_at', '<=', $toDate);
+        }
+
+        // Get paginated results
+        $salesReport = $query->paginate(6);
+
+        // Modify report data if necessary using map()
+        $salesReport->getCollection()->map(function ($item) {
+            // Update unit price field and amount
+            $item->unit_price = number_format($item->price, 2); // Format price
+            $item->amount = number_format($item->total, 2); // Format total amount
+            return $item;
+        });
 
         return view('admins.adminposreport', [
-            'salesReport' => $paginatedReport, // Pass the paginated object
+            'salesReport' => $salesReport, // Pass the paginated report to the view
         ]);
     }
+
 
     public function exportPosReport(Request $request)
     {
@@ -269,9 +287,10 @@ class PosController extends Controller
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
 
-        // Generate and download the report
+        // Generate and download the POS order report
         return Excel::download(new SalesPosExport($fromDate, $toDate), 'pos-report.xlsx');
     }
+
 
     public function search(Request $request)
     {
@@ -290,7 +309,7 @@ class PosController extends Controller
         // Search by product name, description, or any other field you want
         if ($searchQuery) {
             $query->where('product_name', 'like', '%' . $searchQuery . '%')
-                  ->orWhere('product_description', 'like', '%' . $searchQuery . '%');
+                ->orWhere('product_description', 'like', '%' . $searchQuery . '%');
         }
 
         // Get the total count of the filtered products

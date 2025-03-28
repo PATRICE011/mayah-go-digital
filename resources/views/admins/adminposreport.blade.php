@@ -36,22 +36,32 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
-                        <!-- Search -->
-                        <div class="mr-2" style="width: 200px;">
-                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
-                        </div>
-                        <!-- Date Range Filter -->
-                        <div class="mr-2 d-flex align-items-center" style="width: 350px;">
-                            <input type="date" id="fromDate" class="form-control form-control-sm" style="width: 150px;" placeholder="From Date">
-                            <span class="mx-2">to</span>
-                            <input type="date" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date">
-                        </div>
+                        <!-- Search and Date Range Filter Form -->
+                        <form action="{{ route('admins.adminposreport') }}" method="GET" class="d-flex justify-content-end align-items-center">
+                            <!-- Search Input -->
+                            <div class="mr-2" style="width: 250px;">
+                                <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="Search..." value="{{ request('search') }}">
+                            </div>
+
+                            <!-- Date Range Filter -->
+                            <div class="mr-2 d-flex align-items-center" style="width: 350px;">
+                                <input type="date" name="fromDate" id="fromDate" class="form-control form-control-sm" style="width: 150px;" placeholder="From Date" value="{{ request('fromDate') }}">
+                                <span class="mx-2">to</span>
+                                <input type="date" name="toDate" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date" value="{{ request('toDate') }}">
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-sm btn-primary ml-2">
+                                <i class="fa fa-search"></i> Filter
+                            </button>
+                        </form>
+
                         <!-- Export Button -->
-                        <a href="{{ route('admins.export.report') }}" class="btn btn-sm btn-outline-danger">
+                        <a href="{{ route('admins.export.report') }}" class="btn btn-sm btn-outline-danger ml-3">
                             <i class="fa fa-file-export"></i> Export
                         </a>
-
                     </div>
+
 
                     <!-- Sales Report Table -->
                     <div class="card-body p-0">
@@ -71,13 +81,13 @@
                                 <tbody id="salesReportBody">
                                     @forelse($salesReport as $report)
                                     <tr>
-                                        <td>{{ $report['id'] }}</td>
-                                        <td>{{ $report['product_name'] }}</td>
-                                        <td>{{ $report['quantity'] }}</td>
-                                        <td>₱{{ $report['unit_price'] }}</td>
-                                        <td>₱{{ $report['amount'] }}</td>
-                                        <td>{{ $report['date'] }}</td>
-                                        <td>{{ $report['customer'] }}</td>
+                                        <td>{{ $report->id }}</td>
+                                        <td>{{ $report->product_name }}</td>
+                                        <td>{{ $report->quantity }}</td>
+                                        <td>₱{{ $report->unit_price }}</td>
+                                        <td>₱{{ $report->amount }}</td>
+                                        <td>{{ $report->created_at }}</td>
+                                        <td>{{ $report->customer }}</td>
                                     </tr>
                                     @empty
                                     <tr>
@@ -90,8 +100,9 @@
 
                         <!-- Pagination -->
                         <div class="d-flex justify-content-center mt-3">
-                            {{ $salesReport->links('pagination::bootstrap-4') }}
+                            {{ $salesReport->appends(request()->query())->links('pagination::bootstrap-4') }}
                         </div>
+
                     </div>
                 </div>
             </div>

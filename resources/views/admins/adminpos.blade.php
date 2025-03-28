@@ -3,6 +3,166 @@
 @section('content')
 @include('admins.adminheader', ['activePage' => 'pos'])
 
+<style>
+    /* Internal CSS for styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .dashboard-wrapper {
+        padding: 20px;
+    }
+
+    .category-item:hover {
+        background-color: #e9ecef;
+    }
+
+    .product-card {
+        transition: transform 0.2s;
+        cursor: pointer;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
+    }
+
+    .checkout-summary {
+        border-top: 1px solid #dee2e6;
+        padding-top: 10px;
+    }
+
+    .modal-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .modal-footer {
+        justify-content: space-between;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .pagination {
+        margin-top: 20px;
+    }
+
+    .pagination-item {
+        margin: 0 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    /* Checkout Section Styles */
+    .checkout-section {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .cart-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    .cart-item .cart-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .cart-item .cart-info span {
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .cart-item .quantity-controls {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        justify-content: center;
+        /* gap: 20px; */
+    }
+
+    .cart-item .quantity-controls button {
+        margin: 0 10px;
+        padding: 6px 10px;
+        font-size: 1rem;
+    }
+
+    .cart-item .quantity-controls input {
+        width: 60px;
+        text-align: center;
+        font-size: 1.1rem;
+        margin: 0;
+        padding: 5px 0;
+    }
+
+    .cart-item .delete-item {
+        margin-top: 10px;
+        align-self: flex-end;
+    }
+
+    .total-label {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .checkout-btn {
+        margin-top: 20px;
+    }
+
+    /* Style for product name and price */
+    .product-name {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .product-price {
+        font-size: 1.1rem;
+        color: #28a745;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    /* Search bar styles */
+    #product-search {
+        width: 80%;
+    }
+
+    #clear-search {
+        width: 15%;
+    }
+
+    /* Additional Styles for mobile responsiveness */
+    @media (max-width: 768px) {
+        .checkout-section {
+            padding: 10px;
+        }
+        .cart-item {
+            padding: 10px;
+        }
+    }
+
+</style>
+
 <div class="dashboard-wrapper">
     <div class="container-fluid dashboard-content">
         <div class="row">
@@ -18,9 +178,10 @@
             <div class="col-md-6">
                 <h5 class="text-primary mb-3">Products</h5>
                 
-                <!-- Search Bar with Fixed Width -->
-                <div class="mb-3">
+                <!-- Search Bar with Clear Button -->
+                <div class="input-group mb-3">
                     <input type="text" id="product-search" class="form-control" placeholder="Search for products..." />
+                    <button class="btn btn-outline-secondary" type="button" id="clear-search">Clear</button>
                 </div>
 
                 <div id="products" class="row g-4">
@@ -34,13 +195,13 @@
             </div>
 
             <!-- Checkout Section -->
-            <div class="col-md-3 bg-white shadow-sm rounded p-3">
+            <div class="col-md-3 bg-white shadow-sm rounded p-3 checkout-section">
                 <h5 class="text-primary mb-3">Checkout</h5>
                 <ul id="cart-items" class="list-group mb-3">
                     <!-- Cart items will be dynamically added here -->
                 </ul>
                 <div class="d-flex justify-content-between mb-3">
-                    <strong>Total:</strong>
+                    <span class="total-label">Total:</span>
                     <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
                 </div>
                 <button id="checkout-btn" class="btn btn-success w-100 mb-2" disabled>Checkout</button>
@@ -54,7 +215,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-primary" id="cashPaidModalLabel">Enter Payment Details</h5>
+                <h5 class="modal-title" id="cashPaidModalLabel">Enter Payment Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -92,14 +253,10 @@
                 type: 'GET',
                 success: function(categories) {
                     let html = `
-                        <a href="#" data-id="all" class="category-item text-decoration-none">
-                            <li class="list-group-item list-group-item-action">Show All</li>
-                        </a>`;
+                        <li class="list-group-item category-item" data-id="all">Show All</li>`;
                     categories.forEach(category => {
                         html += `
-                            <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
-                                <li class="list-group-item list-group-item-action">${category.category_name}</li>
-                            </a>`;
+                            <li class="list-group-item category-item" data-id="${category.id}">${category.category_name}</li>`;
                     });
                     $('#categories').html(html);
                 },
@@ -113,12 +270,12 @@
         function loadProducts(categoryId = 'all', page = 1, searchQuery = '') {
             $('#products').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>');
             $.ajax({
-                url: '{{ route("products.search") }}',  // Call a new route for search
+                url: '{{ route("products.search") }}',
                 type: 'GET',
                 data: { 
                     category_id: categoryId, 
                     page: page, 
-                    search: searchQuery  // Pass the search query
+                    search: searchQuery  
                 },
                 success: function(response) {
                     const products = response.products;
@@ -155,8 +312,14 @@
 
         // Handle Search Input
         $('#product-search').on('keyup', function() {
-            const searchQuery = $(this).val(); // Get the value entered in the search bar
-            loadProducts('all', 1, searchQuery); // Reload products based on the search query
+            const searchQuery = $(this).val();
+            loadProducts('all', 1, searchQuery);
+        });
+
+        // Clear Search Input
+        $('#clear-search').on('click', function() {
+            $('#product-search').val('');
+            loadProducts('all', 1);
         });
 
         // Load Cart
@@ -172,14 +335,16 @@
                     let cartHtml = '';
                     Object.entries(cart).forEach(([id, item]) => {
                         cartHtml += `
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                ${item.name} 
-                                <div class="d-flex align-items-center">
+                            <li class="list-group-item cart-item">
+                                <div class="cart-info">
+                                    <span class="product-name">${item.name} - ₱${item.price.toFixed(2)}</span>
+                                    <span class="product-price">₱${(item.price * item.quantity).toFixed(2)}</span> 
+                                </div>
+                                <div class="quantity-controls">
+                                    <button class="btn btn-sm btn-danger delete-item" data-id="${id}">Delete</button>
                                     <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
                                     <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
                                     <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
-                                    <span class="ms-3">₱${item.subtotal.toFixed(2)}</span>
-                                    <button class="btn btn-sm btn-danger ms-2 delete-item" data-id="${id}">Delete</button>
                                 </div>
                             </li>`;
                     });
@@ -248,7 +413,7 @@
                         type: 'POST',
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content'),
-                            _method: 'DELETE' // This tells Laravel it's a DELETE request
+                            _method: 'DELETE'
                         },
                         success: function(response) {
                             Swal.fire('Deleted!', response.message, 'success');
