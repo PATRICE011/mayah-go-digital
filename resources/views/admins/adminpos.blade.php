@@ -43,14 +43,28 @@
     }
 
     /* Checkout Section */
+
+    .product-price {
+        margin-top: 5px;
+        margin-right: 10px;
+    }
+
+    .bottom-price {
+        margin-right: 15px;
+        font-size: 28px;
+        color: black;
+    }
+
     .checkout-section {
         display: flex;
         flex-direction: column;
         padding: 15px;
-        max-height: 400px;
+        max-height: 650px;
+        /* Adjust the max height if necessary */
         overflow-y: auto;
         position: relative;
     }
+
 
     .cart-item {
         display: flex;
@@ -101,7 +115,7 @@
         padding: 6px 12px;
         border: none;
         background-color: #e74c3c;
-        color: white;
+        color: red;
         cursor: pointer;
         border-radius: 5px;
     }
@@ -110,19 +124,23 @@
         background-color: #c0392b;
     }
 
+
+
     .checkout-footer {
-        position: sticky;
-        bottom: 0;
+        position: relative;
         background-color: #fff;
         padding: 15px 0;
         border-top: 1px solid #ddd;
         z-index: 10;
+        margin-top: auto;
+        /* This will push the footer to the bottom */
     }
 
     .total-label {
         font-weight: bold;
         font-size: 1.2rem;
     }
+
 
     .checkout-btn,
     #clear-cart-btn {
@@ -132,6 +150,15 @@
         font-size: 1.1rem;
         border-radius: 5px;
         border: none;
+    }
+
+    .checkout-btn {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .checkout-btn:hover {
+        background-color: #218838;
     }
 
     .checkout-btn {
@@ -210,7 +237,7 @@
                 <div class="checkout-footer">
                     <div class="d-flex justify-content-between mb-3">
                         <span class="total-label">Total:</span>
-                        <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
+                        <span id="cart-total" class="text-primary font-weight-bold bottom-price">₱0.00</span>
                     </div>
                     <button id="checkout-btn" class="btn checkout-btn" disabled>Checkout</button>
                     <button id="clear-cart-btn" class="btn" type="button">Clear Cart</button>
@@ -291,7 +318,7 @@
                     let html = '';
                     products.forEach(product => {
                         // Check if the product has stock
-                        if (product.product_stocks > 0) { // Use product.product_stocks
+                        if (product.product_stocks > 0) {
                             html += `
             <div class="col-lg-4 col-md-6">
                 <div class="card shadow-sm product-card border-0" data-id="${product.id}">
@@ -358,9 +385,12 @@
                             </div>
                             <div class="quantity-controls">
                                 <button class="btn btn-sm btn-danger delete-item" data-id="${id}">Delete</button>
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
-                                <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity decrease-quantity" 
+                                        data-id="${id}" data-action="decrease" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
+                                <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" 
+                                       data-id="${id}" value="${item.quantity}" style="width: 60px;">
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity increase-quantity" 
+                                        data-id="${id}" data-action="increase" ${item.quantity >= item.product_stocks ? 'disabled' : ''}>+</button>
                             </div>
                         </li>`;
                     });
@@ -414,22 +444,61 @@
             });
         });
 
-        // Adjust Quantity
+        // Adjust Quantity (Increase or Decrease)
         $(document).on('click', '.adjust-quantity', function() {
             const productId = $(this).data('id');
             const action = $(this).data('action');
             const input = $(`.cart-quantity[data-id="${productId}"]`);
             let quantity = parseInt(input.val());
 
-            if (action === 'increase') {
-                quantity++;
-            } else if (action === 'decrease' && quantity > 1) {
-                quantity--;
-            }
+            // Get the product's available stock
+            let availableStock = 0;
 
-            input.val(quantity);
-            updateCart(productId, quantity);
+            $.ajax({
+                url: '{{ route("products.checkStock") }}',
+                type: 'GET',
+                data: {
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function(response) {
+                    availableStock = response.product_stocks;
+
+                    if (action === 'increase' && quantity < availableStock) {
+                        quantity++;
+                    } else if (action === 'decrease' && quantity > 1) {
+                        quantity--;
+                    }
+
+                    input.val(quantity);
+                    updateCart(productId, quantity);
+
+                    // Disable the increase button if quantity reaches stock limit
+                    if (quantity >= availableStock) {
+                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', true);
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Max Stock Reached',
+                            text: `You can only add up to ${availableStock} items to the cart.`,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', false);
+                    }
+
+                    // Enable the decrease button if quantity is greater than 1
+                    if (quantity > 1) {
+                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', false);
+                    } else {
+                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', true);
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Error', xhr.responseJSON.error || 'Failed to check stock.', 'error');
+                }
+            });
         });
+
 
         // Update Cart
         function updateCart(productId, quantity) {
@@ -438,11 +507,11 @@
                 type: 'POST',
                 data: {
                     product_id: productId,
-                    quantity,
+                    quantity: quantity,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
-                    loadCart();
+                    loadCart(); // Reload cart with updated quantities
                 },
                 error: function() {
                     Swal.fire('Error', 'Failed to update cart.', 'error');
