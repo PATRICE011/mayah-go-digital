@@ -189,6 +189,8 @@
         margin-left: 5px;
     }
 
+
+
     /* Additional Styles for mobile responsiveness */
     @media (max-width: 768px) {
         .checkout-section {
@@ -300,7 +302,76 @@
             });
         }
 
-        // Load Products with Search functionality and Category Filtering
+        function renderPagination(pagination, categoryId, searchQuery) {
+            if (!pagination || !pagination.last_page) return;
+
+            let paginationHtml = '<nav aria-label="Page navigation">';
+            paginationHtml += '<ul class="pagination justify-content-center">';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                paginationHtml += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${pagination.current_page - 1}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>`;
+            } else {
+                paginationHtml += `
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>`;
+            }
+
+            // Page numbers
+            for (let i = 1; i <= pagination.last_page; i++) {
+                paginationHtml += `
+            <li class="page-item ${pagination.current_page === i ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>`;
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                paginationHtml += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${pagination.current_page + 1}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>`;
+            } else {
+                paginationHtml += `
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>`;
+            }
+
+            paginationHtml += '</ul></nav>';
+            $('#pagination').html(paginationHtml);
+
+            // Forcefully set active state
+            setTimeout(() => {
+                $('#pagination .page-item').removeClass('active');
+                $(`#pagination .page-link[data-page="${pagination.current_page}"]`)
+                    .parent()
+                    .addClass('active');
+            }, 0);
+
+            // Attach click event handlers
+            $('#pagination .page-link').on('click', function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                if (page) {
+                    loadProducts('all', page);
+                }
+            });
+        }
+
+        // Modify loadProducts to use the new rendering
         function loadProducts(categoryId = 'all', page = 1, searchQuery = '') {
             $('#products').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>');
             $.ajax({
@@ -315,37 +386,34 @@
                     const products = response.products;
                     const pagination = response.pagination;
 
+                    // Render products (previous logic remains the same)
                     let html = '';
                     products.forEach(product => {
-                        // Check if the product has stock
                         if (product.product_stocks > 0) {
                             html += `
-            <div class="col-lg-4 col-md-6">
-                <div class="card shadow-sm product-card border-0" data-id="${product.id}">
-                    <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
-                    <div class="card-body text-center">
-                        <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
-                        <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
-                    </div>
-                </div>
-            </div>`;
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card shadow-sm product-card border-0" data-id="${product.id}">
+                            <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
+                            <div class="card-body text-center">
+                                <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
+                                <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>`;
                         }
                     });
                     $('#products').html(html);
 
-                    let paginationHtml = '';
-                    if (pagination.last_page > 1) {
-                        for (let i = 1; i <= pagination.last_page; i++) {
-                            paginationHtml += `<a href="#" data-page="${i}" class="pagination-item btn btn-sm ${i === pagination.current_page ? 'btn-primary' : 'btn-outline-primary'}">${i}</a>`;
-                        }
-                    }
-                    $('#pagination').html(paginationHtml);
+                    // Render pagination with current category and search
+                    renderPagination(pagination, categoryId, searchQuery);
                 },
-                error: function() {
+                error: function(xhr) {
+                    console.error(xhr.responseText);
                     Swal.fire('Error', 'Failed to load products.', 'error');
                 }
             });
         }
+
 
         // Handle Search Input
         $('#product-search').on('keyup', function() {
@@ -498,7 +566,6 @@
                 }
             });
         });
-
 
         // Update Cart
         function updateCart(productId, quantity) {

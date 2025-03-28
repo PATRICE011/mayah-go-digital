@@ -36,10 +36,12 @@ class PosController extends Controller
     /**
      * Get Products with Pagination and Optional Category Filtering
      */
+    // Refactor to use custom pagination
     public function getProducts(Request $request)
     {
         $query = Product::query();
-
+    
+        // Category filter
         if ($request->has('category_id') && $request->category_id != 'all') {
             $category = Category::find($request->category_id);
             if (!$category) {
@@ -47,18 +49,34 @@ class PosController extends Controller
             }
             $query->where('category_id', $request->category_id);
         }
-
-        $products = $query->paginate(6);
-
+    
+        // Search filter
+        if ($request->has('search')) {
+            $searchQuery = $request->search;
+            $query->where('product_name', 'like', "%$searchQuery%")
+                ->orWhere('product_description', 'like', "%$searchQuery%");
+        }
+    
+        // Pagination logic
+        $perPage = 6; // Number of products per page
+        $page = $request->input('page', 1); // Current page
+    
+        $products = $query->paginate($perPage, ['*'], 'page', $page); // Paginate
+    
+        // Pagination information
+        $pagination = [
+            'current_page' => $products->currentPage(),
+            'last_page' => $products->lastPage(),
+            'per_page' => $perPage,
+            'total' => $products->total(),
+        ];
+    
         return response()->json([
-            'products' => $products->items(),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-            ],
+            'products' => $products->items(), // Return only the products for this page
+            'pagination' => $pagination,
         ]);
     }
-
+    
     /**
      * Add a Product to the Cart
      */
@@ -119,14 +137,20 @@ class PosController extends Controller
     public function checkStock(Request $request)
     {
         $productId = $request->input('product_id');
+        $quantity = $request->input('quantity'); // Get the quantity to check
 
         // Fetch the product from the database
         $product = Product::findOrFail($productId);
 
+        // Check if the requested quantity is less than or equal to available stock
+        $stockAvailable = $product->product_stocks >= $quantity;
+
         return response()->json([
-            'product_stocks' => $product->product_stocks // Send the available stock
+            'stockAvailable' => $stockAvailable, // Return whether stock is available for the quantity
+            'product_stocks' => $product->product_stocks // Send the available stock for feedback
         ]);
     }
+
 
     public function clear(Request $request)
     {
@@ -345,28 +369,28 @@ class PosController extends Controller
         $searchQuery = $request->input('search', ''); // Get the search query (default to an empty string if not provided)
         $categoryId = $request->input('category_id', 'all'); // Category ID (default to 'all' if not provided)
         $page = $request->input('page', 1); // Page number (default to 1 if not provided)
-
+    
         // Initialize the query builder
         $query = DB::table('products');
-
+    
         // Filter by category if category is provided
         if ($categoryId != 'all') {
             $query->where('category_id', $categoryId);
         }
-
+    
         // Search by product name, description, or any other field you want
         if ($searchQuery) {
             $query->where('product_name', 'like', '%' . $searchQuery . '%')
                 ->orWhere('product_description', 'like', '%' . $searchQuery . '%');
         }
-
+    
         // Get the total count of the filtered products
         $total = $query->count();
-
-        // Paginate the results (10 products per page for example)
-        $perPage = 10;
+    
+        // Paginate the results (6 products per page)
+        $perPage = 6;
         $products = $query->skip(($page - 1) * $perPage)->take($perPage)->get();
-
+    
         // Calculate pagination information
         $pagination = [
             'current_page' => $page,
@@ -374,11 +398,12 @@ class PosController extends Controller
             'per_page' => $perPage,
             'total' => $total,
         ];
-
+    
         // Return the products and pagination as a JSON response
         return response()->json([
             'products' => $products,
             'pagination' => $pagination
         ]);
     }
+    
 }
