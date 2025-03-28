@@ -13,9 +13,24 @@
         padding: 20px;
     }
 
-    .category-item:hover {
-        background-color: #e9ecef;
+    .category-item {
+        cursor: pointer;
     }
+
+    /* .category-item:hover {
+        background-color: #e9ecef;
+    } */
+
+    .category-item.active {
+        background-color: #007bff;
+        /* Highlight the active category with blue */
+        color: white;
+        /* Change text color to white */
+    }
+
+    /* .category-item:hover {
+        background-color: #e9ecef;
+    } */
 
     .product-card {
         transition: transform 0.2s;
@@ -284,6 +299,7 @@
             }
         });
 
+
         // Load Categories
         function loadCategories() {
             $.ajax({
@@ -301,6 +317,21 @@
                 }
             });
         }
+
+        // Handle Category Click
+        $(document).on('click', '.category-item', function() {
+            // Remove the 'active' class from all category items
+            $('.category-item').removeClass('active');
+            // Add 'active' class to the clicked category
+            $(this).addClass('active');
+
+            const categoryId = $(this).data('id');
+            loadProducts(categoryId, 1);
+        });
+
+        // Initial Load
+        loadCategories();
+
 
         function renderPagination(pagination, categoryId, searchQuery) {
             if (!pagination || !pagination.last_page) return;
@@ -526,6 +557,7 @@
 
             // Get the product's available stock
             let availableStock = 0;
+            let notificationShown = false; // Flag to prevent duplicate notification
 
             $.ajax({
                 url: '{{ route("products.checkStock") }}',
@@ -549,12 +581,18 @@
                     // Disable the increase button if quantity reaches stock limit
                     if (quantity >= availableStock) {
                         $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', true);
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Max Stock Reached',
-                            text: `You can only add up to ${availableStock} items to the cart.`,
-                            confirmButtonText: 'OK'
-                        });
+
+                        if (!notificationShown) {
+                            // Show the notification only once
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Max Stock Reached',
+                                text: `You can only add up to ${availableStock} items to the cart.`,
+                                confirmButtonText: 'OK'
+                            });
+
+                            notificationShown = true; // Mark notification as shown
+                        }
                     } else {
                         $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', false);
                     }
@@ -572,64 +610,8 @@
             });
         });
 
-        // Disable manual input, only allow increase/decrease via buttons
-        $(document).on('focus', '.cart-quantity', function() {
-            // When input is focused, prevent typing
-            $(this).blur();
-        });
 
-        // Adjust Quantity (Increase or Decrease)
-        $(document).on('click', '.adjust-quantity', function() {
-            const productId = $(this).data('id');
-            const action = $(this).data('action');
-            const input = $(`.cart-quantity[data-id="${productId}"]`);
-            let quantity = parseInt(input.val());
-
-            // Get the product's available stock
-            $.ajax({
-                url: '{{ route("products.checkStock") }}',
-                type: 'GET',
-                data: {
-                    product_id: productId,
-                    quantity: quantity
-                },
-                success: function(response) {
-                    const availableStock = response.product_stocks;
-
-                    if (action === 'increase' && quantity < availableStock) {
-                        quantity++;
-                    } else if (action === 'decrease' && quantity > 1) {
-                        quantity--;
-                    }
-
-                    input.val(quantity); // Update the input with new value
-                    updateCart(productId, quantity); // Update the cart
-
-                    // Disable the increase button if quantity reaches stock limit
-                    if (quantity >= availableStock) {
-                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', true);
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Max Stock Reached',
-                            text: `You can only add up to ${availableStock} items to the cart.`,
-                            confirmButtonText: 'OK'
-                        });
-                    } else {
-                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', false);
-                    }
-
-                    // Enable the decrease button if quantity is greater than 1
-                    if (quantity > 1) {
-                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', false);
-                    } else {
-                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', true);
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire('Error', xhr.responseJSON.error || 'Failed to check stock.', 'error');
-                }
-            });
-        });
+       
 
 
         // Update Cart
