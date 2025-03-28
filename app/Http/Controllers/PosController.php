@@ -272,4 +272,46 @@ class PosController extends Controller
         // Generate and download the report
         return Excel::download(new SalesPosExport($fromDate, $toDate), 'pos-report.xlsx');
     }
+
+    public function search(Request $request)
+    {
+        $searchQuery = $request->input('search', ''); // Get the search query (default to an empty string if not provided)
+        $categoryId = $request->input('category_id', 'all'); // Category ID (default to 'all' if not provided)
+        $page = $request->input('page', 1); // Page number (default to 1 if not provided)
+
+        // Initialize the query builder
+        $query = DB::table('products');
+
+        // Filter by category if category is provided
+        if ($categoryId != 'all') {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Search by product name, description, or any other field you want
+        if ($searchQuery) {
+            $query->where('product_name', 'like', '%' . $searchQuery . '%')
+                  ->orWhere('product_description', 'like', '%' . $searchQuery . '%');
+        }
+
+        // Get the total count of the filtered products
+        $total = $query->count();
+
+        // Paginate the results (10 products per page for example)
+        $perPage = 10;
+        $products = $query->skip(($page - 1) * $perPage)->take($perPage)->get();
+
+        // Calculate pagination information
+        $pagination = [
+            'current_page' => $page,
+            'last_page' => ceil($total / $perPage),
+            'per_page' => $perPage,
+            'total' => $total,
+        ];
+
+        // Return the products and pagination as a JSON response
+        return response()->json([
+            'products' => $products,
+            'pagination' => $pagination
+        ]);
+    }
 }

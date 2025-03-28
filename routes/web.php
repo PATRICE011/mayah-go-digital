@@ -141,7 +141,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::get('/pos/export', [PosController::class, 'exportPosReport'])->name('admins.export.report');
             Route::match(['post', 'delete'], '/delete/{productId}', [PosController::class, 'destroyPOS'])
         ->name('cartDestroyPOS');
-        
+        Route::get('/products/search', [PosController::class, 'search'])->name('products.search');
         });
 
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');

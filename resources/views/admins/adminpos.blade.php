@@ -17,6 +17,12 @@
             <!-- Main Products Section -->
             <div class="col-md-6">
                 <h5 class="text-primary mb-3">Products</h5>
+                
+                <!-- Search Bar with Fixed Width -->
+                <div class="mb-3">
+                    <input type="text" id="product-search" class="form-control" placeholder="Search for products..." />
+                </div>
+
                 <div id="products" class="row g-4">
                     <!-- Products will be dynamically loaded here -->
                 </div>
@@ -86,14 +92,14 @@
                 type: 'GET',
                 success: function(categories) {
                     let html = `
-                    <a href="#" data-id="all" class="category-item text-decoration-none">
-                        <li class="list-group-item list-group-item-action">Show All</li>
-                    </a>`;
+                        <a href="#" data-id="all" class="category-item text-decoration-none">
+                            <li class="list-group-item list-group-item-action">Show All</li>
+                        </a>`;
                     categories.forEach(category => {
                         html += `
-                        <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
-                            <li class="list-group-item list-group-item-action">${category.category_name}</li>
-                        </a>`;
+                            <a href="#" data-id="${category.id}" class="category-item text-decoration-none">
+                                <li class="list-group-item list-group-item-action">${category.category_name}</li>
+                            </a>`;
                     });
                     $('#categories').html(html);
                 },
@@ -103,13 +109,17 @@
             });
         }
 
-        // Load Products
-        function loadProducts(categoryId = 'all', page = 1) {
+        // Load Products with Search functionality
+        function loadProducts(categoryId = 'all', page = 1, searchQuery = '') {
             $('#products').html('<div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>');
             $.ajax({
-                url: '{{ route("products.get") }}',
+                url: '{{ route("products.search") }}',  // Call a new route for search
                 type: 'GET',
-                data: { category_id: categoryId, page },
+                data: { 
+                    category_id: categoryId, 
+                    page: page, 
+                    search: searchQuery  // Pass the search query
+                },
                 success: function(response) {
                     const products = response.products;
                     const pagination = response.pagination;
@@ -117,15 +127,15 @@
                     let html = '';
                     products.forEach(product => {
                         html += `
-                        <div class="col-lg-4 col-md-6">
-                            <div class="card shadow-sm product-card border-0" data-id="${product.id}">
-                                <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
-                                <div class="card-body text-center">
-                                    <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
-                                    <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="card shadow-sm product-card border-0" data-id="${product.id}">
+                                    <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
+                                        <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`;
+                            </div>`;
                     });
                     $('#products').html(html);
 
@@ -143,6 +153,12 @@
             });
         }
 
+        // Handle Search Input
+        $('#product-search').on('keyup', function() {
+            const searchQuery = $(this).val(); // Get the value entered in the search bar
+            loadProducts('all', 1, searchQuery); // Reload products based on the search query
+        });
+
         // Load Cart
         function loadCart() {
             $.ajax({
@@ -156,16 +172,16 @@
                     let cartHtml = '';
                     Object.entries(cart).forEach(([id, item]) => {
                         cartHtml += `
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            ${item.name} 
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
-                                <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
-                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
-                                <span class="ms-3">₱${item.subtotal.toFixed(2)}</span>
-                                <button class="btn btn-sm btn-danger ms-2 delete-item" data-id="${id}">Delete</button>
-                            </div>
-                        </li>`;
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${item.name} 
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
+                                    <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
+                                    <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
+                                    <span class="ms-3">₱${item.subtotal.toFixed(2)}</span>
+                                    <button class="btn btn-sm btn-danger ms-2 delete-item" data-id="${id}">Delete</button>
+                                </div>
+                            </li>`;
                     });
 
                     $('#cart-items').html(cartHtml);
