@@ -4,7 +4,6 @@
 @include('admins.adminheader', ['activePage' => 'pos'])
 
 <style>
-    /* Internal CSS for styling */
     body {
         font-family: 'Arial', sans-serif;
         background-color: #f8f9fa;
@@ -65,11 +64,12 @@
         border-color: #0056b3;
     }
 
-    /* Checkout Section Styles */
     .checkout-section {
         display: flex;
         flex-direction: column;
         padding: 15px;
+        max-height: 400px; /* Added fixed height */
+        overflow-y: auto; /* Make the checkout section scrollable */
     }
 
     .cart-item {
@@ -88,31 +88,11 @@
         margin-bottom: 10px;
     }
 
-    .cart-item .cart-info span {
-        font-weight: bold;
-        font-size: 1.1rem;
-    }
-
     .cart-item .quantity-controls {
         display: flex;
         align-items: center;
         margin-top: 10px;
         justify-content: center;
-        /* gap: 20px; */
-    }
-
-    .cart-item .quantity-controls button {
-        margin: 0 10px;
-        padding: 6px 10px;
-        font-size: 1rem;
-    }
-
-    .cart-item .quantity-controls input {
-        width: 60px;
-        text-align: center;
-        font-size: 1.1rem;
-        margin: 0;
-        padding: 5px 0;
     }
 
     .cart-item .delete-item {
@@ -139,27 +119,16 @@
         font-size: 1.1rem;
         color: #28a745;
         margin-top: 10px;
-        margin-right: 10px;
     }
-
-
 
     #product-search {
         max-width: 180px;
-        /* Significantly reduced width */
     }
 
     #clear-search {
         max-width: 70px;
         margin-left: 5px;
-        /* Proportionally reduced width */
     }
-
-    .input-group {
-        width: auto;
-        /* Allow the input group to size based on content */
-    }
-
 
     /* Additional Styles for mobile responsiveness */
     @media (max-width: 768px) {
@@ -187,8 +156,6 @@
             <!-- Main Products Section -->
             <div class="col-md-6">
                 <h5 class="text-primary mb-3">Products</h5>
-
-                <!-- Search Bar with Clear Button -->
                 <div class="input-group mb-3">
                     <input type="text" id="product-search" class="form-control form-control-sm" placeholder="Search products..." />
                     <button class="btn btn-outline-secondary btn-sm" type="button" id="clear-search">Clear</button>
@@ -199,22 +166,19 @@
                 </div>
 
                 <!-- Pagination -->
-                <nav id="pagination" class="mt-4 d-flex justify-content-center">
-                    <!-- Pagination will be dynamically loaded here -->
-                </nav>
+                <nav id="pagination" class="mt-4 d-flex justify-content-center"></nav>
             </div>
 
             <!-- Checkout Section -->
             <div class="col-md-3 bg-white shadow-sm rounded p-3 checkout-section">
                 <h5 class="text-primary mb-3">Checkout</h5>
-                <ul id="cart-items" class="list-group mb-3">
-                    <!-- Cart items will be dynamically added here -->
-                </ul>
+                <ul id="cart-items" class="list-group mb-3"></ul>
                 <div class="d-flex justify-content-between mb-3">
                     <span class="total-label">Total:</span>
                     <span id="cart-total" class="text-primary font-weight-bold">₱0.00</span>
                 </div>
                 <button id="checkout-btn" class="btn btn-success w-100 mb-2" disabled>Checkout</button>
+                <button id="clear-cart-btn" class="btn btn-danger w-100 mb-2">Clear Cart</button>
             </div>
         </div>
     </div>
@@ -249,7 +213,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
-        // Set up the CSRF token globally for every AJAX request
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -262,11 +225,9 @@
                 url: '{{ route("categories.get") }}',
                 type: 'GET',
                 success: function(categories) {
-                    let html = `
-                        <li class="list-group-item category-item" data-id="all">Show All</li>`;
+                    let html = `<li class="list-group-item category-item" data-id="all">Show All</li>`;
                     categories.forEach(category => {
-                        html += `
-                            <li class="list-group-item category-item" data-id="${category.id}">${category.category_name}</li>`;
+                        html += `<li class="list-group-item category-item" data-id="${category.id}">${category.category_name}</li>`;
                     });
                     $('#categories').html(html);
                 },
@@ -282,11 +243,7 @@
             $.ajax({
                 url: '{{ route("products.search") }}',
                 type: 'GET',
-                data: {
-                    category_id: categoryId,
-                    page: page,
-                    search: searchQuery
-                },
+                data: { category_id: categoryId, page: page, search: searchQuery },
                 success: function(response) {
                     const products = response.products;
                     const pagination = response.pagination;
@@ -294,15 +251,15 @@
                     let html = '';
                     products.forEach(product => {
                         html += `
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card shadow-sm product-card border-0" data-id="${product.id}">
-                                    <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
-                                    <div class="card-body text-center">
-                                        <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
-                                        <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
-                                    </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card shadow-sm product-card border-0" data-id="${product.id}">
+                                <img src="/assets/img/${product.product_image}" class="card-img-top" alt="${product.product_name}">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title font-weight-bold text-dark">${product.product_name}</h6>
+                                    <p class="card-text text-success">₱${product.product_price.toFixed(2)}</p>
                                 </div>
-                            </div>`;
+                            </div>
+                        </div>`;
                     });
                     $('#products').html(html);
 
@@ -320,18 +277,6 @@
             });
         }
 
-        // Handle Search Input
-        $('#product-search').on('keyup', function() {
-            const searchQuery = $(this).val();
-            loadProducts('all', 1, searchQuery);
-        });
-
-        // Clear Search Input
-        $('#clear-search').on('click', function() {
-            $('#product-search').val('');
-            loadProducts('all', 1);
-        });
-
         // Load Cart
         function loadCart() {
             $.ajax({
@@ -345,18 +290,18 @@
                     let cartHtml = '';
                     Object.entries(cart).forEach(([id, item]) => {
                         cartHtml += `
-                            <li class="list-group-item cart-item">
-                                <div class="cart-info">
-                                    <span class="product-name">${item.name} - ₱${item.price.toFixed(2)}</span>
-                                    <span class="product-price">₱${(item.price * item.quantity).toFixed(2)}</span> 
-                                </div>
-                                <div class="quantity-controls">
-                                    <button class="btn btn-sm btn-danger delete-item" data-id="${id}">Delete</button>
-                                    <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
-                                    <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
-                                    <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
-                                </div>
-                            </li>`;
+                        <li class="list-group-item cart-item">
+                            <div class="cart-info">
+                                <span class="product-name">${item.name}</span>
+                                <span class="product-price">₱${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="btn btn-sm btn-danger delete-item" data-id="${id}">Delete</button>
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="decrease">-</button>
+                                <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" data-id="${id}" value="${item.quantity}" style="width: 60px;">
+                                <button class="btn btn-sm btn-outline-secondary adjust-quantity" data-id="${id}" data-action="increase">+</button>
+                            </div>
+                        </li>`;
                     });
 
                     $('#cart-items').html(cartHtml);
@@ -369,135 +314,20 @@
             });
         }
 
-        // Adjust Quantity
-        $(document).on('click', '.adjust-quantity', function() {
-            const productId = $(this).data('id');
-            const action = $(this).data('action');
-            const input = $(`.cart-quantity[data-id="${productId}"]`);
-            let quantity = parseInt(input.val());
-
-            if (action === 'increase') {
-                quantity++;
-            } else if (action === 'decrease' && quantity > 1) {
-                quantity--;
-            }
-
-            input.val(quantity);
-            updateCart(productId, quantity);
-        });
-
-        // Update Cart
-        function updateCart(productId, quantity) {
+        // Clear Cart Button
+        $('#clear-cart-btn').on('click', function() {
             $.ajax({
-                url: '{{ route("cart.update") }}',
+                url: '{{ route("cart.clear") }}',
                 type: 'POST',
                 data: {
-                    product_id: productId,
-                    quantity,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function() {
                     loadCart();
+                    Swal.fire('Cart Cleared!', 'All items have been removed from the cart.', 'success');
                 },
                 error: function() {
-                    Swal.fire('Error', 'Failed to update cart.', 'error');
-                }
-            });
-        }
-
-        // Delete Cart Item
-        $(document).on('click', '.delete-item', function() {
-            const productId = $(this).data('id');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "This will remove the item from your cart.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '{{ route("cartDestroyPOS", ":id") }}'.replace(':id', productId),
-                        type: 'POST',
-                        data: {
-                            _token: $('meta[name="csrf-token"]').attr('content'),
-                            _method: 'DELETE'
-                        },
-                        success: function(response) {
-                            Swal.fire('Deleted!', response.message, 'success');
-                            loadCart();
-                        },
-                        error: function(xhr) {
-                            Swal.fire('Error', xhr.responseJSON.message || 'Failed to delete item from cart.', 'error');
-                        }
-                    });
-                }
-            });
-        });
-
-        // Add to Cart
-        $(document).on('click', '.product-card', function() {
-            const productId = $(this).data('id');
-            $.ajax({
-                url: '{{ route("cart.add") }}',
-                type: 'POST',
-                data: {
-                    product_id: productId,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function() {
-                    loadCart();
-                },
-                error: function() {
-                    Swal.fire('Error', 'Failed to add product to cart.', 'error');
-                }
-            });
-        });
-
-        // Filter Products by Category
-        $(document).on('click', '.category-item', function(e) {
-            e.preventDefault();
-            const categoryId = $(this).data('id');
-            loadProducts(categoryId);
-        });
-
-        // Pagination
-        $(document).on('click', '.pagination-item', function(e) {
-            e.preventDefault();
-            const page = $(this).data('page');
-            loadProducts('all', page);
-        });
-
-        // Checkout
-        $('#checkout-btn').on('click', function() {
-            $('#cashPaidModal').modal('show');
-        });
-
-        $('#submit-payment').on('click', function() {
-            const cashPaid = parseFloat($('#cash-paid').val());
-            const totalAmount = parseFloat($('#cart-total').text().replace('₱', '').replace(',', ''));
-
-            if (!cashPaid || isNaN(cashPaid) || cashPaid < totalAmount) {
-                Swal.fire('Error', 'Cash paid must be greater than or equal to total amount.', 'error');
-                return;
-            }
-
-            $.ajax({
-                url: '{{ route("checkout") }}',
-                type: 'POST',
-                data: {
-                    cash_paid: cashPaid,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#cashPaidModal').modal('hide');
-                    Swal.fire('Success', `Order placed successfully! Change: ₱${response.change.toFixed(2)}`, 'success');
-                    loadCart();
-                },
-                error: function(xhr) {
-                    Swal.fire('Error', xhr.responseJSON.message || 'Checkout failed.', 'error');
+                    Swal.fire('Error', 'Failed to clear the cart.', 'error');
                 }
             });
         });

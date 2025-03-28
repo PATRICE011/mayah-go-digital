@@ -71,22 +71,70 @@ class PosController extends Controller
         $product = Product::findOrFail($request->product_id);
         $cart = Session::get('cart', []);
 
+        // Check if the product is already in the cart
         if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] += 1;
+            $currentCartQuantity = $cart[$product->id]['quantity'];
+
+            // Check if adding one more would exceed available stock
+            if ($currentCartQuantity + 1 > $product->product_stocks) {
+                return response()->json([
+                    'message' => 'Insufficient stock available.',
+                    'current_stock' => $product->product_stocks,
+                    'current_cart_quantity' => $currentCartQuantity
+                ], 400);
+            }
+
+            // Increment quantity
+            $cart[$product->id]['quantity']++;
             $cart[$product->id]['subtotal'] = $cart[$product->id]['quantity'] * $cart[$product->id]['price'];
         } else {
+            // Adding new product to cart
+            if ($product->product_stocks < 1) {
+                return response()->json([
+                    'message' => 'Insufficient stock available.',
+                    'current_stock' => $product->product_stocks
+                ], 400);
+            }
+
+            // Add the product to the cart
             $cart[$product->id] = [
                 'name' => $product->product_name,
                 'price' => $product->product_price,
                 'quantity' => 1,
-                'subtotal' => $product->product_price,
+                'subtotal' => $product->product_price
             ];
         }
 
+        // Save the cart in session
         Session::put('cart', $cart);
 
-        return response()->json(['message' => 'Product added to cart successfully', 'cart' => $cart]);
+        return response()->json([
+            'message' => 'Product added to cart successfully',
+            'cart' => $cart
+        ]);
     }
+
+    // ProductController.php
+
+    public function checkStock(Request $request)
+    {
+        $productId = $request->input('product_id');
+
+        // Fetch the product from the database
+        $product = Product::findOrFail($productId);
+
+        return response()->json([
+            'product_stocks' => $product->product_stocks // Send the available stock
+        ]);
+    }
+
+    public function clear(Request $request)
+    {
+        Session::forget('cart');
+        return response()->json(['message' => 'Cart cleared successfully']);
+    }
+
+
 
     public function destroyPOS(Request $request, $productId)
     {
