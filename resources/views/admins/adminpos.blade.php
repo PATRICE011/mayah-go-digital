@@ -455,8 +455,13 @@
                                 <button class="btn btn-sm btn-danger delete-item" data-id="${id}">Delete</button>
                                 <button class="btn btn-sm btn-outline-secondary adjust-quantity decrease-quantity" 
                                         data-id="${id}" data-action="decrease" ${item.quantity <= 1 ? 'disabled' : ''}>-</button>
-                                <input type="number" class="form-control form-control-sm text-center mx-2 cart-quantity" 
-                                       data-id="${id}" value="${item.quantity}" style="width: 60px;">
+                                <input type="number" 
+       class="form-control form-control-sm text-center mx-2 cart-quantity" 
+       data-id="${id}" 
+       value="${item.quantity}" 
+       style="width: 60px;" 
+       readonly>
+
                                 <button class="btn btn-sm btn-outline-secondary adjust-quantity increase-quantity" 
                                         data-id="${id}" data-action="increase" ${item.quantity >= item.product_stocks ? 'disabled' : ''}>+</button>
                             </div>
@@ -566,6 +571,66 @@
                 }
             });
         });
+
+        // Disable manual input, only allow increase/decrease via buttons
+        $(document).on('focus', '.cart-quantity', function() {
+            // When input is focused, prevent typing
+            $(this).blur();
+        });
+
+        // Adjust Quantity (Increase or Decrease)
+        $(document).on('click', '.adjust-quantity', function() {
+            const productId = $(this).data('id');
+            const action = $(this).data('action');
+            const input = $(`.cart-quantity[data-id="${productId}"]`);
+            let quantity = parseInt(input.val());
+
+            // Get the product's available stock
+            $.ajax({
+                url: '{{ route("products.checkStock") }}',
+                type: 'GET',
+                data: {
+                    product_id: productId,
+                    quantity: quantity
+                },
+                success: function(response) {
+                    const availableStock = response.product_stocks;
+
+                    if (action === 'increase' && quantity < availableStock) {
+                        quantity++;
+                    } else if (action === 'decrease' && quantity > 1) {
+                        quantity--;
+                    }
+
+                    input.val(quantity); // Update the input with new value
+                    updateCart(productId, quantity); // Update the cart
+
+                    // Disable the increase button if quantity reaches stock limit
+                    if (quantity >= availableStock) {
+                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', true);
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Max Stock Reached',
+                            text: `You can only add up to ${availableStock} items to the cart.`,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        $(`.increase-quantity[data-id="${productId}"]`).prop('disabled', false);
+                    }
+
+                    // Enable the decrease button if quantity is greater than 1
+                    if (quantity > 1) {
+                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', false);
+                    } else {
+                        $(`.decrease-quantity[data-id="${productId}"]`).prop('disabled', true);
+                    }
+                },
+                error: function(xhr) {
+                    Swal.fire('Error', xhr.responseJSON.error || 'Failed to check stock.', 'error');
+                }
+            });
+        });
+
 
         // Update Cart
         function updateCart(productId, quantity) {
