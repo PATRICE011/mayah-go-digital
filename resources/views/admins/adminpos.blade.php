@@ -611,9 +611,6 @@
         });
 
 
-       
-
-
         // Update Cart
         function updateCart(productId, quantity) {
             $.ajax({
