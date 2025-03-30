@@ -115,7 +115,7 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
 
     public function headings(): array
     {
-        return ['#', 'Product Name', 'Quantity', 'Unit Price', 'Raw Price', 'Total Amount', 'Date', 'Customer'];
+        return ['#', 'Product Name', 'Quantities Sold', 'Selling Price', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
     }
 
     public function styles(Worksheet $sheet)
@@ -143,7 +143,7 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                 $sheet = $event->sheet;
 
                 // Set column headers in Row 1
-                $headings = ['#', 'Product Name', 'Quantity', 'Unit Price', 'Raw Price', 'Total Amount', 'Date', 'Customer'];
+                $headings = ['#', 'Product Name', 'Quantities Sold', 'Selling Price', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {
@@ -186,9 +186,9 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                 $columnWidths = [
                     'A' => 8,   // #
                     'B' => 25,  // Product Name
-                    'C' => 10,  // Quantity
-                    'D' => 12,  // Unit Price
-                    'E' => 12,  // Raw Price
+                    'C' => 25,  // Quantity
+                    'D' => 15,  // Selling Price
+                    'E' => 12,  // Unit Price
                     'F' => 15,  // Total Amount
                     'G' => 18,  // Date
                     'H' => 20   // Customer

@@ -76,9 +76,15 @@
             </div>
          </div>
          <ul class="nav__list">
-            <li class="nav__item">
-               <a href="{{url('/user')}}" class="nav__link active-link">HOME</a>
-            </li>
+            @auth
+            <a href="{{url('/user')}}" class="breadcrumb__link">
+               Home
+            </a>
+            @else
+            <a href="{{url('/')}}" class="breadcrumb__link">
+               Home
+            </a>
+            @endauth
 
             <li class="nav__item">
                <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
@@ -127,81 +133,81 @@
 @section('content')
 
 <section class="breadcrumb">
-    <ul class="breadcrumb__list flex container">
-        <li><a href="{{ url(Auth::check() ? '/user' : '/') }}" class="breadcrumb__link">Home</a></li>
-        <li><span class="breadcrumb__link">></span></li>
-        <li><span class="breadcrumb__link">Shop</span></li>
-    </ul>
+   <ul class="breadcrumb__list flex container">
+      <li><a href="{{ url(Auth::check() ? '/user' : '/') }}" class="breadcrumb__link">Home</a></li>
+      <li><span class="breadcrumb__link">></span></li>
+      <li><span class="breadcrumb__link">Shop</span></li>
+   </ul>
 </section>
 
 <section class="products section--lg container">
 
-    <p class="total__products">
-        We found <span>{{ $totalProducts ?? 0 }}</span> items for you!
-    </p>
+   <p class="total__products">
+      We found <span>{{ $totalProducts ?? 0 }}</span> items for you!
+   </p>
 
-    <div class="products__layout">
-        <div class="product__categories-sidebar">
-            <div class="product__category-section">
-                <h3>Categories</h3>
-                <ul>
-                    @foreach($categories as $category)
-                    <li>
-                        <input type="checkbox" id="{{ $category->slug }}" value="{{ $category->category_name }}" class="brand-filter">
-                        <label for="{{ $category->slug }}">{{ $category->category_name }}</label>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
+   <div class="products__layout">
+      <div class="product__categories-sidebar">
+         <div class="product__category-section">
+            <h3>Categories</h3>
+            <ul>
+               @foreach($categories as $category)
+               <li>
+                  <input type="checkbox" id="{{ $category->slug }}" value="{{ $category->category_name }}" class="brand-filter">
+                  <label for="{{ $category->slug }}">{{ $category->category_name }}</label>
+               </li>
+               @endforeach
+            </ul>
+         </div>
+      </div>
 
-        <div class="products__grid">
-            <div class="products__container grid" id="productsContainer">
-                @include('home.partials.product_grid', ['products' => $products ?? collect()])
-            </div>
-            <div id="paginationLinks">
-                @include('home.partials.pagination_links', ['products' => $products])
-            </div>
-        </div>
-    </div>
+      <div class="products__grid">
+         <div class="products__container grid" id="productsContainer">
+            @include('home.partials.product_grid', ['products' => $products ?? collect()])
+         </div>
+         <div id="paginationLinks">
+            @include('home.partials.pagination_links', ['products' => $products])
+         </div>
+      </div>
+   </div>
 </section>
 
 @include('home.footer')
 
 @section('scripts')
 <script>
-    $(function() {
-        // Handle search
-        $('#searchInput').on('keyup', function() {
-            let query = $(this).val().trim();
-            fetchProducts('?search=' + encodeURIComponent(query));
-        });
+   $(function() {
+      // Handle search
+      $('#searchInput').on('keyup', function() {
+         let query = $(this).val().trim();
+         fetchProducts('?search=' + encodeURIComponent(query));
+      });
 
-        // Handle pagination
-        $(document).on('click', '.pagination a', function(event) {
-            event.preventDefault();
-            let url = $(this).attr('href');
-            fetchProducts(url);
-        });
+      // Handle pagination
+      $(document).on('click', '.pagination a', function(event) {
+         event.preventDefault();
+         let url = $(this).attr('href');
+         fetchProducts(url);
+      });
 
-        function fetchProducts(url) {
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(response) {
-                    if (response.products) {
-                        $('#productsContainer').html(response.products);
-                    }
-                    if (response.pagination) {
-                        $('#paginationLinks').html(response.pagination);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-    });
+      function fetchProducts(url) {
+         $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+               if (response.products) {
+                  $('#productsContainer').html(response.products);
+               }
+               if (response.pagination) {
+                  $('#paginationLinks').html(response.pagination);
+               }
+            },
+            error: function(xhr, status, error) {
+               console.error(error);
+            }
+         });
+      }
+   });
 </script>
 @endsection
 @endsection

@@ -166,10 +166,7 @@
 
             <div class="details__price flex">
                 <span class="new__price">₱ {{ number_format($product->product_price, 2) }}</span>
-                @if($product->product_old_price)
-                <span class="old__price">₱ {{ number_format($product->product_old_price, 2) }}</span>
-                <span class="save__price">₱ {{ number_format($product->product_old_price - $product->product_price, 2) }} Off</span>
-                @endif
+        
             </div>
 
             <div class="short__description">

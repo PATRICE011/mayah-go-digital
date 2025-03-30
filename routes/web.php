@@ -50,6 +50,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
         Route::prefix('cart')->group(function () {
             Route::post('/add', [CartController::class, 'addtocart'])->name('home.inserttocart');
             Route::delete('/delete/{id}', [CartController::class, 'destroy'])->name('cartDestroy');
+
             Route::post('/update-cart-item/{cartItemId}', [CartController::class, 'updateCartItem']);
             Route::post('/update-quantity', [CartController::class, 'updateQuantity'])->name('cartUpdateQuantity');
         });
@@ -138,7 +139,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::post('/checkout', [PosController::class, 'checkout'])->name('checkout');
             Route::get('/report', [PosController::class, 'adminposreport'])->name('admins.adminposreport');
             Route::get('/pos/export', [PosController::class, 'exportPosReport'])->name('admins.export.report');
+            Route::match(['post', 'delete'], '/delete/{productId}', [PosController::class, 'destroyPOS'])
+                ->name('cartDestroyPOS');
+            Route::get('/products/search', [PosController::class, 'search'])->name('products.search');
+            Route::post('/cart/clear', [PosController::class, 'clear'])->name('cart.clear');
 
+            Route::get('/products/checkStock', [PosController::class, 'checkStock'])->name('products.checkStock');
         });
 
         Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
@@ -158,11 +164,10 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         })->name('products.export');
 
         Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
-    
-    
+
+
         Route::get('/stocks/report', [StockController::class, 'index']);
         Route::get('stocks/report/export', [StockController::class, 'export']);
-
     });
 
 // Public Routes (accessible by all)

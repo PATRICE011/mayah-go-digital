@@ -14,14 +14,18 @@ class CreatePosOrderItemsTable extends Migration
     public function up()
     {
         Schema::create('pos_order_items', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade'); // Foreign key to orders table
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade'); // Foreign key to products table
-            $table->integer('quantity'); // Quantity of the product
-            $table->decimal('price', 10, 2); // Price of the product
-            $table->decimal('total', 10, 2); // Subtotal for the item (price × quantity)
-            $table->timestamps(); // created_at and updated_at
+            $table->id();
+            $table->unsignedBigInteger('pos_order_id');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('quantity');
+            $table->decimal('price', 10, 2);
+            $table->decimal('total', 10, 2);
+            $table->timestamps();
+        
+            $table->foreign('pos_order_id')->references('id')->on('pos_orders')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
+        
     }
 
     /**

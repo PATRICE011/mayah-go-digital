@@ -14,15 +14,14 @@ class CreatePosOrdersTable extends Migration
     public function up()
     {
         Schema::create('pos_orders', function (Blueprint $table) {
-            $table->id(); // Primary key
-            $table->string('order_number')->unique(); // Unique order identifier
-            $table->decimal('total_amount', 10, 2); // Total price for the order
-            $table->decimal('cash_paid', 10, 2); // Amount of cash paid
-            $table->decimal('change', 10, 2)->default(0); // Change to return
-            
-            $table->enum('status', ['completed', 'pending', 'cancelled'])->default('pending'); // Order status
-            $table->timestamps(); // created_at and updated_at
+            $table->id();
+            $table->string('order_number');
+            $table->unsignedBigInteger('user_id')->nullable(); // Optional for guest
+            $table->decimal('cash_paid', 10, 2);
+            $table->decimal('change', 10, 2);
+            $table->timestamps();
         });
+        
     }
 
     /**

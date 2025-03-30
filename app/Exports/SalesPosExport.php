@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\PosOrderItem;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,6 +10,8 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles, WithEvents
 {
@@ -25,38 +26,46 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         $this->toDate = $toDate;
     }
 
+    // Query for fetching data
     public function query()
     {
-        $query = PosOrderItem::with(['product', 'order.user'])
-            ->orderBy('created_at', 'desc'); // Fetch latest purchases first
+        $query = DB::table('pos_order_items')
+            ->join('products', 'pos_order_items.product_id', '=', 'products.id')
+            ->join('pos_orders', 'pos_order_items.pos_order_id', '=', 'pos_orders.id')
+            ->select('pos_order_items.id', 'products.product_name', 'pos_order_items.quantity', 'pos_order_items.price', 'pos_order_items.total', 'pos_order_items.created_at', 'pos_orders.order_number', DB::raw('IFNULL(pos_orders.user_id, "Guest") as customer'))
+            ->orderBy('pos_order_items.created_at', 'desc'); // Fetch latest purchases first
 
+        // Apply date filter if provided
         if ($this->fromDate && $this->toDate) {
-            $query->whereBetween('created_at', [$this->fromDate . ' 00:00:00', $this->toDate . ' 23:59:59']);
+            $query->whereBetween('pos_order_items.created_at', [$this->fromDate . ' 00:00:00', $this->toDate . ' 23:59:59']);
         }
 
         return $query;
     }
 
+    // Define the headings of the export
     public function headings(): array
     {
-        return ['#', 'Product Name', 'Quantity', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
+        return ['#', 'Product Name', 'Quantities Sold', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
     }
 
+    // Map data for each row
     public function map($item): array
     {
         static $index = 1; // Ensure data numbering starts at 1
-
+    
         return [
             $index++,
-            $item->product->product_name ?? 'Unknown',
-            $item->quantity,
-            number_format((float) $item->price, 2),
-            number_format((float) $item->total, 2),
-            $item->created_at->format('Y-m-d H:i'),
-            $item->order->user->name ?? 'Guest',
+            $item->product_name ?? 'Unknown', // Product name
+            $item->quantity, // Quantity sold
+            number_format((float) $item->price, 2), // Unit price
+            number_format((float) $item->total, 2), // Total amount
+            Carbon::parse($item->created_at)->format('Y-m-d H:i'), // Format created_at date
+            $item->customer ?? 'Guest', // Customer, default 'Guest' for POS
         ];
     }
 
+    // Apply styles to the export sheet
     public function styles(Worksheet $sheet)
     {
         return [
@@ -75,6 +84,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
         ];
     }
 
+    // Register custom events (headers, row styling, etc.)
     public function registerEvents(): array
     {
         return [
@@ -82,7 +92,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 $sheet = $event->sheet;
 
                 // Explicitly set headers in Row 1
-                $headings = ['#', 'Product Name', 'Quantity', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
+                $headings = ['#', 'Product Name', 'Quantities Sold', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
                 $headingRow = 1;
                 $columnIndex = 'A';
 
@@ -110,8 +120,8 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 // Ensure row height for headers
                 $sheet->getRowDimension(1)->setRowHeight(25);
 
-                // Ensure Data Starts at Row 2
-                $rowCount = PosOrderItem::count() + 1; // Adjust row count for correct data placement
+                // Get the row count dynamically
+                $rowCount = DB::table('pos_order_items')->count() + 1; // Adjust row count for correct data placement
 
                 $sheet->getStyle("A1:G{$rowCount}")->applyFromArray([
                     'borders' => [
@@ -126,7 +136,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithMapping, WithStyles
                 $columnWidths = [
                     'A' => 8,   // #
                     'B' => 25,  // Product Name
-                    'C' => 10,  // Quantity
+                    'C' => 20,  // Quantity
                     'D' => 12,  // Unit Price
                     'E' => 15,  // Total Amount
                     'F' => 18,  // Date

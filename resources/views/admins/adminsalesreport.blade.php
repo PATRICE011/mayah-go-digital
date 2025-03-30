@@ -36,20 +36,19 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-end align-items-center">
                         <div class="mr-2" style="width: 200px;">
-                            <input type="text" class="form-control form-control-sm" placeholder="Search...">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search...">
+
                         </div>
-                         <!-- Date Range Filter -->
+                        <!-- Date Range Filter -->
                         <div class="mr-2 d-flex align-items-center" style="width: 350px;">
                             <input type="date" id="fromDate" class="form-control form-control-sm" style="width: 150px;" placeholder="From Date">
                             <span class="mx-2">to</span>
                             <input type="date" id="toDate" class="form-control form-control-sm" style="width: 150px;" placeholder="To Date">
                         </div>
-
-                        <!-- <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
+                        <button id="exportSalesReportBtn" class="btn btn-sm btn-outline-danger mr-2">
                             <i class="fa fa-file-export"></i> Export
-                        </button> -->
+                        </button>
 
-                        <a href="{{url('/admin/export-sales-report')}}" class="btn btn-sm btn-outline-danger mr-2"><i class="fa fa-file-export"></i> Export</a>
                     </div>
 
                     <div class="card-body p-0">
