@@ -439,7 +439,7 @@
                 </div>
 
                 <div class="deals__btn">
-                    <a href="details.html" class="btn btn--md">Shop Now</a>
+                    <a href="{{url('/shop')}}" class="btn btn--md">Shop Now</a>
                 </div>
             </div>
 
@@ -479,7 +479,7 @@
                 </div>
 
                 <div class="deals__btn">
-                    <a href="details.html" class="btn btn--md">Shop Now</a>
+                    <a href="{{url('/shop')}}" class="btn btn--md">Shop Now</a>
                 </div>
             </div>
         </div>

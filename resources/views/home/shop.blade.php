@@ -78,16 +78,16 @@
          <ul class="nav__list">
             @auth
             <a href="{{url('/user')}}" class="breadcrumb__link">
-               Home
+               HOME
             </a>
             @else
             <a href="{{url('/')}}" class="breadcrumb__link">
-               Home
+               HOME
             </a>
             @endauth
 
             <li class="nav__item">
-               <a href="{{url('/shop')}}" class="nav__link">SHOP</a>
+               <a href="{{url('/shop')}}" class="nav__link active-link">SHOP</a>
             </li>
 
             @auth

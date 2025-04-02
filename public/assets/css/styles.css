@@ -1337,7 +1337,8 @@ input[type="number"] {
 }
 
 /* Form styling */
-.login {
+.login,
+.register {
   width: 100%;
   max-width: 400px;
   border: 1px solid var(--border-color-alt);
@@ -2170,9 +2171,9 @@ input[type="number"] {
 }
 
 @media screen and (max-width: 768px) {
-  .grid {
-    display: block; /* Fallback for smaller screens */
-  }
+  /* .grid {
+    display: block;
+  } */
 
   .container{
     max-width: 530px;
@@ -2193,10 +2194,10 @@ input[type="number"] {
     padding: 1rem;
   }
 
-  .login-register__label,
+  /* .login-register__label,
   .login-register__link {
     font-size: var(--tiny-font-size);
-  }
+  } */
 
   .order-progress-step {
     font-size: 10px;
@@ -2332,9 +2333,9 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* div.phpdebugbar{
+div.phpdebugbar{
   display: none;
-} */
+}
 
 
 /* POS */

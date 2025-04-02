@@ -76,9 +76,10 @@
                     <i class="ri-close-line"></i>
                 </div>
             </div>
+            
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="{{url('/user')}}" class="nav__link active-link">HOME</a>
+                    <a href="{{url('/user')}}" class="nav__link">HOME</a>
                 </li>
 
                 <li class="nav__item">
@@ -87,25 +88,25 @@
 
                 @auth
                 <li class="nav__item">
-                    <a href="{{url('/user/myaccount')}}" class="nav__link">MY ACCOUNT</a>
+                    <a href="{{url('/user/myaccount')}}" class="nav__link active-link">MY ACCOUNT</a>
                 </li>
                 @endauth
             </ul>
-        </div>
 
-        <div class="header__search">
-            <form action="{{route('home.shop')}}" method="GET">
-                @csrf
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search Item"
-                    class="form__input"
-                    id="searchInput">
-                <button class="search__btn" id="searchButton">
-                    <i class='bx bx-search search'></i>
-                </button>
-            </form>
+            <div class="header__search">
+                <form action="{{route('home.shop')}}" method="GET">
+                    @csrf
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search Item"
+                        class="form__input"
+                        id="searchInput">
+                    <button class="search__btn" id="searchButton">
+                        <i class='bx bx-search search'></i>
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div class="header__user-actions">

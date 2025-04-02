@@ -75,6 +75,7 @@
                <i class="ri-close-line"></i>
             </div>
          </div>
+         
          <ul class="nav__list">
             <li class="nav__item">
                <a href="{{url('/user')}}" class="nav__link active-link">HOME</a>
