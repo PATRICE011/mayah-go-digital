@@ -147,7 +147,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::get('/products/checkStock', [PosController::class, 'checkStock'])->name('products.checkStock');
         });
 
-        Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
+        Route::prefix('stocks')->group(function(){
+            Route::get('/stock-in', [StockController::class, 'stock_in_report']);
+            Route::get('/stock-out', [StockController::class, 'stock_out_report']);
+            Route::get('/stock-inventory', [StockController::class, 'inventory_report']);
+        });
+       
 
 
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
@@ -165,7 +170,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
         Route::get('/print-categories', [CategoryController::class, 'printCategories'])->name('categories.print');
 
-
+        Route::get('/stocks', [AdminController::class, 'adminstocks'])->name('admins.adminstocks');
         Route::get('/stocks/report', [StockController::class, 'index']);
         Route::get('stocks/report/export', [StockController::class, 'export']);
     });

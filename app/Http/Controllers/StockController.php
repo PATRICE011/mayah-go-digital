@@ -58,4 +58,25 @@ class StockController extends Controller
     public function export(){
         return Excel::download(new StockReportExport, 'stocks-report.xlsx');
     }
+
+
+    // revised reports
+
+    public function stock_in_report(){
+        // stock in
+
+        return view ('admins.stocks.in_report');
+    }
+
+    public function stock_out_report(){
+        // stock out
+
+        return view ('admins.stocks.out_report');
+    }
+
+    public function inventory_report(){
+        // stock in
+
+        return view ('admins.stocks.inventory');
+    }
 }

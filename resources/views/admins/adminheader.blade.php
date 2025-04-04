@@ -107,7 +107,7 @@ $role = Auth::user()->role_id; // Fetch user's role
                         <!-- <a href="{{ route('admins.adminrefund') }}" class="nav-link {{ isset($activePage) && $activePage === 'refund' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Return & Refunds
                         </a> -->
-                        
+
                         @elseif($role == 2) {{-- Role ID 2: See only Online Orders --}}
                         <a href="{{ route('admins.adminonlineorders') }}" class="nav-link {{ isset($activePage) && $activePage === 'onlineorders' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Online Orders
@@ -137,10 +137,31 @@ $role = Auth::user()->role_id; // Fetch user's role
                         Reports
                     </li>
                     <li class="nav-item">
-                       
+                         <!-- Stocks Report Dropdown -->
+                         <a class="nav-link dropdown-toggle" href="#" id="stocksReportDropdown" role="button" data-toggle="collapse" data-target="#stocksReportMenu" aria-expanded="false" aria-controls="stocksReportMenu">
+                            <i class="fas fa-fw fa-boxes"></i> Stocks Report
+                        </a>
+                        <div class="collapse {{ in_array($activePage ?? '', ['stockin', 'stockout', 'inventory']) ? 'show' : '' }}" id="stocksReportMenu">
+                            <ul class="nav flex-column ml-3">
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/stocks/stock-in') }}" class="nav-link {{ isset($activePage) && $activePage === 'stockin' ? 'active' : '' }}">Stock In</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/stocks/stock-out') }}" class="nav-link {{ isset($activePage) && $activePage === 'stockout' ? 'active' : '' }}">Stock Out</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('/admin/stocks/stock-inventory') }}" class="nav-link {{ isset($activePage) && $activePage === 'inventory' ? 'active' : '' }}">Inventory</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <!-- initial stock report -->
                         <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Stock In & Out Report
                         </a>
+
+                       
 
                         <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Sales Report
