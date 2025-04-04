@@ -81,7 +81,7 @@
                                 <tbody id="salesReportBody">
                                     @forelse($salesReport as $report)
                                     <tr>
-                                        <td>{{ $report->id }}</td>
+                                    <td>{{ ($salesReport ->currentPage() - 1) * $salesReport ->perPage() + $loop->iteration }}</td>
                                         <td>{{ $report->product_name }}</td>
                                         <td>{{ $report->quantity }}</td>
                                         <td>₱{{ $report->unit_price }}</td>

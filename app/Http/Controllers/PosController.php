@@ -337,7 +337,7 @@ class PosController extends Controller
         }
 
         // Get paginated results
-        $salesReport = $query->paginate(6);
+        $salesReport = $query->paginate(10);
 
         // Modify report data if necessary using map()
         $salesReport->getCollection()->map(function ($item) {

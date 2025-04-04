@@ -79,7 +79,7 @@
                                 <tbody>
                                     @foreach($stockInReports as $report)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ ($stockInReports->currentPage() - 1) * $stockInReports->perPage() + $loop->iteration }}</td>
                                         <td>{{ $report->product_id }}</td> <!-- Display product_id -->
                                         <td>{{ $report->product_name }}</td>
                                         <td>{{ $report->category_name }}</td>

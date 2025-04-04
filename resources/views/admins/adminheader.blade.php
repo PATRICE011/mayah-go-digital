@@ -170,9 +170,9 @@ $role = Auth::user()->role_id; // Fetch user's role
                             <i class="fas fa-fw fa-file"></i> POS Sales Report
                         </a>
 
-                        <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
+                        <!-- <a href="{{ route('admins.adminproductsreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'productsreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Products Report
-                        </a>
+                        </a> -->
 
                         <a href="{{ route('admins.adminaudit') }}" class="nav-link {{ isset($activePage) && $activePage === 'audit' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Audit Trail

@@ -128,13 +128,22 @@ $(document).ready(function () {
         const search = $('input[placeholder="Search..."]').val().trim();
         const from = $("#fromDate").val();
         const to = $("#toDate").val();
-
+    
         const exportUrl = `/admin/export-sales-report?search=${encodeURIComponent(
             search
         )}&from_date=${encodeURIComponent(from)}&to_date=${encodeURIComponent(
             to
         )}`;
-
-        window.open(exportUrl, "_blank");
+    
+        // Create a temporary anchor element
+        const link = document.createElement('a');
+        link.href = exportUrl;
+        link.download = 'sales-report.csv'; // Specify the default filename (optional)
+        
+        // Append the link to the body, trigger click, and then remove it
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
+    
 });

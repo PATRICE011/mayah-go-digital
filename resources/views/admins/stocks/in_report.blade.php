@@ -64,35 +64,35 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table">
-                            <table class="table">
-                                <thead class="bg-light">
-                                    <tr class="border-0">
-                                        <th class="border-0">#</th>
-                                        <th class="border-0">Product ID</th>
-                                        <th class="border-0">Product Name</th>
-                                        <th class="border-0">Category</th>
-                                        <th class="border-0">Quantity</th>
-                                        <th class="border-0">Unit Price</th>
-                                        <th class="border-0">Date</th>
-                                        <th class="border-0">Last Re Stock Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($stockInReports as $report)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report->product_id }}</td> <!-- Display product_id -->
-                                        <td>{{ $report->product_name }}</td>
-                                        <td>{{ $report->category_name }}</td>
-                                        <td>{{ $report->in_quantity }}</td>
-                                        <td>{{ number_format($report->product_raw_price, 2) }}</td> <!-- Display product_raw_price -->
-                                        <td>{{ \Carbon\Carbon::parse($report->created_at)->format('Y-m-d') }}</td>
-                                        <td>{{ $report->last_restock_date ? \Carbon\Carbon::parse($report->last_restock_date)->format('Y-m-d') : 'N/A' }}</td>
+                                <table class="table">
+                                    <thead class="bg-light">
+                                        <tr class="border-0">
+                                            <th class="border-0">#</th>
+                                            <th class="border-0">Product ID</th>
+                                            <th class="border-0">Product Name</th>
+                                            <th class="border-0">Category</th>
+                                            <th class="border-0">Quantity</th>
+                                            <th class="border-0">Unit Price</th>
+                                            <th class="border-0">Date</th>
+                                            <th class="border-0">Last Re Stock Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($stockInReports as $report)
+                                        <tr>
+                                            <td>{{ ($stockInReports->currentPage() - 1) * $stockInReports->perPage() + $loop->iteration }}</td>
+                                            <td>{{ $report->product_id }}</td> <!-- Display product_id -->
+                                            <td>{{ $report->product_name }}</td>
+                                            <td>{{ $report->category_name }}</td>
+                                            <td>{{ $report->in_quantity }}</td>
+                                            <td>{{ number_format($report->product_raw_price, 2) }}</td> <!-- Display product_raw_price -->
+                                            <td>{{ \Carbon\Carbon::parse($report->created_at)->format('Y-m-d') }}</td>
+                                            <td>{{ $report->last_restock_date ? \Carbon\Carbon::parse($report->last_restock_date)->format('Y-m-d') : 'N/A' }}</td>
 
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                         </div>
 
                         <!-- Pagination Links -->
