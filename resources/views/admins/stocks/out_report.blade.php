@@ -70,7 +70,7 @@
                                         <th class="border-0">Product ID</th>
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Category</th>
-                                        <th class="border-0">Out Stock</th>
+                                        <th class="border-0">Quantity</th>
                                         <th class="border-0">Unit Price</th>
                                         <th class="border-0">Date</th>
                                         <th class="border-0">Last Stock Depletion Date</th>
