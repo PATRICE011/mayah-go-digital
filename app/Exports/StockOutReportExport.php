@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Support\Facades\DB;
 
-class StockInReportExport implements FromCollection, WithHeadings, WithStyles, WithEvents
+class StockOutReportExport implements FromCollection, WithHeadings, WithStyles, WithEvents
 {
     protected $fromDate;
     protected $toDate;
@@ -33,11 +33,11 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 'products.product_id',
                 'products.product_name',
                 'categories.category_name',
-                DB::raw('SUM(CASE WHEN stock_movements.type = "in" THEN stock_movements.quantity ELSE 0 END) as in_quantity'),
+                DB::raw('SUM(CASE WHEN stock_movements.type = "out" THEN stock_movements.quantity ELSE 0 END) as out_quantity'),
                 'products.product_raw_price',
-                'stock_movements.created_at as stock_in_date'
+                'stock_movements.created_at as stock_out_date'
             )
-            ->where('stock_movements.type', 'in') // Only "stock-in" movements
+            ->where('stock_movements.type', 'out') // Only "stock-out" movements
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {
                     $subQuery->where('products.product_id', 'LIKE', "%{$this->search}%")
@@ -55,8 +55,7 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 $query->where('stock_movements.created_at', '<=', $this->toDate . ' 23:59:59');
             })
             ->groupBy('products.product_id', 'products.product_name', 'categories.category_name', 'products.product_raw_price', 'stock_movements.created_at')
-            ->havingRaw('SUM(CASE WHEN stock_movements.type = "in" THEN stock_movements.quantity ELSE 0 END) > 0') // Exclude rows where in_quantity is 0
-            ->orderBy('stock_movements.created_at', 'desc') // Sort by latest stock-in date
+            ->orderBy('stock_movements.created_at', 'desc') // Sort by latest stock-out date
             ->get();
 
         // Format data for export
@@ -66,9 +65,9 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 'product_id' => $item->product_id,
                 'product_name' => $item->product_name,
                 'category_name' => $item->category_name,
-                'in_quantity' => $item->in_quantity,
+                'out_quantity' => $item->out_quantity,
                 'unit_price' => number_format($item->product_raw_price, 2),
-                'stock_in_date' => date('Y-m-d H:i', strtotime($item->stock_in_date)),
+                'stock_out_date' => date('Y-m-d H:i', strtotime($item->stock_out_date)),
             ];
         });
 
@@ -77,7 +76,7 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
 
     public function headings(): array
     {
-        return ['#', 'Product ID', 'Product Name', 'Category', 'In Quantity', 'Unit Price', 'Stock In Date'];
+        return ['#', 'Product ID', 'Product Name', 'Category', 'Out Quantity', 'Unit Price', 'Stock Out Date'];
     }
 
     public function styles(Worksheet $sheet)
@@ -105,7 +104,7 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 $sheet = $event->sheet;
 
                 // Set column headers in Row 1
-                $headings = ['#', 'Product ID', 'Product Name', 'Category', 'In Quantity', 'Unit Price', 'Stock In Date'];
+                $headings = ['#', 'Product ID', 'Product Name', 'Category', 'Out Quantity', 'Unit Price', 'Stock Out Date'];
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {
@@ -151,9 +150,9 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                     'B' => 15,  // Product ID
                     'C' => 25,  // Product Name
                     'D' => 20,  // Category
-                    'E' => 20,  // In Quantity
+                    'E' => 20,  // Out Quantity
                     'F' => 15,  // Unit Price
-                    'G' => 18   // Stock In Date
+                    'G' => 18   // Stock Out Date
                 ];
                 foreach ($columnWidths as $col => $width) {
                     $sheet->getColumnDimension($col)->setWidth($width);

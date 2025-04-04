@@ -25,6 +25,7 @@ use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
 use App\Exports\StockInReportExport;
+use App\Exports\StockOutReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
@@ -150,12 +151,15 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
 
         Route::prefix('stocks')->group(function(){
             Route::get('/stock-in', [StockController::class, 'stock_in_report']);
-            Route::get('/export', function () {
+            Route::get('/stock-in/export', function () {
                 return Excel::download(new StockInReportExport(request()->fromDate, request()->toDate, request()->search), 'stock_in_report.xlsx');
             })->name('export.stock_in_report');
 
 
             Route::get('/stock-out', [StockController::class, 'stock_out_report']);
+            Route::get('/stock-out/export', function () {
+                return Excel::download(new StockOutReportExport(request()->fromDate, request()->toDate, request()->search), 'stock_out_report.xlsx');
+            })->name('export.stock_out_report');
             Route::get('/stock-inventory', [StockController::class, 'inventory_report']);
         });
        

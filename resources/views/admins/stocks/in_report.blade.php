@@ -64,13 +64,14 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table">
+                            <table class="table">
                                 <thead class="bg-light">
                                     <tr class="border-0">
                                         <th class="border-0">#</th>
                                         <th class="border-0">Product ID</th>
                                         <th class="border-0">Product Name</th>
                                         <th class="border-0">Category</th>
-                                        <th class="border-0">Quantity In Stock</th>
+                                        <th class="border-0">In Stock</th>
                                         <th class="border-0">Unit Price</th>
                                         <th class="border-0">Date</th>
                                         <th class="border-0">Last Re Stock Date</th>
@@ -80,21 +81,13 @@
                                     @foreach($stockInReports as $report)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report->product_id }}</td>
+                                        <td>{{ $report->product_id }}</td> <!-- Display product_id -->
                                         <td>{{ $report->product_name }}</td>
-                                        <td>{{ $report->category_name }}</td> <!-- Display category name instead of category_id -->
-
-                                        <td>{{ $report->product_stocks }}</td> <!-- This will show the stock quantity from the 'products' table -->
-
-                                        <td>{{ number_format($report->product_price, 2) }}</td>
-
-                                        <!-- Format the 'created_at' and 'last_restock_date' fields -->
+                                        <td>{{ $report->category_name }}</td>
+                                        <td>{{ $report->in_quantity }}</td>
+                                        <td>{{ number_format($report->product_raw_price, 2) }}</td> <!-- Display product_raw_price -->
                                         <td>{{ \Carbon\Carbon::parse($report->created_at)->format('Y-m-d') }}</td>
-
-                                        <td>
-                                            <!-- Check if 'last_restock_date' is not null and parse it, otherwise show 'N/A' -->
-                                            {{ $report->last_restock_date ? \Carbon\Carbon::parse($report->last_restock_date)->format('Y-m-d') : 'N/A' }}
-                                        </td>
+                                        <td>{{ $report->last_restock_date ? \Carbon\Carbon::parse($report->last_restock_date)->format('Y-m-d') : 'N/A' }}</td>
 
                                     </tr>
                                     @endforeach
@@ -102,7 +95,6 @@
                             </table>
                         </div>
 
-                        <!-- Pagination -->
                         <!-- Pagination Links -->
                         <div class="card-footer">
                             <div class="d-flex justify-content-end">
