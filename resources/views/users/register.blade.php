@@ -46,7 +46,7 @@
       <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
-      @endif
+      @endauth
 
       <div class="nav__menu" id="nav-menu">
          <div class="nav__menu-top">
@@ -78,7 +78,7 @@
          
          <ul class="nav__list">
             <li class="nav__item">
-               <a href="{{url('/user')}}" class="nav__link active-link">HOME</a>
+               <a href="{{url('/')}}" class="nav__link active-link">HOME</a>
             </li>
 
             <li class="nav__item">

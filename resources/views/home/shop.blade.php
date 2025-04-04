@@ -46,7 +46,7 @@
       <a href="{{url('/')}}" class="nav__logo">
          <i class="ri-restaurant-2-fill nav__logo-icon"></i> Mayah Store
       </a>
-      @endif
+      @auth
 
       <div class="nav__menu" id="nav-menu">
          <div class="nav__menu-top">
