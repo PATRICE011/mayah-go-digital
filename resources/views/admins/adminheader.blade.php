@@ -157,12 +157,11 @@ $role = Auth::user()->role_id; // Fetch user's role
 
 
                         <!-- initial stock report -->
-                        <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : '' }}">
+                        <!-- <a href="{{url('/admin/stocks/report')}}" class="nav-link {{ isset($activePage) && $activePage === 'stocksreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Stock In & Out Report
-                        </a>
+                        </a> -->
 
                        
-
                         <a href="{{ route('admins.adminsalesreport') }}" class="nav-link {{ isset($activePage) && $activePage === 'salesreport' ? 'active' : '' }}">
                             <i class="fas fa-fw fa-file"></i> Sales Report
                         </a>
