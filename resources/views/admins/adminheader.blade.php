@@ -4,34 +4,37 @@
         <!-- <a class="navbar-brand" href="">
             MAYAH STORE
         </a> -->
-        <img src="{{ asset('assets/img/logo_store.png') }}" class="navbar-brand">
+        <a class="navbar-brand" href="{{ route('admins.dashboard') }}">
+            <img src="{{ asset('assets/img/logo_store.png') }}" alt="Logo" class="logo-img">
+        </a>
+
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto navbar-right-top">
-        <li class="nav-item dropdown nav-user">
-            <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <!-- Username with proper styling matching the image -->
-                <span class="user-name font-weight-normal px-3 py-2" style="border: 1px solid #e2e8f0; border-radius: 4px; background-color: #4299e1; color: #f7fafc ">
-                    {{ Auth::user()->name ?? 'Guest' }}
-                    <i class="fas fa-chevron-down ml-2" style="font-size: 12px; color: #f7fafc ;"></i>
-                </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow-sm border-0 mt-1" aria-labelledby="userDropdown" style="border-color: #f7fafc !important; border-radius: 4px; background-color: #ffffff;">
-                <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-user mr-2" style="color: #4299e1;"></i>Account</a>
-                <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-cog mr-2" style="color: #4299e1;"></i>Setting</a>
-                <div class="dropdown-divider" style="border-color: #edf2f7;"></div>
-                <form action="{{ url('/admin/logout') }}" method="POST" id="logoutForm">
-                    @csrf
-                    <button type="submit" class="dropdown-item py-2" style="color: #4a5568;"><i class="fas fa-power-off mr-2" style="color: #4299e1;"></i>Logout</button>
-                </form>
-            </div>
-        </li>
-    </ul>
-</div>
+            <ul class="navbar-nav ml-auto navbar-right-top">
+                <li class="nav-item dropdown nav-user">
+                    <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!-- Username with proper styling matching the image -->
+                        <span class="user-name font-weight-normal px-3 py-2" style="border: 1px solid #e2e8f0; border-radius: 4px; background-color: #4299e1; color: #f7fafc ">
+                            {{ Auth::user()->name ?? 'Guest' }}
+                            <i class="fas fa-chevron-down ml-2" style="font-size: 12px; color: #f7fafc ;"></i>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow-sm border-0 mt-1" aria-labelledby="userDropdown" style="border-color: #f7fafc !important; border-radius: 4px; background-color: #ffffff;">
+                        <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-user mr-2" style="color: #4299e1;"></i>Account</a>
+                        <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-cog mr-2" style="color: #4299e1;"></i>Setting</a>
+                        <div class="dropdown-divider" style="border-color: #edf2f7;"></div>
+                        <form action="{{ url('/admin/logout') }}" method="POST" id="logoutForm">
+                            @csrf
+                            <button type="submit" class="dropdown-item py-2" style="color: #4a5568;"><i class="fas fa-power-off mr-2" style="color: #4299e1;"></i>Logout</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </nav>
 </div>
 

@@ -1228,6 +1228,7 @@ Top Header
     box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.13);
     -webkit-transition: all 0.3s ease;
     min-height: 60px;
+    
 }
 
 
@@ -1244,19 +1245,24 @@ Top Header
     color: #007bff;
 } */
 
+/* Wraps the logo container */
 .navbar-brand {
-    width: 70px; /* Adjust this value to your preferred width */
-    height: auto; /* This maintains the aspect ratio */
-  }
-
-.navbar-brand img{
-  width: 50px;
-  border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 1rem;
 }
 
-.navbar-brand:hover{
+/* Style the logo image */
+.logo-img {
+    width: 65px; /* You can go up to 100px if needed */
+    height: auto;
+    border-radius: 10px;
+}
+
+
+/* .navbar-brand:hover{
     color: #007bff;
-}
+} */
 .navbar-right-top {}
 
 .navbar-right-top .nav-item {
