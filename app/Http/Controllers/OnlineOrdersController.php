@@ -60,7 +60,7 @@ class OnlineOrdersController extends Controller
             $order = Order::findOrFail($id); // Fetch order by ID
     
             $validated = $request->validate([
-                'status' => 'required|string|in:pending,confirmed,readyForPickup,completed' // Correct the case to match HTML
+                'status' => 'required|string|in:pending,confirmed,readyForPickup,completed,returned,refunded' // Correct the case to match HTML
             ]);
     
             $order->status = $validated['status']; // Update status
