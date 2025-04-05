@@ -1232,17 +1232,22 @@ Top Header
 
 
 
-.navbar-brand {
+/* .navbar-brand {
     display: inline-block;
     margin-right: 1rem;
     line-height: inherit;
     white-space: nowrap;
     padding: 11px 20px;
-    font-size: 30px;
+    font-size: 10px;
     text-transform: uppercase;
     font-weight: 700;
     color: #007bff;
-}
+} */
+
+.navbar-brand {
+    width: 70px; /* Adjust this value to your preferred width */
+    height: auto; /* This maintains the aspect ratio */
+  }
 
 .navbar-brand img{
   width: 50px;
@@ -1644,6 +1649,7 @@ Left Navigation Sidebar
 ------------------------- */
 
 .nav-left-sidebar {
+    padding-top: 35px;
     position: fixed;
     width: 264px;
     height: 100%;
