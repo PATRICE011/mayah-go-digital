@@ -63,7 +63,7 @@ $role = Auth::user()->role_id; // Fetch user's role
                     <!-- Product & Stocks Section -->
                     @if($role != 2) {{-- Hide for role ID 2 --}}
                     <li class="nav-divider">
-                        Product & Stocks
+                        Inventory
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('admins.adminproducts') }}" class="nav-link {{ isset($activePage) && $activePage === 'products' ? 'active' : '' }}">
@@ -133,11 +133,11 @@ $role = Auth::user()->role_id; // Fetch user's role
                                         <i class="fas fa-fw fa-arrow-up"></i> Stock Out
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="{{ url('/admin/stocks/stock-inventory') }}" class="nav-link {{ isset($activePage) && $activePage === 'inventory' ? 'active' : '' }}">
                                         <i class="fas fa-fw fa-clipboard-list"></i> Inventory
                                     </a>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
 
