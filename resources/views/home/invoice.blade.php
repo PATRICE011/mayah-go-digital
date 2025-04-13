@@ -1,7 +1,88 @@
 @extends('home.layout')
 
 @section('title', 'Mayah Store - Invoice')
+@section('styles')
+<style>
+    @media print {
+        @page {
+            size: auto;
+            margin: 10mm;
+            /* Reduce default margin */
+        }
 
+        body {
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-container {
+            padding: 10px;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table td,
+        table th {
+            padding: 5px 8px;
+            font-size: 11px;
+        }
+
+        .invoice-head-top img {
+            height: 40px;
+        }
+
+        .invoice-head,
+        .invoice-body,
+        .invoice-foot {
+            padding: 0;
+            margin: 0;
+        }
+
+        .invoice-body-bottom {
+            margin-top: 10px;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-start {
+            text-align: left;
+        }
+
+        .invoice-head-bottom ul,
+        .invoice-head-middle {
+            margin: 0;
+        }
+
+        .invoice-head-bottom ul li {
+            font-size: 11px;
+        }
+
+        .hr {
+            border-top: 1px solid #ccc;
+            margin: 5px 0;
+        }
+
+        footer,
+        header,
+        nav,
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+
+@endsection
 @section('content')
 <div class="invoice-wrapper" id="print-area">
     <div class="invoice">
