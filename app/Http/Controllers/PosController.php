@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\SalesPosExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+
 
 class PosController extends Controller
 {
@@ -40,7 +42,7 @@ class PosController extends Controller
     public function getProducts(Request $request)
     {
         $query = Product::query();
-    
+
         // Category filter
         if ($request->has('category_id') && $request->category_id != 'all') {
             $category = Category::find($request->category_id);
@@ -49,20 +51,20 @@ class PosController extends Controller
             }
             $query->where('category_id', $request->category_id);
         }
-    
+
         // Search filter
         if ($request->has('search')) {
             $searchQuery = $request->search;
             $query->where('product_name', 'like', "%$searchQuery%")
                 ->orWhere('product_description', 'like', "%$searchQuery%");
         }
-    
+
         // Pagination logic
         $perPage = 6; // Number of products per page
         $page = $request->input('page', 1); // Current page
-    
+
         $products = $query->paginate($perPage, ['*'], 'page', $page); // Paginate
-    
+
         // Pagination information
         $pagination = [
             'current_page' => $products->currentPage(),
@@ -70,13 +72,13 @@ class PosController extends Controller
             'per_page' => $perPage,
             'total' => $products->total(),
         ];
-    
+
         return response()->json([
             'products' => $products->items(), // Return only the products for this page
             'pagination' => $pagination,
         ]);
     }
-    
+
     /**
      * Add a Product to the Cart
      */
@@ -254,7 +256,8 @@ class PosController extends Controller
 
         try {
             // Create a new POS order in the pos_orders table
-            $orderNumber = Str::random(10); // Generate a random order number
+            $orderNumber = str_pad(random_int(0, 99999999), 8, '0', STR_PAD_LEFT);
+
             $posOrderId = DB::table('pos_orders')->insertGetId([
                 'order_number' => $orderNumber, // Unique order number
                 'user_id' => null, // For POS, the user is typically a guest, so leave null
@@ -369,28 +372,28 @@ class PosController extends Controller
         $searchQuery = $request->input('search', ''); // Get the search query (default to an empty string if not provided)
         $categoryId = $request->input('category_id', 'all'); // Category ID (default to 'all' if not provided)
         $page = $request->input('page', 1); // Page number (default to 1 if not provided)
-    
+
         // Initialize the query builder
         $query = DB::table('products');
-    
+
         // Filter by category if category is provided
         if ($categoryId != 'all') {
             $query->where('category_id', $categoryId);
         }
-    
+
         // Search by product name, description, or any other field you want
         if ($searchQuery) {
             $query->where('product_name', 'like', '%' . $searchQuery . '%')
                 ->orWhere('product_description', 'like', '%' . $searchQuery . '%');
         }
-    
+
         // Get the total count of the filtered products
         $total = $query->count();
-    
+
         // Paginate the results (6 products per page)
         $perPage = 6;
         $products = $query->skip(($page - 1) * $perPage)->take($perPage)->get();
-    
+
         // Calculate pagination information
         $pagination = [
             'current_page' => $page,
@@ -398,12 +401,97 @@ class PosController extends Controller
             'per_page' => $perPage,
             'total' => $total,
         ];
-    
+
         // Return the products and pagination as a JSON response
         return response()->json([
             'products' => $products,
             'pagination' => $pagination
         ]);
     }
-    
+
+    /**
+     * Get order history
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderHistory()
+    {
+        try {
+            // Get all POS orders sorted by latest first
+            $orders = DB::table('pos_orders')
+                ->select('id', 'order_number', 'cash_paid', 'change', 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->take(50)
+                ->get();
+
+            // Calculate and add total_amount to each order
+            foreach ($orders as $order) {
+                $orderItems = DB::table('pos_order_items')
+                    ->where('pos_order_id', $order->id)
+                    ->get();
+
+                $order->total_amount = $orderItems->sum('total');
+            }
+
+            return response()->json($orders);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Order history error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load order history: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Get order details
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderDetails($id)
+    {
+        try {
+            // Get order items with product information
+            $orderItems = DB::table('pos_order_items')
+                ->where('pos_order_id', $id)
+                ->join('products', 'pos_order_items.product_id', '=', 'products.id')
+                ->select(
+                    'pos_order_items.product_id',
+                    'pos_order_items.quantity',
+                    'pos_order_items.price',
+                    'pos_order_items.total',
+                    'products.product_name'
+                )
+                ->get();
+
+            return response()->json($orderItems);
+        } catch (\Exception $e) {
+            Log::error('Order details error: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to load order details: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function printReceipt($id)
+    {
+        // Get the order
+        $order = DB::table('pos_orders')->where('id', $id)->first();
+
+        // Get order items with product & category info
+        $items = DB::table('pos_order_items')
+            ->join('products', 'pos_order_items.product_id', '=', 'products.id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('pos_order_items.pos_order_id', $id)
+            ->select(
+                'products.product_name',
+                'categories.category_name',
+                'pos_order_items.price',
+                'pos_order_items.quantity',
+                DB::raw('pos_order_items.price * pos_order_items.quantity as amount')
+            )
+            ->get();
+
+        return view('admins.receipt', [
+            'order' => $order,
+            'items' => $items
+        ]);
+    }
 }

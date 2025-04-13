@@ -1,8 +1,6 @@
 @extends('admins.layout')
 @section('title', 'Mayah Store - Admin POS')
-@section('content')
-@include('admins.adminheader', ['activePage' => 'pos'])
-
+@section('styles')
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -204,7 +202,26 @@
         margin-left: 5px;
     }
 
+    /* Order History Styles */
+    #order-history-table tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
 
+    .view-order-details {
+        transition: all 0.2s;
+    }
+
+    .view-order-details:hover {
+        transform: scale(1.05);
+    }
+
+    #order-details-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+    }
 
     /* Additional Styles for mobile responsiveness */
     @media (max-width: 768px) {
@@ -217,6 +234,9 @@
         }
     }
 </style>
+@endsection
+@section('content')
+@include('admins.adminheader', ['activePage' => 'pos'])
 
 <div class="dashboard-wrapper">
     <div class="container-fluid dashboard-content">
@@ -246,7 +266,12 @@
             </div>
 
             <!-- Checkout Section -->
+
             <div class="col-md-3 bg-white shadow-sm rounded p-3 checkout-section">
+                <button id="order-history-btn" class="btn btn-info" type="button" style="width: 100%; margin-top: 10px; padding: 12px 0; font-size: 1.1rem; border-radius: 5px; border: none;">
+                    View Order History
+                </button>
+                <hr>
                 <h5 class="text-primary mb-3">Checkout</h5>
                 <ul id="cart-items" class="list-group mb-3"></ul>
 
@@ -289,7 +314,72 @@
     </div>
 </div>
 
+<!-- Order History Modal -->
+<div class="modal fade" id="orderHistoryModal" tabindex="-1" role="dialog" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderHistoryModalLabel">Order History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                                <th>Cash Paid</th>
+                                <th>Change</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-history-table">
+                            <!-- Order history will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Order Details Section -->
+                <div id="order-details-section" style="display: none;">
+
+
+                    <h5 class="mt-4 mb-3">Order Details</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-details-table">
+                                <!-- Order details will be loaded here -->
+                            </tbody>
+                        </table>
+                        <div class="text-end mt-3">
+                            <button id="print-receipt-btn" class="btn btn-success" style="display: none;">
+                                <i class="bi bi-printer"></i> Print Receipt
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+@endsection
 @section('scripts')
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
@@ -695,11 +785,129 @@
             });
         });
 
+        // Order History Button Click Handler
+        $('#order-history-btn').on('click', function() {
+            loadOrderHistory();
+            $('#orderHistoryModal').modal('show');
+        });
+
+        // Load Order History
+        function loadOrderHistory() {
+            $('#order-history-table').html('<tr><td colspan="6" class="text-center"><div class="spinner-border text-primary" role="status"></div></td></tr>');
+            $('#order-details-section').hide();
+
+            $.ajax({
+                url: '{{ route("orders.history") }}',
+                type: 'GET',
+                success: function(orders) {
+                    let html = '';
+                    if (orders.length === 0) {
+                        html = '<tr><td colspan="6" class="text-center">No orders found</td></tr>';
+                    } else {
+                        orders.forEach(order => {
+                            const date = new Date(order.created_at);
+                            const formattedDate = date.toLocaleString();
+
+                            html += `
+                <tr>
+                    <td>${order.order_number}</td>
+                    <td>${formattedDate}</td>
+                    <td>₱${parseFloat(order.total_amount).toFixed(2)}</td>
+                    <td>₱${parseFloat(order.cash_paid).toFixed(2)}</td>
+                    <td>₱${parseFloat(order.change).toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary view-order-details" data-id="${order.id}">
+                            View Details
+                        </button>
+                    </td>
+                </tr>`;
+                        });
+                    }
+                    $('#order-history-table').html(html);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading order history:", xhr.responseText);
+                    Swal.fire('Error', 'Failed to load order history: ' + error, 'error');
+                    $('#order-history-table').html('<tr><td colspan="6" class="text-center">Failed to load order history</td></tr>');
+                }
+            });
+        }
+        // Fix for aria-hidden issue with modals
+        $('#orderHistoryModal').on('shown.bs.modal', function() {
+            // Remove aria-hidden attribute when modal is shown
+            $('.dashboard-main-wrapper').removeAttr('aria-hidden');
+        });
+
+        // When modal is hidden, restore the attribute if needed
+        $('#orderHistoryModal').on('hidden.bs.modal', function() {
+            // Only set aria-hidden back if the element is not focused
+            if (!$('.dashboard-main-wrapper').find(':focus').length) {
+                $('.dashboard-main-wrapper').attr('aria-hidden', 'true');
+            }
+        });
+        // View Order Details Click Handler
+        $(document).on('click', '.view-order-details', function() {
+            const orderId = $(this).data('id');
+            loadOrderDetails(orderId);
+        });
+
+        // Load Order Details
+        function loadOrderDetails(orderId) {
+            $('#order-details-table').html('<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary" role="status"></div></td></tr>');
+            $('#order-details-section').show();
+
+            $.ajax({
+                url: '{{ route("orders.details", ":id") }}'.replace(':id', orderId),
+                type: 'GET',
+                success: function(orderDetails) {
+                    let html = '';
+                    let totalAmount = 0;
+
+                    if (orderDetails.length === 0) {
+                        html = '<tr><td colspan="4" class="text-center">No order details found</td></tr>';
+                    } else {
+                        orderDetails.forEach(item => {
+                            const subtotal = parseFloat(item.price) * parseInt(item.quantity);
+                            totalAmount += subtotal;
+
+                            html += `
+                        <tr>
+                            <td>${item.product_name}</td>
+                            <td>${item.quantity}</td>
+                            <td>₱${parseFloat(item.price).toFixed(2)}</td>
+                            <td>₱${subtotal.toFixed(2)}</td>
+                        </tr>`;
+                        });
+
+                        // Add total amount row
+                        html += `
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total Amount:</td>
+                        <td class="fw-bold text-primary">₱${totalAmount.toFixed(2)}</td>
+                    </tr>`;
+                    }
+
+                    $('#order-details-table').html(html);
+                    showPrintButton(orderId);
+                },
+                error: function() {
+                    Swal.fire('Error', 'Failed to load order details.', 'error');
+                    $('#order-details-table').html('<tr><td colspan="4" class="text-center">Failed to load order details</td></tr>');
+                }
+            });
+        }
+
+        // Show print button after loading order details
+        function showPrintButton(orderId) {
+            $('#print-receipt-btn').show().off('click').on('click', function() {
+                window.open(`/admin/pos/receipt/${orderId}`, '_blank');
+            });
+        }
+
         // Initial Load
         loadCategories();
         loadProducts();
         loadCart();
     });
 </script>
-@endsection
 @endsection

@@ -147,9 +147,14 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::post('/cart/clear', [PosController::class, 'clear'])->name('cart.clear');
 
             Route::get('/products/checkStock', [PosController::class, 'checkStock'])->name('products.checkStock');
+
+            Route::get('/orders/history', [PosController::class, 'getOrderHistory'])->name('orders.history');
+            Route::get('/orders/{id}/details', [PosController::class, 'getOrderDetails'])->name('orders.details');
+            Route::get('/receipt/{id}', [PosController::class, 'printReceipt'])->name('pos.printReceipt');
+
         });
 
-        Route::prefix('stocks')->group(function(){
+        Route::prefix('stocks')->group(function () {
             Route::get('/stock-in', [StockController::class, 'stock_in_report']);
             Route::get('/stock-in/export', function () {
                 return Excel::download(new StockInReportExport(request()->fromDate, request()->toDate, request()->search), 'stock_in_report.xlsx');
@@ -162,7 +167,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             })->name('export.stock_out_report');
             Route::get('/stock-inventory', [StockController::class, 'inventory_report']);
         });
-       
+
 
 
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
