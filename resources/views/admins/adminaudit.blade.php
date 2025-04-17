@@ -243,67 +243,7 @@
     </div>
 </div>
 
+@endsection
 @section('scripts')
 <script src="{{ asset('assets/js/audit.js') }}?v={{ time() }}"></script>
-<script>
-    $(document).ready(function() {
-        // View details button click handler
-        $('.view-details').on('click', function() {
-            const auditId = $(this).data('id');
-            $('#auditDetailsModal').modal('show');
-
-            // Here you would load the details via AJAX
-            // For now just showing a placeholder
-            setTimeout(function() {
-                $('.audit-details-content').html(`
-                    <div class="p-3">
-                        <h6 class="border-bottom pb-2 mb-3">Action Information</h6>
-                        <div class="row mb-3">
-                            <div class="col-md-4 font-weight-bold">Performed By:</div>
-                            <div class="col-md-8">John Doe</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4 font-weight-bold">IP Address:</div>
-                            <div class="col-md-8">192.168.1.1</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4 font-weight-bold">Date & Time:</div>
-                            <div class="col-md-8">09:55 AM, 04-04-2025</div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4 font-weight-bold">Action Type:</div>
-                            <div class="col-md-8">Updated a Product</div>
-                        </div>
-                        
-                        <h6 class="border-bottom pb-2 mb-3 mt-4">Changes Made</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Field</th>
-                                        <th>Before</th>
-                                        <th>After</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Product Name</td>
-                                        <td>Original Product Name</td>
-                                        <td>Updated Product Name</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Price</td>
-                                        <td>$100.00</td>
-                                        <td>$120.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `);
-            }, 500);
-        });
-    });
-</script>
-@endsection
 @endsection

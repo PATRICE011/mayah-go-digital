@@ -117,7 +117,7 @@ class productController extends Controller
             'action' => 'Added a Product',
             'model_type' => Product::class,
             'model_id' => $product->id,
-            'changes' => $validatedData,
+            'changes' => json_encode($validatedData),
         ]);
 
         return response()->json([
@@ -193,11 +193,12 @@ class productController extends Controller
             // Log the audit
             Audit::create([
                 'user_id' => Auth::id(),
-                'action' => 'updated a Product',
+                'action' => 'Updated a Product',
                 'model_type' => Product::class,
                 'model_id' => $product->id,
-                'old_values' => $oldValues,
-                'changes' => $validatedData,
+                // 'ip_address' => $request->ip(),
+                'old_values' => json_encode($oldValues),
+                'changes' => json_encode($validatedData),
             ]);
 
             return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
@@ -211,7 +212,7 @@ class productController extends Controller
     {
         try {
             $product = Product::findOrFail($id);
-            $oldValues = $product->toArray();
+            
             $product->delete();
 
             // Log the audit
@@ -220,7 +221,8 @@ class productController extends Controller
                 'action' => 'Deleted a Product',
                 'model_type' => Product::class,
                 'model_id' => $id,
-                'old_values' => $oldValues,
+                'changes' => json_encode(  $product)
+                
             ]);
 
             return response()->json(['success' => true, 'message' => 'Product deleted successfully!']);

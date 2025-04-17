@@ -151,7 +151,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::get('/orders/history', [PosController::class, 'getOrderHistory'])->name('orders.history');
             Route::get('/orders/{id}/details', [PosController::class, 'getOrderDetails'])->name('orders.details');
             Route::get('/receipt/{id}', [PosController::class, 'printReceipt'])->name('pos.printReceipt');
-
         });
 
         Route::prefix('stocks')->group(function () {
@@ -168,6 +167,15 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
             Route::get('/stock-inventory', [StockController::class, 'inventory_report']);
         });
 
+        Route::prefix('audit')->group(function () {
+            Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
+            Route::get('/audit-trail/{id}', [AuditController::class, 'getAuditDetails']);
+            Route::get('/users/list', [AuditController::class, 'getUsersList']);
+        });
+
+
+
+
 
 
         Route::get('/pos-orders', [AdminController::class, 'adminposorders'])->name('admins.adminposorders');
@@ -175,7 +183,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
         Route::get('/return-and-refunds', [AdminController::class, 'adminrefund'])->name('admins.adminrefund');
         Route::get('/users/administrators', [AdminController::class, 'adminadministrators'])->name('admins.adminadministrators');
 
-        Route::get('/audit-trail', [AuditController::class, 'adminaudit'])->name('admins.adminaudit');
 
 
         Route::get('/products/export', function () {
