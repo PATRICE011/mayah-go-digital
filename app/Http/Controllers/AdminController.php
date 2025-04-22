@@ -278,6 +278,12 @@ class AdminController extends Controller
 
     public function logout(Request $request)
     {
+        Audit::create([
+            'user_id' => Auth::id(),
+            'action' => 'logout',
+            'model_type' => User::class,
+            
+        ]);
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

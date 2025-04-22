@@ -55,6 +55,7 @@ class AuthController extends Controller
             switch ($roleId) {
                 case 1:
                     // Admin role
+                 
                     return redirect()->to(url('/admin'))->with('message', 'Login Successful, Welcome Admin!');
                 case 2:
                     // Staff role
@@ -137,6 +138,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // Log out the current user
+    
         Auth::logout();
 
         // Invalidate session and regenerate CSRF token

@@ -41,67 +41,47 @@
                         <div class="row align-items-center">
                             <div class="col-lg-8 col-md-6 mb-2 mb-md-0">
                                 <div class="d-flex align-items-center">
-                                    <div class="input-group input-group-sm mr-2" style="max-width: 200px;">
-                                        <input type="text" class="form-control" placeholder="Search..." id="auditSearch">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown mr-2">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-filter"></i> Filter
-                                        </button>
-                                        <div class="dropdown-menu p-3" aria-labelledby="filterDropdown" style="min-width: 250px;">
-                                            <div class="form-group mb-2">
-                                                <label for="actionFilter" class="small font-weight-bold">Action Type</label>
-                                                <select class="form-control form-control-sm" id="actionFilter">
-                                                    <option value="">All Actions</option>
-                                                    <option value="login">Login</option>
-                                                    <option value="logout">Logout</option>
-                                                    <option value="create">Create</option>
-                                                    <option value="update">Update</option>
-                                                    <option value="delete">Delete</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label for="userFilter" class="small font-weight-bold">User</label>
-                                                <select class="form-control form-control-sm" id="userFilter">
-                                                    <option value="">All Users</option>
-                                                    <!-- Populate with users dynamically -->
-                                                </select>
-                                            </div>
-                                            <div class="form-group mb-2">
-                                                <label class="small font-weight-bold">Date Range</label>
-                                                <div class="input-group input-group-sm">
-                                                    <input type="date" class="form-control form-control-sm" id="startDate">
-                                                    <div class="input-group-prepend input-group-append">
-                                                        <span class="input-group-text">to</span>
-                                                    </div>
-                                                    <input type="date" class="form-control form-control-sm" id="endDate">
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-between mt-3">
-                                                <button class="btn btn-sm btn-secondary" id="resetFilters">Reset</button>
-                                                <button class="btn btn-sm btn-primary" id="applyFilters">Apply</button>
+                                    <!-- Search and Filter Form -->
+                                    <form action="{{ url()->current() }}" method="GET" class="d-flex flex-wrap align-items-center">
+                                  
+                                        <div class="d-flex flex-wrap">
+                                            <!-- Action Filter -->
+                                            <select name="action" class="form-control form-control-sm mr-2 mb-2 mb-sm-0" style="width: 120px;">
+                                                <option value="">All Actions</option>
+                                                <option value="login" {{ request('action') == 'login' ? 'selected' : '' }}>Login</option>
+                                                <option value="logout" {{ request('action') == 'logout' ? 'selected' : '' }}>Logout</option>
+                                                <option value="create" {{ request('action') == 'create' ? 'selected' : '' }}>Create</option>
+                                                <option value="update" {{ request('action') == 'update' ? 'selected' : '' }}>Update</option>
+                                                <option value="delete" {{ request('action') == 'delete' ? 'selected' : '' }}>Delete</option>
+                                            </select>
+
+                                            <!-- User Filter -->
+                                            <select name="user" class="form-control form-control-sm mr-2 mb-2 mb-sm-0" style="width: 150px;">
+                                                <option value="">All Users</option>
+                                                @foreach(\App\Models\User::whereIn('role_id', [1, 2])->orderBy('name')->get() as $userOption)
+                                                <option value="{{ $userOption->id }}" {{ request('user') == $userOption->id ? 'selected' : '' }}>
+                                                    {{ $userOption->name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+
+                                            <!-- Date Range -->
+                                            <input type="date" class="form-control form-control-sm mr-2 mb-2 mb-sm-0" name="start_date"
+                                                value="{{ request('start_date') }}" placeholder="Start Date" style="width: 140px;">
+                                            <input type="date" class="form-control form-control-sm mr-2 mb-2 mb-sm-0" name="end_date"
+                                                value="{{ request('end_date') }}" placeholder="End Date" style="width: 140px;">
+
+                                            <div class="d-flex mb-2 mb-sm-0">
+                                                <button type="submit" class="btn btn-sm btn-primary mr-2">
+                                                    <i class="fa fa-filter"></i> Filter
+                                                </button>
+                                                <a href="{{ url()->current() }}" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fa fa-times"></i> Clear
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 d-flex justify-content-md-end">
-                                <div class="btn-group btn-group-sm mr-2">
-                                    <button id="exportCsvBtn" class="btn btn-outline-secondary">
-                                        <i class="fa fa-file-csv"></i> CSV
-                                    </button>
-                                    <button id="exportExcelBtn" class="btn btn-outline-secondary">
-                                        <i class="fa fa-file-excel"></i> Excel
-                                    </button>
-                                </div>
-                                <button id="refreshAuditListBtn" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-sync-alt"></i> Refresh
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -191,17 +171,17 @@
                                         @if ($audits->onFirstPage())
                                         <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                                         @else
-                                        <li class="page-item"><a class="page-link" href="{{ $audits->previousPageUrl() }}">&laquo;</a></li>
+                                        <li class="page-item"><a class="page-link" href="{{ url()->current() . '?page=' . $audits->previousPageUrl() }}">&laquo;</a></li>
                                         @endif
 
                                         @foreach ($audits->getUrlRange(1, $audits->lastPage()) as $page => $url)
                                         <li class="page-item {{ $audits->currentPage() == $page ? 'active' : '' }}">
-                                            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            <a class="page-link" href="{{ url()->current() . '?page=' . $page }}">{{ $page }}</a>
                                         </li>
                                         @endforeach
 
                                         @if ($audits->hasMorePages())
-                                        <li class="page-item"><a class="page-link" href="{{ $audits->nextPageUrl() }}">&raquo;</a></li>
+                                        <li class="page-item"><a class="page-link" href="{{ url()->current() . '?page=' . $audits->nextPageUrl() }}">&raquo;</a></li>
                                         @else
                                         <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
                                         @endif
@@ -244,6 +224,7 @@
 </div>
 
 @endsection
+
 @section('scripts')
 <script src="{{ asset('assets/js/audit.js') }}?v={{ time() }}"></script>
 @endsection
