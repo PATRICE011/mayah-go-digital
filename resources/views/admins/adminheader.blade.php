@@ -24,8 +24,8 @@
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow-sm border-0 mt-1" aria-labelledby="userDropdown" style="border-color: #f7fafc !important; border-radius: 4px; background-color: #ffffff;">
-                        <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-user mr-2" style="color: #4299e1;"></i>Account</a>
-                        <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-cog mr-2" style="color: #4299e1;"></i>Setting</a>
+                        <!-- <a class="dropdown-item py-2" href="#" style="color: #4a5568;"><i class="fas fa-user mr-2" style="color: #4299e1;"></i>Account</a> -->
+                        <a class="dropdown-item py-2" href="{{ url('/admin/settings/') }}" style="color: #4a5568;"><i class="fas fa-cog mr-2" style="color: #4299e1;"></i>Setting</a>
                         <div class="dropdown-divider" style="border-color: #edf2f7;"></div>
                         <form action="{{ url('/admin/logout') }}" method="POST" id="logoutForm">
                             @csrf

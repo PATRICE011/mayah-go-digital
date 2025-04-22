@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Product;
 use App\Exports\StockInReportExport;
 use App\Exports\StockOutReportExport;
+use App\Http\Controllers\AdminSettings;
 use Maatwebsite\Excel\Facades\Excel;
 // Guest Routes
 Route::middleware(['guest'])->group(function () {
@@ -88,10 +89,17 @@ Route::middleware(['auth', RoleMiddleware::class . ':3'])->group(function () {
 // Admin & Staff Routes (Roles 1 & 2 - Admin, Staff)
 Route::middleware(['auth', RoleMiddleware::class . ':1,2'])
     ->prefix('admin')->group(function () {
+
+
         // Route::get('/', [AdminController::class, 'index'])->name('admins.index');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admins.logout');
         Route::get('/', [AdminController::class, 'admindashboard'])->name('admins.dashboard');
 
+       Route::prefix('settings')->group(function(){
+        Route::get('/', [AdminSettings::class, 'index'])->name('admins.settings');
+        Route::post('/send-otp', [AdminSettings::class, 'sendOtp']);
+        Route::put('/update-profile', [AdminSettings::class, 'verifyOtp'])->name('admin.updateProfile');
+       });
 
         Route::get('/products', [productController::class, 'adminproducts'])->name('admins.adminproducts');
         Route::post('/store-products', [productController::class, 'store']);
