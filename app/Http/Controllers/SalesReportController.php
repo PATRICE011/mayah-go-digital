@@ -34,7 +34,8 @@ class SalesReportController extends Controller
                 DB::raw('order_items.quantity * order_items.price as total_amount'),
                 'orders.created_at as date',
                 'users_area.name as customer_name'
-            );
+            )
+            ->where('orders.status', 'paid'); // Filter by paid status
 
         // Apply search filter if provided
         if (!empty($search)) {
@@ -80,10 +81,6 @@ class SalesReportController extends Controller
         // Return the view for non-AJAX requests
         return view('admins.adminsalesreport', compact('sales', 'response'));
     }
-
-
-
-
 
     public function exportSalesReport(Request $request)
     {

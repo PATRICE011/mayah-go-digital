@@ -268,9 +268,7 @@
             <!-- Checkout Section -->
 
             <div class="col-md-3 bg-white shadow-sm rounded p-3 checkout-section">
-                <button id="order-history-btn" class="btn btn-info" type="button" style="width: 100%; margin-top: 10px; padding: 12px 0; font-size: 1.1rem; border-radius: 5px; border: none;">
-                    View Order History
-                </button>
+
                 <hr>
                 <h5 class="text-primary mb-3">Checkout</h5>
                 <ul id="cart-items" class="list-group mb-3"></ul>
@@ -283,6 +281,9 @@
                     </div>
                     <button id="checkout-btn" class="btn checkout-btn" disabled>Checkout</button>
                     <button id="clear-cart-btn" class="btn" type="button">Clear Cart</button>
+                    <button id="order-history-btn" class="btn btn-info" type="button" style="width: 100%; margin-top: 10px; padding: 12px 0; font-size: 1.1rem; border-radius: 5px; border: none;">
+                        View Order History
+                    </button>
                 </div>
             </div>
         </div>

@@ -396,6 +396,7 @@
                             <option value="readyForPickup">Ready for pickup</option>
 
                             <option value="completed">Completed</option>
+                            <option value="refunded">Refunded</option>
                         </select>
                     </div>
                 </form>
@@ -491,7 +492,7 @@
                         <option value="confirmed">Confirmed</option>
                         <option value="readyForPickup">Ready For Pickup</option>
                         <option value="completed">Completed</option>
-                        <option value="returned">Returned</option>
+                        <!-- <option value="returned">Returned</option> -->
                         <option value="refunded">Refunded</option>
                     </select>
                 </div>
