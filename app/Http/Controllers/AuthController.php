@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\OtpController;
 use App\Models\Audit;
 use App\Models\User;
+
 class AuthController extends Controller
 {
     // Display the registration form
@@ -47,7 +48,7 @@ class AuthController extends Controller
                 'user_id' => Auth::id(),
                 'action' => 'Logged In',
                 'model_type' => User::class,
-                
+
             ]);
 
             // Handle role-based redirection
@@ -55,7 +56,7 @@ class AuthController extends Controller
             switch ($roleId) {
                 case 1:
                     // Admin role
-                 
+
                     return redirect()->to(url('/admin'))->with('message', 'Login Successful, Welcome Admin!');
                 case 2:
                     // Staff role
@@ -99,32 +100,36 @@ class AuthController extends Controller
             ],
             'password' => 'required|string|min:8|confirmed',
         ]);
-    
+
+        // Check for validation errors
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
-    
+
+        // Auto capitalize the name (first letter of each word)
+        $name = ucwords(strtolower($request->name));
+
         // Generate OTP
         $otp = rand(100000, 999999);
         $otpCreatedAt = now();
-    
+
         // Store user data and OTP in session
         $request->session()->put('user_data', [
-            'name' => $request->name,
+            'name' => $name, // Store capitalized name
             'mobile' => $request->mobile,
             'password' => Hash::make($request->password),
             'otp' => $otp,
             'otp_created_at' => $otpCreatedAt->toDateTimeString(),
             'role_id' => 3, // Default role
         ]);
-    
+
         try {
             // Send OTP to the user's mobile
             $otpController = new OtpController();
             $otpController->sendOtp($request->mobile, $otp);
-    
+
             // Redirect to OTP verification page
             return redirect('user/otp')
                 ->with('message', 'Registration successful! Please check your mobile for the OTP.');
@@ -132,13 +137,13 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
         }
     }
-    
+
 
     // Handle logout request
     public function logout(Request $request)
     {
         // Log out the current user
-    
+
         Auth::logout();
 
         // Invalidate session and regenerate CSRF token
