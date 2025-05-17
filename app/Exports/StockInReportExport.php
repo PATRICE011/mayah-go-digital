@@ -4,17 +4,18 @@ namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Carbon\Carbon;
 
-class StockInReportExport implements FromCollection, WithHeadings, WithStyles, WithEvents
+class StockInReportExport implements FromCollection, WithHeadings, WithEvents
 {
     protected $fromDate;
     protected $toDate;
     protected $search;
+    protected $exportData;
 
     public function __construct($fromDate = null, $toDate = null, $search = '')
     {
@@ -25,7 +26,6 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
 
     public function collection()
     {
-        // Query to fetch the data based on filters
         $stockData = DB::table('stock_movements')
             ->join('products', 'stock_movements.product_id', '=', 'products.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
@@ -37,7 +37,7 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 'products.product_raw_price',
                 'stock_movements.created_at as stock_in_date'
             )
-            ->where('stock_movements.type', 'in') // Only "stock-in" movements
+            ->where('stock_movements.type', 'in')
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {
                     $subQuery->where('products.product_id', 'LIKE', "%{$this->search}%")
@@ -55,12 +55,12 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                 $query->where('stock_movements.created_at', '<=', $this->toDate . ' 23:59:59');
             })
             ->groupBy('products.product_id', 'products.product_name', 'categories.category_name', 'products.product_raw_price', 'stock_movements.created_at')
-            ->havingRaw('SUM(CASE WHEN stock_movements.type = "in" THEN stock_movements.quantity ELSE 0 END) > 0') // Exclude rows where in_quantity is 0
-            ->orderBy('stock_movements.created_at', 'desc') // Sort by latest stock-in date
+            ->havingRaw('SUM(CASE WHEN stock_movements.type = "in" THEN stock_movements.quantity ELSE 0 END) > 0')
+            ->orderBy('stock_movements.created_at', 'desc')
             ->get();
 
-        // Format data for export
-        $formattedData = collect($stockData)->map(function ($item, $index) {
+        // Format and store for rendering
+        $this->exportData = collect($stockData)->map(function ($item, $index) {
             return [
                 'row_number' => $index + 1,
                 'product_id' => $item->product_id,
@@ -72,30 +72,12 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
             ];
         });
 
-        return $formattedData;
+        return $this->exportData;
     }
 
     public function headings(): array
     {
-        return ['#', 'Product ID', 'Product Name', 'Category', 'In Quantity', 'Unit Price', 'Stock In Date'];
-    }
-
-    public function styles(Worksheet $sheet)
-    {
-        return [
-            1 => [
-                'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF']],
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                    'color' => ['argb' => 'FF0000']
-                ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'wrapText' => true
-                ]
-            ]
-        ];
+        return []; // We will write manually in AfterSheet
     }
 
     public function registerEvents(): array
@@ -103,40 +85,54 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
+                $data = $this->exportData ?? collect();
+                $rowIndex = 1;
 
-                // Set column headers in Row 1
-                $headings = ['#', 'Product ID', 'Product Name', 'Category', 'In Quantity', 'Unit Price', 'Stock In Date'];
-                $columnIndex = 'A';
+                // Export date in row 1
+                $sheet->setCellValue('A1', 'Stock in: ' . Carbon::now()->format('Y-m-d H:i:s'));
+                $sheet->mergeCells('A1:G1');
+                $sheet->getStyle('A1')->applyFromArray([
+                    'font' => ['bold' => true, 'size' => 14],
+                    'alignment' => ['horizontal' => 'center'],
+                    'fill' => ['fillType' => 'solid', 'color' => ['argb' => 'CCCCCC']]
+                ]);
+                $sheet->getRowDimension(1)->setRowHeight(30);
 
-                foreach ($headings as $heading) {
-                    $cell = $columnIndex . '1';
+                // Header row
+                $headers = ['#', 'Product ID', 'Product Name', 'Category', 'In Quantity', 'Unit Price', 'Stock In Date'];
+                $col = 'A';
+                foreach ($headers as $heading) {
+                    $cell = $col . '2';
                     $sheet->setCellValue($cell, $heading);
-
-                    // Apply styling for headers
                     $sheet->getStyle($cell)->applyFromArray([
-                        'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF'], 'size' => 12],
-                        'alignment' => [
-                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                            'wrapText' => true
-                        ],
-                        'fill' => [
-                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                            'color' => ['argb' => 'FF0000']
-                        ]
+                        'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF']],
+                        'alignment' => ['horizontal' => 'center'],
+                        'fill' => ['fillType' => 'solid', 'color' => ['argb' => 'FF0000']],
                     ]);
-
-                    $columnIndex++;
+                    $col++;
                 }
 
-                // Set row height for headers
-                $sheet->getRowDimension(1)->setRowHeight(25);
+                // Data rows start from row 3
+                $rowIndex = 3;
+                foreach ($data as $row) {
+                    $sheet->setCellValue("A{$rowIndex}", $row['row_number']);
+                    $sheet->setCellValue("B{$rowIndex}", $row['product_id']);
+                    $sheet->setCellValue("C{$rowIndex}", $row['product_name']);
+                    $sheet->setCellValue("D{$rowIndex}", $row['category_name']);
+                    $sheet->setCellValue("E{$rowIndex}", $row['in_quantity']);
+                    $sheet->setCellValue("F{$rowIndex}", $row['unit_price']);
+                    $sheet->setCellValue("G{$rowIndex}", $row['stock_in_date']);
 
-                // Ensure Data Starts at Row 2
-                $rowCount = count($sheet->toArray(null, true, true)) + 1;
+                    $sheet->getStyle("A{$rowIndex}:G{$rowIndex}")->applyFromArray([
+                        'alignment' => ['vertical' => 'center'],
+                    ]);
 
-                // Apply borders to the data
-                $sheet->getStyle("A1:G{$rowCount}")->applyFromArray([
+                    $rowIndex++;
+                }
+
+                // Apply borders
+                $lastRow = $rowIndex - 1;
+                $sheet->getStyle("A1:G{$lastRow}")->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -145,19 +141,23 @@ class StockInReportExport implements FromCollection, WithHeadings, WithStyles, W
                     ],
                 ]);
 
-                // Adjust column widths
+                // Column widths
                 $columnWidths = [
-                    'A' => 8,   // #
-                    'B' => 15,  // Product ID
-                    'C' => 25,  // Product Name
-                    'D' => 20,  // Category
-                    'E' => 20,  // In Quantity
-                    'F' => 15,  // Unit Price
-                    'G' => 18   // Stock In Date
+                    'A' => 8,
+                    'B' => 15,
+                    'C' => 25,
+                    'D' => 20,
+                    'E' => 15,
+                    'F' => 15,
+                    'G' => 20,
                 ];
+
                 foreach ($columnWidths as $col => $width) {
                     $sheet->getColumnDimension($col)->setWidth($width);
                 }
+
+                // Format unit price column
+                $sheet->getStyle("F3:F{$lastRow}")->getNumberFormat()->setFormatCode('#,##0.00');
             },
         ];
     }
