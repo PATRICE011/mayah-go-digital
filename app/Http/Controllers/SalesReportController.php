@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Exports\SalesExport;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Carbon\Carbon;
 class SalesReportController extends Controller
 {
     //
@@ -82,8 +82,15 @@ class SalesReportController extends Controller
         return view('admins.adminsalesreport', compact('sales', 'response'));
     }
 
-    public function exportSalesReport(Request $request)
+     public function exportSalesReport(Request $request)
     {
-        return Excel::download(new SalesExport($request->from_date, $request->to_date, $request->search), 'sales-report.xlsx');
+        // Generate filename with current date and time
+        $currentDateTime = Carbon::now()->format('Y-m-d_H-i-s');
+        $fileName = 'sales-report_' . $currentDateTime . '.xlsx';
+        
+        return Excel::download(
+            new SalesExport($request->from_date, $request->to_date, $request->search), 
+            $fileName
+        );
     }
 }

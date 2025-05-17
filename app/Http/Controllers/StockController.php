@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Exports\StockReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
+use Carbon\Carbon;
 
 class StockController extends Controller
 {
@@ -57,9 +58,20 @@ class StockController extends Controller
             ->paginate(10);
     }
 
+    private function getTimestampedFilename($baseFilename)
+    {
+        $currentDateTime = Carbon::now()->format('Y-m-d_H-i-s');
+        return $baseFilename . '_' . $currentDateTime . '.xlsx';
+    }
+
     public function export()
     {
-        return Excel::download(new StockReportExport, 'stocks-report.xlsx');
+        $fileName = $this->getTimestampedFilename('stocks-report');
+
+        return Excel::download(
+            new StockReportExport,
+            $fileName
+        );
     }
 
 

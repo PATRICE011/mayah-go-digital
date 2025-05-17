@@ -62,10 +62,10 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
         $totalRawCost = $salesData->sum('total_raw_cost');
         $grossIncome = $totalRevenue - $totalRawCost;
 
-        // Format Data for UI
+        // Format Data for UI - Start with row_number 1 instead of using array index
         $formattedData = collect($salesData)->map(function ($item, $index) {
             return [
-                'row_number' => $index + 1,
+                'row_number' => 1 + $index, // Always start with 1 regardless of internal indexing
                 'product_name' => $item->product_name,
                 'quantity' => $item->quantity,
                 'unit_price' => number_format($item->unit_price, 2),
@@ -115,13 +115,14 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
 
     public function headings(): array
     {
-        return ['#', 'Product Name', 'Quantities Sold', 'Selling Price', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
+        // Return empty array since we'll handle headings in the registerEvents method
+        return [];
     }
 
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => [
+            2 => [
                 'font' => ['bold' => true, 'color' => ['argb' => 'FFFFFF']],
                 'fill' => [
                     'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -141,13 +142,36 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
+                
+                // Add export date to A1
+                $exportDate = 'Export Date: ' . date('Y-m-d H:i:s');
+                $sheet->setCellValue('A1', $exportDate);
+                
+                // Merge cells for export date
+                $sheet->mergeCells('A1:H1');
+                
+                // Style for export date
+                $sheet->getStyle('A1')->applyFromArray([
+                    'font' => ['bold' => true, 'size' => 14],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'color' => ['argb' => 'CCCCCC']
+                    ]
+                ]);
+                
+                // Set row height for export date
+                $sheet->getRowDimension(1)->setRowHeight(30);
 
-                // Set column headers in Row 1
+                // Set column headers in Row 2
                 $headings = ['#', 'Product Name', 'Quantities Sold', 'Selling Price', 'Unit Price', 'Total Amount', 'Date', 'Customer'];
                 $columnIndex = 'A';
 
                 foreach ($headings as $heading) {
-                    $cell = $columnIndex . '1';
+                    $cell = $columnIndex . '2';
                     $sheet->setCellValue($cell, $heading);
 
                     // Apply styling for headers
@@ -168,12 +192,64 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                 }
 
                 // Set row height for headers
-                $sheet->getRowDimension(1)->setRowHeight(25);
+                $sheet->getRowDimension(2)->setRowHeight(25);
+                
+                // Manually set the data starting from row 3
+                $rowIndex = 3;
+                
+                // Get the data from the collection
+                $data = $this->collection();
+                
+                // Calculate total rows excluding the summary rows at the end
+                $totalDataRows = count($data) - 3; // Subtract the 3 summary rows
+                
+                // Write data starting from row 3
+                foreach ($data as $index => $row) {
+                    // Skip the last 3 rows which are totals
+                    if ($index >= $totalDataRows) {
+                        continue;
+                    }
+                    
+                    $sheet->setCellValue('A' . $rowIndex, $row['row_number']);
+                    $sheet->setCellValue('B' . $rowIndex, $row['product_name']);
+                    $sheet->setCellValue('C' . $rowIndex, $row['quantity']);
+                    $sheet->setCellValue('D' . $rowIndex, $row['unit_price']);
+                    $sheet->setCellValue('E' . $rowIndex, $row['raw_price']);
+                    $sheet->setCellValue('F' . $rowIndex, $row['total_amount']);
+                    $sheet->setCellValue('G' . $rowIndex, $row['date']);
+                    $sheet->setCellValue('H' . $rowIndex, $row['customer_name']);
+                    
+                    // Apply styling for data rows
+                    $sheet->getStyle("A{$rowIndex}:H{$rowIndex}")->applyFromArray([
+                        'alignment' => [
+                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                    ]);
+                    
+                    $rowIndex++;
+                }
+                
+                // Now add the summary rows at the end
+                $summaryRows = array_slice($data->toArray(), -3);
+                
+                foreach ($summaryRows as $summaryRow) {
+                    $sheet->setCellValue('A' . $rowIndex, $summaryRow['row_number']);
+                    $sheet->setCellValue('F' . $rowIndex, $summaryRow['total_amount']);
+                    
+                    // Bold styling for summary rows
+                    $sheet->getStyle("A{$rowIndex}:H{$rowIndex}")->applyFromArray([
+                        'font' => ['bold' => true],
+                        'alignment' => [
+                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                    ]);
+                    
+                    $rowIndex++;
+                }
 
-                // Ensure Data Starts at Row 2
-                $rowCount = DB::table('order_items')->count() + 4; // Account for total rows
-
-                $sheet->getStyle("A1:H{$rowCount}")->applyFromArray([
+                // Apply borders to the entire data section
+                $finalRowCount = $rowIndex - 1;
+                $sheet->getStyle("A1:H{$finalRowCount}")->applyFromArray([
                     'borders' => [
                         'allBorders' => [
                             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,

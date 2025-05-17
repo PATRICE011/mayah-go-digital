@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\SalesPosExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
-
+use Carbon\Carbon;
 
 class PosController extends Controller
 {
@@ -354,16 +354,25 @@ class PosController extends Controller
             'salesReport' => $salesReport, // Pass the paginated report to the view
         ]);
     }
+       private function getTimestampedFilename($baseFilename)
+    {
+        $currentDateTime = Carbon::now()->format('Y-m-d_H-i-s');
+        return $baseFilename . '_' . $currentDateTime . '.xlsx';
+    }
 
-
-    public function exportPosReport(Request $request)
+       public function exportPosReport(Request $request)
     {
         // Optional: Accept date filters or other parameters from the request
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
+        
+        $fileName = $this->getTimestampedFilename('pos-report');
 
         // Generate and download the POS order report
-        return Excel::download(new SalesPosExport($fromDate, $toDate), 'pos-report.xlsx');
+        return Excel::download(
+            new SalesPosExport($fromDate, $toDate), 
+            $fileName
+        );
     }
 
 
