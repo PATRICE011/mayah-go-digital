@@ -15,22 +15,22 @@
     <div class="order-progress-bar">
         <!-- Step: Pending -->
         <div class="order-progress-step 
-            {{ in_array($order->status, ['paid', 'confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
+            {{ in_array($order->status, ['paid', 'confirmed', 'readyForPickup', 'completed']) ? 'completed' : '' }} 
             {{ $order->status == 'paid' ? 'active' : '' }}">
             <span>Pending</span>
         </div>
 
         <!-- Step: Confirmed -->
         <div class="order-progress-step 
-            {{ in_array($order->status, ['confirmed', 'ready-for-pickup', 'completed']) ? 'completed' : '' }} 
+            {{ in_array($order->status, ['confirmed', 'readyForPickup', 'completed']) ? 'completed' : '' }} 
             {{ $order->status == 'confirmed' ? 'active' : '' }}">
             <span>Confirmed</span>
         </div>
 
         <!-- Step: Ready for Pickup -->
         <div class="order-progress-step 
-            {{ in_array($order->status, ['ready-for-pickup', 'completed']) ? 'completed' : '' }} 
-            {{ $order->status == 'ready-for-pickup' ? 'active' : '' }}">
+            {{ in_array($order->status, ['readyForPickup', 'completed']) ? 'completed' : '' }} 
+            {{ $order->status == 'readyForPickup' ? 'active' : '' }}">
             <span>Ready for Pickup</span>
         </div>
 

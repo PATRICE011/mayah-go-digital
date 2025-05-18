@@ -17,8 +17,8 @@ class SmsStatusController extends Controller
     public function confirmOrder(Order $order)
     {
         $order->update(['status' => 'confirmed']);
-        
-            // Define the customer mobile number and message
+
+        // Define the customer mobile number and message
         $mobileNumber = $order->user->mobile;
         $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} has been confirmed. Thank you for shopping with us!";
 
@@ -32,7 +32,7 @@ class SmsStatusController extends Controller
     public function rejectOrder(Order $order)
     {
         $order->update(['status' => 'rejected']);
-        
+
         $mobileNumber = $order->user->mobile;
         $message = "Hello, {$order->user->name}! Your order with ID #{$order->orderDetail->order_id_custom} has been rejected. We apologize for any inconvenience. Thank you for choosing us.";
 
@@ -60,14 +60,16 @@ class SmsStatusController extends Controller
         return redirect()->back()->with('message', 'Order marked as ready for pickup and SMS notification sent.');
     }
     // ======= STATUS COMPLETED =======
-    public function completeOrder (Order $order){
+    public function completeOrder(Order $order)
+    {
         $order->update(['status' => 'completed']);
 
         return redirect()->back()->with('message', 'Order marked as completed.');
     }
 
     // ===== STATUS REFUNDED ======
-    public function refundOrder (Order $order){
+    public function refundOrder(Order $order)
+    {
         $order->update(['status' => 'refunded']);
 
         return redirect()->back()->with('message', 'Order marked as refunded.');
@@ -76,38 +78,37 @@ class SmsStatusController extends Controller
     // Helper function to send SMS via Semaphore
 
 
-private function sendSmsNotification($mobileNumber, $message)
-{
-    // Retrieve Semaphore credentials from the .env file
-    $apiKey = env('SEMAPHORE_API_KEY');
-    $senderName = env('SEMAPHORE_SENDER_NAME');
+    private function sendSmsNotification($mobileNumber, $message)
+    {
+        // Retrieve Semaphore credentials from the .env file
+        $apiKey = 'b44a24f27a558fb5290688a7ab25aded';
+        $senderName = 'MAYAHSTORE';
 
-    // Initialize Guzzle client with SSL verification disabled
-    $client = new Client([
-        'verify' => false, // Bypass SSL certificate verification
-    ]);
-
-    try {
-        // Send SMS using the Semaphore API
-        $response = $client->post('https://api.semaphore.co/api/v4/messages', [
-            'form_params' => [
-                'apikey'     => $apiKey,
-                'number'     => $mobileNumber,
-                'message'    => $message,
-                'sendername' => $senderName,
-            ],
+        // Initialize Guzzle client with SSL verification disabled
+        $client = new Client([
+            'verify' => false, // Bypass SSL certificate verification
         ]);
 
-        // Check if the request was successful
-        if ($response->getStatusCode() === 200) {
-            Log::info('SMS sent successfully to ' . $mobileNumber);
-        } else {
-            Log::error('Failed to send SMS. Response: ' . $response->getBody());
-        }
-    } catch (\Exception $e) {
-        // Log any exceptions that occur
-        Log::error('SMS sending failed: ' . $e->getMessage());
-    }
-}
+        try {
+            // Send SMS using the Semaphore API
+            $response = $client->post('https://api.semaphore.co/api/v4/priority', [
+                'form_params' => [
+                    'apikey'     => $apiKey,
+                    'number'     => $mobileNumber,
+                    'message'    => $message,
+                    'sendername' => $senderName,
+                ],
+            ]);
 
+            // Check if the request was successful
+            if ($response->getStatusCode() === 200) {
+                Log::info('SMS sent successfully to ' . $mobileNumber);
+            } else {
+                Log::error('Failed to send SMS. Response: ' . $response->getBody());
+            }
+        } catch (\Exception $e) {
+            // Log any exceptions that occur
+            Log::error('SMS sending failed: ' . $e->getMessage());
+        }
+    }
 }

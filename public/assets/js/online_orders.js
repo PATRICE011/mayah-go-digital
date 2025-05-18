@@ -185,7 +185,7 @@ $(document).ready(function () {
                 return "pending";
             case "confirmed":
                 return "bg-primary";
-            case "ready-for-pickup":
+            case "readyForPickup":
                 return "bg-info";
             case "completed":
                 return "bg-success";
