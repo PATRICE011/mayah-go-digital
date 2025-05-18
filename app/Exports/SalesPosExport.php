@@ -58,7 +58,7 @@ class SalesPosExport implements FromQuery, WithHeadings, WithEvents
                 $sheet = $event->sheet;
 
                 // Export date in A1
-                $sheet->setCellValue('A1', 'POS Sales Report: ' . Carbon::now()->format('Y-m-d H:i:s'));
+                $sheet->setCellValue('A1', 'POS Sales Report as of: ' . Carbon::now()->format('Y-m-d H:i:s'));
                 $sheet->mergeCells('A1:G1');
                 $sheet->getStyle('A1')->applyFromArray([
                     'font' => ['bold' => true, 'size' => 14],

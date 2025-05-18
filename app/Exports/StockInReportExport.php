@@ -89,7 +89,7 @@ class StockInReportExport implements FromCollection, WithHeadings, WithEvents
                 $rowIndex = 1;
 
                 // Export date in row 1
-                $sheet->setCellValue('A1', 'Stock in: ' . Carbon::now()->format('Y-m-d H:i:s'));
+                $sheet->setCellValue('A1', 'Stock in as of: ' . Carbon::now()->format('Y-m-d H:i:s'));
                 $sheet->mergeCells('A1:G1');
                 $sheet->getStyle('A1')->applyFromArray([
                     'font' => ['bold' => true, 'size' => 14],

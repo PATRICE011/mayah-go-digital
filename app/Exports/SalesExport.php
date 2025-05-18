@@ -144,7 +144,7 @@ class SalesExport implements FromCollection, WithHeadings, WithStyles, WithEvent
                 $sheet = $event->sheet;
                 
                 // Add export date to A1
-                $exportDate = 'Sales Report: ' . date('Y-m-d H:i:s');
+                $exportDate = 'Sales Report as of: ' . date('Y-m-d H:i:s');
                 $sheet->setCellValue('A1', $exportDate);
                 
                 // Merge cells for export date

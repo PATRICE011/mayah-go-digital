@@ -87,7 +87,7 @@ class StockOutReportExport implements FromCollection, WithHeadings, WithEvents
                 $rowIndex = 1;
 
                 // Row 1: Export Date
-                $sheet->setCellValue('A1', 'Export Date: ' . Carbon::now()->format('Y-m-d H:i:s'));
+                $sheet->setCellValue('A1', 'Stock out as of: ' . Carbon::now()->format('Y-m-d H:i:s'));
                 $sheet->mergeCells('A1:G1');
                 $sheet->getStyle('A1')->applyFromArray([
                     'font' => ['bold' => true, 'size' => 14],
